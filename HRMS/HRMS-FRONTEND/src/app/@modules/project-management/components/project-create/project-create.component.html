@@ -1,0 +1,351 @@
+<div class="erp-page-wrapper">
+    <div class="erp-header-top">
+    <div class="erp-title-block">
+      <h2 class="erp-module-title">PROJECT MANAGEMENT</h2>
+      <div class="erp-breadcrumb">
+        PROJECT MASTER &gt; <span>{{ isEditMode ? 'EDIT PROJECT' : 'ADD PROJECT' }}</span>
+      </div>
+    </div>
+    <div class="erp-header-actions">
+      <button type="button" class="erp-btn-back" (click)="cancel()">
+        -- Back
+      </button>
+    </div>
+  </div>
+
+    <div class="erp-form-card">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+
+            <div class="erp-loading-wrap" *ngIf="loading">
+        <i class="fa fa-spinner fa-spin mr-1"></i> Loading project details...
+      </div>
+
+      <div *ngIf="!loading">
+                <div class="erp-identity-strip">
+          <span class="erp-identity-label">PROJECT</span>
+          <div class="erp-identity-field name-field">
+            <span class="erp-label">NAME: <span class="required-star">*</span></span>
+            <input
+              type="text"
+              formControlName="project_name"
+              class="erp-control erp-input primary-highlight-input"
+              placeholder="Enter Project Name"
+              [class.is-invalid]="projectForm.get('project_name')?.touched && projectForm.get('project_name')?.invalid"
+            />
+            <span class="erp-inline-error" *ngIf="projectForm.get('project_name')?.touched && projectForm.get('project_name')?.hasError('required')">
+              Name is required!
+            </span>
+          </div>
+          <div class="erp-identity-field code-field">
+            <span class="erp-label">CODE:</span>
+            <input
+              type="text"
+              formControlName="project_code"
+              class="erp-control erp-input code-input"
+              placeholder="e.g. PRJ-001"
+            />
+          </div>
+        </div>
+
+                <div class="erp-tabs-bar">
+          <button
+            type="button"
+            class="erp-tab-item"
+            [class.active]="activeTab === 'details'"
+            (click)="activeTab = 'details'"
+          >
+            DETAILS
+          </button>
+          <button
+            type="button"
+            class="erp-tab-item"
+            [class.active]="activeTab === 'commercials'"
+            (click)="activeTab = 'commercials'"
+          >
+            COMMERCIALS &amp; SCHEDULE
+          </button>
+          <button
+            type="button"
+            class="erp-tab-item"
+            [class.active]="activeTab === 'team'"
+            (click)="activeTab = 'team'"
+          >
+            TEAM &amp; SCOPE
+          </button>
+        </div>
+
+                <div class="erp-tab-pane">
+
+                    <div *ngIf="activeTab === 'details'">
+            <div class="row g-2 mb-2">
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">CLIENT / ACCOUNT:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <input
+                      type="text"
+                      formControlName="client_name"
+                      class="erp-control erp-input"
+                      placeholder="e.g. Acme Corporation Pvt Ltd"
+                    />
+                  </div>
+                </div>
+              </div>
+
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">BILLING METHOD:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <select formControlName="billing_method" class="erp-control erp-select">
+                      <option *ngFor="let b of billingMethods" [value]="b">{{ b }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">DEPARTMENT: <span class="required-star">*</span></span>
+                  </div>
+                  <div class="erp-control-col">
+                    <select
+                      formControlName="department_id"
+                      class="erp-control erp-select"
+                      (change)="onDepartmentChange(projectForm.get('department_id')?.value)"
+                      [class.is-invalid]="projectForm.get('department_id')?.touched && projectForm.get('department_id')?.invalid"
+                    >
+                      <option [ngValue]="null" disabled selected>-- Select Department --</option>
+                      <option *ngFor="let d of departments" [value]="d.dept_id">
+                        {{ d.department_name }}
+                      </option>
+                    </select>
+                    <span class="erp-inline-error" *ngIf="projectForm.get('department_id')?.touched && projectForm.get('department_id')?.hasError('required')">
+                      Department is required
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">PROJECT HEAD: <span class="required-star">*</span></span>
+                  </div>
+                  <div class="erp-control-col">
+                    <select
+                      formControlName="project_manager_id"
+                      class="erp-control erp-select"
+                      (change)="onManagerChange(projectForm.get('project_manager_id')?.value)"
+                      [class.is-invalid]="projectForm.get('project_manager_id')?.touched && projectForm.get('project_manager_id')?.invalid"
+                    >
+                      <option [ngValue]="null" disabled selected>-- Select Project Manager --</option>
+                      <option *ngFor="let m of employees" [value]="m.employee_id">
+                        {{ m.displayText || ((m.employee_code ? '[' + m.employee_code + '] ' : '') + m.name + (m.designation ? ' (' + m.designation + ')' : '')) }}
+                      </option>
+                    </select>
+                    <span class="erp-inline-error" *ngIf="projectForm.get('project_manager_id')?.touched && projectForm.get('project_manager_id')?.hasError('required')">
+                      Project Head is required
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                    <div *ngIf="activeTab === 'details' || activeTab === 'commercials'">
+            <div class="row g-2 mb-2">
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">TOTAL BUDGET (₹):</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <input
+                      type="number"
+                      formControlName="budget"
+                      min="0"
+                      class="erp-control erp-input"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+              </div>
+
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">PRIORITY:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <select formControlName="priority" class="erp-control erp-select">
+                      <option *ngFor="let pr of priorities" [value]="pr">{{ pr }} Priority</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">STATUS:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <select formControlName="status" class="erp-control erp-select">
+                      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+                            <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">PROGRESS (%):</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <input
+                      type="number"
+                      formControlName="initial_progress"
+                      min="0"
+                      max="100"
+                      class="erp-control erp-input"
+                      placeholder="0 - 100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+                        <div class="row g-2 mb-2">
+              <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">START DATE:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <div class="erp-date-wrap">
+                      <input
+                        matInput
+                        [matDatepicker]="startPicker"
+                        formControlName="start_date"
+                        placeholder="DD-MM-YYYY"
+                        class="erp-control erp-input erp-date-input"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="startPicker" class="erp-date-toggle"></mat-datepicker-toggle>
+                      <mat-datepicker #startPicker></mat-datepicker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-12">
+                <div class="erp-form-row">
+                  <div class="erp-label-col">
+                    <span class="erp-label">END DATE:</span>
+                  </div>
+                  <div class="erp-control-col">
+                    <div class="erp-date-wrap">
+                      <input
+                        matInput
+                        [matDatepicker]="endPicker"
+                        formControlName="end_date"
+                        placeholder="DD-MM-YYYY"
+                        class="erp-control erp-input erp-date-input"
+                      />
+                      <mat-datepicker-toggle matSuffix [for]="endPicker" class="erp-date-toggle"></mat-datepicker-toggle>
+                      <mat-datepicker #endPicker></mat-datepicker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+                    <div *ngIf="activeTab === 'details' || activeTab === 'team'">
+                        <div class="erp-form-row mb-2">
+              <div class="erp-label-col label-top">
+                <span class="erp-label">TEAM MEMBERS:</span>
+              </div>
+              <div class="erp-control-col">
+                <div class="erp-team-select-box">
+                  <mat-select
+                    formControlName="members"
+                    multiple
+                    placeholder="Select team members to assign..."
+                    class="erp-mat-select"
+                  >
+                    <mat-option *ngFor="let emp of employees" [value]="emp.employee_id">
+                      {{ emp.displayText || ((emp.employee_code ? '[' + emp.employee_code + '] ' : '') + emp.name + (emp.designation ? ' (' + emp.designation + ')' : '')) }}
+                    </mat-option>
+                  </mat-select>
+                </div>
+                <div class="erp-quick-actions">
+                  <button type="button" class="erp-quick-btn" (click)="selectAllMembers()">SELECT ALL</button>
+                  <span class="erp-quick-sep">|</span>
+                  <button type="button" class="erp-quick-btn" (click)="clearAllMembers()">CLEAR ALL</button>
+                  <span class="erp-members-count" *ngIf="getSelectedMembers().length > 0">
+                    ({{ getSelectedMembers().length }} Members Selected)
+                  </span>
+                </div>
+
+                                <div class="erp-member-chips" *ngIf="getSelectedMembers().length > 0">
+                  <span class="erp-chip" *ngFor="let m of getSelectedMembers()">
+                    {{ m.displayText || ((m.employee_code ? '[' + m.employee_code + '] ' : '') + m.name + (m.designation ? ' (' + m.designation + ')' : '')) }}
+                    <button type="button" class="erp-chip-close" (click)="removeMember(m.employee_id)">&times;</button>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+                        <div class="erp-form-row mb-2">
+              <div class="erp-label-col label-top">
+                <span class="erp-label">REMARKS:</span>
+              </div>
+              <div class="erp-control-col">
+                <textarea
+                  formControlName="description"
+                  rows="3"
+                  class="erp-control erp-textarea"
+                  placeholder="Enter project description, scope of work, and milestones..."
+                ></textarea>
+              </div>
+            </div>
+
+                        <div class="erp-active-checkbox-row">
+              <label class="erp-checkbox-label">
+                <input
+                  type="checkbox"
+                  class="erp-checkbox"
+                  [checked]="projectForm.get('status')?.value === 'Active'"
+                  (change)="onStatusToggle($event)"
+                />
+                <span class="erp-label">IS ACTIVE?</span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+
+                <div class="erp-form-footer">
+          <button type="submit" class="erp-btn-save" [disabled]="submitting">
+            <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i>
+            {{ isEditMode ? 'Update' : 'Save' }}
+          </button>
+          <button type="button" class="erp-btn-cancel" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

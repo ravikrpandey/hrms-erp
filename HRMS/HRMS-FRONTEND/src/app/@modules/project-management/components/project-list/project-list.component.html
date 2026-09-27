@@ -1,0 +1,259 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Projects</h1>
+    <p>
+      Project Management
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>Projects</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" class="btn_add" (click)="goToCreate()">
+      <i class="fa fa-plus"></i> Add Project
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+
+    <div class="zoho-status-tabs">
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'All'"
+      (click)="setStatusFilter('All')"
+    >
+      All Projects <span class="chip-count">{{ allCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'Active'"
+      (click)="setStatusFilter('Active')"
+    >
+      Active / In Progress <span class="chip-count">{{ activeCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'Completed'"
+      (click)="setStatusFilter('Completed')"
+    >
+      Completed <span class="chip-count">{{ completedCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'On Hold'"
+      (click)="setStatusFilter('On Hold')"
+    >
+      On Hold <span class="chip-count">{{ onHoldCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip chip-overdue"
+      [class.active]="selectedStatus === 'Overdue'"
+      (click)="setStatusFilter('Overdue')"
+      *ngIf="overdueCount > 0"
+    >
+      <i class="fa fa-exclamation-circle mr-1"></i> Overdue <span class="chip-count">{{ overdueCount }}</span>
+    </button>
+  </div>
+
+    <div class="filter-toolbar">
+    <div class="toolbar-left">
+      <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name, client, code, manager..."
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+        />
+      </div>
+
+      <div class="dept-select-box" *ngIf="departments.length > 0">
+        <select class="form-select" [(ngModel)]="selectedDepartment" (change)="applyFilter()">
+          <option value="All">All Departments</option>
+          <option *ngFor="let dept of departments" [value]="dept">{{ dept }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <span class="page-size-label">Show</span>
+      <select class="form-select page-size-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+      <span class="page-size-label">entries</span>
+    </div>
+  </div>
+
+    <div class="table-container">
+    <table class="table project-table">
+      <thead>
+        <tr>
+          <th style="min-width: 220px;">Project Name & Code</th>
+          <th style="min-width: 140px;">Client</th>
+          <th style="min-width: 140px;">Department</th>
+          <th style="min-width: 160px;">Project Head</th>
+          <th style="min-width: 110px;">Billing</th>
+          <th style="min-width: 170px;">Timeline</th>
+          <th style="min-width: 120px;">Progress</th>
+          <th style="min-width: 100px;">Status</th>
+          <th style="min-width: 100px; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+                <tr *ngIf="loading">
+          <td colspan="9" class="text-center py-4 text-muted">
+            <i class="fa fa-spinner fa-spin fa-2x mb-2 d-block"></i>
+            Loading projects...
+          </td>
+        </tr>
+
+                <tr *ngIf="!loading && paginatedProjects.length === 0">
+          <td colspan="9" class="text-center py-5">
+            <div class="empty-state-box">
+              <i class="fa fa-folder-open-o empty-icon"></i>
+              <h5>No projects found</h5>
+              <p class="text-muted">Start by creating a new project or adjust your filters.</p>
+              <button class="btn_add mt-2" (click)="goToCreate()">
+                <i class="fa fa-plus"></i> Create Project
+              </button>
+            </div>
+          </td>
+        </tr>
+
+                <tr *ngFor="let p of paginatedProjects" (click)="goToDetail(p)" class="clickable-row">
+          <td>
+            <div class="project-info-cell">
+              <div class="project-avatar">
+                {{ getInitials(p.project_name) }}
+              </div>
+              <div class="project-title-block">
+                <a class="project-title-link" (click)="$event.stopPropagation(); goToDetail(p)">
+                  {{ p.project_name }}
+                </a>
+                <span class="project-code-tag">
+                  {{ p.project_code || ('PRJ-' + p.project_id) }}
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <span class="client-text">{{ p.client_name || '-' }}</span>
+          </td>
+
+          <td>
+            <span class="dept-badge">{{ p.department_name || 'General' }}</span>
+          </td>
+
+          <td>
+            <div class="manager-info" *ngIf="p.project_manager_name; else noManager">
+              <span class="manager-avatar">{{ getInitials(p.project_manager_name) }}</span>
+              <span class="manager-name">{{ p.project_manager_name }}</span>
+            </div>
+            <ng-template #noManager>
+              <span class="text-muted">-</span>
+            </ng-template>
+          </td>
+
+          <td>
+            <span class="billing-tag">{{ p.billing_method || 'Fixed Cost' }}</span>
+          </td>
+
+          <td>
+            <div class="timeline-wrapper">
+              <span class="timeline-date">
+                <i class="fa fa-calendar-o mr-1"></i>
+                {{ formatDate(p.start_date) }} - {{ formatDate(p.end_date) }}
+              </span>
+              <span *ngIf="p.is_overdue" class="badge-overdue">OVERDUE</span>
+            </div>
+          </td>
+
+          <td>
+            <div class="progress-bar-wrapper">
+              <div class="progress" style="height: 6px;">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [style.width.%]="p.progress"
+                  [ngClass]="{
+                    'bg-success': p.progress === 100,
+                    'bg-info': p.progress > 0 && p.progress < 100,
+                    'bg-secondary': p.progress === 0
+                  }"
+                  [attr.aria-valuenow]="p.progress"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <span class="progress-percentage">{{ p.progress || 0 }}%</span>
+            </div>
+          </td>
+
+          <td>
+            <span class="status-pill" [ngClass]="getStatusClass(p.status)">
+              <span class="status-dot"></span>
+              {{ p.status }}
+            </span>
+          </td>
+
+          <td class="text-center" (click)="$event.stopPropagation()">
+            <div class="action-buttons">
+              <button
+                class="btn-action btn-view"
+                title="View Details"
+                (click)="goToDetail(p)"
+              >
+                <i class="fa fa-eye"></i>
+              </button>
+              <button
+                class="btn-action btn-edit"
+                title="Edit Project"
+                (click)="goToEdit(p, $event)"
+              >
+                <i class="fa fa-edit"></i>
+              </button>
+              <button
+                class="btn-action btn-delete"
+                title="Delete Project"
+                (click)="deleteProject(p, $event)"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    <div class="pagination-footer" *ngIf="totalCount > 0">
+    <div class="pagination-info">
+      Showing {{ startItemIndex }} to {{ endItemIndex }} of {{ totalCount }} entries
+    </div>
+    <div class="pagination-buttons">
+      <button
+        class="btn-page"
+        [disabled]="currentPage === 1"
+        (click)="prevPage()"
+      >
+        <i class="fa fa-angle-left mr-1"></i> Previous
+      </button>
+      <span class="page-number-display">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-page"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Next <i class="fa fa-angle-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+</div>

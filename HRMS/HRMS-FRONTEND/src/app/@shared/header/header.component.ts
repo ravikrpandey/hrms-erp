@@ -282,6 +282,13 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
       });
     });
 
+    // Add Project Management and Tasks to global search
+    searchList.push(
+      { name: 'Project Management', type: 'Module', path: '/project-management/projects' },
+      { name: 'Projects', type: 'Menu', path: '/project-management/projects' },
+      { name: 'Tasks', type: 'Menu', path: '/project-management/tasks' }
+    );
+
     return searchList;
   }
 

@@ -1,0 +1,278 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Tasks</h1>
+    <p>
+      Project Management
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>Tasks</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" class="btn_add" (click)="openCreateTask()">
+      <i class="fa fa-plus"></i> Add Task
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+
+    <div class="zoho-status-tabs">
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'All'"
+      (click)="setStatusFilter('All')"
+    >
+      All Tasks <span class="chip-count">{{ allCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'To Do'"
+      (click)="setStatusFilter('To Do')"
+    >
+      To Do <span class="chip-count">{{ todoCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'In Progress'"
+      (click)="setStatusFilter('In Progress')"
+    >
+      In Progress <span class="chip-count">{{ inProgressCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'In Review'"
+      (click)="setStatusFilter('In Review')"
+    >
+      In Review <span class="chip-count">{{ inReviewCount }}</span>
+    </button>
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="selectedStatus === 'Completed'"
+      (click)="setStatusFilter('Completed')"
+    >
+      Completed <span class="chip-count">{{ completedCount }}</span>
+    </button>
+  </div>
+
+    <div class="filter-toolbar">
+    <div class="toolbar-left">
+      <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search task or assignee..."
+          [(ngModel)]="searchTerm"
+          (input)="applyFilter()"
+        />
+      </div>
+
+      <div class="dept-select-box">
+        <select class="form-select" [(ngModel)]="selectedProjectId" (change)="applyFilter()">
+          <option value="">All Projects</option>
+          <option *ngFor="let p of projects" [value]="p.project_id">{{ p.project_name }}</option>
+        </select>
+      </div>
+
+      <div class="dept-select-box">
+        <select class="form-select" [(ngModel)]="selectedPriority" (change)="applyFilter()">
+          <option value="All">All Priorities</option>
+          <option value="Urgent">Urgent</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <span class="page-size-label">Show</span>
+      <select class="form-select page-size-select" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+      <span class="page-size-label">entries</span>
+    </div>
+  </div>
+
+    <div class="table-container">
+    <table class="table project-table">
+      <thead>
+        <tr>
+          <th style="width: 40px;"></th>
+          <th style="min-width: 200px;">Task Name</th>
+          <th style="min-width: 150px;">Project</th>
+          <th style="min-width: 140px;">Assigned To</th>
+          <th style="min-width: 140px;">Reviewer</th>
+          <th style="min-width: 90px;">Priority</th>
+          <th style="min-width: 110px;">Due Date</th>
+          <th style="min-width: 100px;">Status</th>
+          <th style="min-width: 130px;">Review Status</th>
+          <th style="min-width: 110px; text-align: center;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+                <tr *ngIf="loading">
+          <td colspan="10" class="text-center py-4 text-muted">
+            <i class="fa fa-spinner fa-spin fa-2x mb-2 d-block"></i>
+            Loading tasks...
+          </td>
+        </tr>
+
+                <tr *ngIf="!loading && paginatedTasks.length === 0">
+          <td colspan="10" class="text-center py-5">
+            <div class="empty-state-box">
+              <i class="fa fa-check-square-o empty-icon"></i>
+              <h5>No tasks found</h5>
+              <p class="text-muted">Create a task to track work items and milestones.</p>
+              <button class="btn_add mt-2" (click)="openCreateTask()">
+                <i class="fa fa-plus"></i> Add Task
+              </button>
+            </div>
+          </td>
+        </tr>
+
+                <tr *ngFor="let t of paginatedTasks" class="task-row">
+                    <td>
+            <input
+              type="checkbox"
+              class="task-checkbox"
+              [checked]="t.status === 'Completed'"
+              [title]="t.status === 'Completed' ? 'Click to reopen task' : (t.review_status === 'Approved' ? 'Click to close task' : 'Requires reviewer approval before closing')"
+              (change)="toggleTaskStatus(t)"
+            />
+          </td>
+
+                    <td>
+            <div class="task-name-cell" [class.task-done]="t.status === 'Completed'">
+              <span class="task-title-text" (click)="openEditTask(t)">{{ t.task_name }}</span>
+              <small class="task-desc-text" *ngIf="t.description">{{ t.description }}</small>
+            </div>
+          </td>
+
+                    <td>
+            <a [routerLink]="['/master/project-management/projects', t.project_id]" class="project-link">
+              <i class="fa fa-folder-o mr-1"></i> {{ t.project_name || 'Project #' + t.project_id }}
+            </a>
+          </td>
+
+                    <td>
+            <div class="manager-info" *ngIf="t.assigned_to_name; else noAssignee">
+              <span class="manager-avatar">{{ getInitials(t.assigned_to_name) }}</span>
+              <span class="manager-name">{{ t.assigned_to_name }}</span>
+            </div>
+            <ng-template #noAssignee>
+              <span class="text-muted">Unassigned</span>
+            </ng-template>
+          </td>
+
+                    <td>
+            <div class="manager-info" *ngIf="t.reviewer_name; else noReviewer">
+              <span class="manager-avatar reviewer-avatar">{{ getInitials(t.reviewer_name) }}</span>
+              <span class="manager-name font-semibold">{{ t.reviewer_name }}</span>
+            </div>
+            <ng-template #noReviewer>
+              <span class="text-danger small"><i class="fa fa-warning"></i> Not assigned</span>
+            </ng-template>
+          </td>
+
+                    <td>
+            <span class="priority-pill" [ngClass]="getPriorityClass(t.priority)">
+              {{ t.priority || 'Medium' }}
+            </span>
+          </td>
+
+                    <td>
+            <span class="timeline-date">
+              <i class="fa fa-calendar-o mr-1"></i>
+              {{ formatDate(t.due_date) }}
+            </span>
+          </td>
+
+                    <td>
+            <span class="status-pill" [ngClass]="getStatusClass(t.status)">
+              <span class="status-dot"></span>
+              {{ t.status }}
+            </span>
+          </td>
+
+                    <td>
+            <span
+              class="review-status-pill clickable-pill"
+              [ngClass]="getReviewStatusClass(t.review_status)"
+              (click)="openReviewTask(t)"
+              title="Click to view review details or perform review"
+            >
+              <i class="fa" [ngClass]="getReviewStatusIcon(t.review_status)"></i>
+              {{ t.review_status || 'Pending' }}
+            </span>
+          </td>
+
+                    <td class="text-center">
+            <div class="action-buttons">
+              <button
+                class="btn-action btn-review"
+                title="Review & Approval"
+                (click)="openReviewTask(t)"
+                [class.has-review-alert]="t.review_status === 'Submitted'"
+              >
+                <i class="fa fa-shield"></i>
+              </button>
+              <button class="btn-action btn-edit" title="Edit Task" (click)="openEditTask(t)">
+                <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn-action btn-delete" title="Delete Task" (click)="deleteTask(t, $event)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+    <div class="pagination-footer" *ngIf="totalCount > 0">
+    <div class="pagination-info">
+      Showing {{ startItemIndex }} to {{ endItemIndex }} of {{ totalCount }} entries
+    </div>
+    <div class="pagination-buttons">
+      <button
+        class="btn-page"
+        [disabled]="currentPage === 1"
+        (click)="prevPage()"
+      >
+        <i class="fa fa-angle-left mr-1"></i> Previous
+      </button>
+      <span class="page-number-display">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-page"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Next <i class="fa fa-angle-right ml-1"></i>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<app-task-dialog
+  *ngIf="showTaskDialog"
+  [task]="editingTask"
+  [projects]="projects"
+  [employees]="employees"
+  (close)="closeTaskDialog()"
+  (saved)="onTaskSaved()"
+></app-task-dialog>
+
+<app-task-review-dialog
+  *ngIf="showReviewDialog"
+  [task]="taskToReview"
+  [currentUser]="currentUser"
+  (close)="closeReviewDialog()"
+  (reviewed)="onTaskReviewed($event)"
+></app-task-review-dialog>

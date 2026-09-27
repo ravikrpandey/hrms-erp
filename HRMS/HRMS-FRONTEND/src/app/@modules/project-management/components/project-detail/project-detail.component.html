@@ -1,0 +1,561 @@
+<div *ngIf="loading" class="text-center py-5">
+  <i class="fa fa-spinner fa-spin fa-2x text-muted mb-2 d-block"></i>
+  <span class="text-muted">Loading project details...</span>
+</div>
+
+<div *ngIf="!loading && project">
+    <div class="heading_top">
+    <div class="page-title">
+      <h1>{{ project.project_name }}</h1>
+      <p>
+        Project Management
+        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+        <span (click)="goBack()">Projects</span>
+        <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+        <span>{{ project.project_code || ('PRJ-' + project.project_id) }}</span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+      <button class="btn_add ml-2" (click)="goToEdit()">
+        <i class="fa fa-edit"></i> Edit Project
+      </button>
+    </div>
+  </div>
+
+  <div class="right_data_all">
+
+        <div class="project-banner-card">
+      <div class="banner-top-row">
+        <div class="banner-identity">
+          <div class="banner-avatar">
+            {{ getInitials(project.project_name) }}
+          </div>
+          <div>
+            <div class="identity-header">
+              <h2 class="project-title">{{ project.project_name }}</h2>
+              <span class="project-code-badge">{{ project.project_code || ('PRJ-' + project.project_id) }}</span>
+            </div>
+            <div class="identity-sub">
+              <span class="sub-item" *ngIf="project.client_name">
+                <i class="fa fa-building-o mr-1"></i> Client: <strong>{{ project.client_name }}</strong>
+              </span>
+              <span class="sub-separator" *ngIf="project.client_name">•</span>
+              <span class="sub-item">
+                <i class="fa fa-sitemap mr-1"></i> Dept: <strong>{{ project.department_name || 'General' }}</strong>
+              </span>
+              <span class="sub-separator">•</span>
+              <span class="sub-item">
+                <i class="fa fa-credit-card mr-1"></i> Billing: <strong>{{ project.billing_method || 'Fixed Cost' }}</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-badges">
+          <span class="status-pill" [ngClass]="getStatusClass(project.status)">
+            <span class="status-dot"></span>
+            {{ project.status }}
+          </span>
+          <span class="priority-pill" [ngClass]="getPriorityClass(project.priority)">
+            {{ project.priority || 'Medium' }} Priority
+          </span>
+        </div>
+      </div>
+
+            <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon icon-tasks">
+            <i class="fa fa-tasks"></i>
+          </div>
+          <div class="kpi-details">
+            <span class="kpi-value">{{ tasks.length }}</span>
+            <span class="kpi-label">Total Tasks</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-completed">
+            <i class="fa fa-check-circle"></i>
+          </div>
+          <div class="kpi-details">
+            <span class="kpi-value">{{ completedTaskCount }}</span>
+            <span class="kpi-label">Completed Tasks</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-members">
+            <i class="fa fa-users"></i>
+          </div>
+          <div class="kpi-details">
+            <span class="kpi-value">{{ members.length }}</span>
+            <span class="kpi-label">Team Members</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon icon-budget">
+            <i class="fa fa-inr"></i>
+          </div>
+          <div class="kpi-details">
+            <span class="kpi-value">{{ formatCurrency(project.budget) }}</span>
+            <span class="kpi-label">Allocated Budget</span>
+          </div>
+        </div>
+      </div>
+
+            <div class="banner-progress-row">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="progress-title">Project Progress</span>
+          <span class="progress-percentage-bold">{{ calculatedProgress }}% Completed</span>
+        </div>
+        <div class="progress" style="height: 8px;">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            [style.width.%]="calculatedProgress"
+            [ngClass]="{
+              'bg-success': calculatedProgress === 100,
+              'bg-info': calculatedProgress > 0 && calculatedProgress < 100,
+              'bg-secondary': calculatedProgress === 0
+            }"
+            [attr.aria-valuenow]="calculatedProgress"
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+        <div class="zoho-tabs-nav">
+      <button
+        class="tab-link"
+        [class.active]="activeTab === 'overview'"
+        (click)="setTab('overview')"
+      >
+        <i class="fa fa-th-large mr-1"></i> Overview
+      </button>
+      <button
+        class="tab-link"
+        [class.active]="activeTab === 'tasks'"
+        (click)="setTab('tasks')"
+      >
+        <i class="fa fa-check-square-o mr-1"></i> Tasks
+        <span class="tab-badge">{{ tasks.length }}</span>
+      </button>
+      <button
+        class="tab-link"
+        [class.active]="activeTab === 'members'"
+        (click)="setTab('members')"
+      >
+        <i class="fa fa-users mr-1"></i> Team Members
+        <span class="tab-badge">{{ members.length }}</span>
+      </button>
+    </div>
+
+        <div class="tab-pane" *ngIf="activeTab === 'overview'">
+      <div class="row">
+                <div class="col-xxl-8 col-lg-8 col-12 mb-3">
+          <div class="content-card">
+            <h4 class="card-sec-title">Project Details</h4>
+
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Project Name</span>
+                <span class="detail-val font-semibold">{{ project.project_name }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Project Code</span>
+                <span class="detail-val">{{ project.project_code || ('PRJ-' + project.project_id) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Client / Customer</span>
+                <span class="detail-val">{{ project.client_name || 'Internal' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Department</span>
+                <span class="detail-val">{{ project.department_name || 'General' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Project Head / Manager</span>
+                <span class="detail-val font-semibold text-primary">
+                  {{ project.project_manager_name || 'Not assigned' }}
+                  <span class="text-muted" *ngIf="project.project_manager_email">({{ project.project_manager_email }})</span>
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Billing Method</span>
+                <span class="detail-val">{{ project.billing_method || 'Fixed Cost' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Start Date</span>
+                <span class="detail-val">{{ formatDate(project.start_date) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Target End Date</span>
+                <span class="detail-val">
+                  {{ formatDate(project.end_date) }}
+                  <span *ngIf="project.is_overdue" class="badge-overdue ml-2">OVERDUE</span>
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Budget</span>
+                <span class="detail-val">{{ formatCurrency(project.budget) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Initial Progress</span>
+                <span class="detail-val">{{ project.initial_progress || 0 }}%</span>
+              </div>
+            </div>
+
+            <div class="description-block mt-4" *ngIf="project.description">
+              <span class="detail-label">Description & Scope</span>
+              <p class="description-text">{{ project.description }}</p>
+            </div>
+          </div>
+        </div>
+
+                <div class="col-xxl-4 col-lg-4 col-12 mb-3">
+                    <div class="content-card mb-3">
+            <h4 class="card-sec-title">Project Head</h4>
+            <div class="manager-card-body" *ngIf="project.project_manager_name; else noMgr">
+              <div class="manager-avatar-lg">
+                {{ getInitials(project.project_manager_name) }}
+              </div>
+              <div class="manager-text">
+                <h5 class="mgr-name">{{ project.project_manager_name }}</h5>
+                <p class="mgr-email" *ngIf="project.project_manager_email">{{ project.project_manager_email }}</p>
+                <span class="mgr-badge">Project Manager</span>
+              </div>
+            </div>
+            <ng-template #noMgr>
+              <p class="text-muted mb-0">No Project Manager assigned yet.</p>
+            </ng-template>
+          </div>
+
+                    <div class="content-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h4 class="card-sec-title mb-0">Team ({{ members.length }})</h4>
+              <button class="btn-xs btn_add" (click)="openAssignModal()">
+                <i class="fa fa-plus"></i> Assign
+              </button>
+            </div>
+
+            <div class="member-preview-list" *ngIf="members.length > 0; else noMems">
+              <div class="member-preview-item" *ngFor="let m of members.slice(0, 5)">
+                <div class="member-avatar-sm">{{ getInitials(m.employee_name) }}</div>
+                <div class="member-info-sm">
+                  <span class="m-name">{{ m.employee_name }}</span>
+                  <span class="m-role">{{ m.role_in_project || 'Member' }}</span>
+                </div>
+              </div>
+              <button
+                class="btn-view-all-members mt-2"
+                *ngIf="members.length > 5"
+                (click)="setTab('members')"
+              >
+                View all {{ members.length }} members &rarr;
+              </button>
+            </div>
+            <ng-template #noMems>
+              <div class="text-center py-3 text-muted">
+                <i class="fa fa-users fa-2x mb-1 d-block"></i>
+                <small>No team members assigned yet.</small>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <div class="tab-pane" *ngIf="activeTab === 'tasks'">
+      <div class="content-card">
+                <div class="tasks-action-bar">
+          <div class="task-filters-left">
+            <div class="search-box">
+              <i class="fa fa-search"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search tasks..."
+                [(ngModel)]="taskSearchTerm"
+                (input)="applyTaskFilter()"
+              />
+            </div>
+            <div class="status-filter-box">
+              <select class="form-select" [(ngModel)]="taskStatusFilter" (change)="applyTaskFilter()">
+                <option value="All">All Statuses</option>
+                <option value="To Do">To Do</option>
+                <option value="In Progress">In Progress</option>
+                <option value="In Review">In Review</option>
+                <option value="Completed">Completed</option>
+              </select>
+            </div>
+          </div>
+          <div class="task-actions-right">
+            <button class="btn_add" (click)="openAddTaskModal()">
+              <i class="fa fa-plus"></i> Add Task
+            </button>
+          </div>
+        </div>
+
+                <div class="table-container mt-3">
+          <table class="table project-table">
+            <thead>
+              <tr>
+                <th style="width: 40px;"></th>
+                <th style="min-width: 190px;">Task Name</th>
+                <th style="min-width: 140px;">Assigned To</th>
+                <th style="min-width: 140px;">Reviewer</th>
+                <th style="min-width: 90px;">Priority</th>
+                <th style="min-width: 110px;">Due Date</th>
+                <th style="min-width: 100px;">Status</th>
+                <th style="min-width: 120px;">Review Status</th>
+                <th style="min-width: 100px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="filteredTasks.length === 0">
+                <td colspan="9" class="text-center py-4 text-muted">
+                  <i class="fa fa-check-square-o fa-2x mb-2 d-block"></i>
+                  No tasks found. Click "Add Task" to create one.
+                </td>
+              </tr>
+
+              <tr *ngFor="let t of filteredTasks" class="task-table-row">
+                                <td>
+                  <input
+                    type="checkbox"
+                    class="task-checkbox"
+                    [checked]="t.status === 'Completed'"
+                    [title]="t.status === 'Completed' ? 'Click to reopen task' : (t.review_status === 'Approved' ? 'Click to close task' : 'Requires reviewer approval before closing')"
+                    (change)="toggleTaskStatus(t)"
+                  />
+                </td>
+
+                                <td>
+                  <div class="task-name-cell" [class.task-done]="t.status === 'Completed'">
+                    <span class="task-title-text" (click)="openEditTask(t)">{{ t.task_name }}</span>
+                    <small class="task-desc-text" *ngIf="t.description">{{ t.description }}</small>
+                  </div>
+                </td>
+
+                                <td>
+                  <div class="manager-info" *ngIf="t.assigned_to_name; else unassigned">
+                    <span class="manager-avatar">{{ getInitials(t.assigned_to_name) }}</span>
+                    <span class="manager-name">{{ t.assigned_to_name }}</span>
+                  </div>
+                  <ng-template #unassigned>
+                    <span class="text-muted">Unassigned</span>
+                  </ng-template>
+                </td>
+
+                                <td>
+                  <div class="manager-info" *ngIf="t.reviewer_name; else noReviewer">
+                    <span class="manager-avatar reviewer-avatar">{{ getInitials(t.reviewer_name) }}</span>
+                    <span class="manager-name font-semibold">{{ t.reviewer_name }}</span>
+                  </div>
+                  <ng-template #noReviewer>
+                    <span class="text-danger small"><i class="fa fa-warning"></i> Not set</span>
+                  </ng-template>
+                </td>
+
+                                <td>
+                  <span class="priority-pill" [ngClass]="getPriorityClass(t.priority)">
+                    {{ t.priority || 'Medium' }}
+                  </span>
+                </td>
+
+                                <td>
+                  <span class="timeline-date">
+                    <i class="fa fa-calendar-o mr-1"></i>
+                    {{ formatDate(t.due_date) }}
+                  </span>
+                </td>
+
+                                <td>
+                  <span class="status-pill" [ngClass]="getStatusClass(t.status)">
+                    <span class="status-dot"></span>
+                    {{ t.status }}
+                  </span>
+                </td>
+
+                                <td>
+                  <span
+                    class="review-status-pill clickable-pill"
+                    [ngClass]="getReviewStatusClass(t.review_status)"
+                    (click)="openReviewTask(t)"
+                    title="Click to view review details or perform review"
+                  >
+                    <i class="fa fa-shield mr-1"></i>
+                    {{ t.review_status || 'Pending' }}
+                  </span>
+                </td>
+
+                                <td class="text-center">
+                  <div class="action-buttons">
+                    <button
+                      class="btn-action btn-review"
+                      title="Review & Approval"
+                      (click)="openReviewTask(t)"
+                      [class.has-review-alert]="t.review_status === 'Submitted'"
+                    >
+                      <i class="fa fa-shield"></i>
+                    </button>
+                    <button class="btn-action btn-edit" title="Edit Task" (click)="openEditTask(t)">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn-action btn-delete" title="Delete Task" (click)="deleteTask(t, $event)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+        <div class="tab-pane" *ngIf="activeTab === 'members'">
+      <div class="content-card">
+                <div class="tasks-action-bar">
+          <div class="task-filters-left">
+            <div class="search-box">
+              <i class="fa fa-search"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search team members..."
+                [(ngModel)]="memberSearchTerm"
+                (input)="applyMemberSearch()"
+              />
+            </div>
+          </div>
+          <div class="task-actions-right">
+            <button class="btn_add" (click)="openAssignModal()">
+              <i class="fa fa-user-plus"></i> Assign Team Member
+            </button>
+          </div>
+        </div>
+
+                <div class="table-container mt-3">
+          <table class="table project-table">
+            <thead>
+              <tr>
+                <th style="min-width: 200px;">Member</th>
+                <th style="min-width: 150px;">Role in Project</th>
+                <th style="min-width: 150px;">Department</th>
+                <th style="min-width: 180px;">Email</th>
+                <th style="min-width: 80px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="filteredMembers.length === 0">
+                <td colspan="5" class="text-center py-4 text-muted">
+                  <i class="fa fa-users fa-2x mb-2 d-block"></i>
+                  No team members assigned yet.
+                </td>
+              </tr>
+
+              <tr *ngFor="let m of filteredMembers">
+                <td>
+                  <div class="project-info-cell">
+                    <div class="project-avatar" style="background: linear-gradient(135deg, #10b981, #059669);">
+                      {{ getInitials(m.employee_name) }}
+                    </div>
+                    <div class="project-title-block">
+                      <span class="project-title-link">{{ m.employee_name }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <td>
+                  <span class="role-badge">{{ m.role_in_project || 'Member' }}</span>
+                </td>
+
+                <td>
+                  <span class="dept-badge">{{ m.department_name || '-' }}</span>
+                </td>
+
+                <td>
+                  <span class="text-muted">{{ m.employee_email || '-' }}</span>
+                </td>
+
+                <td class="text-center">
+                  <button class="btn-action btn-delete" title="Remove Member" (click)="removeMember(m)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+    <div class="modal-backdrop-custom" *ngIf="showAssignModal" (click)="closeAssignModal()">
+    <div class="modal-dialog-box" (click)="$event.stopPropagation()">
+      <div class="modal-dialog-header">
+        <h4 class="modal-dialog-title">Assign Team Member</h4>
+        <button class="modal-close-btn" (click)="closeAssignModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body">
+        <div class="form-group mb-3">
+          <label class="modal-field-label">Select Employee <span class="text-danger">*</span></label>
+          <select class="form-select" [(ngModel)]="selectedEmployeeId">
+            <option [ngValue]="null" disabled selected>-- Select Employee --</option>
+            <option *ngFor="let e of allEmployees" [value]="e.employee_id">
+              {{ e.name }} <span *ngIf="e.department">({{ e.department }})</span>
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="modal-field-label">Role in Project</label>
+          <select class="form-select" [(ngModel)]="selectedMemberRole">
+            <option *ngFor="let r of memberRoles" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAssignModal()">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="assigningMember || !selectedEmployeeId"
+          (click)="assignMember()"
+        >
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="assigningMember"></i>
+          Assign Member
+        </button>
+      </div>
+    </div>
+  </div>
+
+    <app-task-dialog
+    *ngIf="showTaskModal"
+    [task]="taskToEdit"
+    [projectId]="projectId"
+    [projectName]="project.project_name"
+    [employees]="allEmployees"
+    (close)="closeTaskModal()"
+    (saved)="onTaskSaved()"
+  ></app-task-dialog>
+
+    <app-task-review-dialog
+    *ngIf="showReviewModal"
+    [task]="taskToReview"
+    [currentUser]="currentUser"
+    (close)="closeReviewModal()"
+    (reviewed)="onTaskReviewed($event)"
+  ></app-task-review-dialog>
+
+</div>

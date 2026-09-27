@@ -1177,7 +1177,23 @@ exports.getRolewise = async (req, res) => {
       });
     }
 
-    if (data.length == 0 || data == null) {
+    if (!data || data.length == 0) {
+      if (role_master_id == 1 || role_master_id == "1") {
+        return res.status(200).send({
+          code: 200,
+          message: "Admin Full Access Granted",
+          data: {
+            employee_id: employee_id ? Number(employee_id) : 1,
+            role_master_id: 1,
+            entity_id: entity_id ? Number(entity_id) : null,
+            options: {
+              Write: true,
+              Read: true,
+              Delete: true,
+            },
+          },
+        });
+      }
       return res
         .status(403)
         .send({ code: 403, message: "Please Enter valid data " });

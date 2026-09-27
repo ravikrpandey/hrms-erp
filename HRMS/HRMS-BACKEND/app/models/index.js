@@ -4312,7 +4312,10 @@ db.cost_center.belongsTo(db.entityMaster, { foreignKey: "entity_id", onDelete: "
 
 db.cost_center.hasMany(db.cost_center_map, { foreignKey: "cost_center_id", onDelete: 'RESTRICT' });
 db.cost_center_map.belongsTo(db.cost_center, { foreignKey: "cost_center_id" });
-////////////////////foreign key ends here
+// Project Management Models
+db.project = require("../master/project_management/model/project.model.js")(sequelize, Sequelize);
+db.projectMember = require("../master/project_management/model/project_member.model.js")(sequelize, Sequelize);
+db.task = require("../master/project_management/model/task.model.js")(sequelize, Sequelize);
 
 module.exports = db;
 

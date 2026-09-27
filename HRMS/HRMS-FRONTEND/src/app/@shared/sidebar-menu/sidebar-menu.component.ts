@@ -92,9 +92,27 @@ export class SidebarMenuComponent implements OnInit, OnDestroy, AfterViewInit {
             })
           })
         }
-        this.sidebarList = list;
+        this.sidebarList = this.normalizeMenuIcons(list);
       }
     )
+  }
+
+  normalizeMenuIcons(list: any[]): any[] {
+    if (!list || !Array.isArray(list)) return list;
+    return list.map((menu: any) => {
+      let icon = menu.menuIcon || menu.module_master_icon || '';
+      const name = (menu.menuName || menu.role_module_master_name || '').toLowerCase();
+      if (!icon || icon.trim() === '' || icon === 'fa fa-chevron-down') {
+        if (name.includes('ai') || name.includes('assistant')) {
+          icon = 'fas fa-robot';
+        }
+      }
+      if (icon.includes('fa-solid')) {
+        icon = icon.replace('fa-solid', 'fas');
+      }
+      menu.menuIcon = icon;
+      return menu;
+    });
   }
 
   checkSidebar() {
@@ -109,7 +127,7 @@ export class SidebarMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this.menuSubscription = this.leade.getSidebarData().subscribe(
       (res: any) => {
         if (res?.length) {
-          this.sidebarList = res;
+          this.sidebarList = this.normalizeMenuIcons(res);
         }
       }
     )

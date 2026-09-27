@@ -1,0 +1,151 @@
+<div class="modal-backdrop-custom" (click)="close.emit()">
+  <div class="modal-dialog-box" (click)="$event.stopPropagation()">
+        <div class="modal-dialog-header">
+      <div class="header-content">
+        <h4 class="modal-dialog-title">
+          <i class="fa fa-shield text-primary mr-2"></i> Task Review & Approval
+        </h4>
+        <span class="header-subtitle">Every task requires reviewer approval before closing</span>
+      </div>
+      <button class="modal-close-btn" (click)="close.emit()">&times;</button>
+    </div>
+
+        <div class="modal-dialog-body">
+            <div class="task-info-card">
+        <div class="task-title-row">
+          <span class="project-tag">
+            <i class="fa fa-folder-o mr-1"></i> {{ task?.project_name || 'Project #' + task?.project_id }}
+          </span>
+          <span class="review-status-badge" [ngClass]="'review-' + (task?.review_status || 'Pending').toLowerCase().replace(' ', '-')">
+            {{ task?.review_status || 'Pending' }}
+          </span>
+        </div>
+
+        <h5 class="task-heading">{{ task?.task_name }}</h5>
+        <p class="task-desc" *ngIf="task?.description">{{ task?.description }}</p>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Assignee</span>
+            <div class="person-info" *ngIf="task?.assigned_to_name; else unassigned">
+              <span class="avatar-sm">{{ getInitials(task?.assigned_to_name) }}</span>
+              <span class="person-name">{{ task?.assigned_to_name }}</span>
+            </div>
+            <ng-template #unassigned><span class="text-muted">Unassigned</span></ng-template>
+          </div>
+
+          <div class="meta-item">
+            <span class="meta-label">Reviewer</span>
+            <div class="person-info" *ngIf="task?.reviewer_name; else noReviewer">
+              <span class="avatar-sm avatar-reviewer">{{ getInitials(task?.reviewer_name) }}</span>
+              <span class="person-name font-semibold">{{ task?.reviewer_name }}</span>
+            </div>
+            <ng-template #noReviewer><span class="text-danger">Not Set</span></ng-template>
+          </div>
+
+          <div class="meta-item">
+            <span class="meta-label">Task Status</span>
+            <span class="font-semibold">{{ task?.status || 'To Do' }} ({{ task?.progress || 0 }}%)</span>
+          </div>
+
+          <div class="meta-item">
+            <span class="meta-label">Due Date</span>
+            <span>{{ formatDate(task?.due_date) }}</span>
+          </div>
+        </div>
+      </div>
+
+            <div class="feedback-card" *ngIf="task?.review_comments">
+        <div class="feedback-header">
+          <i class="fa fa-commenting-o mr-1"></i>
+          <span>Last Review Feedback</span>
+          <span class="feedback-date" *ngIf="task?.reviewed_at"> &bull; {{ formatDate(task?.reviewed_at) }}</span>
+        </div>
+        <p class="feedback-text">{{ task?.review_comments }}</p>
+      </div>
+
+            <div class="approval-rule-alert" *ngIf="task?.review_status !== 'Approved' && task?.status !== 'Completed'">
+        <i class="fa fa-info-circle alert-icon"></i>
+        <div class="alert-content">
+          <strong>Reviewer Approval Required</strong>
+          <p>
+            This task cannot be closed directly.
+            {{ isReviewer ? 'As the reviewer/admin, you can approve and close this task below or request changes.' : 'Submit your work for review so the designated reviewer can approve and close it.' }}
+          </p>
+        </div>
+      </div>
+
+            <div class="completed-notice-card" *ngIf="task?.status === 'Completed'">
+        <i class="fa fa-check-circle-o success-icon"></i>
+        <div>
+          <h6 class="mb-1 text-success font-semibold">Task Completed & Approved</h6>
+          <p class="mb-0 text-muted small">This task has already been reviewed, approved, and marked closed.</p>
+        </div>
+      </div>
+
+            <div class="comments-section" *ngIf="task?.status !== 'Completed'">
+        <label class="modal-field-label">
+          <span *ngIf="isReviewer">Reviewer Feedback / Comments</span>
+          <span *ngIf="!isReviewer">Submission Notes (Optional)</span>
+        </label>
+        <textarea
+          class="form-control feedback-input"
+          rows="3"
+          [(ngModel)]="comments"
+          [placeholder]="isReviewer ? 'Enter approval feedback or required revisions...' : 'Describe what was completed or link deliverables...'"
+        ></textarea>
+      </div>
+    </div>
+
+        <div class="modal-dialog-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close.emit()" [disabled]="submitting">
+        Cancel
+      </button>
+
+            <button
+        type="button"
+        class="btn btn-warning"
+        *ngIf="task?.status === 'Completed'"
+        (click)="reopenTask()"
+        [disabled]="submitting"
+      >
+        <i class="fa fa-undo mr-1"></i> Reopen Task
+      </button>
+
+            <button
+        type="button"
+        class="btn btn-primary"
+        *ngIf="task?.status !== 'Completed' && task?.review_status !== 'Submitted' && !isReviewer"
+        (click)="submitForReview()"
+        [disabled]="submitting"
+      >
+        <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i>
+        <i class="fa fa-paper-plane mr-1" *ngIf="!submitting"></i>
+        Submit for Review
+      </button>
+
+            <ng-container *ngIf="task?.status !== 'Completed' && isReviewer">
+                <button
+          type="button"
+          class="btn btn-outline-danger"
+          (click)="requestChanges()"
+          [disabled]="submitting"
+        >
+          <i class="fa fa-exclamation-triangle mr-1"></i> Request Changes
+        </button>
+
+                <button
+          type="button"
+          class="btn btn-success"
+          (click)="approveTask()"
+          [disabled]="submitting"
+        >
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i>
+          <i class="fa fa-check mr-1" *ngIf="!submitting"></i>
+          Approve & Close Task
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>
+

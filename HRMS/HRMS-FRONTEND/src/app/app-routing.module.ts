@@ -129,8 +129,16 @@ const routes: Routes = [
   {
     path: 'candidate-upload-document', component: CandidateUploadDocComponent
   },
-  
-
+  {
+    path: 'projects',
+    redirectTo: 'master/project-management/projects',
+    pathMatch: 'prefix'
+  },
+  {
+    path: 'tasks',
+    redirectTo: 'master/project-management/tasks',
+    pathMatch: 'prefix'
+  }
 ];
 
 @NgModule({

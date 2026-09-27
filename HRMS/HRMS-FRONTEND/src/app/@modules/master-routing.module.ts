@@ -154,6 +154,23 @@ const routes: Routes = [
         path: 'finance',
         loadChildren: () =>
           import('./finance/finance.module').then(m => m.FinanceModule)
+      },
+      {
+        path: 'project-management',
+        loadChildren: () =>
+          import('./project-management/project-management.module').then(
+            (m) => m.ProjectManagementModule
+          ),
+      },
+      {
+        path: 'projects',
+        redirectTo: 'project-management/projects',
+        pathMatch: 'full'
+      },
+      {
+        path: 'tasks',
+        redirectTo: 'project-management/tasks',
+        pathMatch: 'full'
       }
     ],
   },

@@ -201,12 +201,18 @@ export class AuthService {
     // if (this.allModules[i]?.role_module_master_id === id) {
     let subModules = this.allModules;
     for (let j = 0; j < subModules?.length; j++) {
+      let icon = subModules[j].module_master_icon || '';
+      if (!icon && (subModules[j].role_module_master_name || '').toLowerCase().includes('ai')) {
+        icon = 'fas fa-robot';
+      } else if (icon.includes('fa-solid')) {
+        icon = icon.replace('fa-solid', 'fas');
+      }
       let sub = {
         subSuperModule_Id: subModules[j].role_module_master_id,
         superModule: subModules[j].role_module_master_name,
         menuName: subModules[j].role_module_master_name,
         moduleType: `sub super module of ${subModules[j].role_module_master_name}`,
-        menuIcon: subModules[j].module_master_icon,
+        menuIcon: icon,
         menuLink: subModules[j].menu_master_link,
         superMenuLink: subModules[j].module_master_link,
         // superModule_Id: this.allModules[i].role_module_master_id,

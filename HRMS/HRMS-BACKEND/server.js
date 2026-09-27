@@ -408,6 +408,9 @@ require('./app/Tds/return/routes/return.routes.js')(app);
 
 require('./app/Tds/routes/appraisalDuration_routes.js')(app);
 
+// Project Management & Tasks
+require('./app/master/project_management/routes/project.routes.js')(app);
+
 const PORT = process.env.SERVER_PORT || 7000;
 app.listen(PORT, () => {
   console.log(` \u001b[1;32m Server is running on port ${PORT}.. \u001b[0m`);
