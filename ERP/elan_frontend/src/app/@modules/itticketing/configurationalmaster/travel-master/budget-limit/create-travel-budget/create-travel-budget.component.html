@@ -1,0 +1,245 @@
+<app-wrapper
+  [title]="'Configurational Master'"
+  [subTitle]="'Travel Master'"
+  [subheading]="'Add Travel Budget Limit'"
+  [showActions]="true"
+  [isBack]="true"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="travel-type-form">
+    <div class="form-group row">
+      <div class="col-4 px-2">
+        <mat-label>Travel Type</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="travel_type_id"
+            placeholder="Select Type"
+          >
+            <mat-option *ngFor="let item of travelData" [value]="item.id">{{
+              item.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-label>Grade</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="travel_grade_ids"
+            placeholder="Select Grade"
+            multiple
+          >
+            <mat-option *ngFor="let item of gradeData" [value]="item.id">{{
+              item.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2" *ngIf="form.get('travel_type_id')?.value">
+        <mat-label>Conveyance Type</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="travel_conveyance_ids"
+            placeholder="Select Conveyance"
+            multiple
+          >
+            <mat-option
+              *ngFor="let item of conveyanceData.children"
+              [value]="item.id"
+              >{{ item.name }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- Local Budget Limits Table -->
+      <div
+        *ngIf="
+          conveyanceData.name === 'Local' &&
+          form.value.localBudgetLimits?.length
+        "
+      >
+        <h4>Local Budget Limits</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Conveyance</th>
+              <th>Budget Limit</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="localBudgetLimits">
+            <tr
+              *ngFor="let limit of localBudgetLimits.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <td class="col-6 px-2">
+                {{ limit.get("conveyanceName")?.value }}
+              </td>
+              <td class="col-6 px-2">
+                <mat-form-field appearance="outline" class="col-6 px-2">
+                  <mat-label>Budget Limit</mat-label>
+                  <input
+                    matInput
+                    id="budgetLimit"
+                    type="tel"
+                    formControlName="budgetLimit"
+                    placeholder="Enter budget limit"
+                  />
+                  <mat-error
+                    *ngIf="
+                      form.get('budgetLimit')?.invalid &&
+                      form.get('budgetLimit')?.touched
+                    "
+                  >
+                    Budget Limit is required.
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Budget Limit</mat-label>
+          <input
+            matInput
+            id="budget_limit"
+            type="text"
+            formControlName="budget_limit"
+            placeholder="Enter budget limit"
+          />
+          <mat-error
+            *ngIf="
+              form.get('budget_limit')?.invalid &&
+              form.get('budget_limit')?.touched
+            "
+          >
+            Budget Limit is required.
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Remark</mat-label>
+          <input
+            matInput
+            id="remark"
+            type="text"
+            formControlName="remark"
+            placeholder="Enter remark"
+          />
+        </mat-form-field>
+      </div>
+      <div *ngIf="conveyanceData.name === 'Domestic'">
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Local Conveyance Max Limit</mat-label>
+          <input
+            matInput
+            id="local_max_limit"
+            type="text"
+            formControlName="local_max_limit"
+            placeholder="Enter Local Conveyance Max Limit"
+          />
+        </mat-form-field>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>City</th>
+              <th>Daily Allowance</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="domesticBudgetLimits">
+            <tr
+              *ngFor="let limit of domesticBudgetLimits.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <td class="col-3 px-2">
+                <app-mat-form-select-filter
+                  *ngIf="stateList.length > 0"
+                  formControlName="state_id"
+                  [key]="'states_id'"
+                  [items]="stateList"
+                  [displayKey]="'states_name'"
+                  placeholder="Select State"
+                >
+                </app-mat-form-select-filter>
+              </td>
+              <td class="col-3 px-2">
+                <app-mat-form-select-filter
+                  *ngIf="cityList.length > 0"
+                  formControlName="city_id"
+                  [key]="'city_id'"
+                  [items]="cityList"
+                  [displayKey]="'city_name'"
+                  placeholder="Select City"
+                >
+                </app-mat-form-select-filter>
+              </td>
+              <td class="col-3 px-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Budget Limit</mat-label>
+                  <input
+                    matInput
+                    id="budgetLimit"
+                    type="tel"
+                    formControlName="budgetLimit"
+                    placeholder="Enter budget limit"
+                  />
+                </mat-form-field>
+              </td>
+              <td class="col-3 px-2">
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="primary"
+                  (click)="addDomesticBudgetLimit()"
+                >
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="warn"
+                  [disabled]="i === 0"
+                  (click)="removeDomesticBudgetLimit(i)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Other Towns</mat-label>
+          <input
+            matInput
+            id="other_towns"
+            type="text"
+            formControlName="other_towns"
+            placeholder="Enter Other Towns"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>DA (Night Allowance)</mat-label>
+          <input
+            matInput
+            id="da"
+            type="text"
+            formControlName="daily_allowance"
+            placeholder="Enter DA (Night Allowance)"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div
+      class="form-actions mt-3 d-flex justify-content-end gap-2"
+      *ngIf="mode !== 'view'"
+    >
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        {{ mode === "edit" ? "Update" : "Save" }}
+      </button>
+    </div>
+  </form>
+</app-wrapper>

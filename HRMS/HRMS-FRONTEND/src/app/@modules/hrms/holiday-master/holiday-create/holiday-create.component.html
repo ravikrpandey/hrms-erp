@@ -1,0 +1,102 @@
+<div>
+  <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!holidayid?"Add Holiday":"Update Holiday"}}</h3>
+  <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px"> Holiday Record</h3>
+  <ng-container *ngIf="view">
+    <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+        <div class="emp_key">
+          <p>Entity Name :</p>
+          <p>Holiday Name :</p>
+          <p>Date :</p>
+          <p>Status :</p>
+        </div>
+        <div class="emp_value">
+          <p>{{holidayData?.entity_name}}</p>
+          <p>{{holidayData?.holiday_name}}</p>
+          <p> {{holidayData?.date}}</p>
+          <p> {{holidayData?.status}}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub">
+      <button mat-dialog-close >Close</button>
+  </mat-dialog-actions>
+  </ng-container>
+
+  <fieldset *ngIf="!view">
+    <div class="m-3" [formGroup]="holidayForm">
+      <div class="row">
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+          <mat-label>Select Resign </mat-label>
+        </div> -->
+
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4">
+          <div class="form-group row">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Entity</mat-label>
+              <mat-select formControlName="Select_Entity" placeholder="Select Entity">
+                <app-search-filter [array]="entityList" [placeholder]="'Search by entity name'"
+                      [searchFields]="['entity_name']" (filteredReturn)="filterEntitylist = $event.data">
+                    </app-search-filter>
+                <mat-option *ngFor="let entity of filterEntitylist" [value]="entity.entity_id">
+                  {{entity.entity_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="holidayForm.controls['Select_Entity'].hasError('required')">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+          <div class="form-group row">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>Holiday</mat-label>
+              <input matInput type="text" formControlName="Holiday_name" />
+              <mat-error *ngIf="holidayForm.controls['Holiday_name'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="holidayForm.controls['Holiday_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+          <div class="form-group row">
+            <mat-form-field appearance="outline">
+              <mat-label> Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="Date_name" readonly>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="holidayForm.controls['Date_name'].hasError('required')">
+                * Required!
+              </mat-error>
+              <mat-error *ngIf="holidayForm.controls['Date_name'].hasError('leadingSpaces')">
+                * No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    
+    <div class="common_button_sub">
+      <mat-dialog-actions *ngIf="!view" >
+        <button align="end" *ngIf="!holidayid"  (click)="onSubmitForm()" >
+          Submit
+        </button>
+        <button *ngIf="holidayid"  (click)="onUpdateForm()" class="mx-2">
+          Update
+        </button>
+        <button class="cancel_button_y" mat-dialog-close>
+          Close
+        </button>
+      </mat-dialog-actions>
+  </div>
+  </fieldset>
+</div>

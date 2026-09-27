@@ -1,0 +1,49 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+    <h1>Recruitment</h1>
+    <p>Recruitment Module <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span routerLink="../"> Fixed Interview List </span></p>
+  </div>
+    <div class="add_button a_at_bg">
+      <button routerLink="../interviewlist-create" *ngIf="assignAction?.Write">Fixed Interview</button>
+    </div>
+  </div>
+
+
+
+  <div class="right_white_bg">
+    <div class="page_heading">
+      <h3>Fixed Interview List</h3>
+    </div>
+    <div class="right_data_bg_white">
+
+
+
+      <div class="employ_sube py-2">
+        <div class="set_total_user">
+          <div class="example-header">
+            <p class="total_posting">Total Fixed Interviews &nbsp;<span class="text" style="padding:5px 15px;">{{rowData.length>0?rowData.length:2}}</span></p>
+          </div>
+        </div>
+    
+      
+    
+        <div>
+          <input class="form-control" placeholder="Search" type="text" id="filter-text-box" (input)="onFilterTextBoxChanged()" />
+        </div>
+    
+      </div>
+
+      <div class="ag_grid ag_grid_cus">
+      <ag-grid-angular class="ag-theme-alpine" style=" width:100%; height:400px;" [rowData]="rowData"
+        [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10 (gridReady)="onGridReady($event)"
+        (cellClicked)='onCellClicked($event)'>
+      </ag-grid-angular>
+  </div>
+</div>
+</div>
+
+
+</div>

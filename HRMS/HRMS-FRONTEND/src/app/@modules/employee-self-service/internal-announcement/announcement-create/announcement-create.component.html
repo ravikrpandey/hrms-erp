@@ -1,0 +1,122 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>ESS</h1>
+        <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span>Announcement List </span></p>
+    </div>
+    <div class="add_button">
+        <button routerLink="../announcement-list" type="button">List</button>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+    <form class="form_set" [formGroup]="announcementForm">
+
+        <div class="employ_sube py-1">
+           
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="btn_add mt-3">
+                        <!-- <button type="button" class="btn_add" routerLink="../announcement-create">None Selected</button> -->
+                        <!-- <button routerLink="../announcement-create" mat-raised-button color="primary" [matMenuTriggerFor]="menu">
+                        <span>None Selected <mat-icon>arrow_drop_down</mat-icon></span></button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>Item 1</button>
+                        <button mat-menu-item>Item 2</button>
+                    </mat-menu> -->
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label style="color: black;">Department</mat-label>
+                                <mat-select formControlName="department">
+                                    <mat-option *ngFor="let department of getAllDepartment"
+                                        [value]="department.department_name"
+                                        (click)="departmentSelect(department.department_name)">{{
+                                        department.department_name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <section>
+            <div>
+                <div class="row form_head">
+                    <h3>Send Mail</h3>
+                </div>
+
+                <div class="form_basic">
+
+                    <div class="form_set">
+                        <div class="form-group">
+                            <mat-form-field>
+                                <mat-label>To</mat-label>
+                                <input type="email" matInput formControlName="to_email" required>
+                                <mat-error *ngIf="announcementForm.controls['to_email'].hasError('required')">
+                                    E-mail is Required!
+                                </mat-error>
+
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field>
+                                <mat-label>CC</mat-label>
+                                <input type="email" matInput formControlName="cc_email">
+
+                            </mat-form-field>
+                        </div>
+                        <div class="form-group">
+                            <mat-form-field>
+                                <mat-label>BCC</mat-label>
+                                <input type="email" matInput formControlName="bcc_email">
+
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group">
+                            <mat-form-field>
+                                <mat-label>Subject</mat-label>
+                                <input type="text" matInput formControlName="subject">
+                                <mat-error *ngIf="announcementForm.controls['subject'].hasError('required')">
+                                    Subject is Required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="form-group attach_file">
+                            <ckeditor #editer id="ckediter" formControlName="text"></ckeditor>
+                        </div>
+
+
+                    </div>
+                    <div class="" align="end">
+                        <div class="file_name" style="padding: 4px 0 0 0;">
+                            <span style="font-size: 15px;
+                            font-weight: 500;
+                            color: #4a4545;" *ngIf="filename">Attached File Name:</span><span style="font-size: 13px;
+                            color: #5c5858;padding-right:25px;">{{filename}}</span>
+
+                            <input type="file" class="file-input" (change)="onFileSelected($event)" #file>
+                            <div class="allButton">
+                            <button mat-mini-fab color="primary" class="upload-btn" (click)="file.click()"
+                                matTooltip="File Attach">
+                                <mat-icon>attach_file</mat-icon>
+                            </button>
+                            <div class="common_button_sub">
+                                <button (click)="announcmentSubmit()">send</button>
+                                <button class="mx-3 colr_btnn" 
+                                    (click)="announcmentDraft()">{{announceId?'Update
+                                    Draft':'Save as Draft'}}</button>
+                                <button class="cancel_button_y" (click)="cancel()">Cancel</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </form>

@@ -1,0 +1,235 @@
+<app-wrapper [title]="'Warehouse Management'" [subTitle]="'Stock'" [subheading]="'Stock Warehouse Allocation'"
+    [showActions]="true" [isBack]="true">
+    <section class="right_data_all pt-4">
+        <div class="heading_neo">
+            <h3>GRN Details</h3>
+        </div>
+        <form [formGroup]="form">
+            <div class="form_sePo">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="inp_disable mb-3">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>PO Number</mat-label>
+                                <input type="text" matInput formControlName="po_number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group inp_disable mb-3">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>PO Date</mat-label>
+                                <input
+                                    matInput
+                                    [value]="form.value.po_date | date:'dd-MM-yyyy'"
+                                    readonly
+                                />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="inp_disable mb-3">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>GRN Number</mat-label>
+                                <input type="text" matInput formControlName="grn_number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3" [ngClass]="status == 'partial-list' ? 'inp_disable' : ''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Inward Date</mat-label>
+                                <input
+                                    matInput
+                                    [value]="form.value.grn_date | date:'dd-MM-yyyy'"
+                                    readonly
+                                />
+                                <!-- <input matInput [matDatepicker]="pickerGRN" format="DD-MM-YY" formControlName="grn_date"
+                                    readonly />
+                                <mat-datepicker-toggle matSuffix [for]="pickerGRN"
+                                    *ngIf="status !== 'partial-list'"></mat-datepicker-toggle>
+                                <mat-datepicker #pickerGRN></mat-datepicker> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="inp_disable">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Vendor Name</mat-label>
+                                <input type="text" matInput formControlName="vendor_name" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="mb-3" [ngClass]="status == 'partial-list' ? '' : ''">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Invoice Number</mat-label>
+                                <input type="text" matInput formControlName="invoice_no" readonly />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-1">
+                        <div class="form-group mb-3" [ngClass]="status == 'partial-list' ? 'inp_disable' : ''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Invoice Date</mat-label>
+                                <input
+                                    matInput
+                                    [value]="form.value.invoice_date | date:'dd-MM-yyyy'"
+                                    readonly
+                                />
+                                <!-- <input matInput [matDatepicker]="picker" format="DD-MM-YY"
+                                    formControlName="invoice_date" readonly />
+                                <mat-datepicker-toggle matSuffix [for]="picker"
+                                    *ngIf="status !== 'partial-list'"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group inp_disable">
+                            <mat-form-field appearance="outline">
+                                <mat-label>PO Type</mat-label>
+                                <input type="text" matInput formControlName="po_type" />
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group inp_disable">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Warehouse Name</mat-label>
+                                <input matInput formControlName="warehouse_name" placeholder="Enter Warehouse" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 " >
+        <div class="form-group inp_disable" >
+          <mat-form-field appearance="outline"  >
+            <mat-label>Advance Payment</mat-label>
+            <input type="text" matInput formControlName="advance_payment" />
+          </mat-form-field>
+        </div>
+      </div> -->
+                <div class="mt-2">
+                    <p class="ItemClass">Items Details</p>
+                </div>
+                <div class="px-2 mb-5 form_basic table-responsive">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <table class="table" style="width: 100%">
+                            <thead style="text-align: center">
+                                <tr style="text-align: center">
+                                    <th scope="col">S. No.</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Item Name</th>
+                                    <!-- <th scope="col">Managed By</th> -->
+                                    <th scope="col">Item Code</th>
+                                    <th scope="col">PO Quantities</th>
+                                    <!-- <th scope="col">Total Amount</th> -->
+                                    <th scope="col">Accept Quantities</th>
+                                    <th scope="col" style="white-space: nowrap">Add Sub Location</th>
+                                </tr>
+                            </thead>
+                            <tbody formArrayName="grnItem" style="text-align: center">
+                                <tr class="text-center" *ngFor="let grnItem of GrnDataItem.controls; let i = index"
+                                    [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input readonly type="text" matInput formControlName="item_cat" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 13vw">
+                                                <input readonly type="text" matInput formControlName="item_name" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <!-- <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input readonly type="text" matInput formControlName="manage_by" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td> -->
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input readonly type="text" matInput formControlName="item_code" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input readonly type="number" min="0" matInput
+                                                    formControlName="po_qty" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <!-- <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input readonly type="number" min="0" matInput
+                                                    formControlName="amount" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td> -->
+                                    <td>
+                                        <div class="form-group" [ngClass]="
+                      grnItem.get('remaining_qty')?.value == 0
+                        ? 'disableClass'
+                        : ''
+                    ">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input type="number" min="0" matInput #box2 readonly
+                                                    formControlName="rcvd_qty" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button mat-icon-button color="primary" (click)="openWarehouseStore(grnItem)">
+                                            <mat-icon>open_in_new</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3" style="position: relative">
+                        <div class="form-group mb-4">
+                            <input class="form-control" type="file" style="
+                padding-right: 10px;
+                height: 42px;
+                font-size: 14px;
+                padding-top: 10px;
+                border: 1px solid #9e9e9e;
+              " title="Upload Document" (change)="onChange($event)" aria-describedby="inputGroupFileAddon04"
+                                formControlName="image" />
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        style="position: relative; margin-top: 20px">
+                        <div class="form-group mb-4">
+                            <a href="assets/sample-files/serialNumberExcelSampleFormat.xlsx" download
+                                style="color: #000">
+                                <i class="fas fa-download"></i> Download Sample
+                            </a>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </form>
+    </section>
+</app-wrapper>

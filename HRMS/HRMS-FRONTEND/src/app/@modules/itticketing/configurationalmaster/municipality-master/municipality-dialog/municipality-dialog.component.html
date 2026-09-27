@@ -1,0 +1,118 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!departmentId?"Add Municipality":"Update Municipality"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">Municipality Records </h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key"> 
+                    <p>Municipality Name : </p>
+                    <p>Municipality Amount : </p>
+                    <p>Start Year: </p>
+                    <p>End Year: </p>
+                    <!-- <p>Status :</p> -->
+                </div>
+                <div class="emp_value">
+                    <p>{{departmentData?.name_of_municipality}}</p>
+                    <p> {{departmentData?.amount}}</p>
+                    <p> {{departmentData?.start_date}}</p>
+                    <p> {{departmentData?.end_date}}</p>
+                    <!-- <p> {{areaData?.status}}</p> -->
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+    
+    <fieldset *ngIf="!view">
+        <div class="m-3" [formGroup]="departmentForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+                    <mat-label>Municipality Name</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Municipality Name</mat-label>
+                            <input matInput type="text" formControlName="department_name" />
+                            <mat-error *ngIf="departmentForm.controls['department_name'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="departmentForm.controls['department_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+                    <mat-label>Amount</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Amount</mat-label>
+                            <input matInput type="number" min="0" formControlName="amount" />
+                            <mat-error *ngIf="departmentForm.controls['amount'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="departmentForm.controls['amount'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+                    <mat-label>Start Year</mat-label>
+                  </div>
+                  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Start Year</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="startYear" readonly />
+                        <mat-datepicker-toggle matSuffix [for]="picker"*ngIf="!view"></mat-datepicker-toggle>
+                        <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" panelClass="example-year-picker" ></mat-datepicker>
+                        <mat-error *ngIf="departmentForm.controls['startYear'].hasError('required')">
+                          *Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+                    <mat-label>End Year</mat-label>
+                  </div>
+                  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                      <mat-form-field appearance="outline">
+                        <mat-label>End Year</mat-label>
+                        <input matInput [matDatepicker]="pickerh" formControlName="endYear" readonly />
+                        <mat-datepicker-toggle matSuffix [for]="pickerh"*ngIf="!view"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerh startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)" panelClass="example-year-picker" ></mat-datepicker>
+                        <mat-error *ngIf="departmentForm.controls['endYear'].hasError('required')">
+                          *Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                
+            </div>
+            
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!departmentId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="departmentId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

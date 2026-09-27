@@ -1,0 +1,33 @@
+<h3 class="popHead">Upload Asset List <span mat-dialog-close class="cencelBtn">×</span></h3>
+
+<mat-dialog-content class="mat-typography">
+    <div style="margin-top: 15px;">
+      <div class="main_model">
+        <p class="import-text">Upload your Asset list as a CSV or XLSX file. To ensure proper synchronization with the system, make sure the file is correctly formatted. Also, ensure you have downloaded the provided XLSX and CSV files.</p>
+        <form [formGroup]="assetForm" class="mt-2">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-12">
+              <div class="d-flex">
+                <div class="text-center" class="import-button" style="width: 100%; float: left; position: relative;">
+                  <input 
+                      type="file" 
+                      (change)="acceptFile($event)" 
+                      formControlName="file" 
+                      accept=".xlsx, .csv"
+                      autocomplete="off"
+                      tabindex="-1"
+                      [ngClass]="{'markRed': (!filePath && selectedFileExc !== null || assetForm.get('file')?.hasError('notAllowed'))}">
+                    <span *ngIf="assetForm.get('file')?.hasError('notAllowed')" class="err-msg">Please select a valid file (XLSX or CSV).</span>
+                </div>
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="assignBtn common_button_sub" >
+    <button [disabled]="showLoader" (click)="Upload()" > <mat-spinner *ngIf="showLoader" style="width: 50px; height:21px;"></mat-spinner><span *ngIf="!showLoader">Upload</span></button>
+    <button  mat-dialog-close class="cancel_button_y" >Close</button>
+</mat-dialog-actions>

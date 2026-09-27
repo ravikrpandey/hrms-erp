@@ -1,0 +1,13 @@
+<div class="tab-container">
+  <ul class="tabs">
+    <li class="tab" [class.active]="activeTab === 'dashboard'" (click)="setTab('dashboard')">Dashboard</li>
+    <li class="tab" [class.active]="activeTab === 'session'" (click)="setTab('session')">Session Management</li>
+    <li class="tab" [class.active]="activeTab === 'attendance'" (click)="setTab('attendance')">Participants</li>
+  </ul>
+</div>
+
+<div class="page-content">
+  <app-dashboard *ngIf="activeTab === 'dashboard'"></app-dashboard>
+  <app-session-managment *ngIf="activeTab === 'session'"></app-session-managment>
+  <app-attendence *ngIf="activeTab === 'attendance'"></app-attendence>
+</div>

@@ -1,0 +1,78 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Vendor <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Vendor Details </span></p>
+  </div>
+  <!-- <div class="add_button">
+    <button routerLink="../" type="button">List</button>
+    <button class="backBtn" routerLink="../" *ngIf="(title !='BASIC-DETAILS')"><i class="fa fa-arrow-circle-left"></i>
+      Back</button>
+  </div> -->
+</div>
+
+<div fxflex="100%">
+  <div class="row">
+    <div class="tab_menu">
+      <div class="profileArea">
+        <div class="profileText">
+          <div class="iconText">
+            <img
+              [src]="loginUserDetails?.employee_photo ? (baseUrl + '/' + loginUserDetails?.employee_photo) : imagePath"
+              alt="Profile Photo" matTooltip="Profile Photo" class="profileImg" />
+          </div>
+          <div class="paraText">
+            <p>{{loginUserDetails?.vendor_name }}</p>
+            <p>{{loginUserDetails?.vendor_email}}</p>
+            <!-- <p>Status : <span>Active </span></p> -->
+          </div>
+        </div>
+
+      </div>
+      <div class="tab-item">
+        <div class="mainTabs">
+          <button class="main-button"  [routerLink]="['basic-details']"
+            routerLinkActive="active_button" (click)="goToBasicDetails('BASIC-DETAILS')">
+            <i class="fas fa-address-card"></i>
+          </button>
+          <p>Basic Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [routerLink]="['bank-details']"
+            routerLinkActive="active_button" (click)="goToBankDetails('BANK DETAILS')">
+            <i class="far fa-file-alt"></i>
+          </button>
+          <p>Bank Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button"  [routerLink]="['document-details']"
+            routerLinkActive="active_button" (click)="goTodocumentDetails('DOCUMENT')">
+            <i class="far fa-money-bill-alt"></i>
+          </button>
+          <p>Document</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button"  [routerLink]="['account-details']"
+            routerLinkActive="active_button" (click)="goToPaymentDetails('ACCOUNT PAYABLE DETAILS')">
+            <i class="far fa-credit-card"></i></button>
+          <p>Account Payable Details</p>
+        </div>
+        <!-- <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['document-details']"
+            routerLinkActive="active_button" (click)="goToDocumentDetails('DOCUMENT DETAILS')">
+            <i class="fas fa-id-card-alt"></i>
+          </button>
+          <p>Document Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['contract-details']"
+            routerLinkActive="active_button" (click)="goToContractDetails('CONTRACT DETAILS')">
+            <i class="fas fa-id-card-alt"></i>
+          </button>
+          <p>Contract Details</p>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

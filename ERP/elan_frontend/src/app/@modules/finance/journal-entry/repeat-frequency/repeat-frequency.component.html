@@ -1,0 +1,66 @@
+<div class="addmodelCRM">
+  <h3 class="popHead">Auto Repeat</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <form class="" [formGroup]="repeatFrequency" (ngSubmit)="saveDetails(repeatFrequency)">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="mb-3">
+              <mat-label>Frequency</mat-label>
+              <mat-select formControlName="frequency_type" disableOptionCentering
+                class="cdk-overlay-pane deepdrop" (selectionChange)="onFrequencyChange($event)">
+                <mat-option *ngFor="let data of getFrequencyList" [value]="data?.type">
+                  {{data?.value}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="
+                repeatFrequency.controls['frequency_type'].hasError('required')">
+                    This field is required!
+                </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline" readonly>
+                  <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="dp5" (click)="dp5.open()" formControlName="start_date" [max]="maxDate" [min]="minDate"/>
+                <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                <mat-datepicker #dp5></mat-datepicker>
+                <mat-error *ngIf="
+                repeatFrequency.controls['start_date'].hasError('required')">
+                    This field is required!
+                </mat-error>
+                </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" [hidden]="hideEndDate">
+              <div class="form-group mb-3">
+                  <mat-form-field appearance="outline" readonly>
+                      <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="dp6" (click)="dp6.open()" formControlName="end_date"
+                        [min]="minEndDate" />
+                    <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                    <mat-datepicker #dp6></mat-datepicker>
+                    <mat-error *ngIf="
+                    repeatFrequency.controls['end_date'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                    </mat-form-field>
+              </div>
+            </div>
+          <div class="col-md-12 common_button_sub" align="end">
+            <mat-dialog-actions>
+              <button  [class.spinner]="loading"
+              [disabled]="loading">
+              {{candidate_id?'Update':'Submit'}}
+            </button>
+              <button  mat-dialog-close class="cancel_button_y">Close</button>
+            </mat-dialog-actions>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+</div>

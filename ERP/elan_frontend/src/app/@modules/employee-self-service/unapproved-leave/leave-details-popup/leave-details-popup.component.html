@@ -1,0 +1,55 @@
+<h3 class="popHead">Applied Leave Details</h3>
+
+<mat-dialog-content class="mat-typography">
+    <div class="cotain">
+        <div class="emp_key">
+            <p>Employee Name:</p>
+            <p>Leave Type:</p>
+            <p>Total Days:</p>
+            <p>Start Date:</p>
+            <p>End Date:</p>
+            <p>Total Leave Days:</p>
+            <p>Reason:</p>
+            <p>Document:</p>
+            <p>Status:</p>
+            <p>Action:</p>
+            <p class="ac" *ngIf="isReject">Reason:</p>
+        </div>
+
+        <div class="emp_value">
+            <p>{{leaveDetails.applier_name}}</p>
+            <p>{{leaveDetails.leave_type}}</p>
+
+            <p>{{leaveDetails.total_days}} ( for {{leaveDetails.leave_type}} )</p>
+            <P>{{leaveDetails.fromDate | date: 'dd-MM-yyyy'}}</P>
+            <p>{{leaveDetails.toDate | date: 'dd-MM-yyyy'}}</p>
+            <p>{{leaveDetails.count}}</p>
+            <p>{{leaveDetails.reason}}</p>
+            <p><a [href]="leaveDetails.leave_doc" target="_blank"> See leave Doc</a></p>
+            <p [style]="fondColor()">{{leaveDetails.leave_apply_status}}</p>
+
+
+            <mat-form-field appearance="outline">
+                <mat-label>Action</mat-label>
+                <mat-select (selectionChange)="action($event)">
+                    <mat-option value="APPROVED">APPROVED</mat-option>
+                    <mat-option value="REJECTED">REJECTED</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="isReject">
+                <mat-form-field appearance="outline">
+                    <mat-label>Reason of reject</mat-label>
+                    <input matInput type="text" [formControl]="rejectReason">
+                </mat-form-field>
+            </ng-container>
+        </div>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub">
+    <button (click)="submit(leaveDetails.leave_apply_id,rejectReason)">
+        Submit
+      </button>
+    <button mat-dialog-close class="cancel_button_y">Close</button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>

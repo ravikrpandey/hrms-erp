@@ -1,0 +1,223 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Document Management System</h1>
+        <p> Document Management <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+            </i><span>Document Management List</span></p>
+    </div>
+    <div class="add_button">
+        <button type="button" (click)="openDialog()">
+            <span class="upload-icon-circle">
+                <i class="fa fa-upload"></i>
+            </span>
+            <span>Upload Documents</span>
+        </button>
+    </div>
+</div>
+
+<!-- document-dashboard.component.html -->
+<div class="doc-dashboard">
+    <!-- Top summary cards -->
+    <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="summary-cards">
+                <mat-card class="summary-card" *ngFor="let s of summary" (click)="filterBySummary(s.title)"
+                    [class.active]="selectedSummaryTitle === s.title">
+                    <div class="summary-top">
+                        <mat-icon class="summary-icon">{{ s.icon }}</mat-icon>
+                        <div class="summary-count">{{ s.count }}</div>
+                    </div>
+                    <div class="summary-title">{{ s.title }}</div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and filters -->
+<div class="search-bar">
+    <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Search documents by name, type, or metadata..." [formControl]="searchControl" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+        <mat-select [formControl]="categoryControl">
+            <mat-option *ngFor="let c of categories" [value]="c">{{ c }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+        <mat-select [formControl]="statusControl">
+            <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<!-- Count header -->
+<div class="docs-count">
+    <h3>{{ filteredDocuments.length }} Documents</h3>
+</div>
+
+<!-- Documents grid -->
+<div class="row">
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="docs-grid">
+            <mat-card class="doc-card" *ngFor="let doc of filteredDocuments">
+                <div class="doc-card-top">
+                    <div class="doc-left">
+                        <mat-icon class="file-icon" aria-hidden="false" aria-label="File icon">{{ doc.fileIcon ||
+                            'insert_drive_file' }}</mat-icon>
+                    </div>
+                    <div class="doc-main">
+                        <div class="doc-title">{{ doc.title }}</div>
+                        <div class="doc-sub">
+                            <div class="file-type">{{ doc.fileType }}</div>
+                            <div class="sub-row">
+                                <mat-icon>calendar_today</mat-icon>
+                                <span>Uploaded {{ doc.uploadedDate }}</span>
+                            </div>
+
+                            <div class="sub-row">
+                                <mat-icon>person</mat-icon>
+                                <span>Uploaded By {{ doc.uploaded_by }}</span>
+                            </div>
+
+                            <!-- Count header with dynamic filter dropdown -->
+                            <div class="docs-count-inline" (click)="onSummaryClick()">
+                                <h3>
+                                    Documents
+                                    <span *ngIf="selectedSummaryTitle" style="color:#3f51b5"> — {{ selectedSummaryTitle
+                                        }}</span>
+                                </h3>
+                            </div>
+
+                            <!-- Employee / Designation display after click -->
+                            <div class="docs-count-inline" *ngIf="showDetails">
+                                <!-- For Employee Docs and Training -->
+                                <ng-container
+                                    *ngIf="selectedSummaryTitle === 'Employee Docs' || selectedSummaryTitle === 'Training'">
+                                    <div class="detail-row" *ngFor="let emp of employeeList"
+                                        (click)="filterByEmployee(emp)">
+                                        <mat-icon class="detail-icon">badge</mat-icon>
+                                        <span class="detail-text">
+                                            {{ emp.first_name }} {{ emp.middle_name || '' }} {{ emp.last_name }}
+                                        </span>
+                                        <mat-icon class="expand-icon">
+                                            {{ selectedEmployee?.employee_id === emp.employee_id ? 'expand_more' :
+                                            'chevron_right' }}
+                                        </mat-icon>
+                                    </div>
+
+                                    <!-- Display documents for selected employee -->
+                                    <div class="employee-documents-list"
+                                        *ngIf="selectedEmployee && employeeDocuments.length > 0">
+                                        <div class="document-list-item" *ngFor="let doc of employeeDocuments">
+                                            <mat-icon class="doc-icon">{{ doc.fileIcon || 'insert_drive_file'
+                                                }}</mat-icon>
+                                            <div class="doc-info">
+                                                <span class="doc-name">{{ doc.title }}</span>
+                                                <span class="doc-meta">{{ doc.fileType }} • {{ doc.size }}</span>
+                                            </div>
+                                            <div class="doc-actions">
+                                                <button mat-icon-button (click)="onView(doc); $event.stopPropagation();"
+                                                    matTooltip="View">
+                                                    <mat-icon>visibility</mat-icon>
+                                                </button>
+                                                <button mat-icon-button
+                                                    (click)="onDownload(doc); $event.stopPropagation();"
+                                                    matTooltip="Download">
+                                                    <mat-icon>cloud_download</mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-row" *ngIf="employeeList?.length === 0">
+                                        <mat-icon class="detail-icon">badge</mat-icon>
+                                        <span class="detail-text">No Employee Found</span>
+                                    </div>
+                                </ng-container>
+
+                                <!-- For Policies and Compliance -->
+                                <ng-container
+                                    *ngIf="selectedSummaryTitle === 'Policies' || selectedSummaryTitle === 'Compliance'">
+                                    <!-- Show only one role_master_name per document -->
+                                    <div class="detail-row" *ngIf="allRoleMaster.length > 0"
+                                        (click)="filterByDesignation(allRoleMaster[0])">
+                                        <mat-icon class="detail-icon">work</mat-icon>
+                                        <span class="detail-text">
+                                            {{ allRoleMaster[0]?.role_master_name }}
+                                        </span>
+                                        <mat-icon class="expand-icon">
+                                            {{ selectedDesignation?.role_master_id === allRoleMaster[0]?.role_master_id
+                                            ? 'expand_more' : 'chevron_right' }}
+                                        </mat-icon>
+                                    </div>
+
+
+                                    <!-- Display documents for selected designation -->
+                                    <div class="designation-documents-list"
+                                        *ngIf="selectedDesignation && designationDocuments.length > 0">
+                                        <div class="document-list-item" *ngFor="let doc of designationDocuments">
+                                            <mat-icon class="doc-icon">{{ doc.fileIcon || 'insert_drive_file'
+                                                }}</mat-icon>
+                                            <div class="doc-info">
+                                                <span class="doc-name">{{ doc.title }}</span>
+                                                <span class="doc-meta">{{ doc.fileType }} • {{ doc.size }}</span>
+                                            </div>
+                                            <div class="doc-actions">
+                                                <button mat-icon-button (click)="onView(doc); $event.stopPropagation();"
+                                                    matTooltip="View">
+                                                    <mat-icon>visibility</mat-icon>
+                                                </button>
+                                                <button mat-icon-button
+                                                    (click)="onDownload(doc); $event.stopPropagation();"
+                                                    matTooltip="Download">
+                                                    <mat-icon>cloud_download</mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="detail-row" *ngIf="allRoleMaster?.length === 0">
+                                        <mat-icon class="detail-icon">work</mat-icon>
+                                        <span class="detail-text">No Designation Found</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+
+                            <div class="sub-row" *ngIf="doc.expires">
+                                <mat-icon>warning</mat-icon>
+                                <span>Expires {{ doc.expires }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <mat-divider></mat-divider>
+
+                <div class="doc-card-bottom">
+                    <div class="tags">
+                        <div class="tags-row">
+                            <mat-chip-listbox>
+                                <mat-chip-option *ngFor="let t of doc.tags" selected>{{ t }}</mat-chip-option>
+                            </mat-chip-listbox>
+                            <div class="size">{{ doc.size }}</div>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button mat-stroked-button class="view-btn" (click)="onView(doc)">
+                            <mat-icon>visibility</mat-icon>
+                            View
+                        </button>
+                        <button mat-flat-button color="primary" class="download-btn" (click)="onDownload(doc)">
+                            <mat-icon>cloud_download</mat-icon>
+                            Download
+                        </button>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

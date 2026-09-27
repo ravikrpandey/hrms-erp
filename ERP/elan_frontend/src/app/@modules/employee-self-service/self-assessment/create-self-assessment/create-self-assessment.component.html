@@ -1,0 +1,475 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Employee Self Service</h1>
+  <p>Self Assessment<i class="fa fa-angle-right" aria-hidden="true">
+  </i><span>{{paramsType == 'view' ? '  View':'  Add'}} Self Assessment</span></p>
+</div>
+<div class="add_button">
+  <button class="backBtn" routerLink="../"><i class="fa fa-arrow-left"></i> Back</button>
+</div>
+</div>
+<div class="right_data_all">
+<div class="p-0 mt-3">
+  <form [formGroup]="employeeDetail">
+    <div class="row">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>Employee Name</mat-label>
+          <mat-form-field appearance="outline">
+            <input class="highlighted"  matInput type="text"  [readonly]="isDisabled" formControlName="emp_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Employee Code</mat-label>
+          <mat-form-field class="emp_codes"  appearance="outline">
+            <input
+            [readonly]="isDisabled"
+            class="highlighted"
+              matInput
+              type="text"
+              formControlName="emp_number"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>Department</mat-label>
+          <mat-form-field appearance="outline">
+            <input class="highlighted"  [readonly]="isDisabled" matInput type="text" formControlName="department_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>Area </mat-label>
+          <mat-form-field appearance="outline">
+            <input class="highlighted"  [readonly]="isDisabled" matInput type="text" formControlName="area_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>Reporting Manager</mat-label>
+          <mat-form-field  appearance="outline">
+            <input
+            class="highlighted"
+              matInput
+              [readonly]="isDisabled"
+              type="text"
+              formControlName="hierarchical_superio"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>Start Date</mat-label>
+          <mat-form-field  appearance="outline">
+            <input
+            class="highlighted"
+              matInput
+              [readonly]="isDisabled"
+              type="text"
+              formControlName="start_date"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-3">
+          <mat-label>End Date</mat-label>
+          <mat-form-field  appearance="outline">
+            <input
+            class="highlighted"
+              matInput
+              [readonly]="isDisabled"
+              type="text"
+              formControlName="end_date"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div class="cardBoxes">
+  <div class="row">
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Bad</h3>
+        <p class="card-text">The Employee demonstrates a level of proficiency in the role much lower than what is required.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Does Not Satisfy</h3>
+        <p class="card-text">The Employee demonstrates a level of proficiency in the role that is lower than what is required.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Satisfies</h3>
+        <p class="card-text">The Employee demonstrates a level of proficiency in the role in line with what is required.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Good</h3>
+        <p class="card-text">The Employee demonstrates a level of proficiency in the role higher than what is required.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Great</h3>
+        <p class="card-text">The Employee demonstrates a level of proficiency in the role much higher than what is required.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2 col-lg-2 col-sm-2">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title">Not Applicable</h3>
+        <p class="card-text">The specific Objective or Competence is not applicable to the Employee within the scope of the Assessment Process.</p>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+  <hr>
+  <div class="form_basic p-0 mt-3">
+  <form [formGroup]="technicalAssement">
+    <div class="heading_neo">
+      <h3>Technical Assessment</h3>
+    </div>
+    <div class="form_sePo">
+    <div formArrayName="technicalItems">
+          <mat-card>
+            <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+              <thead>
+                <tr>
+                  <th>Objective</th>
+                  <th>Activity</th>
+                  <th>KPI</th>
+                  <th>Self Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let data of kpa_assessment; let i = index"
+                  [formGroupName]="i"
+                >
+                  <td>{{ mode != "innitiate" ? data.kpa_objective_name : data.objective_name }}</td>
+                  <td>{{  mode != "innitiate" ? data.kpa_activity : data.activity }}</td>
+                  <td [innerHTML]="mode != 'innitiate' ? data.kpa_kpi_data : data.kpi_data"></td>
+                  <!-- <td (click)="view(data.kpi_data)">{{ data.kpi_data }}</td> -->
+                  <td>
+                    <select
+                      style="border: 1px solid #A9A9A9;
+                      font-size: 14px;
+                      padding: 7px 10px;"
+                      class="form-select"
+                      formControlName="self_rating_id"
+                      aria-label="Default select example"
+                    >
+                      <option selected disabled>Self Rating</option>
+                      <option
+                        *ngFor="let data of selfAssessmentRating"
+                        [value]="data.id"
+                      >
+                        {{ data.self_rating }}
+                        <span >({{data.self_rating_value}})</span>
+                      </option>
+                    </select>
+                    <mat-error
+                      *ngIf="this.technicalItems.controls[i].get('self_rating_id')?.touched && this.technicalItems.controls[i].get('self_rating_id')?.errors?.['required']"
+                    >
+                      * Required!
+                    </mat-error>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </mat-card>
+    </div>
+    </div>
+  </form>
+</div>
+<div class="form_basic p-0">
+  <form [formGroup]="behaviorAssessment">
+    <div class="heading_neo">
+      <h3>Behavioral Values Assessment</h3>
+    </div>
+    <div class="form_sePo">
+    <div formArrayName="behaviorItems">
+          <mat-card>
+            <div class="table-responsive">
+            <table class="table table-bordered mb-0">
+              <thead>
+                <tr>
+                  <th>Competence</th>
+                  <th>Self Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let row of Competence; let i = index"
+                  [formGroupName]="i"
+                >
+                  <td>
+                    <input
+                    style="border: 1px solid #A9A9A9;
+                    font-size: 14px;
+                    padding: 7px 10px;"
+                      type="text"
+                      placeholder="{{ row }}"
+                      class="form-control"
+                      [value]="row"
+                      formControlName="Competence"
+                      readonly
+                    />
+                  </td>
+                  <td>
+                    <select
+                    style="border: 1px solid #A9A9A9;
+                    font-size: 14px;
+                    padding: 7px 10px;"
+                      class="form-select"
+                      formControlName="self_rating_id"
+                      aria-label="Default select example"
+                    >
+                      <option selected disabled>Self Rating</option>
+                      <option
+                        *ngFor="let data of selfAssessmentRating"
+                        [value]="data.id"
+                      >
+                        {{ data.self_rating }}
+                        <span >({{data.self_rating_value}})</span>
+                      </option>
+                    </select>
+                    <mat-error
+                    *ngIf="this.behaviorItems.controls[i].get('self_rating_id')?.touched && this.behaviorItems.controls[i].get('self_rating_id')?.errors?.['required']"
+                  >
+                    * Required!
+                  </mat-error>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </mat-card>
+        </div>
+        </div>
+  </form>
+</div>
+<div class="form_basic p-0">
+  <form [formGroup]="skillDevelopmentForm">
+    <div class="heading_neo">
+      <h3>Skill Development Plan</h3>
+    </div>
+    <div class="form_sePo">
+        <div formArrayName="items">
+            <mat-card>
+              <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th class="col-development">Need For Development</th>
+                    <th class="col-action-plan">Action Plan</th>
+                    <th class="col-initiate-date">Initiate Date</th>
+                    <th class="col-end-date">End Date</th>
+                    <th class="col-action">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="let row of items?.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <td class="col-development">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            type="text"
+                            formControlName="development"
+                            placeholder="Development"
+                            [readonly] = "isDisabledSkill"
+                          />
+                          <mat-error *ngIf="items.controls[i].get('development')?.touched && items.controls[i].get('development')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="col-action-plan">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            type="text"
+                            formControlName="action_plan"
+                            placeholder="Action Plan"
+                            [readonly] = "isDisabledSkill"
+                          />
+                          <mat-error *ngIf="items.controls[i].get('action_plan')?.touched && items.controls[i].get('action_plan')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="col-initiate-date">
+                      <div *ngIf="!isDisabledSkill" class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            [matDatepicker]="sdpstartDatePicker"
+                            placeholder="Start Date"
+                            name="sdpStartDate"
+                            formControlName="initiate_date"
+                            (dateChange)="onStartDateChange($event,i)"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="sdpstartDatePicker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #sdpstartDatePicker></mat-datepicker>
+                          <mat-error *ngIf="items.controls[i].get('initiate_date')?.touched && items.controls[i].get('initiate_date')?.hasError('required')">
+                            * Required!
+                          </mat-error>                      
+                        </mat-form-field>
+                      </div>
+                      <div *ngIf="isDisabledSkill" class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            type="text"
+                            [value]="ini_date[i]"
+                            placeholder="Start Date"
+                            [readonly] = "isDisabledSkill"
+                          />
+                          <mat-error *ngIf="items.controls[i].get('action_plan')?.touched && items.controls[i].get('action_plan')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="col-end-date">
+                      <div *ngIf="!isDisabledSkill" class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            [matDatepicker]="sdpEndDatePicker"
+                            placeholder="End Date"
+                            name="sdpEndDate"
+                            formControlName="end_date"
+                            [min]="minEndDate2[i]"
+                            (dateChange)="onEndDateChange($event,i)"
+                          />
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="sdpEndDatePicker"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #sdpEndDatePicker></mat-datepicker>  
+                          <mat-error *ngIf="items.controls[i].get('end_date')?.touched && items.controls[i].get('end_date')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div *ngIf="isDisabledSkill" class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            type="text"
+                            [value]="end_date[i]"
+                            placeholder="End Date"
+                            [readonly] = "isDisabledSkill"
+                          />
+                          <mat-error *ngIf="items.controls[i].get('action_plan')?.touched && items.controls[i].get('action_plan')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                        </div>
+                    </td>
+                      <td class="col-action">
+                      <div class="form-group" style="display: flex; align-items: center;" [hidden]="mode == 'view'">
+                        <div class="upload-container uploadClass pointer">
+                          <label for="file-upload{{i}}" class="upload-label" matTooltip="Upload .png,.jpeg,.jpg,.pdf,.xlsx" style="margin-bottom: 0;">
+                            <div class="edd-del" style="margin-right: 7px;">
+                              <mat-icon class="uploadButton" id="upload_logo">upload</mat-icon>
+                            </div>
+                            
+                          </label>
+                            <input
+                            class="form-control" id="file-upload{{i}}"
+                            style="display: none;"
+                            type="file"
+                            title="Upload Image"
+                            (change)="uploadDoc(i,$event)"
+                            accept="image/png, image/jpeg"/>
+                        </div>
+                        <!-- <label *ngIf="errorMessages[i]?.length > 2">{{errorMessages[i]}}</label> -->
+                        <div class="edd-del">
+                          <div class="edd-del" (click)="addRow()">
+                            <mat-icon matTooltip="Add Item" class="addButton" >add_circle</mat-icon>
+                          </div>
+                          <div class="edd-del">
+                            <ng-container *ngIf="i+1!==1">
+                            <mat-icon matTooltip="delete Item"
+                              (click)="romoveRow(i)" class="deleteButton">delete</mat-icon>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                      <div *ngIf="getFileName(i) && ( getFileExtension(i)=='.jpg' || getFileExtension(i)=='.jpeg' || getFileExtension(i)=='.png')" (click)="download2(baseUrl + getFileName(i),i)">
+                        <img  style="height: 50px; width: 50px; display: inline-block;"
+                          [src]="baseUrl + getFileName(i)"
+                          alt=""
+                          class="fileViewImage"
+                        />
+                      </div>
+                      <div class="pointer edd-del" *ngIf="getFileName(i) && ( getFileExtension(i)=='.pdf' || getFileExtension(i)=='.xlsx')">
+                        <ng-container>
+                          <mat-icon class="downloadButton" matTooltip="Download File"
+                          (click)="download(baseUrl + getFileName(i),i)">download</mat-icon>
+                        </ng-container>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            </mat-card>
+    </div>
+    <div class="row">
+    <div class="col-12"> 
+      <div class="form-group mt-3">
+        <mat-label>Remark</mat-label>
+        <textarea style="border: 1px solid #A9A9A9" class="form-control" formControlName="remark"></textarea>
+      </div>
+    </div>
+    </div>
+    </div>
+  </form>
+  </div>
+ 
+  <div class="common_button_sub mb-3" align="end">
+    <button (click)="onSubmit()"  [hidden]="paramsType == 'view'"> Save </button>
+    <button *ngIf="mode=='edit'" (click)="onUpdate()">
+       Update
+    </button>
+  </div>
+  </div>

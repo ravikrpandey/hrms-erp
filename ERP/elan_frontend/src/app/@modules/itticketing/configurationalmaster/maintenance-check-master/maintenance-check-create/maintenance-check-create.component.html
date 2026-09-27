@@ -1,0 +1,95 @@
+<section class="section">
+  <div class="row">
+      <div class="employee_top my-1">
+          Master
+          <span class="employee_2" *ngIf="!viewDetails"><i class="fa fa-angle-right" aria-hidden="true"
+                  style="color: #858586"></i>
+              {{id?'Update Maintenance Check':'Add Maintenance Check'}} </span>
+          <span class="employee_2" *ngIf="viewDetails=='view'"><i class="fa fa-angle-right" aria-hidden="true"
+                  style="color: #858586"></i>
+              View Quality </span>
+      </div>
+  </div>
+  <!-- <mat-card> -->
+
+  <fieldset [disabled]="viewDetails=='view'">
+      <form [formGroup]="AddNewForm">
+          <div>
+              <div class="row mt-4 mx-3">
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                          <mat-form-field appearance="outline" class="mt-1">
+                              <mat-label>Select Work Station Name</mat-label>
+                              <mat-select formControlName="workstation_id">
+                                  <mat-option *ngFor="let data of getAllWorkStationData"
+                                      [value]="data.id">{{data.name_of_workstation}}</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="AddNewForm.get('workstation_id')?.hasError('required')">
+                                  This field is required!
+                              </mat-error>
+                          </mat-form-field>
+                      </div>
+                  </div>
+
+              </div>
+
+
+              <div class="row mt-3 mx-1 mb-3">
+                  <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th scope="col">S.NO</th>
+                              <th scope="col">Maintenance Type</th>
+                              <th scope="col">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody formArrayName="maintenance_type">
+                          <tr *ngFor="let roleFieled of itemsFormArray.maintenance_type['controls']; let i = index"
+                              [formGroupName]="i">
+                              <td class="inpBox">
+                                  {{i+1}}
+                              </td>
+
+                              <td class="inpBox">
+                                  <div class="form-group text-center">
+                                      <mat-form-field appearance="outline" >
+                                          <mat-label>Maintenance </mat-label>
+                                          <input type="text" matInput formControlName="maintenance" />
+                                          <mat-error
+                                              *ngIf="roleFieled.controls['maintenance'].hasError('required')">
+                                              Value is Required.
+                                          </mat-error>
+                                          <mat-error
+                                              *ngIf="roleFieled.controls['maintenance'].hasError('leadingSpaces')">
+                                              *No leading spaces!
+                                          </mat-error>
+                                      </mat-form-field>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="edit_del" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                      <mat-icon matTooltip="Add Quality" (click)="addItem()">add_circle</mat-icon>
+                                      <ng-container *ngIf="i+1!==1">
+                                          <mat-icon matTooltip="Delete Quality"
+                                              (click)="removeItem(i)">delete_circle</mat-icon>
+                                      </ng-container>
+                                  </div>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+      </form>
+  </fieldset>
+  <div class="submit_btn" *ngIf="viewDetails!=='view'">
+      <button mat-raised-button color="primary" (click)="ngSubmit();">
+          {{id?'Update':'Submit'}}
+      </button>
+      <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+  </div>
+
+
+  <!-- </mat-card> -->
+</section>

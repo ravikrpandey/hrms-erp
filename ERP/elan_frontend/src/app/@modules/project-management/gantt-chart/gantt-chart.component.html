@@ -1,0 +1,52 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+            <span>Gantt Chart</span>
+        </p>
+    </div>
+</div>
+<!-- <div class="right_data_all"> -->
+    <div>
+        <mat-card>
+            <div class="row form_head">
+                <h3>Gantt Chart</h3>
+            </div>
+            <form class="form_set" [formGroup]="filterForm">
+                <div class="row justify-content-center" style="margin-top: 15px;">
+                  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group text-center">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Select Project</mat-label>
+                        <mat-select formControlName="project_id">
+                          <mat-option *ngFor="let project of projects" [value]="project.id">
+                            {{ project.project_name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="filterForm.controls['project_id']?.hasError('required')">
+                          This field is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="common_button_sub" *ngIf="filterForm.controls['project_id'].value">
+                    <button (click)="exportToExcel()">Excel Export</button>
+                  </div>
+                </div>
+              </form>
+              
+              <div *ngIf="!filterForm.controls['project_id'].value" class="no-project-message text-center">
+                <p class="alert-message">Please select a project to view the Gantt Chart.</p>
+            </div>
+
+            <div *ngIf="filterForm.controls['project_id'].value" class="gantt-chart-container">
+                <google-chart 
+                    #chart 
+                    [data]="ganttChartData" 
+                    (chartReady)="onChartReady($event)">
+                </google-chart>
+                
+            </div>
+        </mat-card>
+    </div>
+<!-- </div> -->

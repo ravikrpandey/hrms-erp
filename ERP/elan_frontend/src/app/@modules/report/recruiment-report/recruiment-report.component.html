@@ -1,0 +1,68 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Report</h1>
+      <p>Recruitment Report <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span>Recruitment Report List </span></p>
+    </div>
+
+  </div>
+<br>
+
+<div class="right_data_all">
+  <div class="d-flex flex-wrap align-items-center">
+    <!-- Status Dropdown -->
+    <div class="me-3" style="margin-bottom: -25px;">
+      <mat-label>Status</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-select (selectionChange)="statuschange($event)">
+          <mat-option *ngFor="let s of status" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+
+    <!-- Start Date -->
+    <div class="me-3">
+      <label for="start-date" class="form-label">Start Date</label>
+      <input
+        type="date"
+        id="start-date"
+        class="form-control"
+        name="start-date"
+        aria-label="Start Date"
+        [(ngModel)]="startDate"
+      />
+    </div>
+
+    <!-- End Date -->
+    <div>
+      <label for="end-date" class="form-label">End Date</label>
+      <input
+        type="date"
+        id="end-date"
+        class="form-control"
+        name="end-date"
+        aria-label="End Date"
+        [(ngModel)]="endDate"
+      />
+    </div>
+
+  </div>
+  <div>
+    <div class="add_button">
+      <button class="backBtn" (click)="Excel()"> Download</button>
+    </div>
+  </div>
+</div>
+
+
+    <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+        [rowData]="rowDataJob" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+        (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+      </ag-grid-angular>
+    </div>
+
+

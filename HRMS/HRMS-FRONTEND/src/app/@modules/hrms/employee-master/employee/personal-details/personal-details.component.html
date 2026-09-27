@@ -1,0 +1,987 @@
+<section class="form_basic">
+  <div class="right_data_all">
+    <form [formGroup]="personalForm" class="pDetails">
+      <div class="ac_ty buttonColor">
+
+
+
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="true" aria-controls="collapseOne">
+                Present Address Details
+              </button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="acor_data_y">
+                  <div class="main_form mb-0">
+
+                    <div class="row">
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Country<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline" readonly>
+                            <mat-select formControlName="present_country_id"
+                              (selectionChange)="presentCountryChange($event)">
+                              <!-- <mat-select-filter [array]="variables"
+                                (filteredReturn)="countryFilter($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="checkData" [placeholder]="'Search by country name'"
+                                [searchFields]="['countryss_name']" (filteredReturn)="countryList = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let country of countryList"
+                                [value]="country?.countryss_id">{{country?.countryss_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="personalForm.controls['present_country_id'].hasError('required')">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>State<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="present_state_id"
+                              (selectionChange)="onStateSelected($event.value)">
+                              <!-- <mat-select-filter [array]="presentSteteData"
+                                (keyup)="stateFilter($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="stateVar2" [placeholder]="'Search by state name'"
+                                [searchFields]="['states_name']" (filteredReturn)="presentSteteData = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let state of presentSteteData" [value]="state?.states_id">
+                                {{ state?.states_name }}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="personalForm.controls['present_state_id'].hasError('required')">
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>City<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline" readonly>
+                            <mat-select formControlName="present_city_id">
+                              <!-- <mat-select-filter [array]="cityVar"
+                                (filteredReturn)="cityFilter($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="cityVar2" [placeholder]="'Search by city name'"
+                                [searchFields]="['city_name']" (filteredReturn)="presentCityList = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let city of presentCityList"
+                                [value]="city?.city_id">{{city?.city_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="personalForm.controls['present_city_id'].hasError('required')">This is
+                              field
+                              is required</mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Address <span class="alertspan">*</span></mat-label>
+                          <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d;" rows="3"
+                            maxlength="200" formControlName="present_address"
+                            [ngModel]="personalForm.controls['present_address'].value | titlecase">
+                            </textarea>
+
+                          <!-- Validation Error Messages -->
+                          <mat-error *ngIf="personalForm.controls['present_address'].hasError('required')">
+                            This field is Required!
+                          </mat-error>
+                          <mat-error *ngIf="personalForm.controls['present_address'].hasError('leadingSpaces')">
+                            No leading spaces!
+                          </mat-error>
+
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row">
+                      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group check_set1">
+                          <!-- <mat-checkbox color="primary" [checked]="address_check_value"
+                            (change)="showPermanent($event)">
+                            <span>Permanent Address Same as Present Address </span></mat-checkbox> -->
+                          <mat-checkbox color="primary" [checked]="address_check_value" (change)="showPermanent($event)"
+                            [ngClass]="{'disable-arrow': !address_check_value}">
+                            <span>Permanent Address Same as Present Address </span>
+                          </mat-checkbox>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- open permanent address details  -->
+                    <div class="row mt-4">
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Country<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="permanent_country_id"
+                              (selectionChange)="permanentCountryChange($event)" [disabled]="readonlyp">
+                              <!-- <mat-select-filter [array]="variables"
+                                (filteredReturn)="countryFilter2($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="checkData" [placeholder]="'Search by country name'"
+                                [searchFields]="['countryss_name']" (filteredReturn)="countryListSec = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let country of countryListSec"
+                                [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                        personalForm.controls['permanent_country_id'].hasError('required')
+                      ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>State<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="permanent_state_id" (selectionChange)="permanentState($event)"
+                              [disabled]="readonlyp">
+                              <app-search-filter [array]="permanentStateData" [placeholder]="'Search by states name'"
+                                [searchFields]="['states_name']"
+                                (filteredReturn)="filterpermanetstatedata = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let state of filterpermanetstatedata"
+                                [value]="state.states_id">{{state.states_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="personalForm.controls['permanent_state_id'].hasError('required')">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>City<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="permanent_city_id" [disabled]="readonlyp">
+                              <!-- <mat-select-filter (keyup)="filterpermanentcity($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="permanentCityList" [placeholder]="'Search by city name'"
+                                [searchFields]="['city_name']" (filteredReturn)="filterpermanentcitydata = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let city of filterpermanentcitydata"
+                                [value]="city.city_id">{{city.city_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="personalForm.controls['permanent_city_id'].hasError('required')">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Address<span class="alertspan">*</span></mat-label>
+
+                          <textarea [readonly]="readonlyp"
+                            style="width: 975px; border-radius: 3px; border-color: #9d9d9d;" rows="3" maxlength="200"
+                            formControlName="parmanent_address"
+                            [ngModel]="personalForm.controls['parmanent_address'].value | titlecase">
+                          </textarea>
+                          <mat-error *ngIf="
+                          personalForm.controls['parmanent_address'].hasError('required')
+                        ">
+                            This field is Required!
+                          </mat-error>
+                          <mat-error *ngIf="
+                          personalForm.controls['parmanent_address'].hasError('leadingSpaces')
+                        ">
+                            No leading spaces!
+                          </mat-error>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                aria-expanded="true" aria-controls="collapseTwo">
+                Personal Details
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="acor_data_y">
+                  <div class="main_form">
+                    <div class="row">
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Nationality<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline" readonly>
+
+                            <mat-select formControlName="personal_country_id"
+                              (selectionChange)="presentCountryChange1($event)">
+                              <!-- <mat-select-filter [array]="variables"
+                                (filteredReturn)="countryFilter3($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="checkData" [placeholder]="'Search by country name'"
+                                [searchFields]="['countryss_name']" (filteredReturn)="countryListThird = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let country of countryListThird"
+                                [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                            personalForm.controls['personal_country_id'].hasError('required')
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Work from which country <span class="alertspan">*</span> </mat-label>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="work_from_country"
+                              (selectionChange)="presentCountryChange2($event)">
+                              <!-- <mat-select-filter (keyup)="countryfilter4($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="countryListfourth" [placeholder]="'Search by country name'"
+                                [searchFields]="['countryss_name']"
+                                (filteredReturn)="filterworkfromcountry = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let country of filterworkfromcountry"
+                                [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                            personalForm.controls['work_from_country'].hasError(
+                              'required'
+                            )
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>State <span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="personal_state_id"
+                              (selectionChange)="presentStateChange2($event)">
+                              <mat-select-filter [array]="presentSteteData2"
+                                (keyup)="personalStateFilter($event)"></mat-select-filter>
+
+                              <mat-option *ngFor="let state of presentSteteData2"
+                                [value]="state.states_id">{{state.states_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                            personalForm.controls['personal_state_id'].hasError(
+                              'required'
+                            )
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>City <span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline" readonly>
+                            <mat-select formControlName="personal_city_id">
+                              <!-- <mat-select-filter [array]="presentCityList3"
+                                (keyup)="personalCityFilter($event)"></mat-select-filter> -->
+                              <app-search-filter [array]="cityVar2" [placeholder]="'Search by city name'"
+                                [searchFields]="['city_name']" (filteredReturn)="presentCityList3 = $event.data">
+                              </app-search-filter>
+                              <mat-option *ngFor="let city of presentCityList3" [value]="city.city_id">
+                                {{city.city_name}}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                            personalForm.controls['personal_city_id'].hasError(
+                              'required'
+                            )
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label>DIRE Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput maxlength="30" type="text" formControlName="DIRE_number" />
+                            <mat-error *ngIf="personalForm.controls['DIRE_number'].hasError('required' )">
+                              This field is Required!
+                            </mat-error>
+                            <mat-error *ngIf="personalForm.controls['DIRE_number'].hasError('pattern' )">
+                              It is not a valid DIRE Number.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div> -->
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Driving License Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput maxlength="30" type="text" formControlName="driving_license_number" />
+                            <!-- <mat-error *ngIf="personalForm.controls['driving_license_number'].hasError('required' )">
+                              This field is Required!
+                            </mat-error> -->
+                            <mat-error *ngIf="personalForm.controls['driving_license_number'].hasError('pattern' )">
+                              It is not a valid Driving License Number.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Blood Group</mat-label>
+                          <mat-form-field appearance="outline" readonly>
+                            <mat-select formControlName="blood_group">
+                              <mat-option *ngFor="let item of bloodGrupList" [value]="item">{{item}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-label>Marital Status</mat-label>
+                        <mat-form-field appearance="outline">
+
+                          <mat-select formControlName="marital_status">
+                            <mat-option value="Married">Married</mat-option>
+                            <mat-option value="Unmarried">Unmarried</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                            personalForm.controls['marital_status'].hasError(
+                              'required'
+                            )
+                          ">
+                            This field is Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                      <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label>ID Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="id_number" [value]="
+                            personalForm.controls['id_number'].value
+                          " />
+                            <mat-error *ngIf="
+                            personalForm.controls['id_number'].hasError(
+                              'required'
+                            )
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div> -->
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Passport Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="passport_number" [value]="
+                            personalForm.controls['passport_number'].value | uppercase" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Passport Issued Date</mat-label>
+                          <mat-form-field appearance="outline" readonly>
+
+                            <input matInput [matDatepicker]="dp" [max]="getTodayDate()"
+                              (dateChange)="onIssuedDateChange($event)" (click)="dp.open()"
+                              formControlName="issued_date" readonly />
+                            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                            <mat-datepicker #dp></mat-datepicker>
+                            <!-- <mat-error *ngIf="
+                              personalForm.controls['issued_date'].hasError('required')
+                            ">
+                              This field is required!
+                            </mat-error> -->
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Passport Exp Date</mat-label>
+                          <mat-form-field appearance="outline" readonly>
+
+                            <input matInput [matDatepicker]="dpEX" (click)="dpEX.open()" [min]="minExpDateValue"
+                              formControlName="exp_date" readonly />
+                            <mat-datepicker-toggle matSuffix [for]="dpEX"></mat-datepicker-toggle>
+                            <mat-datepicker #dpEX></mat-datepicker>
+                            <!-- <mat-error *ngIf="
+                              personalForm.controls['exp_date'].hasError('required')
+                            ">
+                              This field is required!
+                            </mat-error> -->
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>PAN Card</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="emp_pan_card"
+                              [value]=" personalForm.controls['emp_pan_card'].value | uppercase" />
+
+                          </mat-form-field>
+                          <mat-error *ngIf="personalForm.controls['emp_pan_card'].hasError('pattern')">
+                            Invalid PAN card format (e.g., ABCDE1234F)
+                          </mat-error>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Aadhar Card</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="number" maxlength="12" formControlName="emp_adhar_card_number"
+                              [value]=" personalForm.controls['emp_adhar_card_number'].value | uppercase" />
+
+                          </mat-form-field>
+                          <mat-error *ngIf="personalForm.controls['emp_adhar_card_number'].hasError('pattern')">
+                            Invalid Aadhaar number (should be 12 digits)
+                          </mat-error>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Medical Condition</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="emp_medical_condition" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>VISA Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="visa_number"
+                              [value]=" personalForm.controls['visa_number'].value | uppercase" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Visa Exp Date</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput [matDatepicker]="dpEX1" (click)="dpEX.open()"
+                              formControlName="visa_number_exp_date" />
+                            <mat-datepicker-toggle matSuffix [for]="dpEX1"></mat-datepicker-toggle>
+                            <mat-datepicker #dpEX1></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        *ngIf="personalForm.controls['work_from_country'].value == 'Dubai'"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Emirates ID Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="emirates_id_number"
+                              [value]=" personalForm.controls['emirates_id_number'].value | uppercase" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Labour Card Number</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="labour_card_number"
+                              [value]=" personalForm.controls['labour_card_number'].value | uppercase" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Labour Card Exp Date</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput [matDatepicker]="dpEX3" (click)="dpEX.open()"
+                              formControlName="labour_card_number_exp_date" />
+                            <mat-datepicker-toggle matSuffix [for]="dpEX3"></mat-datepicker-toggle>
+                            <mat-datepicker #dpEX3></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Marital Status</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="marital_status">
+                              <mat-option value="Married">Married</mat-option>
+                              <mat-option value="Unmarried">Unmarried</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="
+                            personalForm.controls['marital_status'].hasError(
+                              'required'
+                            )
+                          ">
+                              This field is Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div *ngIf="personalForm.controls['marital_status'].value !== 'Unmarried'"
+                        class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>Spouse Name<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline" readonly>
+
+                            <input matInput type="text" maxlength="30" formControlName="spouse_name" />
+
+                            <mat-error *ngIf="
+                            personalForm.controls['spouse_name'].hasError(
+                              'required'
+                            )">
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>EID</mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" maxlength="30" formControlName="eid" />
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+                        <div class="form-group">
+                          <mat-label>EID Exp Date</mat-label>
+                          <mat-form-field appearance="outline" readonly>
+
+                            <input matInput [matDatepicker]="dpEX4" (click)="dpEX4.open()"
+                              formControlName="eid_exp_date" />
+                            <mat-datepicker-toggle matSuffix [for]="dpEX4"></mat-datepicker-toggle>
+                            <mat-datepicker #dpEX4></mat-datepicker>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                aria-expanded="true" aria-controls="collapseThree">
+                Family Details
+              </button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="acor_data_y">
+                  <div class="table_ip tableDesign table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>
+                            Family Member's Name
+                          </th>
+                          <th>
+                            Date Of Birth
+                          </th>
+                          <th>
+                            Relation With Employee
+                          </th>
+                          <th>
+                            Contact Number
+                          </th>
+
+                          <th>
+                            Remarks
+                          </th>
+                          <th>
+                            Emergency Contact
+                          </th>
+                          <th class="common_button_sub">
+                            <button (click)="addRow()" *ngIf="action_type != 'view'">
+                              Add
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container formArrayName="family_details"
+                          *ngFor="let control of CF_1.family_details['controls']; index as i">
+                          <tr [formGroup]="control">
+                            <td>
+                              <mat-form-field appearance="outline" style="width:170px">
+                                <input matInput type="text" formControlName="member_name" />
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('member_name')?.hasError('required')
+                              &&
+                              (personalForm.get('family_details')?.get(i.toString())?.get('member_name')?.touched ||
+                               personalForm.get('family_details')?.get(i.toString())?.get('member_name')?.dirty)">
+                                Required!
+                              </mat-error>
+
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:170px">
+                                <input matInput [matDatepicker]="dp4" (click)="dp4.open()"
+                                  formControlName="date_of_birth" [matDatepickerFilter]="disableFutureDates"
+                                  (dateChange)="fromDate($event,i)" />
+                                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                <mat-datepicker #dp4></mat-datepicker>
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('date_of_birth')?.hasError('required')
+                              &&
+                              (personalForm.get('family_details')?.get(i.toString())?.get('date_of_birth')?.touched ||
+                               personalForm.get('family_details')?.get(i.toString())?.get('date_of_birth')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+
+                            <!-- <td>
+                              <mat-form-field appearance="outline" style="width:170px">
+                                <input matInput type="text" maxlength="20" formControlName="relation" />
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('relation')?.hasError('required')
+                              &&
+                              (personalForm.get('family_details')?.get(i.toString())?.get('relation')?.touched ||
+                               personalForm.get('family_details')?.get(i.toString())?.get('relation')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td> -->
+                            <td>
+                              <mat-form-field class="mb-0">
+                                <mat-select formControlName="relation">
+                                  <!-- <mat-select-filter [array]="relationList[i]"
+                                    (filteredReturn)="relationSearch($event,i)"></mat-select-filter> -->
+                                  <app-search-filter [array]="relationList[i]" [placeholder]="'Search by country name'"
+                                    [searchFields]="['countryss_name']" (filteredReturn)="relations[i] = $event.data">
+                                  </app-search-filter>
+                                  <mat-option *ngFor="let item of relations[i]" [value]="item">
+                                    {{item}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('relation')?.hasError('required')
+                              &&
+                              (personalForm.get('family_details')?.get(i.toString())?.get('relation')?.touched ||
+                               personalForm.get('family_details')?.get(i.toString())?.get('relation')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <!-- <input matInput type="number" formControlName="contact_number" class="form-control"
+                            [class.contactInvalid]="control.controls['contact_number'].invalid" />
+                          <span *ngIf="control.controls['contact_number'].hasError('pattern')" style="color:red;">invalid
+                            contact number</span> -->
+
+
+                              <div class="codeArea">
+                                <div class="form-group addCoding">
+                                  <mat-form-field appearance="outline">
+                                    <mat-select formControlName="country_code">
+                                      <mat-option *ngFor="let countryCode of countryCodeList"
+                                        [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                  <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('country_code')?.hasError('required')
+                                  &&
+                                  (personalForm.get('family_details')?.get(i.toString())?.get('country_code')?.touched ||
+                                   personalForm.get('family_details')?.get(i.toString())?.get('country_code')?.dirty)">
+                                    Required!
+                                  </mat-error>
+                                </div>
+                                <div class="form-group">
+                                  <mat-form-field appearance="outline" style="width:170px">
+                                    <input matInput type="number" formControlName="contact_number" />
+                                  </mat-form-field>
+                                  <mat-error
+                                    *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('contact_number')?.hasError('required')
+                                  &&
+                                  (personalForm.get('family_details')?.get(i.toString())?.get('contact_number')?.touched ||
+                                   personalForm.get('family_details')?.get(i.toString())?.get('contact_number')?.dirty)">
+                                    Required!
+                                  </mat-error>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:170px">
+                                <input matInput type="text" maxlength="30" formControlName="remarks" />
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('remarks')?.hasError('required')
+                              &&
+                              (personalForm.get('family_details')?.get(i.toString())?.get('remarks')?.touched ||
+                               personalForm.get('family_details')?.get(i.toString())?.get('remarks')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <mat-checkbox title="Save for emergency contact" class="example-margin"
+                                formControlName="emergency_contact"></mat-checkbox>
+                            </td>
+                            <td style="
+                            text-align: center;
+                            color: #5d6c7c;
+                            cursor: pointer;
+                          ">
+                              <!-- <mat-checkbox title="Save for emergency contact" class="example-margin"
+                                formControlName="emergency_contact"></mat-checkbox> -->
+                              <i class="material-icons" (click)="deletefamily_details(i, control)"
+                                *ngIf="action_type != 'view'">delete</i>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingfour">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapsefour"
+                aria-expanded="true" aria-controls="collapsefour">
+                Previous Employer Details
+              </button>
+            </h2>
+            <div id="collapsefour" class="accordion-collapse collapse show" aria-labelledby="headingfour"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <div class="acor_data_y">
+                  <div class="table_ip tableDesign table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>
+                            Company Name
+                          </th>
+                          <th>
+                            From Date
+                          </th>
+                          <th>
+                            To Date
+                          </th>
+                          <th>
+                            Last Drawn Salary (k)
+                          </th>
+                          <th>
+                            Reason Of Leaving
+                          </th>
+                          <th>
+                            Position
+                          </th>
+                          <th>
+                            Location
+                          </th>
+                          <th class="common_button_sub" *ngIf="action_type != 'view'">
+                            <button (click)="addRowEmploy()">
+                              Add
+                            </button>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container formArrayName="prev_employer_details" *ngFor="
+                        let control_2 of CF_1.prev_employer_details['controls'];
+                        let i = index
+                      ">
+                          <tr [formGroup]="control_2">
+                            <td>
+                              <mat-form-field appearance="outline" style="width:150px">
+                                <input type="text" matInput maxlength="50" formControlName="company_name" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('company_name')?.hasError('required')
+                              &&
+                              (personalForm.get('prev_employer_details')?.get(i.toString())?.get('company_name')?.touched ||
+                               personalForm.get('prev_employer_details')?.get(i.toString())?.get('company_name')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <div class="">
+                                <mat-form-field appearance="outline" style="width:133px">
+                                  <input matInput [matDatepicker]="startPicker" formControlName="from_date"
+                                    [max]="today" />
+                                  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                                  <mat-datepicker #startPicker></mat-datepicker>
+                                </mat-form-field>
+                                <mat-error
+                                  *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('from_date')?.hasError('required')
+                                &&
+                                (personalForm.get('prev_employer_details')?.get(i.toString())?.get('from_date')?.touched ||
+                                 personalForm.get('prev_employer_details')?.get(i.toString())?.get('from_date')?.dirty)">
+                                  Required!
+                                </mat-error>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="">
+                                <mat-form-field appearance="outline" style="width:133px">
+                                  <input matInput [matDatepicker]="endPicker" formControlName="to_date"
+                                    [min]="getStartDate(i)" [max]="today" />
+                                  <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                                  <mat-datepicker #endPicker></mat-datepicker>
+                                </mat-form-field>
+                                <mat-error *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('to_date')?.hasError('required')
+                                &&
+                                (personalForm.get('prev_employer_details')?.get(i.toString())?.get('to_date')?.touched ||
+                                 personalForm.get('prev_employer_details')?.get(i.toString())?.get('to_date')?.dirty)">
+                                  Required!
+                                </mat-error>
+                              </div>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:139px">
+                                <input matInput type="number" min="0" maxlength="5" formControlName="last_salary" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('last_salary')?.hasError('required')
+                                &&
+                                (personalForm.get('prev_employer_details')?.get(i.toString())?.get('last_salary')?.touched ||
+                                 personalForm.get('prev_employer_details')?.get(i.toString())?.get('last_Salary')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:150px">
+                                <input type="text" matInput maxlength="50" formControlName="reason_of_leaving" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('reason_of_leaving')?.hasError('required')
+                                &&
+                                (personalForm.get('prev_employer_details')?.get(i.toString())?.get('reason_of_leaving')?.touched ||
+                                 personalForm.get('prev_employer_details')?.get(i.toString())?.get('reason_of_leaving')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:150px">
+                                <input type="text" matInput maxlength="50" formControlName="position" />
+                              </mat-form-field>
+                              <mat-error
+                                *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('position')?.hasError('required')
+                                &&
+                                (personalForm.get('prev_employer_details')?.get(i.toString())?.get('position')?.touched ||
+                                 personalForm.get('prev_employer_details')?.get(i.toString())?.get('position')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline" style="width:150px">
+                                <input type="text" matInput maxlength="100" formControlName="location" />
+                              </mat-form-field>
+                              <mat-error *ngIf="personalForm.get('prev_employer_details')?.get(i.toString())?.get('location')?.hasError('required')
+                              &&
+                              (personalForm.get('prev_employer_details')?.get(i.toString())?.get('location')?.touched ||
+                               personalForm.get('prev_employer_details')?.get(i.toString())?.get('location')?.dirty)">
+                                Required!
+                              </mat-error>
+                            </td>
+                            <td style="
+                            text-align: center;
+                            color: #5d6c7c;
+                            cursor: pointer;
+                          " *ngIf="action_type != 'view'">
+                              <i class="material-icons" (click)="deleteEmployerRow(i, control_2)">delete</i>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+
+
+        <div class="common_button_sub fotter_u" *ngIf="!action_type">
+          <button (click)="onSubmitPersonal()">
+            Save & Next
+          </button>
+          <button class="cancel_button_y" (click)="Skip()">Skip</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</section>

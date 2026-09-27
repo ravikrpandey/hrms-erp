@@ -1,0 +1,443 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales CRM</h1>
+        <p><span> Create Sales Return</span></p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+
+
+<section class="right_data_all">
+    <form [formGroup]="salesReturnForm">
+        <div class="form_basic">
+            <div class="right_data_all">
+                <div class="heading_neo mt-4">
+                    <h3> Return Information</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+                            <div class="grid-4">
+
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Return Type</mat-label>
+                                        <input matInput type="text" formControlName="return_type" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Sales Order</mat-label>
+                                        <input matInput type="text" formControlName="sales_order" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Customer</mat-label>
+                                        <input matInput type="text" formControlName="customer" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Warehouse</mat-label>
+                                        <input matInput type="text" formControlName="warehouse" readonly />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="right_data_all">
+                <div class="heading_neo mt-4">
+                    <h3> Return Item Details</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+
+
+                            <div class="table-wrapper">
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:0%;">S.N.</th>
+
+                                            <th style="width:11%; text-align:center">Item Of Description</th>
+
+                                            <th style="width:0%; text-align:center">HSN/SAC</th>
+                                            <th style="width:0%; text-align:center">GST (%)</th>
+                                            <th style="width:2%; text-align:center">Qty</th>
+
+                                            <th style="width:1%; text-align:center">
+                                                Return Qty
+                                            </th>
+                                            <th style="width:0%; text-align:center">Rate <br />(Per Unit)</th>
+
+                                            <th style="width:1%; text-align:center">Discount <br />(Per Unit)</th>
+
+                                            <th style="width:4%; text-align:center">Basic Offer Amount</th>
+                                            <th style="width:2%;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="item-rows">
+
+                                        <ng-container *ngFor="let product of items; let i = index">
+                                            <tr [ngStyle]="product.promo_item ? {'background':'#83d483'} : {}">
+                                                <td style="font-weight: bold;">{{ i + 1 }}</td>
+
+                                                <td>{{ product.product_name }} <br><br> {{ product.product_description
+                                                    }} <br><br>Warranty: {{ product.warranty }}</td>
+                                                <!-- <td> -->
+                                                <!-- <img src="../../../../../../assets/No-Image.png" alt="Item Image" style="max-width: 100%;"/> -->
+                                                <!-- <img [src]="getProductImage(product.item_img_path)" (error)="onImgError($event)" alt="Item Image" style="max-width: 100px; max-height: 100px;"/> -->
+                                                <!-- </td> -->
+                                                <td style="text-align: center;">{{ product.hsn_sac_code}}</td>
+                                                <td style="text-align: center;">{{ product.promo_item ? 0 : product.igst
+                                                    }}</td>
+                                                <td style="text-align: center;">{{ product.so_item_qty }}
+                                                    {{product?.uom_name}}</td>
+                                                <td style="text-align:center;">
+
+                                                    <!-- <input type="number" [value]="product.return_qty"
+                                                        (input)="product.return_qty = +$any($event.target).value"
+                                                        name="return_qty_{{i}}" min="0"> -->
+                                                    <input type="number" [value]="product.return_qty"
+                                                        (input)="onReturnQtyChange($event, product)"
+                                                        name="return_qty_{{i}}" min="0" [max]="product.so_item_qty">
+                                                </td>
+                                                <td style="text-align: right;">{{currencySign}}{{ product.promo_item ? 0
+                                                    : product.dbp | number:'1.2-2' }}</td>
+                                                <td style="text-align: right;">{{currencySign}}{{
+                                                    (product.totalDiscountAmountPerQTY ?? 0) | number:'1.2-2' }}</td>
+
+                                                <td style="text-align: right;">{{currencySign}}{{ product.promo_item ? 0
+                                                    : product.totalPrice | number:'1.2-2' }}</td>
+                                                <td>
+                                                    <button mat-icon-button matTooltip="Select Serial No."
+                                                        *ngIf="returnType!=='SO_CANCEL' || returnType!=='INVOICE_CANCEL'" matTooltipPosition="above"
+                                                        (click)="openSerialDialog(i,product)">
+                                                        <mat-icon>open_in_new</mat-icon>
+                                                    </button>
+                                                    <button mat-icon-button matTooltip="Cancel"
+                                                        matTooltipPosition="above" (click)="cancel(i, items[i])">
+
+                                                        <mat-icon>cancel</mat-icon>
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+                                            <!-- <ng-container *ngIf="product.subItems && product.subItems?.length">
+                                                <ng-container *ngFor="let sub of product.subItems; let s = index">
+                                                    <tr class="subitem-row">
+                                                        <td style="text-align: right;">{{ i + 1 }}{{ getAlphabet(s) }}
+                                                        </td>
+                                                        <td>{{ sub.item_name }}</td>
+
+                                                        <td>
+                                                        <img src="../../../../../../assets/No-Image.png" alt="Item Image" style="max-width: 100%;"/>
+                                                        </td>
+                                                        <td>{{ sub.hsn_sac_code}}</td>
+                                                        <td>{{ sub.gst }}</td>
+                                                        <td>{{ sub.qty }} {{sub?.uom_name}}</td>
+                                                        <td style="text-align:center;">
+
+                                                            <input type="number" [value]="sub.return_qty"
+                                                                (input)="sub.return_qty = +$any($event.target).value"
+                                                                name="sub_return_qty_{{i}}_{{s}}" min="0">
+
+                                                        </td>
+                                                        <td style="text-align: right;">{{currencySign}}{{ sub.mrp |
+                                                            number:'1.2-2' }}</td>
+                                                       <td style="text-align: right;">{{currencySign}}{{
+                                                            (sub.totalDiscountAmountPerQTY ?? 0) | number:'1.2-2' }}
+                                                        </td>
+                                                      
+                                                        <td style="text-align: right;">{{currencySign}}{{ sub.offerprice
+                                                            | number:'1.2-2' }}</td>
+                                                        <td>
+                                                            <button mat-icon-button matTooltip="Select Serial No."
+                                                                matTooltipPosition="above"
+                                                                (click)="openSerialDialog(i, items[i])">
+                                                                
+                                                                <mat-icon>open_in_new</mat-icon>
+                                                            </button>
+                                                            <button mat-icon-button matTooltip="Cancel"
+                                                                matTooltipPosition="above"
+                                                                (click)="cancel(i, items[i].subItems[s])">
+                                                              
+                                                                <mat-icon>cancel</mat-icon>
+                                                            </button>
+                                                        </td>
+
+                                                    </tr>
+                                                </ng-container>
+                                            </ng-container> -->
+                                        </ng-container>
+
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;"><b>Gross Amount</b></td>
+                                            <td colspan="2">{{currencySign}}{{ grossTotal | number:'1.2-2' }}</td>
+                                        </tr>
+
+                                        <tr *ngFor="let d of grossDiscountArray">
+                                            <td colspan="9" style="text-align: right;"><b> {{ d.discount_name }}</b>
+                                            </td>
+
+                                            <td colspan="2">
+                                                <span *ngIf="d.discount_type === 'flat'">
+                                                    {{currencySign}}{{ d.amount | number:'1.2-2' }}
+                                                </span>
+                                                <span *ngIf="d.discount_type === 'percent'">
+                                                    {{currencySign}}{{ d.amount }} ({{ d.discount }})
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;"><b>GST Value</b></td>
+                                            <td colspan="2">{{currencySign}}{{ gstTotal | number:'1.2-2' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;">
+                                                <b>Net Basic Offer Amount</b>
+                                            </td>
+                                            <td colspan="2"> {{currencySign}}{{ totalAMTAfterDiscount | number:'1.2-2'
+                                                }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;"><b>Final Offer Amount Including
+                                                    GST</b></td>
+                                            <td colspan="2">{{currencySign}}{{ grant_total | number:'1.2-2' }}</td>
+                                        </tr>
+                                        <tr *ngFor="let c of chargeSummary?.appliedCharges">
+                                            <td colspan="7"></td>
+                                            <td>{{ c.charge_type }}</td>
+                                            <td>{{ c.rule_name }}</td>
+                                            <td>{{ c.amount }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="8"></td>
+                                            <td><b>Total Charges</b></td>
+                                            <td>{{ chargeSummary?.totalCharges }}</td>
+                                        </tr>
+
+                                        <!-- <tr>
+                                            <td colspan="2"><b>Net Amount</b></td>
+                                            <td>{{ chargeSummary?.netAmount }}</td>
+                                        </tr> -->
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="right_data_all">
+                <div class="heading_neo mt-4">
+                    <h3> Return / Cancellation Charges</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+
+                            <div class="grid-3">
+
+                                <div class="form-group">
+                                   
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Charge Type</mat-label>
+
+                                        <mat-select formControlName="charge_type">
+                                            <mat-option *ngFor="let item of chargeType" [value]="item">
+                                                {{ item }}
+                                            </mat-option>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="salesReturnForm.get('charge_type')?.hasError('required')">
+                                            This field is required!
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="form-group">
+                                    
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Charge Method</mat-label>
+
+                                        <mat-select formControlName="charge_method">
+                                            <mat-option *ngFor="let item of chargeMethod" [value]="item">
+                                                {{ item }}
+                                            </mat-option>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="salesReturnForm.get('charge_method')?.hasError('required')">
+                                            This field is required!
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Enter amount or %</mat-label>
+                                        <input matInput type="text" placeholder="Enter amount or %" />
+                                    </mat-form-field>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div> -->
+            <div class="right_data_all" *ngIf="returnType!=='SO_CANCEL' || returnType!=='INVOICE_CANCEL'">
+                <div class="heading_neo mt-4">
+                    <h3> Transport Information</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+                            <div class="grid-4">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Transporter</mat-label>
+                                        <input matInput type="text" formControlName="transporter" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Vehicle Number</mat-label>
+                                        <input matInput type="text" formControlName="vehicle_no" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>LR Number</mat-label>
+                                        <input matInput type="text" formControlName="lr_number" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Driver Name</mat-label>
+                                        <input matInput type="text" formControlName="driver_name" readonly />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="right_data_all" *ngIf="returnType!=='SO_CANCEL' || returnType!=='INVOICE_CANCEL'">
+                <div class="heading_neo mt-4">
+                    <h3> Audit Timeline</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+                            <div class="audit-log">
+
+                                <div class="audit-item">
+
+                                    <h4>Sales Return Created</h4>
+
+                                    <p>
+                                        Ajay Kumar | 20 May 2026 10:30 AM
+                                    </p>
+
+                                </div>
+
+                                <div class="audit-item">
+
+                                    <h4>Inventory Hold Released</h4>
+
+                                    <p>System Generated</p>
+
+                                </div>
+
+                                <div class="audit-item">
+
+                                    <h4>QC Pending</h4>
+
+                                    <p>Warehouse Team</p>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="right_data_all">
+            <div class="heading_neo mt-4">
+                <h3>  Return Item Details</h3>
+            </div>
+            <div class="form_basic mb-0">
+                <div class="form_set">
+                    <div class="row">
+
+
+                         
+
+                      
+
+                    </div>
+                    
+
+
+                </div>
+            </div>
+        </div> -->
+
+        </div>
+
+
+        <button mat-button>
+            Cancel
+        </button>
+
+        <button mat-raised-button color="primary" (click)="createSalesReturn()">
+            Save
+        </button>
+    </form>
+</section>

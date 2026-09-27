@@ -1,0 +1,333 @@
+<div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Customer Profile</h3>
+    </div>
+      <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="customerProfileForm">
+        <div class="row">
+           
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="customerProfileForm.get('customer_code')?.value && customer_id">
+            <div class="form-group mb-4">
+                <mat-form-field appearance="outline">
+                <mat-label>Company Code</mat-label>
+                <input matInput type="text" formControlName="customer_code" readonly/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Company Name</mat-label>
+                <input matInput type="text" formControlName="company_name"/>
+                <mat-error *ngIf="customerProfileForm.controls['company_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Identification </mat-label>
+                <input matInput type="text" formControlName="identification"/>
+                <!-- <mat-error *ngIf="customerProfileForm.controls['identification'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+         
+          
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Is Group</mat-label>
+                <mat-select formControlName="is_group">
+                    <mat-option [value]="'YES'">Yes</mat-option>
+                    <mat-option [value]="'NO'">No</mat-option>                    
+                  </mat-select>
+                  <mat-error *ngIf="customerProfileForm.controls['is_group'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Parent Company</mat-label>
+                <mat-select formControlName="parent_id">
+                  <mat-option *ngFor="let data of parentCompanyList"
+                  [value]="data?.id">
+                  {{data?.company_name}}
+                </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Price Type</mat-label>
+                <mat-select formControlName="price_type_id">
+                  <mat-option *ngFor="let data of priceType"
+                  [value]="data?.id">
+                  {{data?.
+                    price_type
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['price_type_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer Type</mat-label>
+               
+                <mat-select formControlName="customer_type_id">
+                  <mat-option *ngFor="let data of customerType"
+                  [value]="data?.id">
+                  {{data?.
+                    customer_type_name
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['customer_type_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer Category</mat-label>
+               
+                <mat-select formControlName="customer_category_id" (selectionChange)="onCustomerCategoryChange($event.value)" readonly>
+                  <mat-option *ngFor="let data of customerCategory"
+                  [value]="data?.customer_category_id">
+                  {{data?.
+                    customer_category_name
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['customer_category_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Cutomer Sub Category</mat-label>
+               
+                <mat-select formControlName="customer_sub_category_id" (selectionChange)="onCustomerSubCategoryChange($event.value)" readonly>
+                  <mat-option *ngFor="let data of customerSubCategory"
+                  [value]="data?.id">
+                  {{data?.
+                    sub_category_name
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['customer_sub_category_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Cutomer Micro Category</mat-label>
+               
+                <mat-select formControlName="customer_micro_category_id" readonly>
+                  <mat-option *ngFor="let data of microCategoryData"
+                  [value]="data?.id">
+                  {{data?.
+                    micro_category_name
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['customer_micro_category_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer Industry Type</mat-label>
+                <mat-select formControlName="customer_industry_type_id">
+                  <mat-form-field>
+                    <input matInput [formControl]="filterIndustControl" type="text" placeholder="Search" />
+                  </mat-form-field>
+                  <mat-option *ngIf="!industryTypeData?.length" disabled>
+                    <p>IndustryType Not Found</p>
+                  </mat-option>               
+                  <mat-option *ngFor="let data of industryTypeData"
+                    [value]="data?.id">
+                    {{data?.
+                      customer_industries
+                      }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['customer_industry_type_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>PAN Number</mat-label>
+                <input matInput type="text" noCapitalize formControlName="pan_number" maxlength="10"/>
+                <mat-error *ngIf="customerProfileForm.controls['pan_number'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-md-4 disablePage">
+            <mat-label>Type of Supply</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="supply_type">
+                <mat-option
+                  *ngFor="let item of supplyTypeList"
+                  [value]="item?.id"
+                  >{{ item?.name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                customerProfileForm.get('supply_type')?.touched &&
+                customerProfileForm.get('supply_type')?.invalid
+              "
+              class="text-danger"
+            >
+              <div *ngIf="customerProfileForm.get('supply_type')?.errors?.['required']">
+                Supply Type is required
+              </div>
+  
+              <div
+                *ngIf="customerProfileForm.get('supply_type')?.invalid && !customerProfileForm.get('supply_type')?.errors?.['required']"
+              >
+                Supply Type is invalid
+              </div>
+            </div>
+          </div> -->
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>GST Category</mat-label>
+                <input matInput type="text" formControlName="gst_category"/>
+                <mat-error *ngIf="customerProfileForm.controls['gst_category'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>GST Type</mat-label>
+                <mat-select formControlName="gst_category" (valueChange)="selectGstCat($event)" >
+                  <mat-option *ngFor="let gstCat of gstCategory" [value]="gstCat.key">
+                    {{gstCat.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!isGstType" >
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>GST Number</mat-label>
+                <input matInput type="text" noCapitalize formControlName="gst_in"/>
+              
+              </mat-form-field>
+            </div>
+          </div> -->
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                  <mat-label>Registration Date of Party</mat-label>
+                  <input matInput [matDatepicker]="dp5" (click)="dp5.open()" formControlName="registration_date_of_party" />
+                  <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                  <mat-datepicker #dp5></mat-datepicker> 
+                  <mat-error *ngIf="customerProfileForm.controls['registration_date_of_party'].hasError('required')">
+                    This field is required!
+                  </mat-error>                   
+              </mat-form-field> 
+          </div>
+      </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                  <mat-label>GST Registration Date</mat-label>
+                  <input matInput [matDatepicker]="dp6" (click)="dp6.open()" formControlName="gst_registration_date" />
+                  <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                  <mat-datepicker #dp6></mat-datepicker> 
+                  <mat-error *ngIf="customerProfileForm.controls['gst_registration_date'].hasError('required')">
+                    This field is required!
+                  </mat-error>                   
+              </mat-form-field>
+          </div>
+      </div> -->
+
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer Status</mat-label>
+                <mat-select formControlName="customer_status">
+                    <mat-option [value]="'ACTIVE'">Active</mat-option>
+                    <mat-option [value]="'INACTIVE'">Inactive</mat-option>
+                    <mat-option [value]="'BLACKLISTED'">Blacklisted</mat-option>                    
+                  </mat-select>
+                  <mat-error *ngIf="customerProfileForm.controls['customer_status'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+              </mat-form-field>
+              
+            </div>
+          </div> -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Website</mat-label>
+                <input matInput type="text" formControlName="website" maxlength="50"/>
+              </mat-form-field>
+            </div>
+          </div> -->
+        </div>
+     
+        <div class="common_button_sub">
+          <button (click)="onSubmitForm()" *ngIf="!action_type">
+            Save
+          </button>
+          <button (click)="onSubmitForm()" *ngIf="action_type==='edit'">
+            Update
+          </button>
+          <!-- <button class="cancel_button_y">Cancel</button> -->
+        </div>
+      </form>
+    </div>
+  </div>

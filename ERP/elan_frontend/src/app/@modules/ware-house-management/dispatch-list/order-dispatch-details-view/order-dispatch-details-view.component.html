@@ -1,0 +1,383 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Dispatch</h1>
+    <p>Dispatched Order <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+      </i><span> Dispatch Details </span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="/master/warehouse-management/dispatch-list"><i class="fa fa-arrow-left"></i>
+      Back</button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="frmDispatch">
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>DO Date</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-label>DO Date</mat-label>
+              <input [readonly]="frmReadOnly" matInput [matDatepicker]="dp" (click)="dp.open()"
+                formControlName="do_date" />
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Customer Name</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Customer Name</mat-label>
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="customer_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>DO No</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="do_number" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Billing Address</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="billing_address" />
+
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Shipping Address</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="shipping_address" />
+
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Order Number</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="order_number" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label style="margin-bottom: 3px;">Attach File</mat-label>
+            <input type="file" class="form-control" (change)="uploadDoc($event)" style="font-size: 13px;
+                                    height: 42px;
+                                    padding-top: 11px;
+                                    color: #929292;
+                                    padding-left: 10px;">
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Company Name</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <input matInput type="text" [readonly]="frmReadOnly" formControlName="company_name" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <!-- product details start here -->
+      <div class="form_table">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Product Category</th>
+                    <th>Product Name</th>
+                    <th>Product Varient</th>
+                    <th>Product Code</th>
+                    <th>Product Description</th>
+                    <th>UOM</th>
+                    <th>Qty</th>
+                    <th>Price Per Unit</th>
+                    <th>GST Type</th>
+                    <th>CGST</th>
+                    <th>SGST</th>
+                    <th>IGST</th>
+                    <!-- <th>Maximum Discount(%)</th>
+                    <th  *ngIf="getAllProductDetails[0]?.discount_approved || getAllProductDetails[0]?.discount_request">Discount Required</th>
+                    <th  *ngIf="getAllProductDetails[0]?.discount_approved || getAllProductDetails[0]?.discount_request">Discount Approved</th> -->
+                    <!-- <th  >Action</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container formArrayName="productDetailList"
+                    *ngFor="let control of CF_1.productDetailList['controls']; let i = index">
+                    <tr [formGroup]="control">
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Product Category</mat-label>
+                          <mat-select formControlName="product_category_id"
+                            (selectionChange)="getAllActiveProduct($event,i)">
+                            <mat-option [disabled]="formDisabled" *ngFor="let data of cetegory" [value]="data.id"
+                             >{{data.category_name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Product</mat-label>
+                          <mat-select formControlName="product_master_id"
+                            (selectionChange)="getAllProductVariant($event,i)">
+                            <mat-option [disabled]="formDisabled" *ngFor="let item of productData[i]"
+                              [value]="item?.id">{{item?.product_name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                     <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Varient</mat-label>
+                          <mat-select formControlName="variant_id"
+                           (selectionChange)="bindProductData(i)" >
+                            <mat-option [disabled]="formDisabled"
+                              *ngFor="let item of productVariantData[i]"
+                              [value]="item?.id">{{item?.variant_name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Product Code</mat-label>
+                            <input matInput maxlength="30"  formControlName="product_code" class="form-control"
+                              [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Product Description</mat-label>
+                            <input matInput type="text" maxlength="200" formControlName="product_description"
+                              class="form-control" [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Uom</mat-label>
+                            <input matInput type="text" maxlength="100" formControlName="uom_name" class="form-control"
+                              [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Quantity</mat-label>
+                            <input matInput   type="text" maxlength="5" formControlName="qty"
+                              class="form-control" (keypress)="keyPress($event)"
+                              (ngModelChange)="productColculation()" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Price</mat-label>
+                            <input matInput   type="text"
+                              maxlength="5" formControlName="price_per_unit" class="form-control"
+                              (ngModelChange)="productColculation()" (keypress)="keyPress($event)" />
+                          </mat-form-field>
+                        </div>
+
+                      </td>
+                      <td style="width: 100px">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select</mat-label>
+                          <mat-select formControlName="gst_type" (selectionChange)="selectGstType(i)">
+                            <mat-option *ngFor="let item of gstTypeList"
+                              [value]="item">{{item}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <input  *ngIf="control?.get('gst_type')?.value =='CGST/SGST'"
+                          type="text" maxlength="30" formControlName="cgst" class="form-control"
+                          (keypress)="keyPress($event)" (ngModelChange)="productColculation()"
+                          style="width: fit-content;" />
+                        <span *ngIf="control?.get('gst_type')?.value !='CGST/SGST'">-</span>
+                      </td>
+                      <td>
+                        <input  *ngIf="control?.get('gst_type')?.value =='CGST/SGST'"
+                          type="text" maxlength="30" formControlName="sgst" class="form-control"
+                          (keypress)="keyPress($event)" (ngModelChange)="productColculation()"
+                          style="width: fit-content;" />
+                        <span *ngIf="control?.get('gst_type')?.value !='CGST/SGST'">-</span>
+                      </td>
+                      <td>
+                        <input   *ngIf="control?.get('gst_type')?.value =='IGST'" type="text"
+                          maxlength="30" formControlName="igst" class="form-control" (keypress)="keyPress($event)"
+                          (ngModelChange)="productColculation()" style="width: fit-content;" />
+                        <span *ngIf="control?.get('gst_type')?.value !='IGST'">-</span>
+                      </td>
+                      <!-- <td>
+                        <input readonly="true" type="text" maxlength="5" formControlName="maximum_discount"
+                          class="form-control" (keypress)="keyPress($event)" (ngModelChange)="productColculation()"
+                          style="width: fit-content;" />
+                      </td>
+                      <td   *ngIf="getAllProductDetails[0]?.discount_approved || getAllProductDetails[0]?.discount_request">
+                        <input readonly="true" type="text" maxlength="5" formControlName="discount_request"
+                          (keypress)="keyPress($event)" (ngModelChange)="productColculation()" class="form-control"
+                          style="width: fit-content;" />
+                      </td>
+                      <td   *ngIf="getAllProductDetails[0]?.discount_approved || getAllProductDetails[0]?.discount_request" >
+                        <input   type="text" maxlength="5" formControlName="discount_approved"
+                          (keypress)="keyPress($event)" (ngModelChange)="productColculation()" class="form-control"
+                          style="width: fit-content;" />
+                      </td> -->
+                      <!-- <td  >
+                        <span *ngIf="!control?.controls?.isDisabled"
+                          style="color: #063178; cursor: pointer;font-size: 20px;">
+                          <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                            aria-hidden="true"></i></span>
+                        <span style="color: #063178; cursor: pointer;font-size: 20px;">
+                          <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                            style="margin-top:5px; margin-left: 10px!important;"></i></span>
+                      </td> -->
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+          </div>
+        </mat-card>
+      </div>
+
+      <div>
+        <div class="row mt-3">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Notes</mat-label> -->
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Notes</mat-label>
+                <input matInput type="text" [readonly]="frmReadOnly" formControlName="notes" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Terms & Conditions</mat-label> -->
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Terms & Conditions</mat-label>
+                <input matInput type="text" [readonly]="frmReadOnly" formControlName="terms_and_conditions" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Notes</mat-label> -->
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Warehouse</mat-label>
+                <input matInput type="text" [readonly]="frmReadOnly" formControlName="warehouse" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Notes</mat-label> -->
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Vehicle Type</mat-label>
+                <input matInput type="text" [readonly]="frmReadOnly" formControlName="vehicle_type" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Notes</mat-label> -->
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Vehicle Number</mat-label>
+                <input matInput type="text" [readonly]="frmReadOnly" formControlName="vehicle_number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <ng-container  *ngIf="rackDetails.length > 0">
+
+            <div class="right_data_all">
+              <div class="page-title">
+                <h3><b>Racks Detail</b></h3>
+              </div>
+
+              <table class="table table-striped" style="width: 100%; border-collapse: collapse;">
+                <thead style="background-color: #f2f2f2;">
+                  <tr>
+                    <th scope="col" style="width: 25%; padding: 8px; border: 2px solid #ddd;">S.No</th>
+                    <th scope="col" style="width: 25%; padding: 8px; border: 2px solid #ddd;">Row</th>
+                    <th scope="col" style="width: 25%; padding: 8px; border: 2px solid #ddd;">Shelf</th>
+                    <th scope="col" style="width: 25%; padding: 8px; border: 2px solid #ddd;">Section</th>
+                    <th scope="col" style="width: 25%; padding: 8px; border: 2px solid #ddd;">Quantity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let rack of rackDetails; let i = index" >
+                    <th scope="row" style="padding: 8px; border: 2px solid #ddd;">{{ i + 1 }}</th>
+                    <td style="padding: 8px; border: 2px solid #ddd;">
+                      {{rack?.WAREHOUSE_BIFURCATION_SECTION?.WAREHOUSE_BIFURCATION_SELF?.WAREHOUSE_BIFURCATION_Row?.row_name}}
+                    </td>
+                    <td style="padding: 8px; border: 2px solid #ddd;">{{ rack?.WAREHOUSE_BIFURCATION_SECTION?.WAREHOUSE_BIFURCATION_SELF?.self_name }}</td>
+
+                    <td style="padding: 8px; border: 2px solid #ddd;">{{ rack?.WAREHOUSE_BIFURCATION_SECTION?.section_name }}</td>
+
+                    <td style="padding: 8px; border: 2px solid #ddd;">{{ rack.quantity }}</td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+        </ng-container>
+        </div>
+
+
+
+        <div class="row" [hidden]="frmReadOnly">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <!-- <mat-label>Terms & Conditions</mat-label> -->
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Warehouse" formControlName="warehouse_id">
+                  <mat-option *ngFor="let warehouse of warehouseList" [value]="warehouse.warehouse_id">
+                    {{warehouse.warehouse_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <mat-radio-group [(ngModel)]="selectedMode" (change)="selectedRadio()" formControlName="in_status">
+              <mat-radio-button value="firstIn">FIRST IN</mat-radio-button>
+              <mat-radio-button value="lastIn">LAST IN</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+
+        <div class="mt-3 common_button_sub" [hidden]="frmReadOnly">
+          <button (click)="ngSubmitform(frmDispatch.value)">
+            Dispatch
+          </button>
+          <button class="cancel_button_y">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

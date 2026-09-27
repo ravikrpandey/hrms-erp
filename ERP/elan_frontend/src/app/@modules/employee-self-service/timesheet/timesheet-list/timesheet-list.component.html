@@ -1,0 +1,47 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+  </i><span>Time Sheet</span></p>
+</div>
+  <div class="add_button">
+    <button type="button" routerLink="../timesheet-create" *ngIf="assignAction?.Write">Time off Request</button>
+    <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+
+
+<div class="right_data_all">
+  <div class="employ_sube">
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+
+    <!-- <div class="employee_2">
+      <mat-form-field appearance="outline">
+        <mat-label>Search Element Here</mat-label>
+        <input matInput id="filter-text-box" (input)="onFilterTextBoxChanged()" placeholder="Search Here" #input />
+      </mat-form-field>
+    </div> -->
+
+    <div>
+      <input type="text" class="form-control" id="filter-text-box" #input placeholder="Search"
+        (input)="onFilterTextBoxChanged()">
+    </div>
+  </div>
+
+
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" (cellClicked)='onCellClicked($event)' [pagination]=true
+      [paginationPageSize]=10 (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+

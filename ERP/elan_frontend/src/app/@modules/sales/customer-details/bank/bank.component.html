@@ -1,0 +1,305 @@
+<div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Customer Credit Details</h3>
+    </div>
+      <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="customerProfileForm">
+          <!-- "payment_terms": "ADVANCE PAYMENT",
+          "credit_limit": "150000",
+          "internal_credit_limit": "1200",
+          "credit_days": "12days",
+          "grace_period": "3days",
+          "bank_name": "hdfc badvfdgfgbnk",
+          "bank_branch": "guhwkhdklwjek",
+          "bank_ac_num": "FFF4561230",
+          "swift_code": "IFSC4561230",
+          "ifsc_code": "IFSCj54565",
+          "interest": "Yes",
+          "tab_type":"Bank" -->
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Sanctioned Credit limit</mat-label>
+                <input matInput type="number" formControlName="sactioned_credit_limit" maxlength="30" (input)="getValue($event)"   >
+                <mat-error *ngIf="customerProfileForm.controls['sactioned_credit_limit'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Utilized Credit Limit</mat-label>
+                <input matInput type="number" formControlName="utilized_credit_limit" maxlength="30" readonly/>
+                <mat-error *ngIf="customerProfileForm.controls['utilized_credit_limit'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Internal Credit Limit</mat-label>
+                <input matInput type="text" formControlName="internal_credit_limit" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['internal_credit_limit'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Available Credit Limit</mat-label>
+                <input matInput type="number" formControlName="available_credit_limit" maxlength="30" readonly/>
+                <mat-error *ngIf="customerProfileForm.controls['available_credit_limit'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Sanctioned Credit Period</mat-label>
+                <input matInput type="number" formControlName="sactioned_credit_period" maxlength="30" #box (input)="getCreditLimit(box)" >
+                <mat-error *ngIf="customerProfileForm.controls['sactioned_credit_period'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Grace Period</mat-label>
+                <input matInput type="number" formControlName="grace_period" maxlength="30" #box1 (input)="getCreditLimit(box1)"/>
+                <mat-error *ngIf="customerProfileForm.controls['grace_period'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Utilized Credit Days</mat-label>
+                <input matInput type="number" formControlName="utilized_credit_days" maxlength="30" readonly>
+                <!-- <mat-error *ngIf="customerProfileForm.controls['utilized_credit_days'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+
+          
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Available Credit Days</mat-label>
+                <input matInput type="text" formControlName="remainig_credit_days" maxlength="30" readonly/>
+                <mat-error *ngIf="customerProfileForm.controls['remainig_credit_days'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Name</mat-label>
+                <input matInput type="text" formControlName="bank_name" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['bank_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Branch</mat-label>
+                <input matInput type="text" formControlName="bank_branch" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['bank_branch'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Account Number</mat-label>
+                <input matInput type="text" formControlName="bank_ac_num" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['bank_ac_num'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>PAYMENT TERMS</mat-label>
+               
+                <mat-select formControlName="payment_terms">
+                  <mat-option
+                  value="ADVANCE PAYMENT">
+                  ADVANCE PAYMENT
+                </mat-option>
+                <mat-option
+                  value="30 DAYS">
+                  30 DAYS
+                </mat-option>
+                <mat-option
+                  value="60 DAYS">
+                  60 DAYS
+                </mat-option>
+                <mat-option
+                  value="90 DAYS">
+                  90 DAYS
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['interest'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Swift Code</mat-label>
+                <input matInput type="text" formControlName="swift_code" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['swift_code'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>IFSC Code</mat-label>
+                <input matInput type="text" formControlName="ifsc_code" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['ifsc_code'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>INTEREST</mat-label>
+               
+                <mat-select formControlName="interest">
+                  <mat-option
+                  value="Yes">
+                  Yes
+                </mat-option>
+                <mat-option
+                value="No">
+                No
+              </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['interest'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Tab Type</mat-label>
+                <input matInput type="text" formControlName="tab_type" maxlength="30" />
+                <mat-error *ngIf="customerProfileForm.controls['tab_type'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+        </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer ID</mat-label>
+                <mat-select formControlName="customer_id" readonly>
+                  <mat-option *ngFor="let data of customerType"
+                  [value]="data?.id">
+                  {{data?.
+                    customer_type_name
+                    }}
+                </mat-option>
+                </mat-select>
+                <mat-error *ngIf="customerProfileForm.controls['countryss_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+     
+        <div class="common_button_sub">
+          <button (click)="onSubmitForm()" *ngIf="!action_type">
+            Submit
+          </button>
+          <button (click)="onSubmitForm()" *ngIf="action_type==='edit'">
+            Submit
+          </button>
+          <button class="cancel_button_y"    (click)="goBack()" >Cancel</button>
+        </div>
+        </form>
+
+        <div class="table-responsive1" style="padding: 10px;">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Invoice No</th>
+              <th>Invoice Date</th>
+              <th>Sales Order No</th>
+              <th>Invoice Status</th>
+              <th>Payment Status</th>
+              <th class="text-end">Grand Total</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let invoice of invoiceList; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ invoice.sales_invoice_no }}</td>
+              <td>{{ invoice.sales_invoice_date | date:'dd-MM-yyyy' }}</td>
+              <td>{{ invoice.sales_order_no }}</td>
+              <td>{{ invoice.invoice_status }}</td>
+              <td>
+                <span
+                  [class.text-success]="invoice.payment_status === 'PAID'"
+                  [class.text-danger]="invoice.payment_status === 'UNPAID'">
+                  {{ invoice.payment_status }}
+                </span>
+              </td>
+              <td class="text-end">
+                {{ invoice.grand_total | number:'1.2-2' }}
+              </td>
+            </tr>
+
+            <tr *ngIf="!invoiceList?.length">
+              <td colspan="7" class="text-center">
+                No Data Found
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>

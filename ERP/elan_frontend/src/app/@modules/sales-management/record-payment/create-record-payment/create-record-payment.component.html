@@ -1,0 +1,291 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales Management</h1>
+        <p>
+            Create Record Payments
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="back()">
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+      </div>
+</div>
+<div class="right_data_all">
+    <div class="heading_neo mt-2">
+      <h3>Record Payment</h3>
+    </div>
+<form [formGroup]="recordPaymentFormGroup" (ngSubmit)="onSubmit()">
+    <div class="formBorder">
+        <div class="form_sePo">
+            <div class="row">
+                <!-- Customer Selection -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-label>Customer <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                            <mat-select formControlName="customer">
+                                <mat-option *ngFor="let val of customersList" [value]="val?.business_name">
+                                    {{ val?.business_name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="recordPaymentFormGroup.get('customer')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Date Selection -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-label>Date <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                            <input readonly matInput [matDatepicker]="sp" [min]="now" formControlName="createDate" />
+                            <mat-datepicker-toggle matSuffix [for]="sp"></mat-datepicker-toggle>
+                            <mat-datepicker #sp></mat-datepicker>
+                            <mat-error *ngIf="recordPaymentFormGroup.get('createDate')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-label>Reference Invoice Number <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                            <input matInput readonly formControlName="reference_invoice_number" maxlength="40" type="text" />
+                            <mat-error *ngIf="recordPaymentFormGroup.get('reference_invoice_number')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Category Selection -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-label>Category <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                            <mat-select formControlName="category" [(ngModel)]="selectedCategory">
+                                <mat-option *ngFor="let val of itemCategoryList" [value]="val?.asset_category_name">
+                                    {{ val?.asset_category_name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="recordPaymentFormGroup.get('category')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-label>Payment Receive Mode <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                            <input matInput readonly formControlName="payment_receive_mode" type="text" />
+                            <mat-error *ngIf="recordPaymentFormGroup.get('payment_receive_mode')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Table -->
+            <div *ngIf="selectedCategory" class="item-table">
+                <button (click)="addItem()" type="button" class="add-item-button">Add Item</button>
+                <div class="table-responsive">
+                    <table class="table half-width-column">
+                        <thead>
+                            <tr>
+                                <th>S. No.</th>
+                                <th>Payment Reference</th>
+                                <th>Document Number</th>
+                                <th>Total</th>
+                                <th>Outstanding</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="items">
+                            <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+                                <td>
+                                    <span>{{i+1}}</span>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <mat-select formControlName="payment_reference">
+                                            <mat-option *ngFor="let val of itemsList" [value]="val?.item_code">
+                                                {{ val?.item_name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <input readonly matInput formControlName="document_number" />
+
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <input matInput formControlName="total" type="number" />
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <input matInput formControlName="out_standing" type="number" />
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-form-field>
+                                        <input matInput formControlName="amount" type="number" />
+                                    </mat-form-field>
+                                </td>
+                                <td>
+                                    <mat-icon (click)="removeItem(i)">delete</mat-icon>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="container mt-3">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <!-- <div class="form-group">
+                                <mat-label>Billing Address <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="billing_address" type="text" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('billing_address')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div> -->
+                            <div class="form-group mb-3">
+                                <mat-label>Select Bank <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <mat-select formControlName="bank">
+                                        <mat-option [value]="data.id" *ngFor="let data of bankBankList">
+                                          {{data.account_name}}
+                                        </mat-option>
+                                      </mat-select>
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('bank')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Bank Account <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="bank_account" type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('bank_account')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Cheque Number <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="cheque_number" type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('cheque_number')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Total Amount <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="total_amount" type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('total_amount')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Advance Received <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="advance_received" type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('advance_received')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Amount Due <span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="amount_due" type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('amount_due')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label> Amount Paid<span class="alertspan">*</span></mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="amount_paid" readonly
+                                        type="number" />
+                                    <mat-error *ngIf="recordPaymentFormGroup.get('amount_paid')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3 fileWithViewImg">
+                                <mat-label>Upload Document</mat-label>
+                                <input class="form-control" type="file" style="padding-right: 19%" title="Upload"
+                                    formControlName="additionalDetails" accept=".png, .jpg, .jpeg" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Terms</mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="terms" maxlength="30" type="text" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field>
+                                    <input matInput formControlName="remarks" maxlength="30" type="text" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Submission -->
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub mt-3">
+            <button type="submit">Record Payment
+                </button>
+            <button class="cancel_button_y" type="button" (click)="back()">Discard</button>
+        </div>
+    </div>
+</form>
+</div>

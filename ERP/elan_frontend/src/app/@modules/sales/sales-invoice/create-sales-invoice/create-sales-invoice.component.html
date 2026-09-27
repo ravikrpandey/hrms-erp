@@ -1,0 +1,405 @@
+<!-- Top Header -->
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales</h1>
+    <p>
+      Sales Invoice
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #063178">
+      </i><span>Create Sales Invoice </span>
+    </p>
+  </div>
+</div>
+
+<div class="form_head">
+  <h3>Create Sales Invoice</h3>
+  <button class="backBtn" routerLink="/master/sales/sales-invoice-list">
+    <i class="fa fa-arrow-circle-left"></i> Back
+  </button>
+</div>
+<!-- <div class="d-flex gap-2 m-2">
+  <button class="my_class d-flex" (click)="printPdf()" matTooltip="Print">
+      <mat-icon class="mt-1">print</mat-icon>
+      <p class="">Print</p>
+  </button>
+  <button class="my_class d-flex" (click)="downloadData()" matTooltip="Download as PDF">
+      <mat-icon class="mt-1" [ngClass]="downloadPdf ? 'download-icon' : ''">download</mat-icon>
+      <p class="">{{ downloadPdf ? "Downloading.." : "Download" }}</p>
+  </button>
+  <button class="my_class d-flex" (click)="sendEmail()" matTooltip="Send e-Mail">
+      <mat-icon class="mt-1">mail</mat-icon>
+      <p class="">Mail</p>
+  </button>
+   <button *ngIf="!salesInvoicesData" class="my_class d-flex" (click)="createInvoiceForDO()"
+      matTooltip="Create Invoice">
+      <mat-icon class="mt-1">receipt</mat-icon>
+      <p class="">Convert To Invoice</p>
+  </button> 
+ <button *ngIf="salesInvoicesData" class="my_class d-flex" (click)="viewInvoiceForDO()" matTooltip="View Invoice">
+        <mat-icon class="mt-1">receipt</mat-icon>
+        <p class="">View Invoice</p>
+      </button> 
+</div> 
+<div class="m-2 mt-3 new_card p-2">
+  <strong>Delivery Created By :</strong><small class="mx-1 small_text">{{ getAllData?.lead_owner || "---"
+      }}</small>
+</div>-->
+<div class="invoice-box">
+
+  <!-- Company Header -->
+  <table class="no-border">
+    <tr>
+      <td rowspan="3" style="width: 20%; text-align: center">
+        <img src="../../../../../assets/company-logo.png" alt="Logo" style="height: 83px; width: 195px;" />
+      </td>
+      <td style="text-align: center">
+        <div style="margin-right:25%">
+          <b>Elan Professional Appliances Pvt Ltd</b><br />
+          Khasra No.11/1, 12//5/2,, Village Begampur Khatola,<br />
+          Begampur Industrial Area, Gurgaon, Haryana - 122004<br />
+          PAN No : AACCE1748C
+        </div>
+
+      </td>
+
+    </tr>
+  </table>
+
+  <!-- Invoice Title -->
+  <div class="title">Tax Invoice</div>
+
+  <!-- Invoice Info -->
+ 
+
+  <div class=" mt-3 invoice-top">
+    <div style="
+          box-shadow: 0px 0px 5px #ccc;
+          padding: 0px;
+          width: 100%;
+          margin-bottom: 20px;
+          margin-top: 20px;
+        ">
+      <table cellpadding="0" cellspacing="0" border="0"
+        style="background-color: #fff; color: #000; font-size: 14px; width: 100%;">
+        <tbody>
+          <tr>
+            <td>
+              <table cellpadding="0" cellspacing="0" style="width: 100%; margin: 0; clear: both;">
+                <tbody>
+                  <tr style="line-height: 23px;">
+                    
+                    <td style="width: 35%; padding: 0;"><b>Invoice No.</b></td>
+                    <td style="padding: 0;">: <span>{{ salesInvoiceForm.get('sales_invoice_no')?.value}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%; padding: 0;"><b>Invoice Date</b></td>
+                    <td style="padding: 0;">: <span>{{
+                        salesInvoiceForm.get('sales_invoice_date')?.value}}</span></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%; padding: 0;"><b>Acknowledge No.</b></td>
+                    <td style="padding: 0;">: <span>{{signedInvoiceData?.AckNo}}</span></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%; padding: 0;"><b>Acknowledge Date</b></td>
+                    <td style="padding: 0;">: <span>{{ signedInvoiceData?.AckDate}}</span></td>
+                  </tr>
+                 
+                  
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <table cellpadding="0" cellspacing="0" style="width: 100%; margin: 0; clear: both;">
+                <tbody>
+                 
+                  <tr>
+                    <td style="width: 35%; padding: 0;"><b>Quotation No.</b></td>
+                    <td style="padding: 0;">: <span>{{ getAllData?.proposal_no
+                        }}</span></td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%;padding: 0;"><b>Delivery Date</b></td>
+                    <td style="padding: 0;">: <span>{{ getAllData?.do_date }}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%;padding: 0;"><b>So. No.</b></td>
+                    <td style="padding: 0;">: <span>{{ getAllData?.do_no }}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="width: 35%;padding: 0;"><b>Billing Branch</b></td>
+                    <td style="padding: 0;">: <span>{{ getAllData?.branch_name
+                        }}</span></td>
+                  </tr>
+                  
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr *ngIf="irnNo" >
+            <td colspan="2" class="text-center" style="border:1px solid #000;padding:10px;background: #d9d9d9;">
+              <div
+                style="display: inline-block; background-color: #ffffff; padding: 10px 15px; border: 2px solid #000000; font-size: 16px; font-weight: 600; border-radius: 5px;">
+                IRN No: <span _ngcontent-xpq-c209="" style="color: #016db6;">{{irnNo}}</span></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      
+    </div>
+  </div>
+
+  <!-- Bill To / Ship To -->
+  <table>
+    <tr>
+      <td class="section-title" style="width:50%;"><b>Bill To</b></td>
+      <td class="section-title" style="width:50%;"><b>Ship To</b></td>
+    </tr>
+    <tr>
+      <!-- Bill To -->
+      <td style="vertical-align: top; padding:0;"> <!-- ✅ No padding -->
+        <table class="inner-table">
+          <tr>
+            <td style="width:35%;"><b>Party Name</b></td>
+            <td>: {{getAllData?.customer_name}}</td>
+          </tr>
+          <tr>
+            <td><b>& Address</b></td>
+            <td>: {{ getAllData?.customer_billing_add1 }},<br />
+              &nbsp; {{ getAllData?.customer_billing_add2 }}<br />
+              &nbsp; {{getAllData?.city_name}}<br>
+              &nbsp; {{getAllData?.states_name}}<br>
+              &nbsp; {{getAllData?.countryss_name}}<br>
+              &nbsp; {{ getAllData?.customer_billing_pin }}
+            </td>
+          </tr>
+
+
+          <tr>
+            <td><b>GSTIN</b></td>
+            <td>: 23ADBP6221H1Z9</td>
+          </tr>
+          <tr>
+            <td><b>Place Of Supply</b></td>
+            <td>: {{getAllData?.states_name}}</td>
+          </tr>
+          <tr>
+            <td><b>State Code</b></td>
+            <td>: 23</td>
+          </tr>
+          <tr>
+            <td><b>Pay Terms</b></td>
+            <td>: 1 Days</td>
+          </tr>
+        </table>
+      </td>
+
+      <!-- Ship To -->
+      <td style="vertical-align: top; padding:0;"> <!-- ✅ No padding -->
+        <table class="inner-table">
+          <tr>
+            <td style="width:35%;"><b>Party Name</b></td>
+            <td>: {{getAllData?.customer_name}}</td>
+          </tr>
+          <tr>
+            <td><b>& Address</b></td>
+            <td>: {{ getAllData?.shipping_add1 }} <br>
+              &nbsp; {{ getAllData?.shipping_add2 }} <br>
+              &nbsp; {{getAllData?.shipping_city_name}}<br>
+              &nbsp; {{getAllData?.shipping_state_name}}<br>
+              &nbsp; {{getAllData?.shipping_country_name}}<br>
+              &nbsp; {{ getAllData?.shipping_pin }}</td>
+          </tr>
+          <tr>
+
+            <td><b>GSTIN</b></td>
+            <td>: {{getAllData?.customer_gst_number}}</td>
+          </tr>
+
+          <tr>
+            <td><b>Contact Person</b></td>
+            <td>: {{getAllData?.contact_person_name}}</td>
+          </tr>
+          <tr>
+            <td><b>Contact No.</b></td>
+            <td>: {{getAllData?.contact_number}}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr class="section-title">
+      <td>S No</td>
+      <td>Description of Goods</td>
+      <td style="text-align:center">HSN Code</td>
+      <td style="text-align:center">Qty</td>
+      <td style="text-align:center">Tax Rate %</td>
+      <td style="text-align:center">Basic Rate (Per Unit)</td>
+
+      <td style="text-align:center">Discount (Per Unit)</td>
+
+      <td style="text-align:center">Net Amount</td>
+    </tr>
+    <ng-container *ngFor="let data of getAllData?.productDetailList; index as i">
+      <!-- Main Product Row -->
+      <tr>
+        <td style="text-align: center; font-weight: bold;">{{ i + 1 }}</td>
+        <td>{{ data?.product_name }}</td>
+        <td style="text-align:center">{{ data?.hsn_sac_code }}</td>
+        <td style="text-align:center">{{ data?.quantity }}</td>
+        <td style="text-align:center">{{ data?.taxRate || 0 }}</td>
+        <td style="text-align:end">{{ data?.price_per_unit | number: '1.2-2' }}</td>
+        <td style="text-align:end">{{ data?.totalDiscountAmountPerQTY || 0 | number: '1.2-2'}}</td>
+
+        <td style="text-align:end">{{ data?.finalPrice | number: '1.2-2' }}</td>
+      </tr>
+
+      <!-- Customization Rows -->
+      <ng-container *ngIf="(data.customisation_data?.length || 0) > 0">
+        <tr *ngFor="let cust of data.customisation_data; let s = index">
+          <td style="text-align:end">{{ i + 1 }}{{ getAlphabet(s) }}</td>
+          <td>{{ cust.item_name }}</td>
+          <td style="text-align:center">{{ cust.hsn_code }}</td>
+          <td style="text-align:center">{{ cust.quantity }}</td>
+          <td style="text-align:center">{{ cust.gst_rate }}</td>
+          <td style="text-align:end">{{ cust.price_per_unit | number: '1.2-2' }}</td>
+          <td style="text-align:end">{{cust.totalDiscountAmountPerQTY | number: '1.2-2'}}</td>
+          <td style="text-align:end">{{cust.totalWithGst | number: '1.2-2'}}</td>
+
+        </tr>
+      </ng-container>
+
+      <!-- Branding Rows -->
+      <ng-container *ngIf="(data.branding_data?.length || 0) > 0">
+        <tr *ngFor="let brand of data.branding_data; let s = index">
+          <td style="text-align:end">{{ i + 1 }}{{ getAlphabet(s) }}</td>
+          <td>{{ brand.item_name }}</td>
+          <td style="text-align:center">{{ brand.hsn_code }}</td>
+          <td style="text-align:center">{{ brand.quantity }}</td>
+          <td style="text-align:center">{{ brand.gst_rate }}</td>
+          <td style="text-align:end">{{ brand.price_per_unit | number: '1.2-2' }}</td>
+          <td style="text-align:end">{{brand.totalDiscountAmountPerQTY | number: '1.2-2'}}</td>
+          <td style="text-align:end">{{brand.totalWithGst | number: '1.2-2'}}</td>
+
+        </tr>
+      </ng-container>
+    </ng-container>
+
+
+    <tr>
+      <td colspan="7" class="right bold">Gross </td>
+      <td class="text-end">{{grossTotal | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td colspan="7" class="label text-end">Taxable Amt :</td>
+      <td class="value text-end" style="width:166px">{{grossTotal | number: '1.2-2'}}</td>
+    </tr>
+    <tr *ngFor="let discount of getAllData?.cashDiscountList; index as d">
+      <td colspan="7" class="label text-end">{{discount?.discount_name}}</td>
+      <td class="value text-end">{{discount?.discount_amount | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td colspan="7" class="label text-end">Total GST :</td>
+      <td class="value text-end">{{totalGstAmount | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td colspan="7" class="label text-end">Net Basic Offer Amount :</td>
+      <td class="value text-end">{{netAmount | number: '1.2-2'}}</td>
+    </tr>
+    <tr>
+      <td colspan="7" class="label text-end">Final Offer Amount Including GST :</td>
+      <td class="value text-end">{{finalOfferAmount | number: '1.2-2'}}</td>
+    </tr>
+  </table>
+
+
+  <p>
+    <b>Amount In Words:</b> {{amountInWords}}
+  </p>
+
+  <!-- TAX Summary -->
+  <table class="tax-summary">
+    <tr>
+      <!-- <th>HSN</th> -->
+      <th>Taxable Amount</th>
+      <th>TaxAmount</th>
+      <th *ngIf="!gstType">SGST</th>
+      <th *ngIf="!gstType">CGST</th>
+      <th *ngIf="gstType">IGST</th>
+    </tr>
+    <tr>
+      <!-- <td>84185000</td> -->
+      <td>{{grossTotal | number: '1.2-2'}}</td>
+      <td>{{totalGstAmount | number: '1.2-2'}}</td>
+      <td *ngIf="!gstType">{{totalSGST | number: '1.2-2'}}</td>
+      <td *ngIf="!gstType">{{totalCGST | number: '1.2-2'}}</td>
+      <td *ngIf="gstType">{{totalIGST | number: '1.2-2'}}</td>
+    </tr>
+  </table>
+  <!-- Advance Detail -->
+  <table style="margin-top: 25px;">
+    <tr class="section-title">
+      <td colspan="4">Advance Detail:-</td>
+    </tr>
+    <tr>
+      <td>Receipt Date</td>
+      <td>Receipt No</td>
+      <td>Receipt Amt</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Date</td>
+      <td>Instrument No.</td>
+      <td>Amount:</td>
+      <td></td>
+    </tr>
+  </table>
+
+  <!-- Bank Detail -->
+  <table>
+    <tr>
+      <td><b>Bank Name</b><br />HSBC BANK</td>
+      <td><b>Account No.</b><br />054783527001</td>
+      <td><b>Branch</b><br />GURGAON</td>
+      <td><b>IFSC Code</b><br />HSBC0110005</td>
+      <td><b>Account Holder Name</b><br />Elan Professional Appliances Pvt Ltd</td>
+    </tr>
+  </table>
+
+  <!-- Terms -->
+  <table>
+    <tr>
+      <td>
+        <b>Terms & Conditions</b><br />
+        1 The absolute title to and ownership of the goods shall remain in shall until Buyer pays the Invoice
+        amount
+        in full.<br />
+        2 Seller’s responsibility ceases once goods leave its premises. In case the consignment remains
+        undelivered,
+        Buyer will be responsible for all claims preferred by the Transporter.<br />
+        3 Material once sold will not be returned.<br />
+        4 Refer annexure for detailed Terms and Conditions.<br />
+        5 All disputed are subject to Jurisdiction of Gurugram Court only.
+      </td>
+      <td style="width: 30%; text-align: center">
+        For Elan Professional Appliances Pvt Ltd<br /><br /><br /><br />
+        Authorised Signatory
+      </td>
+    </tr>
+  </table>
+</div>
+<div class="footer">
+  Registered Address - Unit No. 802, Tower-2, DLF Corporate Greens, Sector 74A, Gurugram - 122004, Haryana.
+  CIN:U52310HR2009PTC039104, MSME Certificate No. – DL10E0001429<br />
+  Email - info@elanpro.net, Website - www.elanpro.net, Customer Care No. – 0124-4120261 / 262 / 263 / 26.<br />
+  Please mail on us to info@elanpro.net revalidate any email request for change in our Bank A/C.<br /><br />
+  <i class="text-center">This is computer generated invoice hence no signature required</i>
+</div>
+<div class="button-container mb-5" *ngIf="actionType === 'create-invoice'">
+  <button class="submit-btn" (click)="onSubmit()">Confirm & Submit</button>
+</div>

@@ -1,0 +1,252 @@
+<div class="section">
+    <div>
+        <mat-card>
+            <form class="form_basic" [formGroup]="createPrForm">
+                <div class="form_set">
+                    <div class="row form_head">
+                        <h3>PR Details</h3>
+                    </div>
+                    <div class="row details" style="padding: 0 0 20px 0;">
+                        <div class="col-md-6">
+                            <table id="customers">
+                                <tr>
+                                    <td class="head_task">Negotiate No.</td>
+                                    <td class="tasklinks" class="tasklink">
+                                        Nego-{{this.id|| "-"}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="head_task">Department</td>
+                                    <td>{{details_pr?.department_name || "-"}}</td>
+                                </tr>
+                                <!-- <tr>
+                                    <td class="head_task">Start date</td>
+                                    <td> {{this.datesRfp?.createdAt[0] | date: 'dd-MM-yyyy'}}</td>
+                                </tr>
+                               -->
+                                <tr>
+                                    <td class="head_task">Start Date</td>
+                                    <td>
+                                        <div class="form-group">
+
+                                            <mat-form-field appearance="outline" readonly>
+                                                <input matInput [matDatepicker]="dp5" (click)="dp5.open()"
+                                                    placeholder="Start Date" formControlName="start_date_nego"
+                                                    [max]="maxDate" [min]="minDate" />
+                                                <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                                                <mat-datepicker #dp5></mat-datepicker>
+                                                <mat-error *ngIf="
+                                              createPrForm.controls['start_date_nego'].hasError('required')
+                                          ">
+                                                    This field is required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <table id="customers">
+                                <tr>
+                                    <td class="head_task">Created By</td>
+                                    <td>{{createdBy || "-"}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="head_task">Type/Capex||OPEX</td>
+                                    <td>{{details_pr?.pr_type}}</td>
+                                </tr>
+
+
+                                <tr>
+                                    <td class="head_task">End Date</td>
+                                    <td>
+                                        <div class="form-group">
+
+                                            <mat-form-field appearance="outline" readonly>
+                                                <input matInput [matDatepicker]="dp6" (click)="dp6.open()"
+                                                    placeholder="End Date" formControlName="end_date_nego"
+                                                    [min]="minEndDate" />
+                                                <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                                                <mat-datepicker #dp6></mat-datepicker>
+                                                <mat-error *ngIf="
+                                  createPrForm.controls['end_date_nego'].hasError('required')
+                              ">
+                                                    This field is required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row form_head">
+                        <h3>Item Details</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Product Image</th>
+                                        <th *ngIf="this.typePr == 'Item'" scope="col">Item Name</th>
+                                        <th *ngIf="this.typePr == 'Service'" scope="col">Serivce Name</th>
+                                        <th *ngIf="this.typePr == 'BOM'" scope="col">Item Name</th>
+
+                                        <th scope="col">Item Code</th>
+                                        <!-- <th *ngIf="this.typePr == 'Service PR'" scope="col">Unit</th> -->
+                                        <th scope="col">Priority</th>
+                                        <th scope="col">Target Price</th>
+                                        <th scope="col">Vendor</th>
+                                        <th *ngIf="!id" scope="col">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="">
+                                    <tr *ngFor="let item of procurement_requests; index as i">
+                                        <td>
+                                            <img [src]="generateImageUrl(item?.item_document)"
+                                                style="width: 70px; height: 70px ;cursor: pointer;"
+                                                (click)="seePreviewTable(item?.item_document)" />
+                                            <!-- <div class="form-group">
+                                                <img [src]="control.value?.item_document" style="cursor: pointer;" width="50" height="50"
+                                                  (click)="seePreviewTable(control.value?.item_document)" />
+                                              </div> -->
+                                        </td>
+                                        <td>{{item?.item_name}}</td>
+                                        <td>{{item?.item_code}}</td>
+                                        <!-- <td  *ngIf="this.typePr == 'Service PR'">{{"-"}}</td> -->
+                                        <td>{{item?.priority}}</td>
+                                        <td class="form-group custom_field">
+                                            <mat-form-field appearance="outline">
+                                                <input matInput formControlName="target_price" #box
+                                                    (keyup)="keyUpAmount(box.value,i,item)" />
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <mat-form-field appearance="outline">
+                                                    <!-- <input matInput type="number" formControlName="vendor_nego" readonly /> -->
+                                                    <mat-select multiple formControlName="vendor_nego"
+                                                        placeholder="Select vendor"
+                                                        (selectionChange)="vendorSelec($event,i,item)">
+                                                        <mat-option *ngFor="let vendor of item?.vendors"
+                                                            [value]="vendor?.vendors">{{vendor?.vendor_management}}</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form_head">
+                        <h3>Delivery Address</h3>
+                    </div>
+
+                    <div class="row" style="padding: 10px 10px 0 10px;" [formGroup]="createPrForm">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <p>Location(Branch)</p>
+                                <mat-form-field appearance="outline" readonly>
+                                    <input matInput type="text" formControlName="location" readonly />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <p>State</p>
+                                <mat-form-field appearance="outline" readonly>
+                                    <input matInput type="text" formControlName="state" readonly />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <p>Delivery Address</p>
+                                <mat-form-field appearance="outline">
+                                    <input matInput type="text" formControlName="delivery_address" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="form_set">
+                    <div class="form_head">
+                        <h3 style="text-align: center !important;">Quotations</h3>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th> item</th>
+                                <th>Vendors</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container>
+                                <tr *ngIf="levelsOne.length > 0">
+                                    <td [attr.colspan]="8" style="    font-weight: 600;
+                                    background: #d0d6db;
+                                    font-size: 16px; text-align: left;">L1</td>
+                                </tr>
+                                <tr *ngFor="let lev of levelsOne; let i = index">
+                                    <td>{{lev?.itemName || lev?.serviceName || lev?.bomName || "-"}}</td>
+                                    <td>{{lev?.vendor_name || "-"}}</td>
+                                    <td>{{lev?.price_amt || "-"}}</td>
+                                </tr>
+                                <tr *ngIf="levelsTwo.length > 0">
+                                    <td [attr.colspan]="8" style="    font-weight: 600;
+                                    background: #d0d6db;
+                                    font-size: 16px; text-align: left;">L2</td>
+                                </tr>
+                                <tr *ngFor="let lev of levelsTwo; let i = index">
+
+                                    <td>{{lev?.itemName || lev?.serviceName || lev?.bomName ||"-"}}</td>
+                                    <td>{{lev?.vendor_name || "-"}}</td>
+                                    <td>{{lev?.price_amt || "-"}}</td>
+                                </tr>
+                                <tr *ngIf="levelsThree.length > 0">
+                                    <td [attr.colspan]="8"
+                                        style="font-weight: 600; background: #d0d6db; font-size: 16px; text-align: left;">
+                                        L3</td>
+                                </tr>
+                                <tr *ngFor="let lev of levelsThree">
+                                    <td>{{lev?.itemName || lev?.serviceName || lev?.bomName || "-"}}</td>
+                                    <td>{{lev?.vendor_name || "-"}}</td>
+                                    <td>{{lev?.price_amt || "-"}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row form_set">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div style="text-align: center; padding: 28px;">
+                            <button style="padding: 22px;" mat-button mat-raised-button color="primary"
+                                (click)="OpenDefineDate()" [class.spinner]="loading" [disabled]="loading">Start
+                                Re-Negotiate </button>
+
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+
+                    </div>
+
+                </div>
+
+            </form>
+        </mat-card>
+    </div>
+</div>

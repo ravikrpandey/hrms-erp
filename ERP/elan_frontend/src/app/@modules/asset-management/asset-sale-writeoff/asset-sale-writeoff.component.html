@@ -1,0 +1,69 @@
+<div class="heading_top">
+    <div class="page-title ">
+      <h1>Asset Management</h1>
+      <p>
+        Asset
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span>Asset Sold and Discard</span>
+      </p>
+    </div>
+    <div class="add_button">
+        <button type="button" *ngIf="assignAction?.Write && lastSegment!='writeoff-asset-approval' && selectedIndex === 0" (click)="openAssetForm('sell')" >
+          <i class="bi bi-person-add"></i> Sell Asset
+        </button>
+        <button type="button" *ngIf="assignAction?.Write && lastSegment!='sale-asset-approval' && selectedIndex === 0" (click)="openAssetForm('writeoff')" >
+          <i class="bi bi-person-add"></i> Write-off Asset
+        </button>
+         <div class="add_button">
+        <button type="button" (click)="exportToExcel()" *ngIf="selectedIndex === 1">
+          <i class="bi bi-person-add"></i> Download Asset
+        </button>
+      </div>
+      </div>
+  
+  </div>
+  
+  <div class="right_data_all">
+    <div class="employ_sube py-2">
+        <div class="searchSelector">
+      <div class="employee_2" align="end">
+        <div class="customSearchbar">
+        <i class="bi bi-search"></i>
+        <input type="text" class="form-control border-0" id="filter-text-box" placeholder="Search....."
+          (input)="onFilterTextBoxChanged()">
+      </div>
+    </div>
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+      </div>
+    </div>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms"
+    (selectedTabChange)="onTabChange($event)" [(selectedIndex)]="selectedIndex">
+    
+    <mat-tab label="All Assets">
+      <ng-container *ngIf="selectedIndex === 0">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:426px;"
+    [rowData]="rowData" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+     (gridReady)="onGridReady($event)" [rowClass]="rowClass"
+    [gridOptions]="gridOptions" [suppressRowClickSelection]="true">
+  </ag-grid-angular>
+  </ng-container>
+  </mat-tab>
+    <mat-tab label="Sold and Discard Assets">
+      <ng-container *ngIf="selectedIndex === 1">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:426px;"
+    [rowData]="rowData_SD" [columnDefs]="columnDefs_SD" [pagination]=true [paginationPageSize]=10
+     (gridReady)="onGridReady($event)" [rowClass]="rowClass"
+    [gridOptions]="gridOptions" >
+  </ag-grid-angular>
+  </ng-container>
+  </mat-tab>
+  
+  </mat-tab-group>
+  </div>

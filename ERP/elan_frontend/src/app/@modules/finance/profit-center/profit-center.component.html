@@ -1,0 +1,53 @@
+<div class="heading_top py-3">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p><i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+    </i><span>Profit Center</span> / <span>Profit Center List</span></p>
+  </div>
+  </div>
+ <div class="d-flex justify-content-end mt-2 add_button me-3">
+    <button type="button"  (click)="navigateToAdd()" > Add New</button>
+ </div>
+  <div class="right_data_all">
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <select id="page-size" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div class="view-toggle  ">
+            <label for="viewSelect" style="margin-right: 8px; margin-top: 7px; margin-bottom: 0;">Select View </label>
+            <select id="viewSelect" [(ngModel)]="selectedView" style="width: 120px;padding:5px 10px;margin-top: 4px;">
+              <option value="list">List View</option>
+              <option value="tree">Tree View</option>
+            </select>
+          </div>
+            <div class="employee_2" align="end">
+                <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                    placeholder="Search">
+        </div>
+    </div>
+
+
+    <div *ngIf="selectedView === 'list'">
+        <div class="ag_grid">
+          <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]=10 [rowData]="getAllProfitCenterData"
+            (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+        </div>
+      </div>
+    
+    
+      <div *ngIf="selectedView === 'tree'" class="ag_grid">
+    
+       <app-profit-center-hierarchy-view></app-profit-center-hierarchy-view>
+    </div>
+ 
+
+ 
+      
+</div>

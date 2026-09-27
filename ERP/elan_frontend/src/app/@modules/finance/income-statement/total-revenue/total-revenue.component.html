@@ -1,0 +1,51 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Finance And Accounting</h1>
+        <p>Generate Income Statement<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span>Total Revenue</span></p>
+    </div>
+   
+</div>
+
+<section class="right_data_all">
+    <div class="form_basic">
+        <!-- shiftMasterForm -->
+        <form class="form_set" [formGroup]="totalRevenueForm">
+            <div class="row mt-2">
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 p-0">
+                    <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Total Revenue</mat-label>
+                        <input matInput type="number" readonly formControlName="total"/>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-1 p-0 common_button_sub mt-2">
+                    <button (click)="close()" class="cancel_button_y">
+                        Close
+                    </button>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6 p-0">
+                </div>
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2 p-0">
+                </div>
+                
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th class="text-center fill">Month</th>
+                <th *ngFor="let sealType of sealTypes" class="text-center fill">
+                    {{ sealType.seal_type }}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of array;let j = index;" [ngClass]="{'fill': j === array.length - 1 }">
+                <td [ngClass]="{'text-center heading': i === 0}" style="text-align: center" *ngFor="let field of row; let i = index">
+                    {{field}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

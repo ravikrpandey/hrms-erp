@@ -1,0 +1,67 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!uomId?"Add UOM":"Update UOM"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View UOM</h3>
+    <fieldset>
+        <div class="m-3" [formGroup]="UOMForm">
+            <div class="row">
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <mat-label>UOM Name</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <!-- <p>UOM Name</p> -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>UOM Name</mat-label>
+                            <input matInput type="text" formControlName="uom_name"  [readonly]="view === 'view'"/>
+                            <mat-error *ngIf="UOMForm.controls['uom_name'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="UOMForm.controls['uom_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <mat-label>Description</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <!-- <p>Description</p> -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <input matInput type="text" formControlName="uom_description"  [readonly]="view === 'view'" />
+                            <mat-error *ngIf="UOMForm.controls['uom_description'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="UOMForm.controls['uom_description'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="view">
+           
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!uomId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="uomId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

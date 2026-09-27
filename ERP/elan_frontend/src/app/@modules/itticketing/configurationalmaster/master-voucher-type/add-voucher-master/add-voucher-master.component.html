@@ -1,0 +1,90 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Configurational Master</h1>
+      <p>
+       Master Voucher Type
+        <i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #858586"
+        ></i>
+        <span *ngIf="!id">Voucher Type Master</span>
+        <span *ngIf="action_type=='edit'">Voucher Type Master </span>
+        <span *ngIf="action_type=='view'">Voucher Type Master </span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="onBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+  </div>
+  
+  <mat-card style="box-shadow: none">
+    <div class="mb-0">
+      <form class="form_set" [formGroup]="createForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Select Voucher</mat-label>
+                <mat-select formControlName="voucher_id">
+                    <mat-option [value]="item.id" *ngFor="let item of getAllVoucherData"
+                         >{{item.name}}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="createForm.controls['voucher_id'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          
+ <div class="heading_neo mt-2">
+    <h3>Add Voucher</h3>
+ </div>
+<div class="table-responsive col-12 mt-2">
+  <table class="table table-bordered" formArrayName="voucherList">
+    <thead>
+      <tr>
+        <th>Voucher Name</th>
+        <th>Voucher Series</th>
+       
+      
+        <th *ngIf="action_type !== 'view'">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let group of voucherList.controls; let i = index" [formGroupName]="i">
+        <td>
+            <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="Name of Voucher" formControlName="voucher_name" />
+              </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Series" formControlName="series" max="2" min="2" />
+          </mat-form-field>
+        </td>
+        
+        <td *ngIf="action_type !== 'view'">
+         
+          <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="voucherList.length>1">delete</mat-icon>
+          <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+        <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'">
+          <button (click)="onSubmit()">
+            {{ !id ? "Save" : "Update" }}
+          </button>
+          <button class="cancel_button_y" routerLink="../">Cancel</button>
+        </div>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  

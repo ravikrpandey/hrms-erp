@@ -1,0 +1,151 @@
+<ng-container>
+  <div class="addmodelCRM">
+    <h3 mat-dialog-title class="popHead">
+      {{
+        data.item_id?.manage_by == "S.No. Only" ? "Item Serial No" : "Item Batch No"
+      }}
+    </h3>
+
+    <mat-dialog-content class="mat-typography">
+      <!-- <div class="mt-4"> -->
+      <div>
+        <form class="" [formGroup]="batachSerialform">
+          <div class="row">
+            <div class="info-box" *ngIf="data.item_id?.manage_by != 'S.No. Only'">
+              <mat-icon>info</mat-icon>
+              <span>Batch number will be generated automatically when the inventory is saved.</span>
+            </div>
+            <div class="col-md-6" style="display: none;">
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Expiry Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    format="DD-MM-YY"
+                    formControlName="expiryDate"
+                    (dateChange)="createCode()"
+                    readonly
+                  />
+                  <mat-error
+                    *ngIf="
+                      batachSerialform.get('expiryDate')?.hasError('required')
+                    "
+                  >
+                    This field is required!
+                  </mat-error>
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-md-6" style="display: none;">
+              <div class="disableClass">
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Batch No</mat-label>
+                  <input
+                    type="text"
+                    matInput
+                    formControlName="batchNo"
+                    readonly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="data.item_id?.manage_by == 'S.No. Only'">
+              <table class="table" width="100">
+                <!-- <thead class="tHead">
+                  <tr class="text-center py-2">
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Serial No</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead> -->
+
+                <tbody formArrayName="serialNoData">
+                  <tr
+                    class="text-center"
+                    *ngFor="
+                      let serialNoData of itemsFormArray['controls'];
+                      let i = index
+                    "
+                    [formGroupName]="i"
+                  >
+                    <!-- <td scope="col">{{i+1}}</td> -->
+                    <td scope="col">
+                      <mat-form-field
+                        appearance="outline"
+                        class="mt-1"
+                        style="width: 130px"
+                      >
+                      <mat-label>Item Name</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="Item_name"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td scope="col">
+                      <mat-form-field
+                        appearance="outline"
+                        class="mt-1"
+                        style="width: 130px"
+                      >
+                      <mat-label>Serial No.</mat-label>
+                        <input
+                          type="text"
+                          matInput
+                          formControlName="itemSerialNo"
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td scope="col">
+                      <div class="form-group pt-1">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 180px"
+                        >
+                          <mat-label>Item Status</mat-label>
+                          <mat-select formControlName="itemStatus" (selectionChange)="onStatusChange($event.value, i)">
+                            <mat-option value="SELECTED">Selected</mat-option>
+                            <mat-option value="REJECTED">Rejected/Damaged</mat-option>
+                            <mat-option value="NOT RECEIVED">Not Received</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <mat-dialog-actions>
+              <div class="common_button_sub">
+                <button
+                  (click)="ngSubmitData(this.batachSerialform)"
+                  *ngIf="this.data.formData?.status !== 'partial-list'"
+                >
+                  Save
+                </button>
+                <button
+                  (click)="editPartialData(this.batachSerialform)"
+                  *ngIf="this.data.formData?.status == 'partial-list'"
+                >
+                  Update
+                </button>
+                <button mat-dialog-close class="cancel_button_y">Close</button>
+              </div>
+            </mat-dialog-actions>
+          </div>
+        </form>
+      </div>
+    </mat-dialog-content>
+  </div>
+</ng-container>

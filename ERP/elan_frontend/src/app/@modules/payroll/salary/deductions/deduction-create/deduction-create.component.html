@@ -1,0 +1,111 @@
+<div class="right_data_all">
+    <div class="row mt-3">
+
+        <div class="page-title">
+            <h1>{{deductionId ? 'Update Deduction' :'Create Deduction'}}</h1>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="container">
+        <form [formGroup]="deductionForm">
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                        <mat-label>Deduction Plan</mat-label>
+                        <input matInput formControlName="deduction_plan"  required />
+                    </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                        <mat-label>Name in Payslip</mat-label>
+                        <input matInput formControlName="name_in_payslip"  required />
+                    </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+      
+              <div class="row mt-3">
+                <p class="custom-label mandatory">Select the deduction frequency</p>
+                <div class="form-group">
+                  <mat-radio-group formControlName="deduction_frequency" class="vertical-radio-group" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                    <mat-radio-button value="one_time_deduction">One-time deduction</mat-radio-button>
+                    <mat-radio-button value="recurring_deduction">Recurring deduction for subsequent Payrolls</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+      
+              <div class="row mt-3">              
+                <div class="col-md-2">
+                  <p class="mandatory custom-label">Calculation Type</p>
+                  <div class="form-group">
+                    <mat-radio-group formControlName="calculation_type" class="vertical-radio-group" (change)="onCalculationTypeChange($event)" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                      <mat-radio-button value="Flat Amount">Flat Amount</mat-radio-button>
+                      <mat-radio-button value="Percentage of">Percentage of </mat-radio-button>
+                    </mat-radio-group>
+                  </div>
+                </div>
+                <ng-container *ngIf="deductionForm.get('calculation_type')?.value === 'Percentage of'">
+                  <div class="col-md-2" style="align-content:end !important">
+                    <select class="form-select form-select-sm" formControlName="deduction_type" aria-label=".form-select-sm example" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                      <option disabled selected>Select Component</option>
+                      <option *ngFor="let comp of compList" [value]="comp.earning_name">{{comp.earning_name}}</option>
+                    </select>
+                  </div>
+                </ng-container>
+      
+            </div>
+                <!-- Conditionally Show Enter Percentage or Enter Amount -->
+                <div class="row mt-2 " style="width: 60% !important;" *ngIf="deductionForm.get('calculation_type')?.value === 'Percentage of'">
+                  <div class="mb-4 custom-input-group">
+                    <label for="bonusPercentage" class="custom-label mandatory">Enter Percentage</label>
+                    <div class="custom-input-container">
+                      <input matInput formControlName="calculation_percentage" type="number" class="custom-input-field" id="bonusPercentage" aria-label="Bonus Percentage" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                      <div class="custom-addon">%</div>
+                    </div>
+                  </div>
+                </div>
+        
+                <div class="row mt-2" style="width: 60% !important;" *ngIf="deductionForm.get('calculation_type')?.value === 'Flat Amount'">
+                  <div class="mb-4 custom-input-group">
+                    <label for="bonusAmount" class="custom-label mandatory">Enter Amount</label>
+                    <div class="custom-input-container">
+                      <input matInput formControlName="calculation_amount" type="number" class="custom-input-field" id="bonusAmount" aria-label="Bonus Amount" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                      <div class="custom-addon">₹</div>
+                    </div>
+                  </div>
+                </div>
+         
+      
+      
+              <mat-checkbox formControlName="mark_as_active" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Mark this as Active</mat-checkbox>
+            
+  
+      
+          
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <div class="alert mt-4 alert-warning fw-bold" role="alert">
+                <p>Note: Once you associate this deduction with an employee, you will only be able to edit the Name in Payslip. The change will be reflected in both new and existing employees.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 d-flex justify-content-between">
+            <button class="btn btn-danger" (click)="back()">Cancel</button>
+            <button *ngIf="typeCheck !== 'View'" class="btn btn-primary" (click)="submitForm()" [disabled]="deductionForm.invalid">{{deductionId && typeCheck === 'Edit' ? 'Update' : 'Save'}}</button>
+        </div>
+        </form>
+      </div>
+      
+
+
+</div>

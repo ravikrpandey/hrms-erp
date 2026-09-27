@@ -1,0 +1,62 @@
+<div class="template-page">
+  <div class="heading_top">
+    <div class="page-title">
+    <h1>HRMS</h1>
+    <p>Document Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+    </i><span>Document Template Master List</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+  </div>
+
+  <!-- Editor Section -->
+  <div class="editor-section" *ngIf="!showPreview">
+    <div class="editor-header">
+      <h2>Add HTML Template</h2>
+      <button class="btn btn-primary" *ngIf="actionType !== 'view'" (click)="previewHtml()" [disabled]="!templateName || !htmlContent">Preview</button>
+    </div>
+
+    <p class="subtitle">Design your HTML template below and click preview to see how it looks.</p>
+
+    <!-- Template Name Input -->
+    <div class="form-group" style="padding: 16px 0;">
+      <input
+        id="templateName"
+        type="text"
+        class="form-control"
+        style="width: 50%; padding: 10px;"
+        [(ngModel)]="templateName"
+        placeholder="Enter template name"
+        name="templateName"
+        [readOnly]="disableField"
+        [disabled]="disableField"
+      />
+      <div *ngIf="templateName !== undefined && templateName.trim().length === 0 && templateNameTouched" class="text-danger" style="padding-top: 6px;">Name cannot be blank</div>
+    </div>
+
+    <div class="editor-container">
+      <div class="editor-scroll">
+      <ckeditor
+        [(ngModel)]="htmlContent"
+        [editor]="Editor"
+      ></ckeditor>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Section -->
+  <div class="preview-section" *ngIf="showPreview">
+    <div class="preview-header">
+      <h2>Template Preview</h2>
+      <button class="btn btn-secondary" *ngIf="actionType !== 'view'" (click)="editAgain()">Back to Edit</button>
+    </div>
+    <div class="preview-box" [innerHTML]="htmlContent"></div>
+  </div>
+
+  <!-- Fixed Save Button -->
+  <button class="btn-save" *ngIf="actionType !== 'view'" (click)="saveTemplate()" [disabled]="isSubmitting">
+    <span *ngIf="!isSubmitting">💾 Save Template</span>
+    <span *ngIf="isSubmitting">Saving...</span>
+  </button>
+</div>

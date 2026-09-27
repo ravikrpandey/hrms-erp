@@ -1,0 +1,142 @@
+<section>
+  <div class="conatiner">
+    <mat-card>
+      <div class="form_head">
+        <h3>PAYMENT DETAILS</h3>
+        <button class="backBtn" (click)="prevTab()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div>
+
+      <div class="form_basic">
+        <form class="form_set pDetails" [formGroup]="paymentForm">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Bank Name</mat-label>
+                  <mat-select formControlName="bank_id">
+                    <mat-option *ngFor="let bank of allBanks" [value]="bank.id">{{ bank.bank_name }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="paymentForm.controls['bank_id'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Holder Name</mat-label>
+                  <input matInput type="text" maxlength="70" formControlName="employee_name_in_bank" [value]="
+                      paymentForm.controls['employee_name_in_bank'].value | titlecase
+                    " />
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('pattern')">
+                    Please enter a valid Name
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Bank Address</mat-label>
+                  <input matInput type="text" maxlength="50" maxlength="50" formControlName="bank_address" />
+                  <mat-error *ngIf="paymentForm.controls['bank_address'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['bank_address'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Account No</mat-label>
+                  <input matInput type="number" maxlength="16" formControlName="account_number" />
+                  <mat-error *ngIf="paymentForm.controls['account_number'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['account_number'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['account_number'].hasError('pattern')">
+                    Enter a valid 11-16-digit ACCOUNT number!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Re-enter Account No</mat-label>
+                  <input matInput type="number" maxlength="16" formControlName="re_enter_account_no" />
+                  <mat-error *ngIf="paymentForm.controls['re_enter_account_no'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>IFSC Code</mat-label>
+                 
+                  <input type="text" matInput formControlName="ifsc_code" />
+                  <mat-error *ngIf="paymentForm.controls['ifsc_code'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>IBAN Number </mat-label>
+                
+                  <input matInput type="text" formControlName="iban_number" />
+                  <mat-error *ngIf="paymentForm.controls['iban_number'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['iban_number'].hasError('leadingSpaces')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Swift Code </mat-label>
+                
+                  <input matInput type="text" formControlName="swift_code" />
+                  <mat-error *ngIf="paymentForm.controls['swift_code'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3" *ngIf="!action_type">
+            <button *ngIf="paymentForm.disable" mat-raised-button color="primary" class="mx-3" papp-document-details
+              (click)="onCreate()">
+              Save & Next
+            </button>
+            <button mat-raised-button color="warn" (click)="Skip()">
+              Skip
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</section>

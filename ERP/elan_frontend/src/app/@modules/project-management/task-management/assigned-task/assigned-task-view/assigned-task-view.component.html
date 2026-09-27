@@ -1,0 +1,250 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Update Task</span></p>
+    </div>
+    <div class="add_button">  
+      <button class="backBtn" (click)="backBtn()" ><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+  
+  <div class="right_data_all">
+    <div>
+      <mat-card>
+        <div class="row form_head">
+          <h3>Add Task</h3>
+        </div>
+        <div class="form_basic mb-0" >
+          <fieldset >
+          <form class="form_set" [formGroup]="createTaskForm">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>Project Name</mat-label>
+                    <input matInput type="text" formControlName="project_name" [readonly]="true" />
+                  </mat-form-field>
+                </div>
+              </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                        <mat-label>Task Type</mat-label>
+                        <input matInput type="text" formControlName="task_type" [readonly]="true" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3" *ngIf="showTaskField">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="readonly-wrapper">
+                        <mat-label>Parent Task</mat-label>
+                        <mat-select 
+                          formControlName="parent_task_id" 
+                          [disabled]="type === 'view' || type === 'edit' || !parentTasks || parentTasks.length === 0">
+                          <mat-option *ngIf="!parentTasks || parentTasks.length === 0" [value]="" disabled>
+                            No tasks available!
+                          </mat-option>
+                          <mat-option *ngFor="let task of parentTasks" [value]="task.id">
+                            {{ task.task_name }}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  
+                  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>Task Name</mat-label>
+                    <input matInput type="text" formControlName="task_name" [readonly]="true" />
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startPicker" formControlName="start_date" [readonly]="type === 'edit'" />
+                    <mat-datepicker-toggle matSuffix [for]="startPicker" [ngClass]="{'readonly-wrapper': type === 'edit'}"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker ></mat-datepicker>
+                    <mat-error *ngIf="createTaskForm.controls['start_date']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endPicker" formControlName="end_date" [readonly]="type === 'edit'" />
+                    <mat-datepicker-toggle matSuffix [for]="endPicker" [ngClass]="{'readonly-wrapper': type === 'edit'}"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-label>Milestone</mat-label>
+                    <mat-select formControlName="milestone_id" [disabled]="type === 'edit'">
+                      <mat-option *ngFor="let milestone of milestoneData" [value]="milestone.id">{{ milestone.milestone_name }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-label>Priority</mat-label>
+                    <mat-select formControlName="priority" [disabled]="type === 'view' || type === 'edit'">
+                      <mat-option *ngFor="let priority of priorityData" [value]="priority.value">
+                        <mat-icon class="priority-icon" [ngStyle]="{ color: priority.color }">{{ priority.icon }}</mat-icon>
+                        <span [ngStyle]="{ color: priority.color }">{{ priority.name }}</span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-label>Assign To</mat-label>
+                    <mat-select formControlName="assign_to" [disabled]="type === 'edit'">
+                      <mat-option *ngFor="let employee of employeeData" [value]="employee.employee_id">{{ employee.employee_name }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="createTaskForm.controls['assign_to']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group ckEditor mb-4">
+                <h3>Task Description</h3>
+                <div class="form-group attach_file" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                  <ckeditor #editer id="ckediter" formControlName = "description" ></ckeditor>
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-4 col-12 mb-3">
+                <div class="form-group" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                  <mat-label style="margin-top: 8px;">Dependence</mat-label>
+                  <mat-radio-group 
+                    formControlName="dependenceType" 
+                    [disabled]="type === 'view' || type === 'edit'" 
+                    class="dependence-radio-group"
+                    (change)="onDependenceTypeChange($event.value)">
+                    <mat-radio-button value="Task or Subtask" [checked]="createTaskForm.controls['dependenceType'].value === 'Task or Subtask'">Task or Subtask</mat-radio-button>
+                    <mat-radio-button value="Other" [checked]="createTaskForm.controls['dependenceType'].value === 'Other'">Others</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+                <div class="form-group" style="margin-left: 85px;" *ngIf="dependenceType === 'Task or Subtask'">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                      <mat-label>Task Name</mat-label>
+                      <mat-select formControlName="dependent_task_id" [disabled]="type === 'view' || type === 'edit'">
+                        <mat-option *ngFor="let task of allTasks" [value]="task.id">{{ task.task_name }}</mat-option>
+                        <mat-option *ngIf="!allTasks?.length" disabled>
+                          No tasks available
+                        </mat-option>
+                      </mat-select>
+                      
+                      <mat-error *ngIf="createTaskForm.controls['dependent_task_id']?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div *ngIf="dependenceType === 'Other'" class="form-group" style="margin-left: 85px;" [ngClass]="{'readonly-wrapper': type === 'edit'}">
+                    <mat-form-field appearance="outline" class="full-width">
+                      <mat-label>Update</mat-label>
+                      <input 
+                        matInput 
+                        formControlName="otherDetails" 
+                        placeholder="Provide details here..." 
+                        rows="3" />
+                    </mat-form-field>
+                  </div>
+            </div>
+            </div>
+            
+            <div class="row">
+              <div class="col-xxl- col-lg-12 col-md-12 col-sm-6 col-12" >
+                <div class="form-group fileWithViewImg" *ngIf="type !== 'view'">
+                  <div class="col-xxl- col-lg-4 col-md-4 col-sm-4 col-4" style="margin-left: 85px;">
+                  <div *ngIf="type === 'edit'">
+                    <div *ngFor="let doc of uploadedDocuments" class="document-row">
+                      <mat-form-field appearance="outline" [ngClass]="'readonly-wrapper'">
+                        <mat-label>Document Name</mat-label>
+                        <input  
+                          matInput class="doc_name"
+                          type="text" 
+                          [value]="doc.document_name" 
+                          [readonly]="type === 'edit'" 
+                        />
+                      </mat-form-field>
+                  
+                      <!-- Download Button -->
+                       <div class="common_button_sub download_btn">
+                      <button 
+                        mat-button class="btn btn-primary"
+                        color="primary" 
+                        (click)="downloadFile(doc.fileUrl, doc.document_name)"
+                      >
+                        Download
+                      </button>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                  
+                <div class="col-xxl- col-lg-4 col-md-4 col-sm-4 col-4 d-flex justify-content-end" style="margin-left: 585px;">
+                  <div class="form-group mx-2 status mt-2" >
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                      <mat-label>Status</mat-label>
+                      <mat-select 
+                        formControlName="status" 
+                        [disabled]="type === 'view' || type === 'edit'"
+                      >
+                        <mat-option 
+                          *ngFor="let status of statuses" 
+                          [value]="status.value" 
+                          [ngStyle]="{'color': status.color}"
+                        >
+                          {{ status.name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="createTaskForm.controls['status']?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+          </fieldset>
+          <div class="mt-3 common_button_sub" *ngIf="type !== 'view'">
+            <button *ngIf="type== 'edit'" (click)="onUpdateStatus()">Update Status</button>
+            <button style="cursor: pointer;" (click)="backBtn()" class="cancel_button_y">Cancel</button>
+          </div>
+        </div>
+        
+        
+        
+      </mat-card>
+    </div>
+  </div>
+  
+
+
+
+

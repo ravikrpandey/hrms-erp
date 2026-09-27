@@ -1,0 +1,652 @@
+<app-wrapper [title]="'Asset Management'" [subTitle]="'Asset'" [subheading]="id ? 'Update Asset' : 'Add New Asset'"
+    [isBack]="true" [showActions]="true">
+    <section class="right_data_all">
+        <mat-card style="box-shadow:none;">
+            <div class="form_basic mb-0">
+                <form class="" [formGroup]="createDirectAsset">
+                    <div class="heading_neo mt-0">
+                        <h3>Basic Details</h3>
+                    </div>
+                    <div class="formBasicArea">
+                        <div class="row">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Asset Type</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Asset Type</mat-label>
+                                        <mat-select formControlName="asset_type">
+                                            <mat-option value="tangible">Tangible</mat-option>
+                                            <mat-option value="intangible">Intangible</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="createDirectAsset.controls['asset_type'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Asset Type is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Asset Category</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Asset Category</mat-label>
+                                        <mat-select formControlName="asset_category"
+                                            (selectionChange)="OnAsset($event.value)">
+                                            <mat-form-field>
+                                                <input matInput [formControl]="filterCatControl" type="text"
+                                                    placeholder="Search" />
+                                            </mat-form-field>
+                                            <mat-option *ngFor="let data of assetCategoryList" [value]="data.id">
+                                                {{ data?.asset_category_name }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['asset_category'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Category is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Item Name</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Item Name</mat-label>
+                                        <!-- multiple [(ngModel)]="selectedItems" -->
+                                        <mat-select formControlName="item_id" (valueChange)="itemDetails($event)">
+                                            <mat-form-field>
+                                                <input matInput [formControl]="filterItemControl" type="text"
+                                                    placeholder="Search" />
+                                            </mat-form-field>
+                                            <mat-option *ngFor="let item of itemsList" [value]="item.id">
+                                                {{ item?.item_name }} ({{item?.item_code}})
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['item_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Item is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Commission Date</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Commission Date</mat-label>
+                                        <input matInput [matDatepicker]="dp4" (click)="dp4.open()"
+                                            formControlName="purchase_date" />
+                                        <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp4></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Put To Use Date</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Put To Use Date</mat-label>
+                                        <input matInput [matDatepicker]="dp2" (click)="dp2.open()"
+                                            formControlName="item_use_date" />
+                                        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp2></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Depriciation By</mat-label>
+
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Depriciation By</mat-label>
+                                        <mat-select formControlName="depriciation_by">
+
+                                            <mat-option value="put_to_use_date">Put to use Date</mat-option>
+                                            <mat-option value="purchase_date">Commission date</mat-option>
+                                            <mat-option value="by_value">Depreciated value</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="
+                                    createDirectAsset.controls['depriciation_by'].hasError(
+                                    'required'
+                                  )
+                                ">
+                                            Required Field
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                                *ngIf="createDirectAsset.get('depriciation_by')?.value==='by_value'">
+                                <div class="form-group mb-3">
+                                    <mat-label>Depreciated value</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Depreciated value</mat-label>
+                                        <input matInput type="text" formControlName="depriciated_value" />
+                                        <mat-error
+                                            *ngIf="createDirectAsset.controls['depriciated_value'].hasError('required')">
+                                            Depreciated value is required when 'Depreciated value' is selected
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Asset Tag Id</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Asset Tag Id</mat-label>
+                                        <input matInput type="text" formControlName="asset_tag_id" readonly />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Branch</mat-label>
+                                    <app-mat-form-select-filter
+                                        [key]="'id'"
+                                        [items]="addressData"
+                                        [displayKey]="'branch_name'"
+                                        placeholder="Select Branch"
+                                        formControlName="branch"
+                                        [noneOption]="false"
+                                    ></app-mat-form-select-filter>
+                                    <mat-error *ngIf="
+                                createDirectAsset.controls['branch'].hasError(
+                                'required'
+                              )
+                            ">
+                                        Required Field
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <!-- 
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="manageBy == 'S.No. Only'">
+                            <div class="form-group mb-3">
+                                <mat-label>Serial Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Serial Number</mat-label>
+                                    <input matInput type="text" formControlName="serial_number" />
+                                    <mat-error *ngIf="
+                      createDirectAsset.controls['serial_number'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Serial Number is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div> -->
+                            <!-- *ngIf="manageBy == 'Batch Only'" -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Serial Number</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Serial Number</mat-label>
+                                        <input matInput type="text" formControlName="serial_number" />
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['serial_number'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Serial Number is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Acquisition amount</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Acquisition amount</mat-label>
+                                        <input matInput type="text" formControlName="amount" />
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['amount'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Acquisition amount is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>Vendor</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Vendor</mat-label>
+                                        <mat-select formControlName="suplier_id">
+                                            <mat-select-filter [array]="supplierDataList"
+                                                (filteredReturn)="supplierDataFilter($event)"></mat-select-filter>
+                                            <mat-option *ngFor="let data of VendorData" [value]="data.id">
+                                                {{ data?.vendor_name }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['suplier_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                            Supplier is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>HSN Code</mat-label>
+                                <mat-form-field appearance="outline" class="readonly-select">
+                                    <mat-label>HSN Code</mat-label>
+                                    <mat-select formControlName="hsn_code_id">
+                                        <mat-option *ngFor="let data of hsnCodeList" [value]="data.id">{{
+                                            data?.hsn_sac_code }}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createDirectAsset.controls['hsn_code_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        HSN Code is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div> -->
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-label>GST %</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>GST</mat-label>
+                                        <input matInput type="text" formControlName="gst" />
+                                        <mat-error *ngIf="
+                      createDirectAsset.controls['gst'].hasError(
+                        'required'
+                      )
+                    ">
+                                            >GST is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                                *ngIf="!showGst">
+                                <div class="form-group mb-4">
+                                    <mat-label>VAT %</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>VAT %</mat-label>
+                                        <input matInput type="number" formControlName="vat"
+                                            (keydown)="removePlus($event)" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                    <mat-label>Quantity</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput type="text" formControlName="quantity" />
+                        <mat-error *ngIf="
+            createDirectAsset.controls['quantity'].hasError(
+            'required'
+            )
+        ">
+                            Quantity is Required.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+                            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                    <mat-label>Total Amount</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Total Amount</mat-label>
+                        <input matInput type="text" formControlName="total_amt" readonly/>
+                        <mat-error *ngIf="
+            createDirectAsset.controls['total_amt'].hasError(
+            'required'
+            )
+        ">
+                            Total Amount is Required.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Frequency</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Frequency</mat-label>
+                                        <mat-select formControlName="frequency">
+                                            <mat-option [value]="'Yearly'">Yearly</mat-option>
+                                            <mat-option [value]="'Monthly'">Monthly</mat-option>
+                                            <mat-option [value]="'Daily'">Daily</mat-option>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="
+            createDirectAsset.controls['frequency'].hasError(
+            'required'
+            )
+        ">
+                                            Frequency is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Use Full life (Years)</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Use Full life (Years)</mat-label>
+                                        <input matInput type="number" formControlName="use_full_life" />
+                                        <mat-error
+                                            *ngIf="createDirectAsset.controls['use_full_life'].hasError('required')">Use
+                                            Full life is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Depreciation Rate (%)</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Depreciation Rate (%)</mat-label>
+                                        <input matInput type="number" formControlName="salvage_value" />
+                                        <mat-error
+                                            *ngIf="createDirectAsset.controls['salvage_value'].hasError('required')">
+                                            Determine Salvage Value is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Depreciation Method</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Depreciation Method</mat-label>
+                                        <mat-select formControlName="depMethod_id">
+                                            <mat-option *ngFor="let data of calculateData" [value]="data.id">
+                                                {{ data?.calculationMethod }}
+                                            </mat-option>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="
+            createDirectAsset.controls['depMethod_id'].hasError(
+            'required'
+            )
+        ">
+                                            Depreciation Method is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-4">
+                                    <mat-label>Asset Status</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Status</mat-label>
+                                        <mat-select formControlName="assetStatus">
+                                            <mat-option *ngFor="let data of assetStatuses" [value]="data.id">{{
+                                                data?.status_name }}</mat-option>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="
+            createDirectAsset.controls['assetStatus'].hasError(
+            'required'
+            )
+        ">
+                                            Asset Status is Required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-4">
+                <mat-label>Accumulated Depreciation</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Accumulated Depreciation</mat-label>
+                        <input matInput type="number" formControlName="accumulated_dep"/>
+   
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-2">
+                                <section class="example-section">
+                                    <mat-checkbox class="example-margin" (change)="onCheckboxChange($event)"
+                                        [checked]="isCheckedCondition">Asset for preventive maintenance</mat-checkbox>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- chart of account start -->
+                    <div class="heading_neo mt-3">
+                        <h3>Account Details </h3>
+                    </div>
+                    <div formArrayName="Account_details">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">S.No.</th>
+                                        <th scope="col">Account</th>
+                                        <th scope="col">Debit</th>
+                                        <th scope="col">Credit</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of Account_details.controls; let i = index"
+                                        [formGroupName]="i">
+                                        <td>{{ i + 1 }}</td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Account</mat-label>
+                                                <mat-select #select2 formControlName="chart_account_id"
+                                                    (selectionChange)="onAccountChange()">
+
+                                                    <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                                                        (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                                                    <ng-container>
+                                                        <mat-option [value]="data.id"
+                                                            *ngFor="let data of chartedAccount" [hidden]="data.hidden">
+                                                            {{data.account_code}} - {{data.account_name}}
+                                                        </mat-option>
+                                                    </ng-container>
+
+                                                </mat-select>
+                                                <button mat-icon-button
+                                                    *ngIf="this.Account_details.controls[i].get('chart_account_id')?.value"
+                                                    matSuffix (click)="clearDropdown('chart_account_id',i)">
+                                                    <mat-icon class="text-dark"
+                                                        style="font-size: 20px;">close</mat-icon>
+                                                </button>
+                                                <mat-error
+                                                    *ngIf="this.Account_details.controls[i].get('chart_account_id')?.touched && this.Account_details.controls[i].get('chart_account_id')?.errors?.['required']">
+                                                    * Required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </td>
+
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Debit</mat-label>
+                                                <input matInput formControlName="debit_amount"
+                                                    (keyup)="calculation($event,'debit_amount',i)" />
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <mat-form-field appearance="outline">
+                                                <mat-label>Credit</mat-label>
+                                                <input matInput formControlName="credit_amount"
+                                                    (keyup)="calculation($event,'credit_amount',i)" />
+                                            </mat-form-field>
+                                        </td>
+                                        <td>
+                                            <div class="edit_del flexRow">
+                                                <div (click)="AddRow()">
+                                                    <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                                                </div>
+                                                <div *ngIf="i !== 0">
+                                                    <mat-icon matTooltip="Delete Item"
+                                                        (click)="removeRow(i)">delete_circle</mat-icon>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- chart of account end -->
+                    <!-- </div> -->
+
+                    <!-- imagesss? -->
+                    <div class="heading_neo mb-3">
+                        <h3>Upload Document</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Documents Name</mat-label>
+                                    <input matInput type="text" formControlName="document_name" />
+                                    <mat-error *ngIf="createDirectAsset.controls['document_name'].hasError('required')">
+                                        Documents name is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group-name-cat">
+                                <input (change)="onChange($event)" class="form-control" type="file"
+                                    style="padding-right: 19%" title="Upload Document" formControlName="upload_document"
+                                    accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc" />
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <div class="add_button">
+                                <button type="button" (click)="addDocument()">Add Document</button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive mt-4">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Document Name</th>
+                                        <th>Document</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let doc of arrayDataPush; let i = index">
+                                        <td>{{doc?.document_name || '-'}}</td>
+                                        <td>
+                                            <a href="{{generateImageUrl()+doc?.upload_document}}" target="_blank"
+                                                download>
+                                                <mat-icon class="imgEmpCopy"> visibility</mat-icon>
+                                            </a>
+                                        </td>
+                                        <td style="color: #7c7c7c; cursor: pointer;">
+                                            <i class="material-icons" (click)="deletData(doc,i)">delete</i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="arrayDataPush?.length === 0">
+                                <p style="text-align: center;
+            font-size: 16px;">Documents Not Found</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="heading_neo mb-3">
+                        <h3>Specifications</h3>
+                    </div>
+                    <ng-container formArrayName="itemSpecification"
+                        *ngFor="let control of CF_1.itemSpecification['controls']; index as i">
+                        <div class="row" [formGroupName]="i">
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Specification Type</mat-label>
+                                        <input matInput type="text" formControlName="specificationType" />
+                                        <mat-error *ngIf="control.controls['specificationType'].hasError('required')">
+                                            *Required!</mat-error>
+                                        <mat-error
+                                            *ngIf="control.controls['specificationType'].hasError('leadingSpaces')">
+                                            *No leading spaces!
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Specification Details</mat-label>
+                                        <input matInput type="text" formControlName="specificationDetails" />
+                                        <mat-error
+                                            *ngIf="control.controls['specificationDetails'].hasError('required')">
+                                            *Required!</mat-error>
+                                        <mat-error
+                                            *ngIf="control.controls['specificationDetails'].hasError('leadingSpaces')">
+                                            *No leading spaces!
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                                <div class="form-group mt-2" style="cursor: pointer; font-size: 20px; color: #016DB6;">
+                                    <i *ngIf="i>0" class="material-icons" (click)="deleteRow(i)">delete</i>
+                                </div>
+                            </div>
+                            <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                                <div class="form-group mt-2" *ngIf="i === Account_details.length - 2">
+                                    <span style="cursor: pointer; font-size: 20px; color: #016DB6;"><i
+                                            class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12"></div>
+                        </div>
+                    </ng-container>
+                    <div class="common_button_sub mt-4" align="end">
+                        <button type="button" (click)="onSubmitForm()" [disabled]="isSubmitting"> {{id?'Update
+                            Asset':'Add
+                            Asset'}}</button>
+                        <button type="button" class="cancel_button_y"
+                            routerLink="/master/asset-management/asset-list">Discard</button>
+                    </div>
+                </form>
+            </div>
+        </mat-card>
+    </section>
+</app-wrapper>

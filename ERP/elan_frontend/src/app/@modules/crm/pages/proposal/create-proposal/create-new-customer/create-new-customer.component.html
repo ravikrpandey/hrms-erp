@@ -1,0 +1,242 @@
+<div class="conatiner">
+  <section>
+    <form [formGroup]="proposalForm">
+      <div class="row mx-3 mt-4">
+        <div
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          [hidden]="true"
+        >
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Proposal Type</mat-label>
+              <mat-select
+                formControlName="proposal_type_id"
+                (selectionChange)="proposalSelection($event)"
+              >
+                <mat-option
+                  *ngFor="let item of proposalTypeList"
+                  [value]="item.id"
+                  >{{ item.perposal_type }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <!-- <app-mat-form-select-filter *ngIf="proposalTypeList.length > 0"
+                formControlName="proposal_type_id"
+                [items]="proposalTypeList"
+                [displayKey]="'perposal_type'"
+                [key]="'perposal_type'"
+                placeholder="Proposal Type"
+              >
+              </app-mat-form-select-filter> -->
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Company Name</mat-label>
+              <input matInput type="text" formControlName="company_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Lead Of Sources</mat-label>
+              <mat-select formControlName="lead_source">
+                <mat-option
+                  *ngFor="let leadSource of leadSourceList"
+                  [value]="leadSource.id"
+                  >{{ leadSource.lead_source }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Created By</mat-label>
+              <mat-select formControlName="created_by">
+                <mat-option
+                  *ngFor="let createdBy of createdByList"
+                  [value]="createdBy"
+                  (click)="selectCreatedBy(createdBy)"
+                  >{{ createdBy }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          *ngIf="proposalForm.get('created_by')?.value === 'Any Other'"
+        >
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Employee</mat-label>
+              <mat-select formControlName="created_by_id">
+                <mat-option
+                  *ngFor="let emp of salesEmployeeList"
+                  [value]="emp.employee_id"
+                  >{{ emp.employee_code }} -  {{emp?.title }} {{ emp.first_name }}
+                  {{ emp.middle_name }} {{ emp.last_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+              
+              <mat-form-field appearance="outline">
+         
+                <mat-label>Title</mat-label>
+                <mat-select
+                  formControlName="title"
+                  placeholder="Mr || Mrs || Miss"
+                  (selectionChange)="typeChange($event)"
+                >
+                  <mat-option value="Mr">Mr</mat-option>
+                  <mat-option value="Mrs">Mrs</mat-option>
+                  <mat-option value="Miss">Miss</mat-option>
+                </mat-select>
+               
+              </mat-form-field>
+            </div>
+          </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Person Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_person_name"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Number</mat-label>
+              <input
+                matInput
+                type="tel"
+                formControlName="contact_number"
+                (keypress)="keyPress($event)"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Mail ID</mat-label>
+              <input matInput type="email" noCapitalize formControlName="mail_id" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <app-mat-form-select-filter
+              *ngIf="countryList.length > 0"
+              formControlName="country_id"
+              [key]="'countryss_id'"
+              [items]="countryList"
+              [displayKey]="'countryss_name'"
+              placeholder="Select Country"
+            >
+            </app-mat-form-select-filter>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Pincode</mat-label>
+              <input matInput type="tel" maxlength="6" formControlName="pincode" (keypress)="allowOnlyNumber($event)" (blur)="fetchPinDetails()" />
+               <!-- Error messages -->
+                <mat-error *ngIf="proposalForm.get('pincode')?.hasError('required')">
+                  Pincode is required
+                </mat-error>
+                <mat-error *ngIf="proposalForm.get('pincode')?.hasError('pattern')">
+                  Pincode must be 6 digits
+                </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <app-mat-form-select-filter
+              formControlName="state_id"
+              [key]="'states_id'"
+              [items]="stateList"
+              [displayKey]="'states_name'"
+              placeholder="Select State"
+            >
+            </app-mat-form-select-filter>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <app-mat-form-select-filter
+              formControlName="city_id"
+              [key]="'city_id'"
+              [items]="cityList"
+              [displayKey]="'city_name'"
+              placeholder="Select City"
+            >
+            </app-mat-form-select-filter>
+          </div>
+        </div>
+
+        <div
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          *ngIf="
+            postOffice.length > 0 &&
+            proposalForm.get('country_id')?.value == 101
+          "
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Choose Postal Address</mat-label>
+            <mat-select
+              formControlName="postal_address"
+              (valueChange)="selectPostal($event)"
+            >
+              <mat-option
+                *ngFor="let post of postOffice"
+                [value]="post.Name + ', ' + post.District"
+              >
+                {{
+                  post.Name +
+                    ",
+                  " +
+                    post.District
+                }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Address</mat-label>
+              <input matInput type="text" formControlName="address" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub">
+        <button
+          mat-raised-button
+          color="primary"
+          class="mx-3 mb-4"
+          (click)="saveCustomer()"
+          [disabled]="proposalForm.invalid"
+        >
+          Save & Next
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

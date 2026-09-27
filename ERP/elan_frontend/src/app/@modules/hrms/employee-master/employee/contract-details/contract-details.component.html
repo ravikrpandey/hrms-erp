@@ -1,0 +1,143 @@
+<div class="form_basic1 main_form">
+
+  <div class="heading_neo">
+    <h3>Contract Details</h3>
+  </div>
+        <form class="" [formGroup]="contractForm">
+          <div class="form_sePo">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Type Of Contract</mat-label>
+                <mat-form-field appearance="outline">
+               
+                  <mat-select formControlName="contract_types_id">
+                    <mat-select-filter [array]="contracts"
+                  (filteredReturn)="contractSearch($event)"></mat-select-filter>
+                    <mat-option *ngFor="let contract of contractList" [value]="contract.id">{{ contract.contract_type
+                      }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="contractForm.controls['contract_types_id'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Start working date</mat-label>
+                <mat-form-field appearance="outline" readonly>
+               
+                  <input matInput [matDatepicker]="dp" (click)="dp.open()" (dateChange)="startDate($event)" formControlName="start_working_date"
+                    readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                  <mat-error *ngIf="
+                        contractForm.controls['start_working_date'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Probation End date</mat-label>
+                <mat-form-field appearance="outline" readonly>
+                 
+                
+                  <input matInput [matDatepicker]="dpEX" (click)="dpEX.open()" [min]="calculateMinToDate()"  formControlName="end_date_probation"
+                    readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dpEX"></mat-datepicker-toggle>
+                  <mat-datepicker #dpEX></mat-datepicker>
+                  <mat-error *ngIf="
+                        contractForm.controls['end_date_probation'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Allowance Details -->
+
+          <mat-tab-group class="mt-4">
+            <mat-tab label="Promotion History" class="table-responsive">
+              <table class="table table-bordered tableHeadingg">
+                <thead>
+                  <tr>
+                    <th>From Position</th>
+                    <th>To Position</th>
+                    <th>Date</th>
+                    <th>Remark</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Junior Developer</td>
+                    <td>Sr. Develope</td>
+                    <td>10/06/2024</td>
+                    <td>Demo</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-tab>
+            <mat-tab label="Demotion History">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>From Position</th>
+                    <th>To Position</th>
+                    <th>Date</th>
+                    <th>Remark</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Junior Developer</td>
+                    <td>Sr. Develope</td>
+                    <td>10/06/2024</td>
+                    <td>Demo</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-tab>
+            <mat-tab label="Transfer History">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>From Position</th>
+                    <th>To Position</th>
+                    <th>Date</th>
+                    <th>Remark</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Junior Developer</td>
+                    <td>Sr. Develope</td>
+                    <td>10/06/2024</td>
+                    <td>Demo</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div class="row">
+
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="common_button_sub" *ngIf="!action_type">
+            <button (click)="onSubmitForm()">
+              Save
+            </button>
+            </div>
+          </div>
+        </div>
+          </div>
+        </form>
+    
+  
+    </div>

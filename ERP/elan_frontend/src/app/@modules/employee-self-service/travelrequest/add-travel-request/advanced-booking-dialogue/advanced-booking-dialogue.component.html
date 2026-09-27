@@ -1,0 +1,43 @@
+
+<h3 class="popHead">Advance Booking Details</h3>
+
+<mat-dialog-content class="mat-typography">
+  <div class="contain">
+    <p>Advance booking details on this travel request</p>
+    <div class="row">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <form class="form_set" [formGroup]="bookingform">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Total Amount</mat-label>
+              <input matInput type="number" formControlName="totalAmount" />
+            </mat-form-field>
+          </div>
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Payment Method</mat-label>
+              <mat-select formControlName="paymentMethod" (selectionChange)="onPaymentMethodChange($event.value)">
+                <mat-option value="Petty_Cash">Petty Cash</mat-option>
+                <mat-option value="Bank">Bank</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group" *ngIf="bookingform.get('paymentMethod')?.value === 'Bank'">
+            <mat-form-field appearance="outline">
+              <mat-label>Bank Name</mat-label>
+              <mat-select formControlName="bankName">
+                <mat-option *ngFor="let bank of banks" [value]="bank.id">{{ bank.bank_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub">
+  <button (click)="submit()">
+    Submit
+  </button>
+  <button mat-dialog-close class="cancel_button_y" (click)="close()">Close</button>
+</mat-dialog-actions>

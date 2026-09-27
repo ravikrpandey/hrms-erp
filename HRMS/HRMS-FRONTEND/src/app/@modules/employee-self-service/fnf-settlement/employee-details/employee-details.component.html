@@ -1,0 +1,89 @@
+
+<div style="width: 100%;
+    float: left;padding-top: 20px;">
+<form [formGroup]="employeedetailsform" class="form-section" novalidate>
+  <div class="form-grid">
+
+    <div class="form-group">
+      <label>Employee Code</label>
+      <input type="text" formControlName="employee_code" class="form-control"readonly  />
+      <small *ngIf="employeedetailsform.get('employee_code')?.touched && employeedetailsform.get('employee_code')?.invalid" readonly class="text-danger">
+        Employee ID is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Employee Name</label>
+      <input type="text" formControlName="employee_name" class="form-control" readonly  />
+      <small *ngIf="employeedetailsform.get('employee_name')?.touched && employeedetailsform.get('employee_name')?.invalid" class="text-danger">
+        Employee Name is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Department</label>
+      <input type="text" formControlName="department" class="form-control"readonly  />
+      <small *ngIf="employeedetailsform.get('department')?.touched && employeedetailsform.get('department')?.invalid" class="text-danger">
+        Department is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Designation</label>
+      <input type="text" formControlName="designation" class="form-control" readonly />
+      <small *ngIf="employeedetailsform.get('designation')?.touched && employeedetailsform.get('designation')?.invalid" class="text-danger">
+        Designation is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>DOJ</label>
+      <input type="text" formControlName="date_of_joining" class="form-control"readonly  />
+      <small *ngIf="employeedetailsform.get('date_of_joining')?.touched && employeedetailsform.get('date_of_joining')?.invalid" class="text-danger">
+        Date of Joining is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Last Working Date</label>
+      <input type="text" formControlName="last_working_date" class="form-control"readonly  />
+      <small *ngIf="employeedetailsform.get('last_working_date')?.touched && employeedetailsform.get('last_working_date')?.invalid" class="text-danger">
+        Last Working Date is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>Resignation Type</label>
+      <select formControlName="resignation_type" class="form-control">
+        <option value="">Select</option>
+        <option value="VOLUNTARY">Voluntary</option>
+        <option value="RETREMENT">Retirement</option>
+      </select>
+      <small *ngIf="employeedetailsform.get('resignation_type')?.touched && employeedetailsform.get('resignation_type')?.invalid" class="text-danger">
+        Resignation Type is required
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label>FnF Status</label>
+      <select formControlName="fnf_status" class="form-control">
+        <option value="">Select</option>
+        <option value="PENDING">Pending </option>
+        <option value="APPROVED">Approved</option>
+        <option value="PAID">Paid</option>
+      </select>
+      <small *ngIf="employeedetailsform.get('fnf_status')?.touched && employeedetailsform.get('fnf_status')?.invalid" class="text-danger">
+        FnF Status is required
+      </small>
+    </div>
+
+  </div>
+
+  <div class="form-actions mt-3">
+    <button class="action-btn btn btn-primary" type="button" (click)="submit()">Save & Next</button>
+    <button class="action-btn btn btn-secondary Cancel" type="button" [routerLink]="['/master/ess/fnf-settlement']">Cancel</button>
+  </div>
+</form>
+</div>
+
+

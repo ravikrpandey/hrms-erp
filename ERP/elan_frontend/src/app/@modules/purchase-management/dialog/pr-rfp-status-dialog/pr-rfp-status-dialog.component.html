@@ -1,0 +1,104 @@
+<h3 mat-dialog-title class="popHead">PR Record</h3>
+
+<mat-dialog-content class="mat-typography">
+    <div class="pr-details-container" *ngIf="data && getData">
+        <table class="pr-details-table">
+            <tbody>
+                <!-- <tr>
+                    <td class="detail-label">PR Id</td>
+                    <td class="detail-value">{{ data?.id }}</td>
+                </tr> -->
+                <tr>
+                    <td class="detail-label">PR Code</td>
+                    <td class="detail-value">{{ data?.pr_number }}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Department</td>
+                    <td class="detail-value">
+                        {{ data?.department_name || getData?.MASTER_DEPARTMENT?.department_name}}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Create Date</td>
+                    <td class="detail-value">{{ this.createDate | date: 'dd/MM/yyyy, h:mm a' }}</td>
+                </tr>
+                <tr>
+                    <td class="detail-label">Approval Status</td>
+                    <td class="detail-value">
+                        <span class="status-badge" [ngClass]="{
+                                'status-approved': this.getData?.final_status === 'Approved',
+                                'status-pending': this.getData?.final_status === 'Pending',
+                                'status-rejected': this.getData?.final_status === 'Rejected'
+                            }">
+                            {{ this.getData?.final_status }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="detail-label">PR Category</td>
+                    <td class="detail-value">{{ data?.pr_category + " PR" }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Procurement Items Section -->
+        <ng-container *ngIf="procurement_requests?.length">
+            <div class="items-section" *ngFor="let item of procurement_requests; let i = index">
+                <div class="item-header">
+                    <span>{{ data?.pr_category === 'Service' ? 'Service' : 'Item' }} #{{ i + 1 }}</span>
+                </div>
+                <table class="pr-details-table">
+                    <tbody>
+                        <!-- Service Fields -->
+                        <tr *ngIf="data?.pr_category === 'Service'">
+                            <td class="detail-label">Service Name</td>
+                            <td class="detail-value">{{ item?.MASTER_SERVICE?.service_name || "-" }}</td>
+                        </tr>
+                        <tr *ngIf="data?.pr_category === 'Service'">
+                            <td class="detail-label">Service Quantity</td>
+                            <td class="detail-value">{{ item?.quantity || "-" }}</td>
+                        </tr>
+
+                        <!-- Item Fields -->
+                        <tr *ngIf="data?.pr_category === 'Item'">
+                            <td class="detail-label">Item Name</td>
+                            <td class="detail-value">{{ item?.MASTER_ITEM?.item_name || "-" }}</td>
+                        </tr>
+                        <tr *ngIf="data?.pr_category === 'Item'">
+                            <td class="detail-label">Item Code</td>
+                            <td class="detail-value">{{ item?.MASTER_ITEM?.item_code || "-" }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="detail-label">Priority</td>
+                            <td class="detail-value">{{ item?.priority || "-" }}</td>
+                        </tr>
+
+                        <tr *ngIf="data?.pr_category === 'Item'">
+                            <td class="detail-label">Item Quantity</td>
+                            <td class="detail-value">{{ item?.quantity || "-" }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="detail-label">Total MVP</td>
+                            <td class="detail-value">{{ item?.total_mvp || "-" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label">Tax</td>
+                            <td class="detail-value">{{ item?.tax || "-" }}</td>
+                        </tr>
+                        <tr>
+                            <td class="detail-label">Grand Total</td>
+                            <td class="detail-value fw-bold">{{ item?.grand_total || "-" }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button mat-dialog-close class="cancel_button_y">
+        Close
+    </button>
+</mat-dialog-actions>

@@ -1,0 +1,16 @@
+<script src="https://www.google.com/recaptcha/api.js?render={{SITE_KEY}}"></script>
+
+<div>
+  <button (click)="generateToken()">
+    Generate Token
+  </button>
+</div>
+
+<div style="padding: 20px 10px;">
+  <label name="tokenstr" id="tokenstr">{{token}}</label>
+</div>
+<div *ngIf="token !== undefined" style="padding: 10px;">
+  <ngx-copy-to-clipboard target="#tokenstr" [action]="copy">
+    Copy to clipboard
+  </ngx-copy-to-clipboard>
+</div>

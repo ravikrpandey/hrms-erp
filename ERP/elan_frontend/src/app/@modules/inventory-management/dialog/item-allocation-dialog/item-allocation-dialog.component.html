@@ -1,0 +1,306 @@
+<app-wrapper
+  [title]="'Inventory Management'"
+  [subTitle]="'Stock'"
+  [subheading]="'Stock Warehouse Allocation'"
+  [showActions]="true"
+  [actions]="actions"
+>
+  <div class="warehouse-tree-container">
+    <!-- Item Details Card -->
+    <div
+      class="item-details-card py-2 px-3 mb-3 border rounded bg-light"
+      *ngIf="data.itemData"
+    >
+      <div class="row align-items-center">
+        <!-- Item Name / Header -->
+        <div class="col-md-4 d-flex align-items-center">
+          <mat-icon class="me-2 text-primary">inventory</mat-icon>
+          <h5 class="mb-0 text-truncate font-weight-bold">
+            {{ data.itemData.item_name }}
+          </h5>
+        </div>
+        <!-- Details Inline -->
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-sm-4 text-md-center">
+              <span class="text-muted small d-block">Batch Number:</span>
+              <strong>{{ data.itemData.batchNo || "N/A" }}</strong>
+            </div>
+            <div class="col-sm-4 text-md-center">
+              <span class="text-muted small d-block">Received Qty:</span>
+              <strong>{{ data.itemData.rcvd_qty }} Units</strong>
+            </div>
+            <div class="col-sm-4 text-md-center">
+              <span class="text-muted small d-block">Category:</span>
+              <strong>{{ data.itemData.item_cat }}</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Serial Numbers Allocation Section (S.No. Only) -->
+    <form
+      [formGroup]="form"
+      *ngIf="serialNoList.length > 0"
+      class="d-flex flex-column flex-grow-1 overflow-hidden"
+    >
+      <mat-dialog-content style="flex: 1; overflow: auto; max-height: none; padding: 0 5px 15px 5px;">
+        <div class="serial-section" formArrayName="serialAllocations">
+          <h4><mat-icon>list_alt</mat-icon> Item Serial Numbers Allocation</h4>
+          <div
+            class="table-wrapper"
+            style="
+              overflow: auto;
+              max-height: none;
+              border: 1px solid #eee;
+              border-radius: 8px;
+            "
+          >
+            <table
+              style="width: 100%; min-width: 1000px; border-collapse: collapse"
+            >
+              <thead>
+                <tr>
+                  <th style="width: 60px">#</th>
+                  <th>Batch No</th>
+                  <th>Serial Number</th>
+                  <th style="min-width: 170px">Sub Location Type</th>
+                  <th style="min-width: 170px">Sub Location</th>
+                  <th style="min-width: 170px">Bay</th>
+                  <th style="min-width: 170px">Rack</th>
+                  <th style="min-width: 170px">Bin</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let control of serialAllocations.controls;
+                    let idx = index
+                  "
+                  [formGroupName]="idx"
+                >
+                  <td>{{ idx + 1 }}</td>
+                  <td>{{ control.get("batchNo")?.value }}</td>
+                  <td>
+                    <strong>{{ control.get("itemSerialNo")?.value }}</strong>
+                  </td>
+                  <td>
+                    <app-mat-form-select-filter
+                      [key]="'id'"
+                      [items]="zoneTypes"
+                      [displayKey]="'zone_type'"
+                      placeholder="Select Sub Location Type"
+                      formControlName="zone_type_id"
+                    ></app-mat-form-select-filter>
+                  </td>
+                  <td>
+                    <app-mat-form-select-filter
+                      *ngIf="
+                        control.get('zone_type_id')?.value &&
+                        rowZoneLists[idx] &&
+                        rowZoneLists[idx].length > 0
+                      "
+                      [key]="'id'"
+                      [items]="rowZoneLists[idx]"
+                      [displayKey]="'name'"
+                      placeholder="Select Sub Location"
+                      formControlName="zone_id"
+                    ></app-mat-form-select-filter>
+                  </td>
+                  <td>
+                    <app-mat-form-select-filter
+                      *ngIf="
+                        control.get('zone_id')?.value &&
+                        rowBayLists[idx] &&
+                        rowBayLists[idx].length > 0
+                      "
+                      [key]="'id'"
+                      [items]="rowBayLists[idx]"
+                      [displayKey]="'name'"
+                      placeholder="Select Bay"
+                      formControlName="bay_id"
+                    ></app-mat-form-select-filter>
+                  </td>
+                  <td>
+                    <app-mat-form-select-filter
+                      *ngIf="
+                        control.get('bay_id')?.value &&
+                        rowRackLists[idx] &&
+                        rowRackLists[idx].length > 0
+                      "
+                      [key]="'id'"
+                      [items]="rowRackLists[idx]"
+                      [displayKey]="'name'"
+                      placeholder="Select Rack"
+                      formControlName="rack_id"
+                    ></app-mat-form-select-filter>
+                  </td>
+                  <td>
+                    <app-mat-form-select-filter
+                      *ngIf="
+                        control.get('rack_id')?.value &&
+                        rowBinLists[idx] &&
+                        rowBinLists[idx].length > 0
+                      "
+                      [key]="'id'"
+                      [items]="rowBinLists[idx]"
+                      [displayKey]="'name'"
+                      placeholder="Select Bin"
+                      formControlName="bin_id"
+                    ></app-mat-form-select-filter>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </mat-dialog-content>
+
+      <!-- Action Footer for S.No. Allocation -->
+      <mat-dialog-actions align="end" class="border-top pt-2 mt-2 bg-white w-100">
+        <div class="me-auto d-flex flex-column align-items-start">
+          <mat-checkbox formControlName="bypass_approval">Bypass Stock Acknowledgement Approval</mat-checkbox>
+          <small *ngIf="form.get('bypass_approval')?.value" class="text-danger mt-1 d-flex align-items-center">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; margin-right: 4px;">warning</mat-icon>
+            Warning: The stock will be approved and ledger updated immediately!
+          </small>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="allocate-btn"
+          (click)="onSubmit()"
+          [disabled]="form.invalid"
+        >
+          <mat-icon>check_circle</mat-icon> Save Allocation
+        </button>
+      </mat-dialog-actions>
+    </form>
+
+    <!-- Allocation Flow (Batch Only) -->
+    <form
+      [formGroup]="form"
+      class="allocation-section d-flex flex-column flex-grow-1 overflow-hidden"
+      *ngIf="serialNoList.length === 0"
+    >
+      <mat-dialog-content style="flex: 1; overflow: auto; max-height: none; padding: 0 5px 15px 5px;">
+        <h4>Allocation Path</h4>
+
+        <div class="hierarchy-flow">
+          <!-- Level 1: Zone Type -->
+          <div class="flow-item level-zone-type">
+            <div class="icon-node" matTooltip="Step 1: Select Type">
+              <mat-icon>category</mat-icon>
+            </div>
+            <div class="content">
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="zoneTypes"
+                [displayKey]="'zone_type'"
+                placeholder="Select Sub Location Type"
+                formControlName="zone_type_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+
+          <!-- Level 2: Zone -->
+          <div
+            class="flow-item level-zone"
+            *ngIf="form.get('zone_type_id')?.value && zoneList.length > 0"
+          >
+            <div class="icon-node" matTooltip="Step 2: Select Zone">
+              <mat-icon>location_on</mat-icon>
+            </div>
+            <div class="content">
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="zoneList"
+                [displayKey]="'name'"
+                placeholder="Select Sub Location"
+                formControlName="zone_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+
+          <!-- Level 3: Bay -->
+          <div
+            class="flow-item level-bay"
+            *ngIf="form.get('zone_id')?.value && bayList.length > 0"
+          >
+            <div class="icon-node" matTooltip="Step 3: Select Bay">
+              <mat-icon>view_quilt</mat-icon>
+            </div>
+            <div class="content">
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="bayList"
+                [displayKey]="'name'"
+                placeholder="Select Bay"
+                formControlName="bay_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+
+          <!-- Level 4: Rack -->
+          <div
+            class="flow-item level-rack"
+            *ngIf="form.get('bay_id')?.value && rackList.length > 0"
+          >
+            <div class="icon-node" matTooltip="Step 4: Select Rack">
+              <mat-icon>reorder</mat-icon>
+            </div>
+            <div class="content">
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="rackList"
+                [displayKey]="'name'"
+                placeholder="Select Rack Type"
+                formControlName="rack_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+
+          <!-- Level 5: Bin -->
+          <div
+            class="flow-item level-bin"
+            *ngIf="form.get('rack_id')?.value && binList.length > 0"
+          >
+            <div class="icon-node" matTooltip="Step 5: Select Bin">
+              <mat-icon>inventory_2</mat-icon>
+            </div>
+            <div class="content">
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="binList"
+                [displayKey]="'name'"
+                placeholder="Select Bin"
+                formControlName="bin_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+        </div>
+      </mat-dialog-content>
+
+      <!-- Action Footer -->
+      <mat-dialog-actions align="end" class="border-top pt-2 mt-2 bg-white w-100">
+        <div class="me-auto d-flex flex-column align-items-start">
+          <mat-checkbox formControlName="bypass_approval">Bypass Stock Acknowledgement Approval</mat-checkbox>
+          <small *ngIf="form.get('bypass_approval')?.value" class="text-danger mt-1 d-flex align-items-center">
+            <mat-icon style="font-size: 14px; width: 14px; height: 14px; margin-right: 4px;">warning</mat-icon>
+            Warning: The stock will be approved and ledger updated immediately!
+          </small>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="allocate-btn"
+          (click)="onSubmit()"
+          [disabled]="form.invalid"
+        >
+          <mat-icon>check_circle</mat-icon> Save Allocation
+        </button>
+      </mat-dialog-actions>
+    </form>
+  </div>
+</app-wrapper>

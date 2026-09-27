@@ -1,0 +1,178 @@
+<div class="container">
+
+  <!-- Main Heading -->
+  <div class="main-heading">
+    Transporter Acceptance
+  </div>
+  <div class="card" *ngFor="let item of planningList?.soList">
+    <h3>Vehicle Planning Code: {{ planningList.planningCode }}</h3>
+    <p><b>Pickup Date:</b> {{ item.pickup_date| date:'yyyy-MM-dd' }} </p>
+    <p><b>Pickup Address:</b> {{ item.WAREHOUSE_MASTER?.name }} | {{item.WAREHOUSE_MASTER?.address }} </p>
+    <p><b>Delivery Date:</b> {{ item.expected_delivery_date | date:'yyyy-MM-dd' }} </p>
+    <p><b>Delivery Address:</b>
+      {{item?.warehousePlaningPickup?.address }},
+      {{item?.warehousePlaningPickup?.postal_address }},
+      {{item?.warehousePlaningPickup?.pincode }} </p>
+    <p>
+      <b>Loading Priority:</b>
+      <span class="priority">{{item.priority}} </span>
+      <!-- <span class="priority" [ngClass]="getPriorityClass(item.priority)">
+                {{ item.priority }}/10 ({{ getPriorityLabel(item.priority) }})
+            </span> -->
+    </p>
+  </div>
+  <div class="card" *ngIf="planningList?.rateAgreement?.rate && planningList?.rateAgreement?.rate.length>0">
+    <div class="section-title">Rate Agreement Details</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th colspan="5">
+            {{ planningList?.rateAgreement?.agreement_no }} - {{ planningList?.rateAgreement?.agreement_type }} ( {{
+            planningList?.rateAgreement?.valid_from }} - {{ planningList?.rateAgreement?.valid_to }})
+
+          </th>
+        </tr>
+        <tr>
+          <th>From City</th>
+          <th>To City</th>
+          <th>Rate</th>
+          <th>Extra Charge</th>
+          <th>Remark</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rate of planningList?.rateAgreement?.rate">
+          <td>{{rate?.rateAgreementDetails?.fromCity?.city_name}}</td>
+          <td>{{rate?.rateAgreementDetails?.toCity?.city_name}}</td>
+          <td>{{rate?.rateAgreementDetails?.rate}}</td>
+          <td>{{rate?.rateAgreementDetails?.extra_charge}}</td>
+          <td>{{rate?.rateAgreementDetails?.remark}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="container">
+
+    <!-- Transporter Action -->
+    <div class="section-title">Transporter Response</div>
+    <form [formGroup]="planningForm">
+
+      <div formArrayName="charges">
+
+        <table class="table table-bordered table-striped align-middle">
+          <thead>
+            <tr>
+              <th width="50%">Charge Name</th>
+              <th width="25%">Amount</th>
+              <th width="25%" class="text-center">
+                <button type="button" class="btn2 btn-sm btn-primary" (click)="addCharge()">
+                  <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="add"></mat-icon>
+
+                </button>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let charge of charges.controls; let i = index" [formGroupName]="i">
+
+              <!-- Charge Name -->
+              <td>
+                <mat-form-field appearance="outline" class="w-100 mb-0">
+                  <mat-label>Charge Name</mat-label>
+                  <mat-select formControlName="charge_id">
+
+                    <mat-option *ngFor="let item of chargeMasterList" [value]="item.id"
+                      [disabled]="isChargeSelected(item.id, i)">
+
+                      {{ item.charge_name }}
+
+                    </mat-option>
+
+                  </mat-select>
+                </mat-form-field>
+                <!-- <mat-form-field appearance="outline" class="w-100 mb-0">
+
+                  <mat-select formControlName="charge_id" (selectionChange)="onChargeChange($event.value, i)">
+
+                    <mat-option *ngFor="let item of chargeMasterList" [value]="item.id">
+
+                      {{ item.charge_name }}
+
+                    </mat-option>
+
+                  </mat-select>
+                </mat-form-field> -->
+              </td>
+
+              <!-- Amount -->
+              <td>
+                <mat-form-field appearance="outline" class="w-100 mb-0">
+                  <mat-label>Amount</mat-label>
+
+                  <input matInput type="number" min="0" formControlName="amount">
+                </mat-form-field>
+              </td>
+
+              <!-- Action -->
+              <td class="text-center">
+
+                <button type="button" class="btn2 btn-sm btn-danger" (click)="removeCharge(i)"
+                  [disabled]="charges.length === 1">
+
+                 <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="delete"></mat-icon>
+
+
+                </button>
+
+              </td>
+
+
+            </tr>
+            <tr >
+              <td style="text-align:right"> Total Charges</td>
+              <td colspan="2">{{totalChargeAmount}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+    </form>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="field">
+          <label class="label">Amount</label>
+          <input type="number" placeholder="Enter amount" [(ngModel)]="transporter.amount" min="0"
+            (keydown)="preventNegative($event)" />
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="field">
+          <label class="label">Remarks Charge(optional)</label>
+          <textarea rows="3" placeholder="Enter remarks if any" [(ngModel)]="transporter.remarks"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <section class="example-section">
+      <mat-checkbox class="example-margin" [(ngModel)]="transporter.tcAccepted">
+        I confirm that I have read, understood, and agree to all applicable terms and conditions for this vehicle
+        planning request.
+      </mat-checkbox>
+    </section>
+
+    <div class="actions">
+      <button class="btn btn-accept" [disabled]="!isAcceptEnabled()" (click)="onAction('ACCEPTED')">Accept</button>
+
+      <button class="btn btn-reject" (click)="onAction('REJECTED')"> Reject</button>
+    </div>
+
+  </div>
+
+
+</div>

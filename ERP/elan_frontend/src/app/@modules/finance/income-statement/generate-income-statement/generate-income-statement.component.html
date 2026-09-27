@@ -1,0 +1,252 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Finance And Accounting</h1>
+        <p>Income Statement<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span>Generate Income Statement</span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+</div>
+<!-- <div class="heading_top heading_top2 flexRow">
+    <div class="headings"><u>Income Statement</u></div>
+    <div  class="headings"><u>Pending For Approval</u></div>
+    <div  class="headings"><u>Approved</u></div>
+</div> -->
+<section class="right_data_all">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="generateForm">
+                <div class="row">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 p-0 mt-2">
+                        <mat-radio-group formControlName="income_type"
+                        (change)="onSelection($event)">
+                        <mat-radio-button value="Forecast">Forecast</mat-radio-button>
+                        <mat-radio-button value="Actual">Actual</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="generateForm.get('income_type')?.hasError('required')">
+                        This field is required!
+                        </mat-error>
+                    </div>
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Financial Year</mat-label>
+                                <mat-select formControlName="financial_year_id" (selectionChange)="onFinancialYearChange($event)">
+                                    <mat-option *ngFor="let yr of fYearsFiltered"
+                                        [value]="yr.id">{{yr.financial_year}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="generateForm.get('financial_year_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="!id" class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 common_button_sub mt-2">
+                        <button  (click)="generate()">
+                            Generate
+                        </button>
+                    </div>
+                    <div class="col-xxl-7 col-lg-7 col-md-7 col-sm-7">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>
+<section class="right_data_all">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="incomeStatementForm">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect1()">
+                                <mat-label>Total Revenue</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Total Revenue</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="total_revenue"/>
+                                <mat-error *ngIf="incomeStatementForm.get('total_revenue')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect2()">
+                                <mat-label>Operating Expense</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Operating Expense</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="operating_expense"/>
+                                <mat-error *ngIf="incomeStatementForm.get('operating_expense')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect3()">
+                                <mat-label>Variable Cost</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Variable Cost</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="variable_cost"/>
+                                <mat-error *ngIf="incomeStatementForm.get('variable_cost')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label">
+                                <mat-label>Gross Profit/Loss</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Gross Profit/Loss</mat-label>
+                                <input matInput type="text" [readonly]="mode" formControlName="gross_profit_loss"/>
+                                <mat-error *ngIf="incomeStatementForm.get('gross_profit_loss')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect4()">
+                                <mat-label>EBITDA</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>EBITDA</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="ebitda"/>
+                                <mat-error *ngIf="incomeStatementForm.get('ebitda')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect5()">
+                                <mat-label>Depreciation and
+                                    Amortization</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Depreciation and
+                                    Amortization </mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="depreciation_and_amortization"/>
+                                <mat-error *ngIf="incomeStatementForm.get('depreciation_amortization')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect6()">
+                                <mat-label>Operating Profit/
+                                    Loss</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Operating Profit/Loss</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="operating_profit_loss"/>
+                                <mat-error *ngIf="incomeStatementForm.get('operating_profit_loss')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect7()">
+                                <mat-label>Investment
+                                    Income</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Investment Income </mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="investment_income"/>
+                                <mat-error *ngIf="incomeStatementForm.get('investment_income')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect8()">
+                                <mat-label>Interest Paid and Finance
+                                    Charges</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Interest Paid and Finance Charges</mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="interest_paid_and_finance_charges"/>
+                                <mat-error *ngIf="incomeStatementForm.get('interest_paid_and_finance_charges')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect9()">
+                                <mat-label>Net income/ (loss before Tax)</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Net income/ (loss before Tax)
+                                    </mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="net_income_loss_before_tax"/>
+                                <mat-error *ngIf="incomeStatementForm.get('net_income_loss_before_tax')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div class="label" (click)="redirect10()">
+                                <mat-label>Attributable Earnings / (Loss for the year)</mat-label>
+                            </div>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Attributable Earnings / (Loss for the year)
+                                    </mat-label>
+                                <input matInput type="text" [readonly]="mode" (input)="updateAmount($event)" formControlName="attributable_earning"/>
+                                <mat-error *ngIf="incomeStatementForm.get('attributable_earning')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+             
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3 margin">
+                        <mat-label [ngClass]="{'error-message': !incomeStatementForm.get('remarks')?.valid && incomeStatementForm.get('remarks')?.touched}">Remarks</mat-label>
+                 
+                        <textarea [ngClass]="{'invalid-border': !incomeStatementForm.get('remarks')?.valid && incomeStatementForm.get('remarks')?.touched}" style="resize:both" type="text" rows="3" cols="48" width="100%" matInput formControlName="remarks"></textarea>
+                        <mat-error *ngIf="!incomeStatementForm.get('remarks')?.valid && incomeStatementForm.get('remarks')?.touched">
+                        This field is required!
+                        </mat-error>
+                    </div>
+                    </div>
+                </div>
+            <div class="common_button_sub" align="end">
+                <button *ngIf="!id" (click)="onSubmit()">
+                    Submit
+                </button>
+            </div>
+            <div class="common_button_sub" align="end">
+                <button *ngIf="approveMode" (click)="approve()">
+                    Approve
+                </button>
+                
+                <button class="cancel_button_y" *ngIf="approveMode" (click)="reject()">
+                    Reject
+                </button>
+            </div>
+        </form>
+       </div>
+    </mat-card>
+</section>

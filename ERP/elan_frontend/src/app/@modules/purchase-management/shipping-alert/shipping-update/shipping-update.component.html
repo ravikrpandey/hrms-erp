@@ -1,0 +1,202 @@
+<h3 mat-dialog-title class="popHead">
+  <span class="title-text">Shipment Approval</span>
+  <button mat-icon-button mat-dialog-close class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</h3>
+<mat-dialog-content class="mat-typography">
+  <div class="emp_key">
+    <form [formGroup]="frmShipmentView">
+      <div class="container">
+        <div class="row">
+          <div>
+            <mat-label class="lable">PO Number: </mat-label>
+            <span>{{ frmShipmentView.get("po_no")?.value }}</span>
+          </div>
+
+          <div>
+            <mat-label class="lable">Vendor Name: </mat-label>
+            <span>{{ frmShipmentView.get("vendor")?.value }}</span>
+          </div>
+
+          <div>
+            <mat-label class="lable">Shipment Type: </mat-label>
+            <span>{{ frmShipmentView.get("shipment_type")?.value }}</span>
+          </div>
+
+          <div>
+            <mat-label class="lable">Transport Mode: </mat-label>
+            <span>{{ frmShipmentView.get("transport_mode")?.value }}</span>
+          </div>
+        </div>
+        <div class="section">
+          <div class="row">
+            <div>
+              <mat-label class="lable">Shipment No.: </mat-label>
+              <span>{{ frmShipmentView.get("shiped_no")?.value }}</span>
+            </div>
+
+            <div>
+              <mat-label class="lable">Dispatch Date: </mat-label>
+              <span>{{ frmShipmentView.get("shipment_date")?.value }}</span>
+            </div>
+
+            <div>
+              <mat-label class="lable">Expected Delivery: </mat-label>
+              <span>{{
+                frmShipmentView.get("expected_delivery_date")?.value
+              }}</span>
+            </div>
+            <div>
+              <mat-label class="lable">Invoice Amount: </mat-label>
+              <span
+                >{{ currencySymbols }}
+                {{ frmShipmentView.get("invoice_amount")?.value }}</span
+              >
+            </div>
+
+            <div class="mt-4">
+              <mat-label class="lable">Advance Amount: </mat-label>
+              <span>{{ currencySymbols }} {{ advance_amount }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <table>
+            <tr>
+              <th>Sr. No.</th>
+              <th>Item Name</th>
+              <th>Item Code</th>
+              <th>Order Quantity</th>
+              <th>Pending Quantity</th>
+              <th>Shipped Qty</th>
+              <th>Dispatch Qty</th>
+            </tr>
+
+            <tr *ngFor="let item of items; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item?.itemMaster.item_name }}</td>
+              <td>{{ item?.itemMaster.item_code }}</td>
+              <td>{{ item?.poItem?.quantity }}</td>
+              <td>{{ item?.poItem?.quantity - item.vendor_shiped_qty }}</td>
+              <td>{{ item.vendor_shiped_qty }}</td>
+              <td>{{ item.claim_qty }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="section">
+          <div class="doc-grid">
+            <div class="doc-card" *ngFor="let doc of documents">
+              <div class="doc-content">
+                <div class="doc-main">
+                  <span class="material-icons doc-type-icon">
+                    {{ doc.icon || "description" }}
+                  </span>
+                  <div class="doc-details">
+                    <label>Document</label>
+                    <span class="doc-name">{{ doc.document_type }}</span>
+                  </div>
+                </div>
+
+                <div class="doc-actions">
+                  <span
+                    class="material-icons view"
+                    (click)="viewDocument(doc.document_url)"
+                    title="View"
+                  >
+                    visibility
+                  </span>
+                  <span
+                    class="material-icons download"
+                    (click)="downloadDocument(doc.document_url)"
+                    title="Download"
+                  >
+                    download
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div
+            class="form-grid"
+            *ngIf="frmShipmentView.get('shipment_type')?.value === 'Domestic'"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Freight Charges</mat-label>
+              <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                formControlName="freight_charges"
+                (keydown)="preventInvalidKeys($event)"
+              />
+              <span matSuffix>{{ currencyCode }}</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Loading Unloading Charges</mat-label>
+              <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                formControlName="loading_unloading_charges"
+                (keydown)="preventInvalidKeys($event)"
+              />
+              <span matSuffix>{{ currencyCode }}</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Insurance Charges</mat-label>
+              <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                formControlName="cha_service_charges"
+                (keydown)="preventInvalidKeys($event)"
+              />
+              <span matSuffix>{{ currencyCode }}</span>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Other Logistics Charges</mat-label>
+              <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                formControlName="cha_other_charges"
+                (keydown)="preventInvalidKeys($event)"
+              />
+              <span matSuffix>{{ currencyCode }}</span>
+            </mat-form-field>
+          </div>
+
+          <textarea
+            rows="3"
+            style="resize: none"
+            placeholder="Enter remarks *"
+            formControlName="buyer_remark"
+          ></textarea>
+          <div
+            class="error text-danger"
+            *ngIf="
+              frmShipmentView.get('buyer_remark')?.touched &&
+              frmShipmentView.get('buyer_remark')?.invalid
+            "
+          >
+            Remark field is required
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button class="approve" (click)="buyerAction('APPROVED')">Acknowledge</button>
+
+  <!-- <button class="reject" (click)="buyerAction('REJECTED')">Reject</button> -->
+</mat-dialog-actions>

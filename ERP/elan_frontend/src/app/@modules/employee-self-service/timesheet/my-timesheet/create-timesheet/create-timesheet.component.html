@@ -1,0 +1,125 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>ESS</h1>
+        <p>Timesheet<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i><span>Create Timesheet</span></p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="backBtn()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+</div>
+
+<div class="right_data_all">
+    <div>
+        <mat-card>
+            <div class="row form_head">
+                <h3>Add Timesheet</h3>
+            </div>
+            <div class="form_basic mb-0">
+                <fieldset>
+                    <form class="form_set" [formGroup]="timesheetForm">
+                        <div class="row">
+                            <!-- Date Field -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline" class="readonly-wrapper">
+                                        <mat-label>Date</mat-label>
+                                        <input matInput formControlName="date" readonly />
+                                        <mat-error *ngIf="timesheetForm.controls['date']?.hasError('required')">
+                                            This field is required!
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- Project Name Dropdown -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Project Name</mat-label>
+                                    <mat-select formControlName="project_name" (selectionChange)="onProjectChange($event)">
+                                    <mat-option *ngFor="let project of projects" [value]="project.id">
+                                        {{ project.project_name }}
+                                    </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="timesheetForm.controls['project_name']?.hasError('required')">
+                                    This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                                </div>
+                            </div>
+                            
+                            <!-- Task Name Dropdown -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Task Name</mat-label>
+                                    <mat-select formControlName="task_name" [disabled]="availableTasks.length === 0">
+                                    <mat-option *ngFor="let task of availableTasks" [value]="task.id">
+                                        {{ task.task_name }}
+                                    </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="timesheetForm.controls['task_name']?.hasError('required')">
+                                    This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                                </div>
+                            </div>
+                            
+                            <!-- Start Time -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>Start Time</mat-label>
+                                  <input matInput [ngxMatTimepicker]="startTimePicker" formControlName="start_time" />
+                                  <ngx-mat-timepicker-toggle matSuffix [for]="startTimePicker"></ngx-mat-timepicker-toggle>
+                                  <ngx-mat-timepicker #startTimePicker></ngx-mat-timepicker>
+                                  <mat-error *ngIf="timesheetForm.controls['start_time']?.hasError('required')">
+                                    This field is required!
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            <!-- End Time -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <mat-form-field appearance="outline">
+                                  <mat-label>End Time</mat-label>
+                                  <input matInput [ngxMatTimepicker]="endTimePicker" formControlName="end_time" />
+                                  <ngx-mat-timepicker-toggle matSuffix [for]="endTimePicker"></ngx-mat-timepicker-toggle>
+                                  <ngx-mat-timepicker #endTimePicker></ngx-mat-timepicker>
+                                  <mat-error *ngIf="timesheetForm.controls['end_time']?.hasError('required')">
+                                    This field is required!
+                                  </mat-error>
+                                </mat-form-field>
+                              </div>
+                            <!-- Total Hours -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <mat-form-field appearance="outline" class="readonly-wrapper">
+                                  <mat-label>Total Hours</mat-label>
+                                  <input matInput formControlName="total_hours" readonly />
+                                </mat-form-field>
+                              </div>
+                            <!-- Billable/Non-Billable -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                                <div class="form-group">
+                                    <mat-checkbox formControlName="billable" (change)="toggleBillable('billable')">Billable</mat-checkbox>
+                                    <mat-checkbox formControlName="non_billable" (change)="toggleBillable('non_billable')">Non-Billable</mat-checkbox>
+                                </div>
+                            </div>
+                            <!-- Remarks -->
+                            <div class="col-12 mb-3">
+                                <div class="form-group text-area">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Remarks</mat-label>
+                                        <textarea matInput formControlName="remarks"></textarea>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </fieldset>
+                <!-- Submit Buttons -->
+                <div class="mt-3 common_button_sub" *ngIf="type !== 'view'">
+                    <button *ngIf="type !== 'edit' && view !== 'view'" (click)="onSubmit()">Submit</button>
+                    <button style="cursor: pointer;" (click)="backBtn()" class="cancel_button_y">Cancel</button>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,229 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>CRM</h1>
+    <p>Create Lead <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span> Lead Create Form </span></p>
+  </div>
+  <div class="add_button">
+    <!-- <button type="button" routerLink="employee-create" (click)='openAddModal()' >Add New Field</button> -->
+    <!-- <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+  </div>
+</div>
+
+
+
+<div class="right_data_all">
+
+  <!-- Dynamic form start -->
+  <form [formGroup]="dynamicForm" (ngSubmit)="onSubmitForm()">
+    <!-- Static form start -->
+    <div class="row m-3">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[0]?.label}}</mat-label>
+            <mat-select [formControlName]="formConfig?.fields[0]?.name">
+              <mat-option [disabled]="formConfig?.fields[0]?.isDisabled" *ngFor="let item of productList"
+                [value]="item?.id">{{item?.product_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[1]?.label}}</mat-label>
+            <input matInput type="text" [formControlName]="formConfig?.fields[1]?.name"
+              [readonly]="formConfig?.fields[1]?.isDisabled" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[2]?.label}}</mat-label>
+            <input matInput type="text" [formControlName]="formConfig?.fields[2]?.name"
+              [readonly]="formConfig?.fields[2]?.isDisabled" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label> {{formConfig?.fields[3]?.label}} </mat-label>
+            <input matInput [matDatepicker]="dp" (click)="dp.open()" [formControlName]="formConfig?.fields[3]?.name"
+              [readonly]="formConfig?.fields[3]?.isDisabled" />
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp [disabled]="formConfig?.fields[3]?.isDisabled"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[4]?.label}}</mat-label>
+            <input onlyAlphabet matInput type="text" [formControlName]="formConfig?.fields[4]?.name"
+              [readonly]="formConfig?.fields[4]?.isDisabled" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[5]?.label}}</mat-label>
+            <input onlyNumber matInput type="text" maxlength="10" [formControlName]="formConfig?.fields[5]?.name"
+              [readonly]="formConfig?.fields[5]?.isDisabled" />
+            <!-- (keypress)="keyPress($event, formConfig?.fields[5]?.name)" -->
+            <mat-error *ngIf="formConfig?.fields[5]?.name?.errors?.['required']">Please
+              enter mobile number</mat-error>
+            <mat-error *ngIf="formConfig?.fields[5]?.name?.errors?.['pattern']">Mobile
+              number is not 10 digit</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[10]?.label}}</mat-label>
+            <input matInput type="email" [formControlName]="formConfig?.fields[10]?.name"
+              [readonly]="formConfig?.fields[10]?.isDisabled" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group fileWithViewImg">
+          <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+            (change)="uploadDoc($event)" [formControlName]="formConfig?.fields[6]?.name"
+            [readonly]="formConfig?.fields[6]?.isDisabled" />
+          <img *ngIf="imageUrl" src="{{fileUrl+imageUrl}}" alt="" class="fileViewImage" (click)="viewImg()">
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>{{formConfig?.fields[7]?.label}} </mat-label>
+            <input matInput [matDatepicker]="fud" (click)="fud.open()" [formControlName]="formConfig?.fields[7]?.name"
+              [max]="maxDate" [min]="minDate" [readonly]="formConfig?.fields[7]?.isDisabled" />
+
+            <mat-datepicker-toggle matSuffix [for]="fud"></mat-datepicker-toggle>
+            <mat-datepicker #fud [disabled]="formConfig?.fields[7]?.isDisabled"></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <!-- <mat-form-field appearance="outline"> -->
+          <mat-label [ngClass]="{'error-message': !dynamicForm.get(formConfig?.fields[11]?.name)?.valid && dynamicForm.get(formConfig?.fields[11]?.name)?.touched}">{{formConfig?.fields[10]?.label}}*</mat-label>
+          <textarea matInput type="text" [formControlName]="formConfig?.fields[11]?.name"
+            [readonly]="formConfig?.fields[11]?.isDisabled" rows="4"
+            [ngClass]="{'invalid-border': !dynamicForm.get(formConfig?.fields[11]?.name)?.valid && dynamicForm.get(formConfig?.fields[11]?.name)?.touched}"
+            style="width: 100%;font-size: 14px;font-weight: 400;"></textarea>
+          <!-- </mat-form-field> -->
+          <div *ngIf="!dynamicForm.get(formConfig?.fields[11]?.name)?.valid && dynamicForm.get(formConfig?.fields[11]?.name)?.touched"
+            class="error-message">
+            This field is required!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic start -->
+    <div class="row m-3">
+      <div [ngClass]="field?.type == 'ckEditor' ? 'col-md-12' : 'col-md-4'"
+        *ngFor="let field of formConfig?.fields?.slice(12)">
+        <ng-container [ngSwitch]="field?.type">
+          <div class="form-group" *ngSwitchCase="'text'">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ field?.label }}</mat-label>
+              <input matInput [type]="field?.type" [formControlName]="field?.name"
+                (keypress)="keyPress($event, field?.name)" [maxlength]="maxInputLength" [readonly]="field?.isDisabled" />
+            </mat-form-field>
+          </div>
+          <div class="form-group" *ngSwitchCase="'date'">
+            <mat-form-field appearance="outline">
+              <mat-label> {{ field?.label }} </mat-label>
+              <input matInput [matDatepicker]="dp" (click)="dp.open()" [formControlName]="field?.name"
+                [max]="(field?.name == 'follow_up_date' || field?.name == 'lead_created_date') ?  maxDate : null"
+                [min]="(field?.name == 'follow_up_date' || field?.name == 'lead_created_date') ? minDate : null"
+                [readonly]="field?.isDisabled" />
+
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp [disabled]="field?.isDisabled"></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="form-group" *ngSwitchCase="'number'">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ field?.label }}</mat-label>
+              <input matInput [type]="field?.type" [formControlName]="field?.name" [readonly]="field?.isDisabled" />
+            </mat-form-field>
+          </div>
+          <div class="form-group" *ngSwitchCase="'select'">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ field?.label }}</mat-label>
+              <mat-select [formControlName]="field?.name" (selectionChange)="dynamicFormChange(field?.name)">
+                <mat-option [disabled]="field?.isDisabled" *ngFor="let option of field?.options"
+                  [value]="option?.value">{{ option?.label
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-group" *ngSwitchCase="'file'">
+            <input class="form-control" [type]="field?.type" style="padding-right: 19%" title="Upload Document"
+              (change)="uploadDoc($event)" [formControlName]="field?.name" />
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <!-- Static start -->
+    <div class="row mlr_3" *ngIf="leadId">
+      <div class="col-md-4">
+        <h3><span class="link_color" (click)="viewDescription()">View Description</span></h3>
+      </div>
+      <div class="col-md-4">
+        <h3><span class="link_color" [routerLink]="['../create-proposal']"
+            [queryParams]="{id:leadId, actionType: 'create'}">Create
+            Proposal</span></h3>
+      </div>
+    </div>
+    <div class="form-group ckEditor">
+      <div class="form-group attach_file">
+        <ckeditor #editer id="ckediter" [formControlName]="formConfig?.fields[8]?.name"></ckeditor>
+        <p *ngIf="(!dynamicForm?.value?.description && descriptionReq)" style="color: red">This field is required
+        </p>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="deal_close_detail" *ngIf="closedProposal">
+          <h3>Deal Close Detail</h3>
+          <p>Proposal Id - <b>{{closedProposal?.proposal_id}}</b></p>
+          <p>Proposal No. - <b>{{closedProposal?.proposal_no}}</b></p>
+          <p class="view_version">Version - <b>{{closedProposal?.version}}</b>
+            <mat-icon (click)="viewProposal(closedProposal)">visibility</mat-icon>
+          </p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="d-flex mb-0 w-80">
+          <mat-form-field appearance="outline" *ngIf="leadId">
+            <mat-label>{{formConfig?.fields[9]?.label}}</mat-label>
+            <mat-select [formControlName]="formConfig?.fields[9]?.name">
+              <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                {{item?.first_name + ' ' + item?.last_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="common_button_sub text-right w-50 p-0">
+            <button class="mx-3 ">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

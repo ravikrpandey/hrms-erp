@@ -1,0 +1,71 @@
+<div class="check">
+    <h3 mat-dialog-title class="popHead">
+        Set Appraisal Interval
+        <!-- Close icon positioned at the top-right -->
+        <button mat-icon-button class="close-btn" (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </h3>
+
+    <mat-dialog-content class="mat-typography">
+        <form class="form_set">
+            <div class="cotain" [formGroup]="remarksForm">
+                <div class="row">
+                  
+                 
+              
+                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" [ngClass]="{'disable-pointer-events': this.allData?.status == 'View' }">
+                        <div class="form-group">
+                          <mat-label>Period<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="period">
+                              <mat-option class="input_font" value="YEAR">YEAR</mat-option>
+                              <mat-option class="input_font" value="MONTHS">MONTHS</mat-option>
+                              <mat-option class="input_font" value="DAYS">DAYS</mat-option>
+                            <!-- </mat-select>
+                            <mat-error *ngIf="getFormControl('period')?.invalid && getFormControl('period')?.touched">
+                              This field is required!
+                            </mat-error> -->
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" [ngClass]="{'disable-pointer-events': this.allData?.status == 'View' }">
+                        <div class="form-group">
+              
+                          <mat-label>Effective after<span class="alertspan">*</span></mat-label>
+                          <mat-form-field appearance="outline">
+                            <input type="number" class="input_font" matInput formControlName="effective_after"
+                              onkeypress="return event.charCode >= 48" min="0" placeholder="Effective after" />
+              
+                            <!-- <mat-error
+                              *ngIf="getFormControl('effective_after')?.invalid && getFormControl('effective_after')?.touched">
+                              This field is required!
+                            </mat-error> -->
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    
+
+           
+
+
+                </div>
+
+                <div class="row">
+
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" *ngIf="this.allData?.status !== 'View'">
+        <button mat-button mat-raised-button color="primary" (click)="submitForm()">
+            {{labelName}}
+        </button>
+        <button mat-button mat-raised-button color="warn" *ngIf="this.allData?.action !== 'Update'" (click)="closeDialog()">
+            Cancel
+        </button>
+       
+    </mat-dialog-actions>
+</div>

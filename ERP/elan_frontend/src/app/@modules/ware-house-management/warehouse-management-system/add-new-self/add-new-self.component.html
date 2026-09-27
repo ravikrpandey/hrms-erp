@@ -1,0 +1,43 @@
+<div>
+    <h3 mat-dialog-title class="popHead">Add Shelf Item</h3>
+    <!-- [disabled]="view == 'view'" -->
+    <fieldset>
+        <div class="m-3" [formGroup]="AddSelfForm">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Shelf Name</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="self_name" maxlength="30"/>
+                        <mat-error *ngIf="AddSelfForm.controls['self_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AddSelfForm.controls['self_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Shelf Capacity</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="number" formControlName="capacity" maxlength="30"/>
+                        <mat-error *ngIf="AddSelfForm.controls['self_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                       
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button (click)="onSubmitForm()">
+                Save
+            </button>
+            <button mat-dialog-close class="cancel_button_y">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

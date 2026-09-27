@@ -1,0 +1,106 @@
+<!-- attendance-update.component.html -->
+<div class="attendance-component mat-elevation-z2">
+  <header class="topbar">
+    <div class="title-area">
+      <h1 class="title">ESS</h1>
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <span>Attendance Request</span>
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span class="current">Attendance Request Form</span>
+      </nav>
+    </div>
+
+    <div class="actions">
+      <!-- <button mat-flat-button color="primary" (click)="goToList()">Attendance Request</button> -->
+    </div>
+  </header>
+
+  <section class="card">
+    <div class="card-head">
+      <h3 class="popHead">Attendance Update Request</h3>
+    </div>
+
+    <div class="card-body">
+      <!-- top row: datepicker + add button -->
+      <div class="top-row">
+        <mat-form-field appearance="outline" class="" style="width: 350px;">
+          <mat-label>Pick a date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="topPicker"
+            [(ngModel)]="selectedDate"
+            (dateChange)="onTopDateChange($event.value)"
+            placeholder="Choose a date"
+            aria-label="Pick a date"
+          />
+          <mat-datepicker-toggle matSuffix [for]="topPicker"></mat-datepicker-toggle>
+          <mat-datepicker #topPicker></mat-datepicker>
+        </mat-form-field>
+
+        <div class="add-btn-wrap">
+          <button mat-flat-button color="primary" (click)="addAtTop()">
+            <mat-icon>add</mat-icon>
+            Add
+          </button>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- list of in/out pairs -->
+      <div class="pairs">
+        <div
+          class="pair-row"
+          *ngFor="let pair of attendancePairs; let i = index"
+          [attr.data-index]="i"
+        >
+          <mat-form-field appearance="outline" class="time-field">
+            <mat-label>In Time <span *ngIf="pair?.inMode">({{ pair.inMode }})</span></mat-label>
+            <input matInput type="time" step="1" [(ngModel)]="pair.inTime" aria-label="In time" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="time-field">
+            <mat-label>Out Time <span *ngIf="pair?.outMode">({{ pair.outMode }})</span></mat-label>
+            <input matInput type="time" step="1" [(ngModel)]="pair.outTime" aria-label="Out time" />
+          </mat-form-field>
+
+          <div class="row-actions">
+            <button
+              mat-mini-fab
+              color="primary"
+              (click)="addMore(i)"
+              matTooltip="Add row"
+              aria-label="Add row"
+              type="button"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+
+            <button
+              mat-mini-fab
+              color="warn"
+              *ngIf="attendancePairs.length > 1"
+              (click)="deleteRow(i)"
+              [disabled]="isBiometricPair(pair)"
+              matTooltip="Delete row"
+              aria-label="Delete row"
+              type="button"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- footer actions -->
+      <div class="footer-actions">
+        <button mat-stroked-button color="warn" (click)="goToList()">
+          Close
+        </button>
+        <button mat-flat-button color="primary" (click)="onSubmit2()" >
+          Submit
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

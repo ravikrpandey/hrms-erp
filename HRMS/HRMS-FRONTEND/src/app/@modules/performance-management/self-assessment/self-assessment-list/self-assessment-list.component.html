@@ -1,0 +1,72 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Performance Assessment</h1>
+    <p>
+      Team Performance Assessment<i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #063178"
+      >
+      </i
+      ><span>Assessment List</span>
+    </p>
+  </div>
+</div>
+<div class="form-group mt-3">
+  <div class="row">
+    <div class="col-md-4">
+      <mat-radio-group
+      [(ngModel)]="feedBack"
+      (ngModelChange)="onFeedBackChange($event)"
+    >
+      <!-- <mat-radio-button value="feedback">Feedback</mat-radio-button>
+      <mat-radio-button value="Assessment">Assessment</mat-radio-button> -->
+    </mat-radio-group>
+    </div>
+    <div class="col-md-4 mt-2">
+      <strong class="">Total Team Member : {{countData}}</strong>
+    </div>
+    <div class="col-md-4 mt-2">
+      <strong class="">Self Assessment complete : {{rowData?.length}}</strong>
+    </div>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <!-- <div class="add_btn">
+      <button type="button" class="btn_add" (click)="openDialog()">Add </button>
+  </div> -->
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select id="page-size" (change)="onPageSizeChanged()">
+        <option value="10" selected="">10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2" align="end">
+      <input
+        type="text"
+        class="form-control"
+        id="filter-text-box"
+        (input)="onFilterTextBoxChanged()"
+        placeholder="Search"
+      />
+    </div>
+  </div>
+
+  <div class="ag_grid">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+
+<!-- <div *ngIf="show" class="row">
+  <div class="flexRow2">
+    <div *ngIf="page != 'pending-for-approval' || show" class="activeBox" style="margin-right:20px" (click)="toggle('Opex')" [ngClass]="{ 'activeBox': activeTab === 'Opex', 'inActive': activeTab !== 'Opex' }">Opex</div>
+    <div *ngIf="page != 'pending-for-approval' || show" class="inactive" (click)="toggle('Capex')" [ngClass]="{ 'activeBox': activeTab === 'Capex', 'inActive': activeTab !== 'Capex' }">Capex</div>
+  </div>
+</div> -->
+<div *ngIf="page != 'pending-for-approval' || show" class="flexRowss">
+  <!-- <div class="box"><span><h2>Financial Year :- {{fYearData.financial_year}}</h2></span></div> -->
+  <div class="adctiveInactive">
+  <div class="inActive"  (click)="toggle('Opex')" [ngClass]="{ 'inActive': activeTab === 'Opex', 'activeBox': activeTab !== 'Opex' }">Opex</div>
+  <div class="activeBox" (click)="toggle('Capex')" [ngClass]="{ 'inActive': activeTab === 'Capex', 'activeBox': activeTab !== 'Capex' }">Capex</div>
+  </div>
+</div>
+<div *ngIf="page=='pending-for-approval' && !show" class="right_data_all">
+  <div class="boxDiv">
+    <div  (click)="fetchPending(dep.dept_id)" *ngFor="let dep of depList" class="depBox">
+      <div class="innerBox" >
+        <div class="flexRow">
+          <div class="value">Name : </div>
+          <div class="value">{{dep.name}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Department :</div>
+          <div class="value">{{dep.department_name}}</div>
+        </div>
+        <div class="flexRow"> 
+          <div class="value">Total Request :</div>
+          <div class="value">{{dep.total_request}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Total Amount () :</div>
+          <div class="value">{{dep.total_amount}}</div>
+        </div>
+      </div>
+    </div>
+    <div  (click)="fetchPending(dep.dept_id)" *ngFor="let dep of depList" class="depBox">
+      <div class="innerBox" >
+        <div class="flexRow">
+          <div class="value">Name : </div>
+          <div class="value">{{dep.name}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Department :</div>
+          <div class="value">{{dep.department_name}}</div>
+        </div>
+        <div class="flexRow"> 
+          <div class="value">Total Request :</div>
+          <div class="value">{{dep.total_request}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Total Amount :</div>
+          <div class="value">{{dep.total_amount}}</div>
+        </div>
+      </div>
+    </div>
+    <div  (click)="fetchPending(dep.dept_id)" *ngFor="let dep of depList" class="depBox">
+      <div class="innerBox" >
+        <div class="flexRow">
+          <div class="value">Name : </div>
+          <div class="value">{{dep.name}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Department :</div>
+          <div class="value">{{dep.department_name}}</div>
+        </div>
+        <div class="flexRow"> 
+          <div class="value">Total Request :</div>
+          <div class="value">{{dep.total_request}}</div>
+        </div>
+        <div class="flexRow">
+          <div class="value">Total Amount :</div>
+          <div class="value">{{dep.total_amount}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="show || page != 'pending-for-approval'" class="right_data_all mt-3">
+  <div class="employ_sube py-2">
+      <div class="example-header">
+          <select id="page-size" (change)="onPageSizeChanged()">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+          </select>
+      </div>
+      <div class="employee_2" class="flexEnd">
+        <button  mat-raised-button color="primary" style="cursor:pointer; height: 35px;" (click)="departmentView()" *ngIf="show">Back</button>
+        <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                  placeholder="Search">
+        <button *ngIf="page == 'planning' || page == 'draft'" style="cursor:pointer; height: 35px;" mat-raised-button color="primary" (click)="onSubmit()">
+          Submit
+        </button>
+      </div>
+  </div>
+   
+  <div class="ag_grid">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]=10
+      [rowData]="rowData"
+      rowSelection="multiple"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)='onCellClicked($event)'
+      [suppressRowClickSelection]="true"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

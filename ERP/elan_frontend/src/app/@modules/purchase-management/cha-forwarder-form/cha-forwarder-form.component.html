@@ -1,0 +1,1258 @@
+<app-wrapper
+  [title]="'Purchase Management'"
+  [subTitle]="data.vendor_category === 'Domestic' ? '' : page + ' Details'"
+  [showActions]="true"
+  [isBack]="true"
+>
+  <div class="download-bar" *ngIf="pageMode === 'view' || page === 'TRANSPORT'">
+    <mat-icon class="download-btn" title="Download Bill" (click)="downloadPDF()"
+      >download</mat-icon
+    >
+  </div>
+
+  <div #billContent class="right_data_all">
+    <div class="invoice-logo" *ngIf="billDownloadHide">
+      <img src="../../../assets/company-logo.png" alt="company-logo" />
+    </div>
+    <div class="invoice-title" *ngIf="billDownloadHide">{{ billName }}</div>
+    <h3><b>Shipping Details:</b></h3>
+    <table class="details-table">
+      <tr>
+        <td class="label">PO Number</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.po_number }}</td>
+        <td class="label">Vendor Name</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.vendorName }}</td>
+        <td class="label">Vendor Mobile</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.contact_number }}</td>
+      </tr>
+      <tr>
+        <td class="label">Shipment No.</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.shiped_no }}</td>
+        <td class="label">Shipment Date</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.shipment_date | date: "dd-MM-yyyy" }}</td>
+        <td class="label">Shipment From</td>
+        <td class="colon">:</td>
+        <td class="value">
+          {{ data?.port_id ? data?.pickup : data?.departure_location }}
+        </td>
+      </tr>
+      <tr>
+        <td class="label">Shipment To</td>
+        <td class="colon">:</td>
+        <td class="value">
+          {{ data?.port_id ? data?.delivery : data?.delivery_location }}
+        </td>
+        <td class="label">Transport Mode</td>
+        <td class="colon">:</td>
+        <td class="value">{{ data?.mode }}</td>
+        <td class="label">Invoice Amount</td>
+        <td class="colon">:</td>
+        <td class="value">
+          {{ data?.invoice_amount | number: "1.2-2" }}
+          {{ data?.Currency_Type }}
+        </td>
+        <!-- <td class="label">Advance Amount</td>
+        <td class="colon">:</td>
+        <td class="value">
+          {{ data?.advance_amount | number: "1.2-2" }}
+          {{ data?.Currency_Type }}
+        </td> -->
+      </tr>
+    </table>
+
+    <div
+      class="table-container"
+      style="margin-bottom: 20px"
+      *ngIf="page !== 'FORWARDER'"
+    >
+      <table>
+        <thead>
+          <tr>
+            <ng-container *ngFor="let key of modeKeys">
+              <th *ngIf="key !== 'containers'">
+                {{ formatKey(key) }}
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <ng-container *ngFor="let key of modeKeys">
+              <td *ngIf="key !== 'containers'">
+                {{ formatValue(key, data.modeData[key]) }}
+              </td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- Forwarder form -->
+    <form
+      [formGroup]="forwarderForm"
+      *ngIf="data.vendor_category != 'Domestic' && page === 'FORWARDER'"
+    >
+      <!-- ══════════════════════════════════════════
+              CARD 3a — ROAD
+          ══════════════════════════════════════════ -->
+      <mat-card
+        class="form-card"
+        *ngIf="data?.mode === 'ROAD'"
+        formGroupName="road"
+      >
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="card-icon">local_shipping</mat-icon> Road Transport
+            Details
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row three-col">
+            <mat-form-field appearance="outline" class="col-md-2">
+              <mat-label>Vehicle Number</mat-label>
+              <input
+                matInput
+                formControlName="vehicle_number"
+                placeholder="e.g. MH 01 AB 1234"
+              />
+              <mat-icon matSuffix>directions_car</mat-icon>
+              <mat-error>Vehicle number is required.</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-md-2">
+              <mat-label>Driver Name</mat-label>
+              <input
+                matInput
+                formControlName="driver_name"
+                placeholder="Full name"
+              />
+              <mat-icon matSuffix>person</mat-icon>
+              <mat-error>Driver name is required.</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-md-2">
+              <mat-label>Driver Mobile</mat-label>
+              <input
+                matInput
+                formControlName="driver_mobile"
+                placeholder="+91 XXXXX XXXXX"
+              />
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error>Enter a valid mobile number.</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-md-2">
+              <mat-label>Transporter Name</mat-label>
+              <input
+                matInput
+                formControlName="transporter_name"
+                placeholder="Agency name"
+              />
+              <mat-icon matSuffix>business</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-md-2">
+              <mat-label>LR Number</mat-label>
+              <input
+                matInput
+                formControlName="lr_number"
+                placeholder="Lorry Receipt No."
+              />
+              <mat-icon matSuffix>receipt</mat-icon>
+              <mat-error>LR number is required.</mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ══════════════════════════════════════════
+              CARD 3b — AIR
+          ══════════════════════════════════════════ -->
+      <mat-card
+        class="form-card"
+        *ngIf="data?.mode === 'AIR'"
+        formGroupName="air"
+      >
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="card-icon">flight</mat-icon> Air Transport Details
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="sub-title">
+            <mat-icon class="sub-icon">airlines</mat-icon> Airline Information
+          </p>
+          <div class="row two-col">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Airline Name</mat-label>
+              <input
+                matInput
+                formControlName="airline_name"
+                placeholder="e.g. IndiGo, Emirates"
+              />
+              <mat-icon matSuffix>flight_takeoff</mat-icon>
+              <mat-error>Airline name is required.</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Flight Number</mat-label>
+              <input
+                matInput
+                formControlName="flight_number"
+                placeholder="e.g. EK 512"
+              />
+              <mat-icon matSuffix>confirmation_number</mat-icon>
+              <mat-error>Flight number is required.</mat-error>
+            </mat-form-field>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">article</mat-icon> Airway Bill
+          </p>
+          <div class="row two-col">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>AWB Number</mat-label>
+              <input
+                matInput
+                formControlName="awb_number"
+                placeholder="Air Waybill Number"
+              />
+              <mat-icon matSuffix>tag</mat-icon>
+              <mat-error>AWB number is required.</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>AWB Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="awbPicker"
+                formControlName="awb_date"
+                placeholder="DD/MM/YYYY"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="awbPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #awbPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">schedule</mat-icon> Flight Schedule
+          </p>
+          <div class="row two-col">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>ETD — Departure Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="etdAir"
+                formControlName="etd"
+                placeholder="DD/MM/YYYY"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="etdAir"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #etdAir></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>ETA — Arrival Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="etaAir"
+                formControlName="eta"
+                placeholder="DD/MM/YYYY"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="etaAir"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #etaAir></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">inventory</mat-icon> Cargo Details
+          </p>
+          <div class="row three-col">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Total Packages</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="total_packages"
+                placeholder="0"
+                min="0"
+              />
+              <mat-icon matSuffix>widgets</mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Gross Weight (KG)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="gross_weight"
+                placeholder="0.00"
+                step="0.01"
+              />
+              <mat-icon matSuffix>scale</mat-icon>
+              <mat-error>Required.</mat-error>
+              <mat-error>Must be > 0.</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Chargeable Weight</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="chargeable_weight"
+                placeholder="0.00"
+                step="0.01"
+              />
+              <mat-icon matSuffix>monitor_weight</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">payments</mat-icon> Freight Details
+          </p>
+          <div class="row two-col">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Freight Type</mat-label>
+              <mat-select formControlName="freight_type">
+                <mat-option value="PREPAID">Prepaid</mat-option>
+                <mat-option value="COLLECT">Collect</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Freight Forwarder</mat-label>
+              <input
+                matInput
+                formControlName="freight_forwarder"
+                placeholder="Forwarder name"
+              />
+              <mat-icon matSuffix>business</mat-icon>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- ══════════════════════════════════════════
+              CARD 3c — SEA
+          ══════════════════════════════════════════ -->
+      <mat-card
+        class="form-card"
+        *ngIf="data?.mode === 'SEA'"
+        formGroupName="sea"
+      >
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="card-icon">directions_boat</mat-icon> Sea Transport
+            Details
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p class="sub-title">
+            <mat-icon class="sub-icon">anchor</mat-icon> Vessel Information
+          </p>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Vessel Name</mat-label>
+                <input
+                  matInput
+                  formControlName="vessel_name"
+                  placeholder="e.g. MSC Gülsün"
+                />
+                <mat-icon matSuffix>anchor</mat-icon>
+                <mat-error>Vessel name is required.</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Voyage Number</mat-label>
+                <input
+                  matInput
+                  formControlName="voyage_number"
+                  placeholder="Voyage / Trip No."
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Shipping Line</mat-label>
+                <input
+                  matInput
+                  formControlName="shipping_line"
+                  placeholder="e.g. Maersk, MSC"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">inventory_2</mat-icon> Container Details
+          </p>
+
+          <div formArrayName="containers">
+            <div
+              *ngFor="let container of seaContainers.controls; let i = index"
+              [formGroupName]="i"
+              class="container-item border rounded"
+              style="
+                border: 1px solid #dee2e6;
+                border-radius: 0.25rem;
+                padding: 0.3rem;
+                background-color: #fafafa;
+              "
+            >
+              <div
+                class="d-flex justify-content-between align-items-center"
+                style="
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 0.5rem;
+                "
+              >
+                <span
+                  class="badge bg-secondary"
+                  style="
+                    background-color: #6c757d;
+                    color: #fff;
+                    padding: 0.25em 0.4em;
+                    font-size: 75%;
+                    font-weight: 700;
+                    border-radius: 0.25rem;
+                  "
+                  >Container #{{ i + 1 }}</span
+                >
+                <button
+                  type="button"
+                  mat-icon-button
+                  color="warn"
+                  (click)="removeContainer(i)"
+                  *ngIf="seaContainers.length > 1"
+                  [disabled]="pageMode === 'view'"
+                  title="Remove Container"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Container Number</mat-label>
+                    <input
+                      matInput
+                      formControlName="container_number"
+                      placeholder="e.g. MSCU1234567"
+                    />
+                    <mat-icon matSuffix>tag</mat-icon>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Container Type</mat-label>
+                    <mat-select formControlName="container_type">
+                      <mat-option value="20FT">20FT</mat-option>
+                      <mat-option value="40FT">40FT</mat-option>
+                      <mat-option value="40HC">40HC</mat-option>
+                      <mat-option value="Reefer">Reefer</mat-option>
+                      <mat-option value="Open Top">Open Top</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-4">
+                  <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Seal Number</mat-label>
+                    <input
+                      matInput
+                      formControlName="seal_number"
+                      placeholder="Seal No."
+                    />
+                    <mat-icon matSuffix>lock</mat-icon>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="text-right"
+            *ngIf="pageMode !== 'view'"
+            style="text-align: right"
+          >
+            <button
+              type="button"
+              mat-stroked-button
+              color="primary"
+              (click)="addContainer()"
+            >
+              <mat-icon>add</mat-icon> Add Container
+            </button>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">receipt_long</mat-icon> Bill of Lading
+          </p>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Number</mat-label>
+                <input
+                  matInput
+                  formControlName="bl_number"
+                  placeholder="B/L No."
+                />
+                <mat-icon matSuffix>receipt_long</mat-icon>
+                <mat-error>BL number is required.</mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="blPicker"
+                  formControlName="bl_date"
+                  placeholder="DD/MM/YYYY"
+                  (click)="blPicker.open()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="blPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #blPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Type</mat-label>
+                <mat-select formControlName="bl_type">
+                  <mat-option value="Original">Original</mat-option>
+                  <mat-option value="Seaway Bill">Seaway Bill</mat-option>
+                  <mat-option value="Telex Release">Telex Release</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">schedule</mat-icon> Shipment Schedule
+          </p>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETD</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etdSea"
+                  formControlName="etd"
+                  placeholder="DD/MM/YYYY"
+                  (click)="etdSea.open()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etdSea"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etdSea></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETA</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etaSea"
+                  formControlName="eta"
+                  placeholder="DD/MM/YYYY"
+                  (click)="etaSea.open()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etaSea"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etaSea></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">inventory</mat-icon> Cargo Details
+          </p>
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Total Packages</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="total_packages"
+                  min="0"
+                />
+                <mat-icon matSuffix>widgets</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gross Weight (KG)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="gross_weight"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>scale</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Volume (CBM)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="volume"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>straighten</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <p class="sub-title">
+            <mat-icon class="sub-icon">payments</mat-icon> Freight Details
+          </p>
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Freight Type</mat-label>
+                <mat-select formControlName="freight_type">
+                  <mat-option value="Prepaid">Prepaid</mat-option>
+                  <mat-option value="Collect">Collect</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Currency</mat-label>
+                <mat-select formControlName="currency_id">
+                  <mat-option
+                    *ngFor="let curr of currencyList"
+                    [value]="curr?.Currency_Convert_id"
+                  >
+                    {{ curr?.Currency_Type }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Ocean Freight</mat-label>
+                <span matTextPrefix> &nbsp;</span>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="ocean_freight"
+                  step="0.01"
+                />
+              </mat-form-field>
+            </div>
+            <div class="col-md-3 mb-3">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Forwarder</mat-label>
+                <input
+                  matInput
+                  formControlName="forwarder"
+                  placeholder="Forwarder name"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <button
+        *ngIf="pageMode === 'edit' && page === 'FORWARDER'"
+        mat-raised-button
+        color="primary"
+        (click)="forwardUpdate()"
+        style="float: right; margin-right: 10px"
+      >
+        Update Details & Charges
+      </button>
+    </form>
+
+    <!-- CHA Section View/Edit Start -->
+    <form
+      [formGroup]="formGroup"
+      *ngIf="data.vendor_category != 'Domestic' && page !== 'FORWARDER'"
+    >
+      <h3><b>BOE Details:</b></h3>
+      <!-- View Part -->
+      <table
+        class="custom-table"
+        *ngIf="pageMode === 'view' || page === 'TRANSPORT'"
+      >
+        <thead>
+          <tr>
+            <th>BOE Number</th>
+            <th>BOE Date</th>
+            <th>Exchange Rate</th>
+            <th>Invoice Amount (INR)</th>
+            <th>Freight Charges (INR)</th>
+            <th>Insurance Charges (INR)</th>
+            <th>Assessable Value (INR)</th>
+            <th>Duty (%)</th>
+            <th>Duty Amount (INR)</th>
+            <th>BOE Created By</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>{{ BOEData?.boe_number }}</td>
+            <td>{{ BOEData?.boe_date | date: "dd-MM-yyyy" }}</td>
+            <td>{{ BOEData?.exchange_rate | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.invoice_amount | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.freight_charges | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.insurance_charges | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.assessable_value | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.duty_percent }}</td>
+            <td>{{ BOEData?.duty_amount | number: "1.2-2" }}</td>
+            <td>{{ BOEData?.userName }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form Part -->
+      <div class="form-grid" *ngIf="pageMode === 'edit' && page === 'CHA'">
+        <mat-form-field appearance="outline">
+          <mat-label>BOE Number</mat-label>
+          <input matInput formControlName="boe_number" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>BOE Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerDate"
+            format="DD-MM-YY"
+            formControlName="boe_date"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerDate"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerDate></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Exchange Rate</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="exchange_rate"
+            readonly
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Invoice Amount (INR)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="invoice_amount"
+            readonly
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Freight Charges (INR)</mat-label>
+          <input matInput type="number" formControlName="freight_charges" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Insurance Charges (INR)</mat-label>
+          <input matInput type="number" formControlName="insurance_charges" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Assessable Value (INR)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="assessable_value"
+            readonly
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Duty (%)</mat-label>
+          <input matInput type="number" formControlName="duty_percent" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Duty Amount (INR)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="duty_amount"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <button
+        *ngIf="pageMode === 'edit' && page === 'CHA' && !buttonHide"
+        mat-raised-button
+        color="primary"
+        (click)="approveBOE()"
+        style="float: right"
+      >
+        {{ isBOECompleted ? "Update BOE Details" : "Approve BOE" }}
+      </button>
+
+      <h3><b>Item Claims:</b></h3>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Shipped Qty</th>
+            <th>Claimed Qty</th>
+          </tr>
+        </thead>
+
+        <tbody formArrayName="items">
+          <tr
+            *ngFor="let item of items.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <td>{{ item.get("name")?.value }}</td>
+            <td>{{ item.get("qty")?.value }}</td>
+            <td *ngIf="pageMode === 'view' || page === 'TRANSPORT'">
+              {{ item.get("claim_qty")?.value }}
+            </td>
+            <td *ngIf="pageMode === 'edit' && page === 'CHA'">
+              <input
+                type="number"
+                [readOnly]="!isBOECompleted"
+                formControlName="claim_qty"
+                (input)="onClaimChange(i)"
+                min="0"
+                [max]="item.get('qty')?.value"
+                class="qty-input"
+                style="border-radius: 4px; width: 20%"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- View Part -->
+      <div
+        class="form-grid"
+        style="margin-top: 15px"
+        *ngIf="pageMode === 'view' || page === 'TRANSPORT'"
+      >
+        <div class="variance-box"><b>Variance:</b> {{ totalVariance }} QTY</div>
+
+        <div class="variance-box">
+          <b>Variance Remark:</b> {{ data?.variance_remark }}
+        </div>
+      </div>
+
+      <!-- Form Part -->
+      <div
+        class="form-grid"
+        style="margin-top: 15px"
+        *ngIf="pageMode === 'edit' && page === 'CHA'"
+      >
+        <div class="variance-box"><b>Variance:</b> {{ totalVariance }} QTY</div>
+
+        <mat-form-field appearance="outline" class="remark-full">
+          <mat-label>Variance Remark</mat-label>
+          <textarea
+            matInput
+            formControlName="variance_remark"
+            rows="3"
+          ></textarea>
+        </mat-form-field>
+        <mat-error
+          *ngIf="formGroup.get('variance_remark')?.hasError('required')"
+        >
+          Remark is required when variance exists
+        </mat-error>
+      </div>
+      <span
+        *ngIf="pageMode === 'edit' && page === 'CHA' && !buttonHide"
+        matTooltip="Complete BOE details first"
+        [matTooltipDisabled]="isBOECompleted"
+        class="tooltip-wrapper"
+      >
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="approveItems()"
+          [disabled]="!isBOECompleted"
+        >
+          {{ isItemsCompleted ? "Update Item Claims" : "Approve Item Claims" }}
+        </button>
+      </span>
+
+      <h3><b>CHA Charges:</b></h3>
+      <!-- View Part -->
+      <div
+        class="form-grid"
+        *ngIf="pageMode === 'view' || page === 'TRANSPORT'"
+      >
+        <div class="variance-box">
+          <b>CHA Service Charges(INR):</b>
+          {{ data?.cha_service_charges | number: "1.2-2" }}
+        </div>
+
+        <div class="variance-box">
+          <b>Other Charges(INR):</b>
+          {{ data?.cha_other_charges | number: "1.2-2" }}
+        </div>
+      </div>
+
+      <!-- Form Part -->
+      <div class="form-grid" *ngIf="pageMode === 'edit' && page === 'CHA'">
+        <mat-form-field appearance="outline">
+          <mat-label>CHA Service Charges(INR)</mat-label>
+          <input matInput type="number" formControlName="cha_service_charges" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Other Charges(INR)</mat-label>
+          <input matInput type="number" formControlName="cha_other_charges" />
+        </mat-form-field>
+
+        <input
+          type="file"
+          multiple
+          (change)="onFileSelected($event)"
+          *ngIf="isItemsCompleted"
+        />
+      </div>
+
+      <span
+        *ngIf="pageMode === 'edit' && page === 'CHA' && !buttonHide"
+        matTooltip="Complete item claim first"
+        [matTooltipDisabled]="isItemsCompleted"
+        class="tooltip-wrapper"
+      >
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="approveCHA()"
+          [disabled]="!isItemsCompleted"
+        >
+          {{ isCHACompleted ? "Update CHA Details" : "Approve CHA" }}
+        </button>
+      </span>
+
+      <!-- Documents Part -->
+      <h3 *ngIf="data?.docList?.length > 0"><b>All Documents:</b></h3>
+      <div class="doc-grid">
+        <div class="doc-card" *ngFor="let doc of data?.docList; let i = index">
+          <mat-icon>description</mat-icon>
+          <div
+            class="doc-name"
+            matTooltip="{{ getFileName(doc.document_name) }}"
+          >
+            {{ getFileName(doc.document_name) }}
+          </div>
+
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="viewFile(doc.document_name)"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button
+            *ngIf="
+              doc.entryType == 'CHA' &&
+              pageMode === 'edit' &&
+              page === 'CHA' &&
+              !buttonHide
+            "
+            mat-icon-button
+            color="warn"
+            (click)="removeFile(i, doc.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div
+        *ngIf="pageMode === 'edit' && page === 'CHA' && !buttonHide"
+        class="bottom-btn-container"
+      >
+        <span
+          matTooltip="Complete all steps before generating CHA Bill"
+          [matTooltipDisabled]="isCHACompleted"
+        >
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="CHABillGenerate()"
+            [disabled]="!isCHACompleted"
+          >
+            Generate CHA Bill
+          </button>
+        </span>
+      </div>
+    </form>
+    <!-- CHA Section View/Edit End -->
+
+    <!-- Transport Section View/Edit Start -->
+    <form
+      [formGroup]="formGroupFor"
+      *ngIf="
+        page === 'TRANSPORT' &&
+        billDownloadHideForwarder &&
+        data.vendor_category != 'Domestic'
+      "
+    >
+      <h3><b>Transporter fills charges & vehicle details:</b></h3>
+      <!-- View Part -->
+      <div
+        class="form-grid"
+        *ngIf="pageMode === 'view' && page === 'TRANSPORT'"
+        style="grid-template-columns: repeat(3, 1fr) !important"
+      >
+        <div class="variance-box">
+          <b>Freight Charges:</b>
+          {{ data?.freight_charges | number: "1.2-2" }} INR
+        </div>
+
+        <div class="variance-box">
+          <b>Loading Unloading Charges:</b>
+          {{ data?.loading_unloading_charges | number: "1.2-2" }} INR
+        </div>
+
+        <div class="variance-box">
+          <b>Port To Warehouse Charges:</b>
+          {{ data?.port_to_warehouse_charges | number: "1.2-2" }} INR
+        </div>
+      </div>
+
+      <table
+        class="custom-table"
+        *ngIf="pageMode === 'view' && page === 'TRANSPORT'"
+      >
+        <thead>
+          <tr>
+            <th>Vehicle No.</th>
+            <th>Driver Name</th>
+            <th>Driver Mobile No.</th>
+            <th>Transporter Name</th>
+            <th>LR Number</th>
+            <th>Forwarded By</th>
+            <th>Dispatch Date</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>{{ forData?.vehicle_number }}</td>
+            <td>{{ forData?.driver_name }}</td>
+            <td>{{ forData?.driver_mobile }}</td>
+            <td>{{ forData?.transporter_name }}</td>
+            <td>{{ forData?.lr_number }}</td>
+            <td>{{ forData?.userName }}</td>
+            <td>{{ forData?.updatedAt | date: "dd-MM-yyyy" }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Form Part -->
+      <div
+        class="form-grid"
+        *ngIf="pageMode === 'edit' && page === 'TRANSPORT'"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>Freight Charges (INR)</mat-label>
+          <input matInput type="number" formControlName="freight_charges" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Loading Unloading Charges (INR)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="loading_unloading_charges"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Port To Warehouse Charges (INR)</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="port_to_warehouse_charges"
+          />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Vehicle Number</mat-label>
+          <input matInput formControlName="vehicle_number" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="form-grid"
+        *ngIf="pageMode === 'edit' && page === 'TRANSPORT'"
+      >
+        <mat-form-field appearance="outline">
+          <mat-label>Driver Name</mat-label>
+          <input matInput formControlName="driver_name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Driver Mobile No.</mat-label>
+          <input matInput type="number" formControlName="driver_mobile" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Transporter Name</mat-label>
+          <input matInput formControlName="transporter_name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>LR Number</mat-label>
+          <input matInput formControlName="lr_number" />
+        </mat-form-field>
+      </div>
+
+      <div class="form-grid">
+        <div class="variance-box">
+          <b>Warehouse Delivery Address:</b> {{ data?.wdelivery }}
+        </div>
+      </div>
+
+      <button
+        *ngIf="pageMode === 'edit' && page === 'TRANSPORT' && !buttonHideFor"
+        mat-raised-button
+        color="primary"
+        (click)="actionForwarder('out')"
+        style="float: right"
+      >
+        Out For Delivery
+      </button>
+
+      <button
+        *ngIf="pageMode === 'edit' && page === 'TRANSPORT' && !buttonHideFor"
+        mat-raised-button
+        color="primary"
+        (click)="actionForwarder('draft')"
+        style="float: right; margin-right: 10px"
+      >
+        Draft
+      </button>
+    </form>
+    <!-- Transport Section View/Edit End -->
+
+    <!-- Domestic Vendor Start-->
+    <div *ngIf="data.vendor_category === 'Domestic'">
+      <h3><b>Item Claims:</b></h3>
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Item Name</th>
+            <th>Shipped Qty</th>
+            <th>Claimed Qty</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of data.itemList; let i = index">
+            <td>{{ item.itemName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.claim_qty }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3><b>Charges Details:</b></h3>
+      <div
+        class="form-grid"
+        style="grid-template-columns: repeat(4, 1fr) !important"
+      >
+        <div class="variance-box">
+          <b>Freight Charges:</b>
+          {{ data?.freight_charges | number: "1.2-2" }} INR
+        </div>
+        <div class="variance-box">
+          <b>Loading Unloading Charges:</b>
+          {{ data?.loading_unloading_charges | number: "1.2-2" }} INR
+        </div>
+        <div class="variance-box">
+          <b>Insurance Charges:</b>
+          {{ data?.cha_service_charges | number: "1.2-2" }}
+        </div>
+        <div class="variance-box">
+          <b>Other Logistics Charges:</b>
+          {{ data?.cha_other_charges | number: "1.2-2" }}
+        </div>
+      </div>
+
+      <h3 *ngIf="data?.docList?.length > 0"><b>All Documents:</b></h3>
+      <div class="doc-grid">
+        <div class="doc-card" *ngFor="let doc of data?.docList; let i = index">
+          <mat-icon>description</mat-icon>
+          <div
+            class="doc-name"
+            matTooltip="{{ getFileName(doc.document_name) }}"
+          >
+            {{ getFileName(doc.document_name) }}
+          </div>
+
+          <button
+            mat-icon-button
+            color="primary"
+            (click)="viewFile(doc.document_name)"
+          >
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Domestic Vendor End -->
+
+    <!-- Footer Section -->
+    <div *ngIf="billDownloadHide" class="invoice-footer">
+      <div class="footer-left">
+        <p>
+          <b>{{ company.name }}</b>
+        </p>
+        <p>{{ company.address }}</p>
+        <p *ngIf="company.phone">Phone: {{ company.phone }}</p>
+        <p *ngIf="company.email">Email: {{ company.email }}</p>
+        <p *ngIf="company.gstin">GSTIN: {{ company.gstin }}</p>
+      </div>
+
+      <div class="footer-right">
+        <p>For {{ company.name }}</p>
+        <br /><br />
+        <p><b>Authorized Signatory</b></p>
+      </div>
+    </div>
+  </div>
+</app-wrapper>

@@ -1,0 +1,386 @@
+.permission-container {
+  padding: 1rem;
+  background: #f8f9fa;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Header Section
+.permission-header {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .header-actions {
+    display: flex;
+    gap: 0.5rem;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+  }
+
+  .permission-legend {
+    display: flex;
+    gap: 1.5rem;
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #6c757d;
+
+      i {
+        font-size: 1rem;
+      }
+    }
+  }
+}
+
+// Permission Tree
+.permission-tree {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 1rem;
+}
+
+// Module Level (Top Level)
+.module-wrapper {
+  margin-bottom: 1rem;
+}
+
+.module-panel {
+  border: 2px solid #e3e6ea;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: white;
+
+  &::ng-deep .mat-expansion-panel-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    &:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%) !important;
+
+      // Make ALL text black on hover
+      *,
+      .module-header,
+      .module-header .module-name {
+        color: black !important;
+      }
+    }
+  }
+
+  &::ng-deep .mat-expansion-panel-header.mat-expanded {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    .module-header,
+    .module-header .module-name {
+      color: black !important;
+    }
+  }
+  &::ng-deep .mat-expansion-panel-body {
+    padding: 1rem;
+    background: #f8f9fa;
+  }
+}
+
+.module-header {
+  .module-title {
+    flex: 1;
+  }
+
+  .module-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+
+    .module-name {
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      color: white;
+    }
+  }
+
+  .module-permissions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 1rem;
+  }
+}
+
+.permission-badges {
+  display: flex;
+  gap: 0.5rem;
+
+  .permission-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+
+    &.active {
+      background: white;
+
+      &.read {
+        color: #17a2b8;
+      }
+
+      &.write {
+        color: #ffc107;
+      }
+
+      &.delete {
+        color: #dc3545;
+      }
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Menu Level (Level 1)
+.level-1-container {
+  padding: 0.5rem;
+}
+
+.menu-wrapper {
+  margin-bottom: 0.75rem;
+}
+
+.menu-panel {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  &::ng-deep .mat-expansion-panel-header {
+    padding: 0.75rem 1rem;
+    background: #ffffff;
+
+    &:hover {
+      background: #f1f3f5 !important;
+    }
+  }
+
+  &::ng-deep .mat-expansion-panel-body {
+    padding: 0.75rem;
+    background: #fafbfc;
+  }
+}
+
+.menu-header {
+  .menu-title {
+    flex: 1;
+  }
+
+  .menu-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+
+    .menu-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #495057;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .menu-permissions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 1rem;
+  }
+}
+
+.permission-checkboxes {
+  display: flex;
+  gap: 1rem;
+
+  .permission-check {
+    &::ng-deep .mat-checkbox-label {
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    &.read-check {
+      &::ng-deep .mat-checkbox-checkmark {
+        background-color: #17a2b8;
+      }
+
+      i {
+        color: #17a2b8;
+      }
+    }
+
+    &.write-check {
+      &::ng-deep .mat-checkbox-checkmark {
+        background-color: #ffc107;
+      }
+
+      i {
+        color: #ffc107;
+      }
+    }
+
+    &.delete-check {
+      &::ng-deep .mat-checkbox-checkmark {
+        background-color: #dc3545;
+      }
+
+      i {
+        color: #dc3545;
+      }
+    }
+  }
+}
+
+// Child Level (Level 2)
+.level-2-container {
+  padding: 0.5rem;
+}
+
+.child-item {
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.child-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #adb5bd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .child-name {
+    font-size: 0.9rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+
+    i {
+      font-size: 1.5rem;
+      margin-right: 0.25rem;
+    }
+  }
+
+  .child-permissions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+// Footer Section
+.permission-footer {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 1rem;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+
+  button {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// Global Checkbox Styling
+::ng-deep {
+  .module-panel .mat-checkbox-label,
+  .menu-panel .mat-checkbox-label,
+  .child-checkbox .mat-checkbox-label {
+    color: inherit;
+  }
+
+  .module-panel .mat-checkbox-frame {
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .module-panel .mat-checkbox-checked .mat-checkbox-background {
+    background-color: white;
+  }
+
+  .module-panel .mat-checkbox-checkmark-path {
+    stroke: #667eea !important;
+  }
+
+  mat-expansion-panel-header.mat-expanded {
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover {
+    background: inherit !important;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .permission-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .permission-legend {
+      width: 100%;
+      justify-content: space-around;
+    }
+  }
+
+  .child-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    .child-permissions {
+      width: 100%;
+      justify-content: space-around;
+    }
+  }
+
+  .permission-footer {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}

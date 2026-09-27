@@ -1,0 +1,52 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">Add Amount</h3>
+    <!-- <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Department</h3> -->
+    <!-- <fieldset [disabled]="view == 'view'"> -->
+        <div class="m-3" [formGroup]="budgetExtendForm">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>type</mat-label>
+                            <mat-select formControlName="extend_type" >
+                            <mat-option value="Increase">Increase</mat-option>
+                            <mat-option value="Decrease">Decrease</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="budgetExtendForm.controls['extend_type'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Amount</mat-label>
+                            <input matInput type="text" formControlName="amount" />
+                            <mat-error *ngIf="budgetExtendForm.controls['amount'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="budgetExtendForm.controls['amount'].hasError('pattern')">
+                                *Only Numerics Allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <!-- <button *ngIf="budgetId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button> -->
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    <!-- </fieldset> -->
+</div>

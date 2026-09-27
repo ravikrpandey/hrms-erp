@@ -1,0 +1,100 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>Recruitment <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+      <span>Job BGV Send On Mail</span>
+    </p>
+  </div>
+</div>
+<div class="right_data_all">
+  <div class="heading_neo">
+    <h3>BGV Send On Mail</h3>
+  </div>
+  <form class="form_set pDetails" [formGroup]="bgvMailForm">
+    <div class="table-wrapper table-responsive" style="width: 100%;">
+      <table class="table table-bordered" style="width: 100%;">
+        <thead>
+          <tr style="width: 100%;">
+            <th>S.No.</th>
+            <th>Company Name</th>
+            <th>Company Email</th>
+            <th>Start Date</th>
+            <th>End date</th>
+            <th class="common_button_sub">
+              <button type="button" class="btn btn-outline-success" (click)="addRow()">
+                <i class="fa fa-plus"></i> Add
+              </button>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container formArrayName="company_details"
+            *ngFor="let control of CF_1.company_details['controls']; index as i">
+            <tr [formGroup]="control" style="width: 100%;">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <input type="text" formControlName="company_name" class="form-control"
+                  style="width: 100%; height:42px;" />
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <input matInput type="email" style="text-transform:lowercase" formControlName="company_email" />
+                </mat-form-field>
+                <mat-error
+                  *ngIf="control.get('company_email')?.hasError('required') && control.get('company_email')?.touched">
+                  Company Email is required
+                </mat-error>
+                <mat-error *ngIf="control.get('company_email')?.hasError('email') && control.get('company_email')?.touched">
+                  Please enter a valid email
+                </mat-error>
+              </td>
+              <td>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input matInput [matDatepicker]="startPicker" formControlName="start_date" [max]="today"
+                    class="form-control" style="width: 100%;" readonly />
+                  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #startPicker></mat-datepicker>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field class="example-full-width" appearance="outline">
+                  <input matInput [matDatepicker]="endPicker" formControlName="end_date" [min]="getStartDate(i)"
+                    [max]="today" class="form-control" style="width: 100%;" readonly />
+                  <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+              </td>
+              <td class="text-center">
+                <i class="material-icons" (click)="deletecompany_details(i, control)"
+                  style="cursor: pointer; color: #d9534f;">delete</i>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div *ngFor="let fileControl of fileControls; let i = index" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group fileWithViewImg mb-4">
+          <mat-label>Upload Resume/Experience Letter<span class="alertspan">*</span></mat-label>
+          <input class="form-control" type="file"
+            style="padding-right: 10px; height: 42px; padding-top: 10px; font-size:14px;"
+            title="Termination Copy Upload" (change)="uploadDoc($event, i)" />
+          <img *ngIf="fileControl.fileUrl" [src]="baseUrl + '/' + fileControl.fileUrl" alt class="fileViewImage"
+            (click)="viewImg(i)">
+        </div>
+      </div>
+    </div>
+    <div class="descript">
+      <mat-label>Remarks</mat-label>
+      <div class="form-group mt-2">
+        <ckeditor #editer id="ckediter" formControlName="candidate_description"></ckeditor>
+      </div>
+    </div>
+    <div class="common_button_sub mt-3">
+      <button type="button" class="btn btn-success" (click)="handleSubmit()">
+        <i class="fa fa-save"></i> Save
+      </button>
+    </div>
+  </form>
+</div>

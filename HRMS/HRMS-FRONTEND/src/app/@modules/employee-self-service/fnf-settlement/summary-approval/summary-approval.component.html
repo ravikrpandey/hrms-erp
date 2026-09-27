@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Summary & Approval</title>
+</head>
+<div style="width: 100%;
+    float: left;padding-top: 20px;">
+<form [formGroup]="summaryForm" (ngSubmit)="handleSubmit()">
+  <div class="section">
+    <h2>Summary</h2>
+    <div class="summary-grid">
+      <div class="field">
+        <label>Total Earnings</label>
+        <input type="text" formControlName="total_earnings"  readonly />
+      </div>
+      <div class="field">
+        <label>Total Deductions</label>
+        <input type="text" formControlName="total_deductions" readonly  />
+      </div>
+      <div class="field">
+        <label>Net FnF Payable</label>
+        <input type="text" formControlName="net_fnf_payable"  readonly />
+      </div>
+      <div class="field">
+        <label>TDS/Tax deductions</label>
+        <input type="text" formControlName="tax_deductions"  />
+      </div>
+      <div class="field">
+        <label>Final Amount Payable</label>
+        <input type="text" formControlName="final_amount_payable"  />
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Approvals</h2>
+    <div class="approval-grid">
+      <div class="field">
+        <label>HR Approval</label>
+        <select formControlName="hr_approval">
+          <option value="APPROVED">Approve</option>
+          <option value="PENDING">Reject</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date of Approval</label>
+        <input type="date" formControlName="date_of_approval" />
+      </div>
+      <div class="field">
+        <label>Timestamp log for audit</label>
+        <input type="text" formControlName="timestamp_log" />
+      </div>
+      <div class="field">
+        <label>Finance Approval</label>
+        <select formControlName="finance_approval">
+          <option value="APPROVED">Approve</option>
+          <option value="PENDING">Reject</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Comments</label>
+        <textarea formControlName="comments"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="action-btn btn btn-primary" type="submit">Save & Next</button>
+    <button class="action-btn btn btn-secondary Cancel" type="button" routerLink="/master/ess/fnf-settlement">Cancel</button>
+  </div>
+</form>
+</div>
+</html>

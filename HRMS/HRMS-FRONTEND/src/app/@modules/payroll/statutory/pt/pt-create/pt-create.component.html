@@ -1,0 +1,190 @@
+<div class="right_data_all">
+  <div class="row">
+    <div class="page-title">
+      <h1>Professional Tax</h1>
+    </div>
+  </div>
+
+  <section>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="ptForm" (ngSubmit)="submitForm()">
+        <!-- State Dropdown -->
+        <div class="row mb-3" [ngClass]="{ 'disable-pointer': ptId }">
+          <mat-form-field appearance="outline" class="state-select">
+            <mat-label>State</mat-label>
+            <mat-select
+              formControlName="stateName"
+              (openedChange)="onDropdownOpened($event)"
+              (selectionChange)="onStateChange($event.value)"
+            >
+              <!-- search box -->
+              <mat-select-filter
+                #stateFilter
+                [array]="states"
+                [displayMember]="'name'"
+                placeholder="Search..."
+                (filteredReturn)="filteredStates = $event"
+              >
+              </mat-select-filter>
+
+              <!-- options -->
+              <mat-option *ngFor="let st of filteredStates" [value]="st.name">
+                {{ st.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Slab Section -->
+        <div *ngIf="selectedState">
+          <!-- Info for Non-applicable States -->
+          <div *ngIf="!selectedState.ptApplicable" class="alert alert-info">
+            Professional Tax is <strong>not applicable</strong> in
+            {{ selectedState.name }}.
+          </div>
+
+          <!-- Slab table only if applicable -->
+          <div *ngIf="selectedState.ptApplicable">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>From Gross Salary (Monthly)</th>
+                  <th>To Gross Salary (Monthly)</th>
+                  <th>PT Amount</th>
+                  <th>Gender</th>
+                  <th>Month</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="slabs">
+                <tr
+                  *ngFor="let slab of slabs.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="fromAmount"
+                    />
+                    <div
+                      class="text-danger"
+                      *ngIf="
+                        slab.get('fromAmount')?.touched &&
+                        slab.get('fromAmount')?.invalid
+                      "
+                    >
+                      This field is required!
+                    </div>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="toAmount"
+                      [readonly]="slab.get('noUpperLimit')?.value"
+                    />
+                    <div class="form-check mt-1">
+                      <input
+                        type="checkbox"
+                        class="form-check-input"
+                        formControlName="noUpperLimit"
+                        (change)="toggleNoLimit(i)"
+                        id="noUpperLimit{{ i }}"
+                      />
+                      <label class="form-check-label" for="noUpperLimit{{ i }}">
+                        No upper limit
+                      </label>
+                    </div>
+                    <div
+                      class="text-danger"
+                      *ngIf="
+                        slab.get('toAmount')?.touched &&
+                        slab.get('toAmount')?.invalid &&
+                        !slab.get('noUpperLimit')?.value
+                      "
+                    >
+                      This field is required!
+                    </div>
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="ptAmount"
+                    />
+                    <div
+                      class="text-danger"
+                      *ngIf="
+                        slab.get('ptAmount')?.touched &&
+                        slab.get('ptAmount')?.invalid
+                      "
+                    >
+                      This field is required!
+                    </div>
+                  </td>
+                  <td>
+                    <select class="form-select" formControlName="gender">
+                      <option value="ALL">All</option>
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select class="form-select" formControlName="month">
+                      <option value="ALL">All</option>
+                      <option value="JAN">January</option>
+                      <option value="FEB">February</option>
+                      <option value="MAR">March</option>
+                      <option value="APR">April</option>
+                      <option value="MAY">May</option>
+                      <option value="JUN">June</option>
+                      <option value="JUL">July</option>
+                      <option value="AUG">August</option>
+                      <option value="SEP">September</option>
+                      <option value="OCT">October</option>
+                      <option value="NOV">November</option>
+                      <option value="DEC">December</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      (click)="removeSlab(i)"
+                      *ngIf="slabs.length > 1"
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Add Row Button -->
+            <button type="button" class="btn btn-secondary" (click)="addSlab()">
+              + Add Row
+            </button>
+          </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="mt-4 d-flex justify-content-between">
+          <button type="button" class="btn btn-danger" (click)="back()">
+            Cancel
+          </button>
+
+          <!-- Save only when PT is applicable -->
+          <button
+            *ngIf="selectedState?.ptApplicable"
+            type="submit"
+            class="btn btn-primary"
+          >
+            {{ ptId ? "Update" : "Save" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

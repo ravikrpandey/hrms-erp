@@ -1,0 +1,215 @@
+
+<div class="heading_top">
+    <div class="page-title">
+        <h1>ESS</h1>
+        <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Time off Request </span></p>
+    </div>
+    <div class="add_button">
+      <!-- <button routerLink="../complaint-list" type="button">List</button> -->
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+  <div class="achieveFormArea">
+    
+    <div class="form_basic">
+        <form class="form_set" [formGroup]="timeSheet" (ngSubmit)="onSubmit()">
+            <div class="row">
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Employee Id</mat-label>
+                            <input readonly matInput type="text" formControlName="employee_id" required />
+                            <mat-error *ngIf="timeSheet.controls['employee_id'].hasError('required')">
+                                Employee Id is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Employee Name</mat-label>
+                            <input readonly matInput type="text" formControlName="employee_name" />
+                            <mat-error *ngIf="timeSheet.controls['employee_name'].hasError('required')">
+                                Employee Name is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Manager Name</mat-label>
+                            <input readonly matInput type="text" formControlName="manager_name" />
+                            <mat-error *ngIf="timeSheet.controls['manager_name'].hasError('required')">
+                                Manager Name is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Contact No</mat-label>
+                            <input readonly matInput type="number" formControlName="contact_no" />
+
+                            <mat-error *ngIf="timeSheet.controls['contact_no'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="timeSheet.controls['contact_no'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email Id</mat-label>
+                            <input readonly matInput type="email" formControlName="email" />
+                            <mat-error *ngIf="timeSheet.controls['email'].hasError('pattern')">
+                                Please Enter Valid Email.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Date-Of Request Date</mat-label>
+                            <input matInput [matDatepicker]="dp" (click)="dp.open()"
+                                formControlName="date_off_request"   [max]="maxDate" 
+                                [min]="minDate"/>
+                            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                            <mat-datepicker #dp></mat-datepicker>
+
+                            <mat-error *ngIf="timeSheet.controls['date_off_request'].hasError('required')">
+                                Date-Of Request Date is Required.
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            (timeChange)="timeChangeHandler($event)" 
+                            <mat-label>Time-Of Request Time</mat-label>
+                            <input matTimepicker matInput formControlName="time_off_request"/>
+                            <mat-error *ngIf="timeSheet.controls['time_off_request'].hasError('required')">
+                                Time-Of Request Time is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+                <!-- 
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Time Of Request Time</mat-label>
+                        <input matInput [format]=24 formControlName="time_off_request"
+                        (ngModelChange)="onChangeEvent($event)" [ngxMatTimepicker]="pickerB"/>
+                        <mat-icon matSuffix (click)="opentime()">
+                            watch_later
+                        </mat-icon>
+                        <mat-error *ngIf="timeSheet.controls['time_off_request'].hasError('required')">
+                            Time-Of Request Time is Required.
+                        </mat-error>
+                    </mat-form-field>
+                    <ngx-mat-timepicker (click)="closeTimePicker(pickerB)" color="primary" #pickerB></ngx-mat-timepicker>
+                </div> -->
+
+
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Time of Request</mat-label>
+                            <mat-select formControlName="time_off_request">
+                                <mat-option *ngFor="let data of time" [value]="data">{{data}}</mat-option>
+                            </mat-select>
+
+                            <mat-error *ngIf="timeSheet.controls['time_off_request'].hasError('required')">
+                                Time of Request is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Time Of Taken</mat-label>
+                            <mat-select formControlName="time_off_taken">
+                                <mat-option value="1st Half">1st Half</mat-option>
+                                <mat-option value="2nd Half">2nd Half</mat-option>
+
+
+                            </mat-select>
+                            <mat-error *ngIf="timeSheet.controls['time_off_taken'].hasError('required')">
+                                Time Of Taken Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Time-Of Request Reason</mat-label>
+                            <mat-select formControlName="time_off_request_reason"
+                                (selectionChange)="countryChanged($event)">
+                                <mat-option value="Health Issue">Health Issue</mat-option>
+                                <mat-option value="Family Issue">Family Issue</mat-option>
+                                <mat-option value="Others">Others</mat-option>
+                            </mat-select>
+
+                            <mat-error
+                                *ngIf="timeSheet.controls['time_off_request_reason'].hasError('required')">
+                                Time-Of Request Reason is Required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="timeSheet.controls['time_off_request_reason'].value =='Others'">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Time-Of Request Reason Other</mat-label>
+                            <input matInput type="text" formControlName="timeRequestReasonOther" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Remarks</mat-label>
+                            <input matInput (keydown)="changedText()" type="text" formControlName="remark" [attr.disabled]="words >100 ? '' : null" (keydown)="wordCounter()" #text id="wmd-input" name="post-text" class="wmd-input s-input bar0 js-post-body-field processed" data-post-type-id="2" cols="92" rows="15" tabindex="101" data-min-length="" oncopy="return false;" onpaste="return false;" oncut="return false;"/>
+                            
+                        </mat-form-field>
+                    </div>
+                    <span class="warn_text" *ngIf="extraWords">Please enter within the text limit: 50</span>
+                </div>
+
+            </div>
+
+            <div class="common_button_sub">
+             
+                <button  [disabled]="extraWords" >Submit</button>
+                <button (click)="reLoad()" class="cancel_button_y">Cancel</button>
+          
+            </div>
+        </form>
+    </div>
+        
+    </div>

@@ -1,0 +1,146 @@
+<div class="right_data_all">
+    <div class="row">
+
+        <div class="page-title">
+            <h1>{{ templateData.template_name + ' ' + ' - '}}Salary Template</h1>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="container">
+        <div class="container">
+               <div class="row">
+                    <!-- <div class="col-lg-4">
+                      <p class="head"><strong class="text-primary">Company Name :</strong> {{templateData?.entity_name}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                      <p class="head"><strong class="text-primary">Branch Name :</strong> {{templateData?.branch_name}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                      <p class="head"><strong class="text-primary">Grade Type :</strong> {{templateData?.grade_name}}
+                      </p>
+                    </div> -->
+                    <div class="col-lg-4">
+                        <p class="head"><strong class="text-primary">Template Name :</strong> {{templateData?.template_name}}
+                        </p>
+                      </div>
+                      <div class="col-lg-8">
+                        <p class="head"><strong class="text-primary">Template Description :</strong> {{templateData?.description}}
+                        </p>
+                      </div>
+               </div>
+
+              <div class="card p-3 mb-3">
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <table class="table">
+                      <thead>
+                        <tr class="fs-6 text-primary">
+                          <th>Salary Components</th>
+                          <th>Monthly Amount</th>
+                          <th>Annual Amount</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngIf="templateData.earningComponentList.length > 0">
+                            <tr>
+                                <td colspan="4">
+                                  <h3 class="text-primary fs-6">Earnings</h3>
+                                </td>
+                              </tr>
+                            <tr *ngFor="let earningData of templateData.earningComponentList">
+                                <ng-container *ngIf="earningData.basicPercentage">
+                                    <td class="fs-6 fw-bold">{{earningData.componentName}} 
+                                      <p class="text-muted">{{earningData.basicPercentage}} % &nbsp; of &nbsp; {{earningData.calculationType}} </p> 
+                                    </td>
+                                    <td> ₹ {{earningData.monthlyBasic}}</td>
+                                    <td> ₹ {{earningData.annualBasic}}</td>
+                                </ng-container>
+                                <ng-container *ngIf="earningData.fixedAllowanceMonthly">
+                                    <td class="fs-6 fw-bold">{{earningData.componentName}} </td>
+                                    <td> ₹ {{earningData.fixedAllowanceMonthly}}</td>
+                                    <td> ₹ {{earningData.fixedAllowanceAnnual}}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+
+                        <ng-container *ngIf="templateData.deductionComponentList.length > 0">
+                            <tr>
+                                <td colspan="4">
+                                  <h3 class="text-primary fs-6">Deductions</h3>
+                                </td>
+                              </tr>
+                            <tr *ngFor="let deductionData of templateData.deductionComponentList">
+                                <ng-container *ngIf="deductionData.basicPercentage">
+                                    <td class="fs-6 fw-bold">{{deductionData.componentName}} 
+                                      <p class="text-muted">{{deductionData.basicPercentage}} % &nbsp; of &nbsp; {{deductionData.calculationType}} </p> 
+                                    </td>
+                                    <td> ₹ {{deductionData.monthlyBasic}}</td>
+                                    <td> ₹ {{deductionData.annualBasic}}</td>
+                                </ng-container>
+                                <ng-container *ngIf="deductionData.fixedAllowanceMonthly">
+                                    <td class="fs-6 fw-bold">{{deductionData.componentName}} </td>
+                                    <td> ₹ {{deductionData.fixedAllowanceMonthly}}</td>
+                                    <td> ₹ {{deductionData.fixedAllowanceAnnual}}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+
+
+                        <ng-container *ngIf="templateData.reiembursementComponentList.length > 0">
+                            <tr>
+                                <td colspan="4">
+                                  <h3 class="text-primary fs-6">Reimbursements</h3>
+                                </td>
+                              </tr>
+                            <tr *ngFor="let reiembursementData of templateData.reiembursementComponentList">
+                                <ng-container *ngIf="reiembursementData.basicPercentage">
+                                    <td class="fs-6 fw-bold">{{reiembursementData.componentName}} 
+                                      <p class="text-muted">{{reiembursementData.basicPercentage}} % &nbsp; of &nbsp; {{reiembursementData.calculationType}} </p> 
+                                    </td>
+                                    <td> ₹ {{reiembursementData.monthlyBasic}}</td>
+                                    <td> ₹ {{reiembursementData.annualBasic}}</td>
+                                </ng-container>
+                                <ng-container *ngIf="reiembursementData.fixedAllowanceMonthly">
+                                    <td class="fs-6 fw-bold">{{reiembursementData.componentName}} </td>
+                                    <td> ₹ {{reiembursementData.fixedAllowanceMonthly}}</td>
+                                    <td> ₹ {{reiembursementData.fixedAllowanceAnnual}}</td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                    
+                  </div>
+                </div>
+
+                <!-- Cost to Company -->
+                <div class=" mt-3 alert alert-primary fs-6" role="alert">
+                    <div class="row">
+                        <div class="col-5">
+                            Cost to Company
+                        </div>
+                        <div class="col-3 text-center">
+                            ₹ {{ templateData.total_monthly_gross }}
+                        </div>
+                        <div class="col-3 text-center">
+                            ₹ {{ templateData.total_annual_gross }} 
+                        </div>
+                    </div>
+
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary" (click)="back()">Back</button>
+                </div>
+              </div>
+          
+ 
+        </div>
+    
+
+      </div>
+      
+
+
+</div>

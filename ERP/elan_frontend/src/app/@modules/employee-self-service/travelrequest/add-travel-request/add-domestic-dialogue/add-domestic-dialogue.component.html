@@ -1,0 +1,328 @@
+<h3 class="popHead" *ngIf="!view">
+  {{ data?.id ? "Update Destination" : "Add Destination" }}
+</h3>
+<h3 class="popHead" *ngIf="view">View Destination</h3>
+<form [formGroup]="formModel" class="form_set" (ngSubmit)="onSubmit()">
+  <div class="row" [ngClass]="{ 'disable-interaction': view }">
+    <!-- From State -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>From State</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="domestic_from_state_id"
+            (selectionChange)="fromStateChange($event)"
+          >
+            <mat-select-filter
+              [array]="states"
+              (filteredReturn)="stateSearch($event)"
+            ></mat-select-filter>
+            <mat-option
+              *ngFor="let state of stateList"
+              [value]="state.states_id"
+              >{{ state.states_name }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_from_state_id'].hasError(
+                'required'
+              ) && formModel.controls['domestic_from_state_id'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- From City -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>From City</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="domestic_from_city_id"
+            (selectionChange)="fromCityChange($event)"
+          >
+            <mat-select-filter
+              [array]="cities"
+              (filteredReturn)="citySearch($event)"
+            ></mat-select-filter>
+            <mat-option
+              *ngFor="let city of fromCityList"
+              [value]="city.city_id"
+              >{{ city.city_name }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_from_city_id'].hasError(
+                'required'
+              ) && formModel.controls['domestic_from_city_id'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- From Date -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>From Date</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            formControlName="domestic_from_date"
+            [matDatepicker]="fromDatepicker"
+            (dateChange)="calculateDays()"
+            [matDatepickerFilter]="dateFilter"
+            (click)="fromDatepicker.open()"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="fromDatepicker"
+            [ngClass]="{ 'disable-interaction': view }"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #fromDatepicker></mat-datepicker>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_from_date'].hasError('required') &&
+              formModel.controls['domestic_from_date'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- To State -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>To State</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="domestic_to_state_id"
+            (selectionChange)="toStateChange($event)"
+          >
+            <mat-select-filter
+              [array]="toStates"
+              (filteredReturn)="toStateSearch($event)"
+            ></mat-select-filter>
+            <mat-option
+              *ngFor="let state of toStateList"
+              [value]="state.states_id"
+              >{{ state.states_name }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_to_state_id'].hasError('required') &&
+              formModel.controls['domestic_to_state_id'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- To City -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>To City</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select
+            formControlName="domestic_to_city_id"
+            (selectionChange)="toCityChange($event)"
+          >
+            <mat-select-filter
+              [array]="toCities"
+              (filteredReturn)="toCitySearch($event)"
+            ></mat-select-filter>
+            <mat-option
+              *ngFor="let city of toCityList"
+              [value]="city.city_id"
+              >{{ city.city_name }}</mat-option
+            >
+          </mat-select>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_to_city_id'].hasError('required') &&
+              formModel.controls['domestic_to_city_id'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- To Date -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>To Date</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            formControlName="domestic_to_date"
+            [matDatepicker]="toDatepicker"
+            (dateChange)="calculateDays()"
+            [matDatepickerFilter]="dateFilter"
+            (click)="toDatepicker.open()"
+            readonly
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="toDatepicker"
+            [ngClass]="{ 'disable-interaction': view }"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #toDatepicker></mat-datepicker>
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_to_date'].hasError('required') &&
+              formModel.controls['domestic_to_date'].touched
+            "
+          >
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Include Hotel Information -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group mt-4">
+        <mat-checkbox formControlName="include_hotel"
+          >Include Hotel Information</mat-checkbox
+        >
+      </div>
+    </div>
+
+    <!-- Name of Hotel -->
+    <div
+      class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3"
+      *ngIf="formModel.get('include_hotel')?.value"
+    >
+      <div class="form-group">
+        <mat-label>Name of Hotel</mat-label>
+        <mat-form-field appearance="outline">
+          <input matInput type="text" formControlName="domestic_hotel_name" />
+          <mat-error
+            *ngIf="
+              formModel.controls['domestic_hotel_name'].hasError(
+                'leadingSpaces'
+              ) && formModel.controls['domestic_hotel_name'].touched
+            "
+          >
+            No leading spaces!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Number of Days -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+      <div class="form-group">
+        <mat-label>Number of Days</mat-label>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            type="number"
+            formControlName="number_of_days"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <table *ngIf="fullFromCityList.length > 0 && journeyToCityList.length > 0" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>From City</th>
+          <th>To City</th>
+          <th>From Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody formArrayName="journeyBifurcation">
+        <tr
+          *ngFor="let limit of journeyBifurcation.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <td class="col-3 px-2">
+            <!-- fullFromCityList -->
+            <app-mat-form-select-filter
+              *ngIf="journeyToCityList.length > 0"
+              formControlName="travel_from_city_id"
+              [key]="'city_id'"
+              [items]="journeyToCityList"
+              [displayKey]="'city_name'"
+              placeholder="Select City"
+            >
+            </app-mat-form-select-filter>
+          </td>
+          <td class="col-3 px-2">
+            <app-mat-form-select-filter
+              *ngIf="journeyToCityList.length > 0"
+              formControlName="travel_to_city_id"
+              [key]="'city_id'"
+              [items]="journeyToCityList"
+              [displayKey]="'city_name'"
+              placeholder="Select City"
+            >
+            </app-mat-form-select-filter>
+          </td>
+          <td class="col-3 px-2">
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                formControlName="from_date"
+                [matDatepicker]="fPicker"
+                [matDatepickerFilter]="dateFilter"
+                (click)="fPicker.open()"
+                readonly
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="fPicker"
+                [ngClass]="{ 'disable-interaction': view }"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #fPicker></mat-datepicker>
+            </mat-form-field>
+          </td>
+          <td class="col-3 px-2">
+            <button
+              type="button"
+              mat-icon-button
+              color="primary"
+              (click)="addJourney()"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+            <button
+              type="button"
+              mat-icon-button
+              color="warn"
+              [disabled]="i === 0"
+              (click)="removeJourney(i)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <mat-dialog-actions align="end" class="common_button_sub pb-3">
+    <button type="submit" *ngIf="!view">
+      {{ data?.id ? "Update" : "Submit" }}
+    </button>
+    <button mat-dialog-close class="cancel_button_y">Close</button>
+  </mat-dialog-actions>
+</form>

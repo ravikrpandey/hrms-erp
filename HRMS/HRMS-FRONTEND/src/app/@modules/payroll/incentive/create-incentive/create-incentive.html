@@ -1,0 +1,297 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Payroll </h1>
+        <p> Incentive
+            <span class="employee_2">
+                <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+                {{ id && actionType === 'edit' ? 'Update' : actionType === 'view' ? 'View' : 'Add' }}
+            </span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+</div>
+
+<mat-card>
+    <div class="form_basic m-3">
+        <!-- Incentive Form -->
+        <form class="form_set" [formGroup]="incentiveForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Financial Year</mat-label>
+                            <mat-select formControlName="financial_year_id">
+                                <mat-option *ngFor="let year of financialYearList" [value]="year?.id">
+                                    {{ year?.financial_year }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Department</mat-label>
+                            <mat-select (selectionChange)="selectedDepartmentName($event.value)"
+                                formControlName="dept_id" multiple>
+
+
+                                <app-search-filter [array]="departmentdata" [placeholder]="'Search by department name'"
+                                    [searchFields]="['department_name']"
+                                    (filteredReturn)="filteredDepartments  = $event.data">
+                                </app-search-filter>
+
+
+                                <mat-option *ngFor="let dept of filteredDepartments" [value]="dept.dept_id">
+                                    {{ dept.department_name }}
+                                </mat-option>
+                                <mat-error
+                                    *ngIf="incentiveForm.get('dept_id')?.touched && incentiveForm.controls['dept_id'].hasError('required')">
+                                    * Required!
+                                </mat-error>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Employee Name</mat-label>
+                            <mat-select formControlName="employee">
+                                <span
+                                    *ngIf="employeeNameData.length > 0 && employeeNameData[0]?.first_name?.length > 0">
+                                    <mat-option *ngFor="let employee of employeeNameData"
+                                        [value]="employee.employee_id">
+                                        {{ employee.first_name + ' ' + employee.last_name }}
+                                    </mat-option>
+                                </span>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Incentive Type -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Incentive Type</mat-label>
+                            <mat-select formControlName="incentive_type">
+                                <mat-option value="PERFORMANCE_BONUS">Performance Bonus</mat-option>
+                                <mat-option value="SALES_COMMISSION">Sales Commission</mat-option>
+                                <mat-option value="EXTRA_HOURS">Extra Hours</mat-option>
+                                <mat-option value="LEAD_CLOSE">Lead Close</mat-option>
+                                <mat-option value="OTHERS">Others</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Plan Name -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Plan Name</mat-label>
+                            <input matInput formControlName="plan_name" placeholder="Enter plan name">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Start Date -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="startPicker" formControlName="start_date"
+                                (dateChange)="onStartDateChange($event)" />
+                            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startPicker></mat-datepicker>
+                            <mat-error *ngIf="incentiveForm.get('start_date')?.hasError('required')">
+                                Start Date is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- End Date -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="endPicker" formControlName="end_date" [min]="minEndDate" />
+                            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #endPicker></mat-datepicker>
+                            <mat-error *ngIf="incentiveForm.get('end_date')?.hasError('invalidEndDate')">
+                                End Date cannot be before Start Date
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Target KPI -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Target KPI</mat-label>
+                            <input matInput type="number" formControlName="target_kpi" placeholder="Enter target kpi">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Target Value -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Target Value</mat-label>
+                            <input matInput type="number" formControlName="target_value"
+                                placeholder="Enter target value">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Achieved Value  -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Achieved Value</mat-label>
+                            <input matInput type="number" formControlName="achieved_value"
+                                placeholder="Enter Achieved value">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Multiplier -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Multiplier</mat-label>
+                            <input matInput type="number" formControlName="multiplier" placeholder="Enter multiplier">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Payment Mode -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" style="flex: 1 1 45%;">
+                            <mat-label>Payment Mode</mat-label>
+                            <mat-select formControlName="payment_mode">
+                                <mat-option value="BANK_TRANSFER">Bank Transfer</mat-option>
+                                <mat-option value="CHEQUE">Cheque</mat-option>
+                                <mat-option value="CASH">Cash</mat-option>
+                                <mat-option value="PAYROLL">Payroll</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Frequency</mat-label>
+                            <mat-select formControlName="frequency"
+                                (selectionChange)="onFrequencyTypeChange($event.value)">
+                                <mat-option [value]="1">One Time</mat-option>
+                                <mat-option [value]="2">Recurring</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!----For One Time Start-->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="incentiveForm.get('frequency')?.value == 1">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Payroll Year</mat-label>
+                            <mat-select formControlName="payroll_financial_year_id">
+                                <mat-option *ngFor="let year of financialYearList" [value]="year?.id">
+                                    {{ year?.financial_year }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="incentiveForm.get('frequency')?.value == 1">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payroll Month</mat-label>
+                            <mat-select formControlName="payroll_month">
+                                <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                                    {{ data?.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!----For One Time End-->
+                <!----For Recurring Start-->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="incentiveForm.get('frequency')?.value == 2">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Payroll Year</mat-label>
+                            <mat-select formControlName="recurring_payroll_fy_id">
+                                <mat-option *ngFor="let year of financialYearList" [value]="year?.id">
+                                    {{ year?.financial_year }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="incentiveForm.get('frequency')?.value == 2">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payroll Start Month</mat-label>
+                            <mat-select formControlName="payroll_start_month">
+                                <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                                    {{ data?.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                    *ngIf="incentiveForm.get('frequency')?.value == 2">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payroll End Month</mat-label>
+                            <mat-select formControlName="payroll_end_month">
+                                <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                                    {{ data?.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!----For Recurring End-->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-checkbox class="example-margin" formControlName="is_taxable"
+                            (change)="onCheckboxChange($event)">
+                            Is taxable?
+                        </mat-checkbox>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group service_description">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Remarks</mat-label>
+                            <input matInput type="text" formControlName="remark" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="common_button_sub">
+                    <button (click)="onSubmitForm()" *ngIf="actionType !== 'view'">
+                        {{ actionType === 'edit' ? 'Update' : 'Submit' }}
+                    </button>
+                    <button class="cancel_button_y" (click)="back()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</mat-card>

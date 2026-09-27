@@ -1,0 +1,200 @@
+<div class="heading_neo mt-3">
+  <h3>Policy Restrictions</h3>
+</div>
+
+<form [formGroup]="form">
+  <!-- <mat-card> -->
+  <div class="form_sePo">
+
+    <!-- Allowed durations section -->
+    <div class="row mt-3">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <span>Allowed Durations For This Leave Policy Are</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group groupInLine" formGroupName="duration" >
+          <mat-checkbox *ngFor="let leaveDuration of durations" color="primary" [value]="leaveDuration"
+            [checked]="form.get('duration')?.value.includes(leaveDuration)" class="radio-space"
+            [ngClass]="{'disabled': pageMode === 'viewMode'}" (change)="onCheckboxChange($event)">{{ leaveDuration
+            }}</mat-checkbox>
+        </div>
+        <mat-error *ngIf="form.get('duration')?.invalid && form.get('duration')?.touched">
+          At least one duration must be selected!
+        </mat-error>
+      </div>
+    </div>
+
+
+    <!-- Allowed request for section -->
+    <div class="row mt-5">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <span>Allowed Request For</span>
+        </div>
+      </div>
+    </div>
+
+ <!-- Past Dates Checkbox -->
+<!-- Past Dates Checkbox -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="form-group" [ngClass]="{'disable-pointer-events': isDisabled}">
+      <mat-checkbox color="primary" formControlName="PastDates">
+        Past Dates
+      </mat-checkbox>
+    </div>
+  </div>
+</div>
+
+<!-- Past Dates Fields -->
+<div class="row m-3" *ngIf="form.get('PastDates')?.value">
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="form-group" style="margin-top: 9%; margin-left: 0.8rem; font-size: 0.9rem;">
+      <span>Can Apply</span>
+    </div>
+  </div>
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="form-group" [ngClass]="{'disable-pointer-events': isDisabled}">
+      <mat-form-field appearance="outline">
+        <input matInput type="number" placeholder="Enter days" onkeypress="return event.charCode >= 48" min="1"
+          formControlName="pastDateInput" />
+        <mat-error *ngIf="form.get('pastDateInput')?.hasError('required') && form.get('pastDateInput')?.touched">
+          This field is required!
+        </mat-error>
+        <mat-error *ngIf="form.get('pastDateInput')?.hasError('min') && form.get('pastDateInput')?.touched">
+          The value must be at least 1!
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="form-group" style="margin-top: 0.8rem; margin-left: 0.8rem; font-size: 0.9rem;">
+      <span>Days In Past</span>
+    </div>
+  </div>
+</div>
+
+<!-- Future Dates Checkbox -->
+<div class="row mt-3">
+  <div class="col-12">
+    <div class="form-group" [ngClass]="{'disable-pointer-events': isDisabled}">
+      <mat-checkbox color="primary" formControlName="futureDays">
+        Future Dates
+      </mat-checkbox>
+    </div>
+  </div>
+</div>
+
+<!-- Future Dates Fields -->
+<div class="row m-3" *ngIf="form.get('futureDays')?.value">
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="form-group" style="margin-top: 9%; margin-left: 0.8rem; font-size: 0.9rem;">
+      <span>To Be Applied</span>
+    </div>
+  </div>
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="form-group">
+      <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+        <input matInput type="number" onkeypress="return event.charCode >= 48" min="1"
+          formControlName="futuredaysInAdvanceInput" placeholder="Enter days" />
+        <mat-error *ngIf="form.get('futuredaysInAdvanceInput')?.hasError('required')">
+          This field is required!
+        </mat-error>
+        <mat-error *ngIf="form.get('futuredaysInAdvanceInput')?.hasError('min')">
+          The value must be at least 1!
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+    <div class="form-group" style="margin-top: 0.8rem; margin-left: 0.8rem; font-size: 0.9rem;">
+      <span>Days In Advance</span>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- <div class="row mt-2"> -->
+    <div class="row mt-5 col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+      <!-- Minimum leave allowed per leave request -->
+
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3">
+        <div class="form-group">
+          Minimum Leave Allowed Per Leave Request
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3">
+        <div class="form-group" [ngClass]="{'disable-pointer-events': isDisabled }">
+          <mat-form-field appearance="outline">
+            <input matInput type="number" onkeypress="return event.charCode >= 48" min="0" placeholder="Minimum"
+              formControlName="minLeaveRequest" />
+              <mat-error *ngIf="form.get('minLeaveRequest')?.hasError('required') && form.get('minLeaveRequest')?.touched">
+                This field is required!
+              </mat-error>
+            <!-- <mat-error *ngIf="form.get('minLeaveRequest')?.dirty && form.get('minLeaveRequest')?.touched">
+              This field is required!
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <!-- Maximum leave allowed per leave request -->
+
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3">
+        <div class="form-group">
+          Maximum Leave Allowed Per Leave Request
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3">
+        <div class="form-group" [ngClass]="{'disable-pointer-events': isDisabled }">
+          <mat-form-field appearance="outline">
+            <input matInput type="number" onkeypress="return event.charCode >= 48" min="0" placeholder="Maximum"
+              formControlName="maxLeaveRequest" />
+              <!-- <mat-error *ngIf="form.get('maxLeaveRequest')?.hasError('required') && form.get('maxLeaveRequest')?.touched">
+                This field is required!
+              </mat-error> -->
+            <!-- <mat-error *ngIf="(getFormControl('maxLeaveRequest')?.dirty || getFormControl('maxLeaveRequest')?.touched)">
+              This field is required!
+            </mat-error> -->
+          </mat-form-field>
+          <mat-error *ngIf="form.get('maxLeaveRequest')?.hasError('required') && form.get('maxLeaveRequest')?.touched">
+            This field is required!
+          </mat-error>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- </div> -->
+
+
+
+
+
+  </div>
+  <!-- </mat-card> -->
+  
+  <div class="col-12 common_button_sub mt-2" style="display: flex; justify-content: flex-end;">
+    <button type="button" style="margin-right: 2rem;" *ngIf="!showUpdate && this.pageMode !== 'viewMode'"
+    [disabled]="this.pageMode === 'viewMode'" 
+    (click)="addPolicyRestrictions()">Add</button>
+
+    <button type="button" style="margin-right: 2rem;" *ngIf="showUpdate && this.pageMode !== 'viewMode'"
+      [disabled]="this.pageMode === 'viewMode'"
+      (click)="addPolicyRestrictions()">Update</button>
+
+    <!-- <button mat-raised-button color="primary" type="button" style="margin-right: 2rem;" 
+       (click)="backToPolicyList()">POLICY LISTING</button> -->
+
+    <!-- <button mat-raised-button color="warn" type="button" style="margin-right: 2rem;" class="mx-3" (click)="onCancel()">CANCEL</button> -->
+  </div>
+
+</form>

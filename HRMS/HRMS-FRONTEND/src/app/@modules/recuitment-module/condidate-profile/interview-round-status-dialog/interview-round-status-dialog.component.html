@@ -1,0 +1,33 @@
+<ng-container>
+  <h3 class="popHead"> Interview Status</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S.No. </th>
+            <th>Round</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Interviewer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataList; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{data?.interview_round}}</td>
+            <td>{{ data?.interview_date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{data?.interview_time}}</td>
+            <td>
+              <button type="button" class="statusButton">{{data?.final_status}}</button>
+            </td>
+            <td >
+              <mat-icon (click)="viewInterviewStatus($event, data)">visibility</mat-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+</ng-container>

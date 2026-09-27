@@ -1,0 +1,112 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Basic Information</h3>
+    </div>
+    <form class="form_set formBorder" [formGroup]="basicform">
+      <div class="form_sePo">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Full Name <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text"  formControlName="full_name"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Employee </mat-label>
+              <mat-form-field>
+                <mat-select formControlName="employee_id">
+                  <mat-option *ngFor="let employee of employees" [value]="employee.employee_id">
+                    {{employee?.first_name + ' ' + employee?.last_name + ' ' +
+                  employee?.employee_code}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Date of Birth <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="dobPicker" type="text" formControlName="date_of_birth" [max]="maxDobDate" readonly>
+                <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                <mat-datepicker #dobPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Gender <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="gender">
+                  <mat-option value="Male">Male</mat-option>
+                  <mat-option value="Female">Female</mat-option>
+                  <mat-option value="Other">Other</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Blood Group</mat-label>
+              <mat-form-field>
+                <mat-select formControlName="blood_group">
+                  <mat-option value="A+">A+</mat-option>
+                  <mat-option value="A-">A-</mat-option>
+                  <mat-option value="B+">B+</mat-option>
+                  <mat-option value="B-">B-</mat-option>
+                  <mat-option value="O+">O+</mat-option>
+                  <mat-option value="O-">O-</mat-option>
+                  <mat-option value="AB+">AB+</mat-option>
+                  <mat-option value="AB-">AB-</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Nationality</mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="nationality">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <label >Upload Picture</label>
+              <div class="input-group">
+                <input
+                  class="form-control"
+                  type="file"
+                  style="padding-right: 10px;"
+                  (change)="onChangefile($event)"
+                />
+                <div class="input-group-append" *ngIf="basicform.controls['profile_picture'].value">
+                  <button
+                    class="btn btn-outline-primary"
+                    (click)="openFileInNewTab(basicform.controls['profile_picture'].value)">
+                    View
+                  </button>
+                </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="action_type!='view'">
+            <div class="common_button_sub">
+              <button (click)="onSubmitForm()">Save & Next</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

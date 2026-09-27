@@ -1,0 +1,290 @@
+<div class="section">
+  <div class="row head">
+    <p routerLink="../">
+      Asset Management /{{ id ? " Update Product" : "Add Product" }} / Asset
+    </p>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+<div class="section">
+  <div>
+    <mat-card>
+      <div class="row form_head">
+        <h3>{{ id ? "Update Product / Asset" : " Add Product / Asset" }}</h3>
+      </div>
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="productupdateForm">
+          <div class="row">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Category</mat-label>
+                  <mat-select formControlName="select_category">
+                    <mat-option>Select</mat-option>
+                    <mat-option
+                      *ngFor="let cat of catData"
+                      [value]="cat.asset_category"
+                      >{{ cat.asset_category }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Product/Asset Name</mat-label>
+                  <input matInput type="text" formControlName="asset_name" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Product Description</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="asset_description"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Purchase Date </mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="dp"
+                    (click)="dp.open()"
+                    formControlName="purchased_date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dp"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Vendor Name </mat-label>
+                  <mat-select
+                    formControlName="vendor_name"
+                    placeholder="select vendor"
+                  >
+                    <mat-option
+                      *ngFor="let vendor of vendorData"
+                      [value]="vendor.vendor_name"
+                      >{{ vendor.vendor_name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Purchased Cost</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="purchased_cost"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Asset ID</mat-label>
+                  <input matInput type="text" formControlName="asset_ID" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Serial Number</mat-label>
+                  <input matInput type="text" formControlName="serial_number" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Assigned Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    (click)="picker.open()"
+                    formControlName="assigned_date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Assigned To(Employee name)</mat-label>
+                  <mat-select formControlName="assigned_to">
+                    <mat-option
+                      *ngFor="let emp of empdata"
+                      [value]="emp.fullName"
+                      >{{ emp.fullName }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Assigned By</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="assigned_by"
+                    readonly
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Status</mat-label>
+                  <mat-select
+                    formControlName="asset_status"
+                    (selectionChange)="onStatusChange($event)"
+                  >
+                    <mat-option *ngFor="let sts of status" [value]="sts.name">{{
+                      sts.name
+                    }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div
+              *ngIf="this.scrap_fields"
+              class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+            >
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Scrap Type</mat-label>
+                  <mat-select
+                    formControlName="scrap_type"
+                    (selectionChange)="onStatusChange($event)"
+                  >
+                    <mat-option
+                      *ngFor="let st of scrap_type"
+                      [value]="st.scrap_type"
+                      >{{ st.scrap_type }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div
+              *ngIf="scrap_fields"
+              class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+            >
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Scrap Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker1"
+                    (click)="picker1.open()"
+                    formControlName="scrap_date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div
+              *ngIf="return_date"
+              class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+            >
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Return Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker"
+                    (click)="picker.open()"
+                    formControlName="return_date"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Remarks/Comments</mat-label>
+                  <input matInput type="text" formControlName="remark" />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="mt-3" align="end">
+            <button
+              *ngIf="!id"
+              mat-raised-button
+              color="primary"
+              class="mx-3"
+              (click)="onSubmit()"
+            >
+              Submit
+            </button>
+            <button
+              *ngIf="id"
+              mat-raised-button
+              color="primary"
+              class="mx-3"
+              (click)="onUpdate()"
+            >
+              Update
+            </button>
+
+            <button
+              mat-raised-button
+              color="warn"
+              (click)="
+                onCancel(
+                  'master/itticket/configurational-master/product-asset-master'
+                )
+              "
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</div>

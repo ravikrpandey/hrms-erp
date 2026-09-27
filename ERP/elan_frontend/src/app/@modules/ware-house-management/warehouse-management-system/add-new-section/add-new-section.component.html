@@ -1,0 +1,42 @@
+<div>
+    <h3 mat-dialog-title class="popHead">Add Section Item</h3>
+    <!-- [disabled]="view == 'view'" -->
+    <fieldset>
+        <div class="row m-3" [formGroup]="AddSectionForm">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Section Name</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="section_name" maxlength="30"/>
+                        <mat-error *ngIf="AddSectionForm.controls['section_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AddSectionForm.controls['section_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Capacity</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="capacity" maxlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0"/>
+                        <mat-error *ngIf="AddSectionForm.controls['capacity'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button (click)="onSubmitForm()">
+                Save
+            </button>
+            <button mat-dialog-close class="cancel_button_y">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

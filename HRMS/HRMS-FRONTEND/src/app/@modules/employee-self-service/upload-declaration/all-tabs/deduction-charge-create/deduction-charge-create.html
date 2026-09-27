@@ -1,0 +1,113 @@
+<div *ngIf="loading" class="text-center my-3">Loading...</div>
+
+<!-- Loop over sorted sections -->
+<div *ngFor="let section of sortedSections" class="mb-4">
+
+  <!-- Section 80C, 80CCC, 80CCD -->
+  <ng-container *ngIf="section.key === 'Section 80C, 80CCC, 80CCD'">
+    <h4 class="section-header">
+      {{ section.key }}
+      <span class="max-limit-text" style="float:right">
+        Max Limit: {{ section.value?.[0]?.maxLimit || 0 | number:'1.0-0' }}
+      </span>
+    </h4>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Particulars</th>
+          <th>Amount</th>
+          <th>Document</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of section.value || []; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item?.declaration_type || '-' }}</td>
+          <td>
+            <input type="number" [(ngModel)]="item.amount" class="form-control" placeholder="0.00"
+              (ngModelChange)="onAmountChange(section.key, item, $event)" />
+          </td>
+          <td>
+            <input type="file" (change)="uploadDoc($event, item)" />
+            <button class="btn btn-sm btn-info mt-1" (click)="viewDocument(item.document)" 
+              [disabled]="!item.document">View</button>
+          </td>
+        </tr>
+
+        <!-- Empty row if no data -->
+        <tr *ngIf="!section.value || section.value.length === 0">
+          <td colspan="4" class="text-center text-muted">No items available</td>
+        </tr>
+
+        <!-- Total row -->
+        <tr class="table-secondary">
+          <td colspan="2" class="text-right font-weight-bold">Total:</td>
+          <td class="font-weight-bold">
+            {{ getSectionTotal(section.key) | number:'1.0-0' }}
+            &nbsp;|&nbsp;
+            Remaining: {{ getRemainingLimit(section.key) | number:'1.0-0' }}
+          </td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <!-- Other Sections -->
+  <ng-container *ngIf="section.key !== 'Section 80C, 80CCC, 80CCD'">
+    <h4 class="section-header">{{ section.key }}</h4>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Particulars</th>
+          <th *ngIf="section.key !== 'Other Section'">Age</th>
+          <th>Max Limit</th>
+          <th>Amount</th>
+          <th>Document</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of section.value || []; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ item?.declaration_type || '-' }}</td>
+
+          <!-- Age column -->
+          <td *ngIf="section.key !== 'Other Section'">
+            <ng-container *ngIf="section.key === 'Section 80D' && (i === 2 || i === 3); else blankAge">
+              <select class="form-control" [(ngModel)]="item.age">
+                <option value="<60"><60</option>
+                <option value="60-79">60 to 79</option>
+                <option value=">=80">>=80</option>
+              </select>
+            </ng-container>
+            <ng-template #blankAge></ng-template>
+          </td>
+
+          <td>{{ item?.maxLimit || '-' }}</td>
+          <td>
+            <input type="number" [(ngModel)]="item.amount" class="form-control" placeholder="Amount" />
+          </td>
+          <td>
+            <input type="file" (change)="uploadDoc($event, item)" />
+            <button class="btn btn-sm btn-info mt-1" (click)="viewDocument(item.document)" 
+              [disabled]="!item.document">View</button>
+          </td>
+        </tr>
+
+        <!-- Empty row if no data -->
+        <tr *ngIf="!section.value || section.value.length === 0">
+          <td colspan="6" class="text-center text-muted">No items available</td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+</div>
+
+<!-- Submit button -->
+<div class="text-right mt-3">
+  <button class="btn btn-primary" (click)="onSubmit()">Submit & Next</button>
+</div>

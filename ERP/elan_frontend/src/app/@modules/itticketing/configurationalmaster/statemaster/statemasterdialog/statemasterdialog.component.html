@@ -1,0 +1,63 @@
+<h3 mat-dialog-title *ngIf="view" class="popHead">State Record</h3>
+<mat-dialog-content *ngIf="view" class="mat-typography">
+  <div class="cotain">
+    <div class="emp_key">
+      <p>Country Name :</p>
+      <p>State Name :</p>
+      <p>Status :</p>
+    </div>
+    <div class="emp_value">
+      <p>{{ singleStateData.countryss_name }}</p>
+      <p>{{ singleStateData.states_name }}</p>
+      <p>{{ singleStateData.status }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="view" align="end" class="common_button_sub">
+  <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>
+<h3 mat-dialog-title *ngIf="!view && id" class="popHead">Update State</h3>
+<h3 mat-dialog-title *ngIf="!view && !id" class="popHead">Create State</h3>
+<fieldset *ngIf="!view">
+  <div class="m-3" [formGroup]="stateForm">
+    <div class="row">
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <mat-select formControlName="country_name">
+            <mat-select-filter
+              [array]="countries"
+              (filteredReturn)="countrySearch($event)"
+            ></mat-select-filter>
+            <mat-option
+              *ngFor="let role of countryList"
+              [value]="role.countryss_id"
+            >
+              {{ role.countryss_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+        <mat-form-field appearance="outline">
+          <mat-label>State Name</mat-label>
+          <input matInput type="text" formControlName="state_name" />
+          <mat-error *ngIf="stateForm.get('state_name')?.hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error
+            *ngIf="stateForm.get('state_name')?.hasError('leadingSpaces')"
+          >
+            *No leading spaces!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <mat-dialog-actions align="end" *ngIf="!view" class="common_button_sub mb-3">
+    <button *ngIf="!id" (click)="onSubmitForm()">Save</button>
+    <button *ngIf="id" (click)="onUpdateForm()">Update</button>
+    <button mat-dialog-close class="cancel_button_y">Close</button>
+  </mat-dialog-actions>
+</fieldset>

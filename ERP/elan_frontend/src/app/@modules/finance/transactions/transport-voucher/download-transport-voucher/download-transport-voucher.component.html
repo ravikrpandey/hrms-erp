@@ -1,0 +1,267 @@
+<!-- LOADING OVERLAY -->
+<div class="pdf-loading" [class.active]="isLoading">
+    <div class="spinner-container">
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+        <div class="spinner-ring"></div>
+    </div>
+    <div class="loading-text">Generating Document</div>
+    <div class="loading-subtext">Please wait while your voucher is being prepared</div>
+    <div class="loading-progress">
+        <div class="progress-bar"></div>
+    </div>
+</div>
+
+<!-- DATA LOADING -->
+<div class="data-loading" *ngIf="isDataLoading">
+    <div class="loader"></div>
+    <p>Loading voucher data...</p>
+</div>
+
+<!-- MAIN CONTAINER -->
+<div class="main-container" *ngIf="!isDataLoading">
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar no-print">
+        <div class="action-left">
+            <button class="btn btn-back" (click)="goBack()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </button>
+        </div>
+        <div class="action-right">
+            <button class="btn btn-print" (click)="printVoucher()" [disabled]="isPrinting">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 9V3h12v6M6 21h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/>
+                    <path d="M18 9V7a2 2 0 00-2-2H8a2 2 0 00-2 2v2"/>
+                </svg>
+                {{ isPrinting ? 'Printing...' : 'Print' }}
+            </button>
+            <button class="btn btn-pdf" (click)="downloadPDF()" [disabled]="isLoading">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                    <path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/>
+                </svg>
+                {{ isLoading ? 'Generating...' : 'Download PDF' }}
+            </button>
+        </div>
+    </div>
+
+    <div class="voucher-wrapper" id="voucherContentWrapper">
+        <div #voucherContent>
+            <div class="voucher">
+
+                <!-- HEADER -->
+                <table class="header-table">
+                    <tr>
+                        <td class="logo-cell">
+                          <img src="../../../../../../assets/company-logo.png" />
+                        </td>
+                        <td class="address-cell" style="text-align:center;margin-top:30px">
+                            <span class="cname">{{ voucherData.companyName }}</span>
+                            {{ voucherData.companyAddress }}<br>
+                            PAN No. {{ voucherData.companyPan }}
+                        </td>
+                        <td class="title-cell">
+                            <span class="v-title">Transport Voucher</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- META ROW -->
+                <table class="meta-table">
+                    <tr>
+                        <td class="meta-left">Voucher No.&nbsp;&nbsp;&nbsp;&nbsp;{{ voucherData.voucherNumber }}</td>
+                        <td class="meta-right" colspan="2">Voucher Date :&nbsp;&nbsp;{{ voucherData.voucherDate }}</td>
+                    </tr>
+                </table>
+
+                <!-- MAIN DETAILS -->
+                <table class="main-table">
+                    <tr>
+                        <td class="label-cell">Branch</td>
+                        <td class="value-cell">{{ voucherData.branch }}</td>
+                        <td class="label-cell">Financial Year</td>
+                        <td class="value-cell">{{ voucherData.financialYear }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">GST Type</td>
+                        <td class="value-cell">{{ voucherData.gstType }}</td>
+                        <td class="label-cell">Status</td>
+                        <td class="value-cell">{{ voucherData.status }}</td>
+                    </tr>
+                </table>
+
+                <!-- TRANSPORTER DETAILS -->
+                <table class="main-table">
+                    <tr>
+                        <td class="label-cell">Transporter Name</td>
+                        <td class="value-cell">{{ voucherData.transporterName }}</td>
+                        <td class="label-cell">GSTIN</td>
+                        <td class="value-cell">{{ voucherData.transporterGstin }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Address</td>
+                        <td class="value-cell" colspan="3">{{ voucherData.transporterAddress }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Invoice No</td>
+                        <td class="value-cell">{{ voucherData.transporterInvoiceNo }}</td>
+                        <td class="label-cell">Nature of Transaction</td>
+                        <td class="value-cell">{{ voucherData.natureOfTransaction }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">TDS Nature</td>
+                        <td class="value-cell" colspan="3">{{ voucherData.tdsNature }}</td>
+                    </tr>
+                </table>
+
+                <!-- TRANSPORT DETAILS -->
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>LR No.</th>
+                            <th>LR Date</th>
+                            <th>From</th>
+                            <th>To</th>
+                            <th>Vehicle No.</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let lorry of voucherData.lorryDetails; let i = index"
+                            [class.striped]="i % 2 === 1">
+                            <td>{{ lorry.lrNo }}</td>
+                            <td>{{ lorry.lrDate }}</td>
+                            <td>{{ lorry.from }}</td>
+                            <td>{{ lorry.to }}</td>
+                            <td>{{ lorry.vehicleNo }}</td>
+                            <td class="text-right">{{ formatCurrency(lorry.amount) }}</td>
+                        </tr>
+                        <tr class="total-row" *ngIf="voucherData.lorryDetails.length > 0">
+                            <td colspan="5" class="text-right">Total Transport Charges</td>
+                            <td class="text-right">{{ formatCurrency(getTotalTransportCharges()) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- CHARGES DETAILS -->
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Parent Account</th>
+                            <th>Account</th>
+                            <th>Charge Name</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let charge of voucherData.chargesDetails; let i = index"
+                            [class.striped]="i % 2 === 1">
+                            <td>{{ charge.parentAccount }}</td>
+                            <td>{{ charge.account }}</td>
+                            <td>{{ charge.chargeName }}</td>
+                            <td class="text-right">{{ formatCurrency(charge.amount) }}</td>
+                        </tr>
+                        <tr class="total-row" *ngIf="voucherData.chargesDetails.length > 0">
+                            <td colspan="3" class="text-right">Total Charges</td>
+                            <td class="text-right">{{ formatCurrency(getTotalCharges()) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- TAX & PAYMENT SUMMARY -->
+                <table class="main-table summary-table">
+                    <tr>
+                        <td class="label-cell">Taxable Value</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.taxSummary.taxableValue) }}</td>
+                        <td class="label-cell">Gross Total</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.paymentSummary.grossTotal) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">IGST</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.taxSummary.igst) }}</td>
+                        <td class="label-cell">TDS</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.paymentSummary.tds) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">CGST</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.taxSummary.cgst) }}</td>
+                        <td class="label-cell">GST Total</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.paymentSummary.gstTotal) }}</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">SGST</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.taxSummary.sgst) }}</td>
+                        <td class="label-cell">Less Amount</td>
+                        <td class="value-cell">{{ formatCurrency(voucherData.paymentSummary.lessAmount) }}</td>
+                    </tr>
+                    <tr class="total-row summary-total">
+                        <td class="label-cell"><strong>Total GST</strong></td>
+                        <td class="value-cell"><strong>{{ formatCurrency(voucherData.taxSummary.totalGst) }}</strong></td>
+                        <td class="label-cell"><strong>Net Payable</strong></td>
+                        <td class="value-cell"><strong>{{ formatCurrency(voucherData.paymentSummary.netPayable) }}</strong></td>
+                    </tr>
+                </table>
+
+                <!-- ACCOUNTING ENTRY -->
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width:50%;">Ledger</th>
+                            <th class="text-right" style="width:25%;">Debit</th>
+                            <th class="text-right" style="width:25%;">Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let entry of voucherData.accountingEntries; let i = index"
+                            [class.striped]="i % 2 === 1">
+                            <td>{{ entry.ledger }}</td>
+                            <td class="text-right" *ngIf="entry.debit !== null">{{ formatCurrency(entry.debit) }}</td>
+                            <td class="text-right" *ngIf="entry.debit === null">—</td>
+                            <td class="text-right" *ngIf="entry.credit !== null">{{ formatCurrency(entry.credit) }}</td>
+                            <td class="text-right" *ngIf="entry.credit === null">—</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td class="text-right"><strong>Total</strong></td>
+                            <td class="text-right"><strong>{{ formatCurrency(getTotalDebit()) }}</strong></td>
+                            <td class="text-right"><strong>{{ formatCurrency(getTotalCredit()) }}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- NARRATION -->
+                <div class="narration-line">
+                    <strong>Narration:</strong> {{ voucherData.narration || 'No remarks provided for this transaction.' }}
+                </div>
+
+                <!-- SIGNATURES -->
+                <div class="signature-section">
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        Prepared By<br>
+                        {{ voucherData.preparedBy }}
+                    </div>
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        Verified By<br>
+                        {{ voucherData.verifiedBy }}
+                    </div>
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        Approved By<br>
+                        {{ voucherData.approvedBy }}
+                    </div>
+                </div>
+
+                <!-- FOOTER -->
+                <div class="footer-line">
+                    Page :&nbsp;&nbsp;&nbsp;&nbsp;1/1
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

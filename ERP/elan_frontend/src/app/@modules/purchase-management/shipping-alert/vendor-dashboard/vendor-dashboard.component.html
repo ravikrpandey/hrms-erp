@@ -1,0 +1,135 @@
+<div class="page-wrapper">
+    <app-vendor-top-header [vendor_id]="vendor_id_header"></app-vendor-top-header>
+    
+    <div class="main">
+        <h1 class="main-heading">Dashboard</h1>
+        <p class="main-sub">Procurement Activities</p>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card total-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>description</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.total_po }}</h3>
+                    <p>Total PO</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card completed-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>task_alt</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.completed_po }}</h3>
+                    <p>Completed PO</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card progress-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>pending_actions</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.inprogress_po }}</h3>
+                    <p>In Progress PO</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card return-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>assignment_return</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.return_po }}</h3>
+                    <p>Return PO</p>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="summary-section">
+
+            <div class="summary-card">
+                <h4>Completion PO Rate</h4>
+
+                <div class="progress-wrapper">
+                    <div
+                        class="progress-bar"
+                        [style.width.%]="completionPercentage">
+                    </div>
+                </div>
+
+                <span>{{ completionPercentage }}%</span>
+            </div>
+
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="dashboard-card total-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>play_circle</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.live_rfp }}</h3>
+                    <p>Total Live RFP</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card completed-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>task_alt</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.close_rfp }}</h3>
+                    <p>Total Closed RFP</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card live-nego-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>published_with_changes</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.live_nego }}</h3>
+                    <p>Total Live Negotiation</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card close-nego-card">
+                <div class="card-left">
+                    <div class="card-icon">
+                        <mat-icon>task_alt</mat-icon>
+                    </div>
+                </div>
+
+                <div class="card-right">
+                    <h3>{{ dashboardData.close_nego }}</h3>
+                    <p>Total Closed Negotiation</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

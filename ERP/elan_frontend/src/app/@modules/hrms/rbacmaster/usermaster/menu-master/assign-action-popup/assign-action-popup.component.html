@@ -1,0 +1,35 @@
+<h3 mat-dialog-title class="popHead">
+  Assign Action to modules
+  <span mat-dialog-close class="cencelBtn" *ngIf="isAccess">×</span>
+</h3>
+
+<mat-dialog-content class="mat-typography">
+  <h3 style="text-align: center">{{ m_title }}</h3>
+  <div class="cotain">
+    <ng-container *ngFor="let m of assignActions">
+      <div class="actionC">
+        <span>{{ m.name }}</span>
+        <div class="example-section">
+          <input
+            type="checkbox"
+            class="checkboxFeild"
+            (change)="changeAction($event)"
+            [checked]="m.access"
+            [value]="m.id"
+            [name]="m.name"
+          />
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="assignBtn common_button_sub">
+  <button [disabled]="showLoader" (click)="Assign()">
+    <mat-spinner
+      *ngIf="showLoader"
+      style="width: 50px; height: 50px"
+    ></mat-spinner
+    ><span *ngIf="!showLoader">Assign</span>
+  </button>
+  <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>

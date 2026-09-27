@@ -1,0 +1,120 @@
+<app-wrapper
+  [title]="'Configurational Master'"
+  [subTitle]="'Purchase Master'"
+  [subheading]="'Add Port Master'"
+  [showActions]="true"
+  [isBack]="true"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="travel-type-form">
+    <div class="form-group row p-2">
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Port Type</mat-label>
+          <mat-select formControlName="port_type" placeholder="Select Type">
+            <mat-option *ngFor="let port of portTypes" [value]="port">{{
+              port + " Port"
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Port Name</mat-label>
+          <input
+            matInput
+            id="port_name"
+            type="text"
+            formControlName="port_name"
+            placeholder="Enter Port Name"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>UN/LCOde</mat-label>
+          <input
+            matInput
+            id="unlocode"
+            type="text"
+            formControlName="unlocode"
+            placeholder="Enter UN/LCOde"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Latitude</mat-label>
+          <input
+            matInput
+            id="latitude"
+            type="text"
+            formControlName="latitude"
+            placeholder="Enter Latitude"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Longitude</mat-label>
+          <input
+            matInput
+            id="longitude"
+            type="text"
+            formControlName="longitude"
+            placeholder="Enter Longitude"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" placeholder="Select Status">
+            <mat-option [value]="'ACTIVE'">Active</mat-option>
+            <mat-option [value]="'INACTIVE'">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-4 px-2">
+        <app-mat-form-select-filter
+          [key]="'countryss_id'"
+          [items]="countryList"
+          [displayKey]="'countryss_name'"
+          placeholder="Country"
+          formControlName="country_id"
+        ></app-mat-form-select-filter>
+      </div>
+      <div class="col-4 px-2">
+        <app-mat-form-select-filter
+          [key]="'states_id'"
+          [items]="stateList"
+          [displayKey]="'states_name'"
+          placeholder="State"
+          formControlName="state_id"
+        ></app-mat-form-select-filter>
+      </div>
+
+      <div class="col-4 px-2">
+        <app-mat-form-select-filter
+          [key]="'city_id'"
+          [items]="cityList"
+          [displayKey]="'city_name'"
+          placeholder="City"
+          formControlName="city_id"
+        ></app-mat-form-select-filter>
+      </div>
+    </div>
+    <div
+      class="form-actions mt-3 d-flex justify-content-end gap-2"
+      *ngIf="mode !== 'view'"
+    >
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="form.invalid"
+      >
+        {{ mode === "edit" ? "Update" : "Save" }}
+      </button>
+    </div>
+  </form>
+</app-wrapper>

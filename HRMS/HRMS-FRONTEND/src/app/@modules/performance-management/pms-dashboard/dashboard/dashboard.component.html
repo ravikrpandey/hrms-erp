@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="dash">
+        <div class="page-title">
+            <h1>Dashboard</h1>
+            <p> PMS<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i><span>Dashboard</span></p>
+        </div>
+    </div>
+    <div class="dashboard">
+        <main>
+            <div class="form-group ">
+                <mat-form-field appearance="outline">
+                    <mat-label>SELECT USER</mat-label>
+                    <mat-select formControlName="select the Users" placeholder="Enter user Name"
+                        (selectionChange)="onUserSelect($event)">
+                        <mat-select-filter></mat-select-filter>
+                        <mat-option *ngFor="let item of showSelecteduser" [value]="item">
+                            {{ item.first_name }} {{ item.middle_name }} {{ item.last_name }} ({{item.assessment_name}})
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div *ngIf="assessmentData && assessmentData.length > 0" class="assessment-cards-container">
+                <div *ngFor="let status of assessmentData" [ngClass]="getCardClass(status.status)"
+                    class="assessment-card">
+                    <div class="card-header">
+                        <h3>{{ status.status }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>[{{ status.count }}]</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <canvas #doughnutCanvas></canvas>
+        </div>
+        <div class="col-md-6 col-12">
+            <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-12">
+            <div id="managerRatingChartContainer" style="height: 100%; width: 100%;"></div>
+        </div>
+        <div class="col-md-6 col-12">
+            <div id="BehaviourRatingChartContainer" style="height: 100%; width: 100%;"></div>
+        </div>
+    </div>
+</div>

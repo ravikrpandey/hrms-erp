@@ -1,0 +1,63 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Inventory Management</h1>
+  <p>Total Inventory<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+  </i><span>Total Inventory List</span></p>
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="right_data_all">
+<div class="row m-3">
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Branch Name</mat-label>
+      <mat-select (selectionChange)="onSelectedBranch($event)" name="selectedBranch"  >
+        <mat-option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Asset Category</mat-label>
+      <mat-select [(ngModel)]="selectedAssetCategory" name="selectedAssetCategory"
+        (selectionChange)="onSelectedAssetCategory($event)">
+        <mat-option *ngFor="let assetcategory of assetCategoryName" [value]="assetcategory">{{ assetcategory }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Item Name</mat-label>
+      <mat-select [(ngModel)]="selectedItem" name="selectedItem" (selectionChange)="onSelectedItem($event)">
+        <mat-option *ngFor="let itemname of itemName" [value]="itemname">{{ itemname }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+<div class="employ_sube py-2">
+  <div class="example-header">
+      <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+      </select>
+  </div>
+
+  <div>
+      <input type="text" class="form-control" id="filter-text-box" #input placeholder="Search"
+          (input)="onFilterTextBoxChanged()">
+  </div>
+
+</div>
+
+<div class="ag_grid">
+  <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;" [rowData]="rowData"
+    [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=9 (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+</div>
+</div>

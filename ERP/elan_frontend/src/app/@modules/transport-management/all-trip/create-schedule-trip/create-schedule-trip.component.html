@@ -1,0 +1,862 @@
+<div class="heading_top">
+  <div class="page-title"   *ngIf="liveStatus!='STARTED'">
+    <h1>Transport Management</h1>
+    <p>
+      Schedule Trip <i class="fa fa-angle-right" aria-hidden="true"></i>
+      <span>Create Schedule Trip</span>
+    </p>
+  </div>
+  <div class="add_button" *ngIf="liveStatus!='STARTED'">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<form [formGroup]="scheduleTripForm">
+  <div class="row">
+    <!-- Trip ID -->
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12" *ngIf="trip_id">
+      <div class="form-group">
+        <mat-label>Trip ID <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="trip_id" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Distance -->
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+      <div class="form-group">
+        <mat-label>Distance <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="distance" />
+        </mat-form-field>
+      </div>
+    </div>
+
+   <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+  <div class="form-group">
+    <mat-label>Date of Dispatch <span class="alertspan">*</span></mat-label>
+    <mat-form-field appearance="outline" class="w-100">
+      <input
+        matInput
+        [matDatepicker]="dispatchDatePicker"
+        formControlName="dispatch_date"
+        placeholder="Choose a date"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="dispatchDatePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #dispatchDatePicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+</div>
+
+
+    <!-- Trip Type -->
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+      <div class="form-group">
+        <mat-label>Trip Type <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="trip_type">
+            <mat-option value="One-way">One-way</mat-option>
+            <mat-option value="Round-Trip">Round-Trip</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Delivery Date -->
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+      <div class="form-group">
+        <mat-label>Delivery Date <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            [matDatepicker]="deliveryDatePicker"
+            formControlName="delivery_date"
+            placeholder="Select delivery date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="deliveryDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #deliveryDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Mode of Transport -->
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+      <mat-label>Mode of Transport <span class="alertspan">*</span></mat-label>
+      <mat-radio-group
+        formControlName="modeOfTransport"
+        (change)="getValue($event)"
+        class="d-block mt-2"
+      >
+        <mat-radio-button value="self" class="me-3">Self</mat-radio-button>
+        <mat-radio-button value="vendor">Vendor Vehicle</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <ng-container *ngIf="toggleForm == 'self'">
+      <!-- Type of Vehicle-->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Type of Vehicle</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select
+            formControlName="vehicle_type"
+            (selectionChange)="onVehicleTypeSelect($event.value)"
+          >
+            <mat-select-filter (keyup)="FilterVehicleCategory($event)">
+            </mat-select-filter>
+            <mat-option
+              *ngFor="let vehiclecategory of filterVichlelist"
+              [value]="vehiclecategory.id"
+            >
+              {{ vehiclecategory.vehical_category_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Vehicle  Number (Dropdown) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Vehicle Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="own_vehicle_number">
+            <app-search-filter
+              [array]="vehicleList"
+              [placeholder]="'Search by Vehicle Number'"
+              [searchFields]="['vehicle_number']"
+              (filteredReturn)="filtervehicleList = $event.data"
+            >
+            </app-search-filter>
+            <mat-option
+              *ngFor="let vehicle of filtervehicleList"
+              [value]="vehicle.id"
+              (click)="onVehicleSelect(vehicle.id)"
+            >
+              {{ vehicle.vehicle_number }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Vehicle Registration Number (Dropdown) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Vehicle Registration Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="own_vehicle_regno">
+            <mat-option
+              *ngFor="let vehicle of vehicleDatas"
+              [value]="vehicle.id"
+            >
+              {{ vehicle.rc_number }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Vehicle Capacity (auto filled) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12"   >
+        <mat-label>Vehicle Capacity</mat-label>
+
+        <mat-form-field
+          appearance="outline"
+          style="width: 100%; border-radius: 4px"
+        >
+          <input
+            matInput
+            formControlName="max_load_capacity"
+            [readonly]="true"
+            style="font-weight: 500px"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Driver Name (dropdown) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Driver Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="own_driver">
+               <app-search-filter
+              [array]="driverList"
+              [placeholder]="'Search by Driver name'"
+              [searchFields]="['full_name']"
+              (filteredReturn)="filterDriverList = $event.data"
+            >
+            </app-search-filter>
+            <mat-option
+              *ngFor="let driver of filterDriverList"
+              [value]="driver.driver_id"
+              (click)="onDriverSelect(driver)"
+            >
+              {{ driver.full_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Driver Contact Number (auto) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Driver Contact Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            type="text"
+            formControlName="own_driver_contact"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Driver License Number (auto) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Driver License Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input
+            matInput
+            type="text"
+            formControlName="own_driver_license_no"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Odometer Reading -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Odometer Reading</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" formControlName="odometerReading" />
+        </mat-form-field>
+      </div>
+
+      <!-- Advance to Driver -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Advance to Driver</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" formControlName="advance_amount" />
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <!-- Vendor here  -->
+    <ng-container *ngIf="toggleForm == 'vendor'">
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Vendor Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select
+            formControlName="vendor_name"
+            (selectionChange)="onVendorSelect($event.value)"
+          >
+             <app-search-filter
+              [array]="vendorList"
+              [placeholder]="'Search by vendor name'"
+              [searchFields]="['vendor_name']"
+              (filteredReturn)="filterVendorList = $event.data"
+            >
+            </app-search-filter>
+            <mat-option *ngFor="let vendor of filterVendorList" [value]="vendor.id">
+              {{ vendor.vendor_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Type of Vehicle-->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Type of Vehicle</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="vendor_vehicle_type">
+   <app-search-filter
+              [array]="vendorVehicleCategoryList"
+              [placeholder]="'Search by Vehicle Category Name'"
+              [searchFields]="['vehical_category_name']"
+              (filteredReturn)="filtervendorVehicleCategoryList = $event.data"
+            >
+            </app-search-filter>
+            <mat-option
+              *ngFor="let vehicle of filtervendorVehicleCategoryList"
+              [value]="vehicle.id"
+              (click)="getVendorVehicle(vehicle)"
+            >
+              {{ vehicle.vehical_category_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Vehicle  Number (Dropdown) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Vendor Vehicle Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="vendor_vehicle_number">
+            <app-search-filter
+              [array]="vendorVehiclesNumber"
+              [placeholder]="'Search by Vehicle Number'"
+              [searchFields]="['vehicle_number']"
+              (filteredReturn)="filtervendorVehiclesNumber = $event.data"
+            >
+            </app-search-filter>
+            <mat-option
+              *ngFor="let vehicle of filtervendorVehiclesNumber"
+              [value]="vehicle.id"
+              (click)="onVendorVehicleSelect(vehicle)"
+            >
+              {{ vehicle.vehicle_number }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Vehicle Registration Number (text input) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Vehicle Registration Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="vendor_vehicle_reg" />
+        </mat-form-field>
+      </div>
+
+       <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12"   >
+        <mat-label>Vehicle Capacity</mat-label>
+
+        <mat-form-field
+          appearance="outline"
+          style="width: 100%; border-radius: 4px"
+        >
+          <input
+            matInput
+            formControlName="max_load_capacity"
+            [readonly]="true"
+            style="font-weight: 500px"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Driver Name (text input) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Driver Name</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="vendor_driver_name" />
+        </mat-form-field>
+      </div>
+
+      <!-- Driver Contact Details (text input) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Driver Contact Details</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="vendor_driver_contact" />
+        </mat-form-field>
+      </div>
+
+      <!-- Payment Term (Dropdown) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Payment Term</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="vendor_payment_term">
+            <mat-option value="Fixed rate">Fixed rate</mat-option>
+            <mat-option value="Per KM">Per KM</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Amount -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Amount</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" formControlName="vendor_amount" />
+        </mat-form-field>
+      </div>
+    </ng-container>
+
+    <div class="row mb-4">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <form [formGroup]="scheduleTripForm">
+
+          <mat-checkbox formControlName="isItem" [(ngModel)]="isItemChecked">
+            Item
+          </mat-checkbox>
+
+           <!-- <mat-checkbox
+            formControlName="isProduct"
+            [(ngModel)]="isProductChecked"
+          >
+            Product
+          </mat-checkbox> -->
+          
+        </form>
+      </div>
+    </div>
+    <div
+      class="heading_neo mb-3"
+      *ngIf="getAllData.transportRequestData?.isItem == 1 || isItemChecked"
+    >
+      <h3>Items</h3>
+    </div>
+
+    <div
+      class="row mt-3 mx-1 mb-3"
+      *ngIf="getAllData.transportRequestData?.isItem == 1 || isItemChecked"
+    >
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Item Type</th>
+              <th>Item Category</th>
+              <th>Item Name</th>
+              <th>Item Code</th>
+              <th>Qty</th>
+              <th>Type</th>
+              <th>Price</th>
+              <th>UOM</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let roleFieled of getAllData.itemData; let i = index">
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.itemType"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.asset_category_name"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.item_name"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.item_code"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="number"
+                      matInput
+                      [value]="roleFieled.bom_qty"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.type"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="number"
+                      matInput
+                      [value]="roleFieled.price"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group-name">
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="roleFieled.uom_name"
+                      readonly
+                    />
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- <div
+      class="heading_neo mb-3"
+      *ngIf="getAllData.transportRequestData?.isProduct == 1 || isProductChecked"
+    >
+      <h3>Products</h3>
+    </div> -->
+
+    <div
+      class="form_table"
+      *ngIf="getAllData.transportRequestData?.isProduct == 1 || isProductChecked"
+    >
+      <mat-card>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Product Category</th>
+                <th>Product Name</th>
+                <th>Product Varient</th>
+                <th>Product Description</th>
+                <th>HSN Code</th>
+                <!-- <th>Delivered Qty</th> -->
+                <!-- <th>Remaining Quantity</th> -->
+                <th>UOM</th>
+                <th>Quantity</th>
+                <th>Price Per Unit</th>
+                <th>Total Price</th>
+
+                <!-- <th *ngIf="
+                  isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                CGST (%)
+              </th>
+              <th *ngIf="
+                  isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                SGST (%)
+              </th>
+              <th *ngIf="
+                  !isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                IGST (%)
+              </th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of getAllData.productData; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input matInput [value]="item.category_name" readonly />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input matInput [value]="item.product_name" readonly />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input matInput [value]="item.variant_name" readonly />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [value]="item.product_description || 'NA'"
+                      readonly
+                    />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input matInput readonly [value]="item.hsn_code" />
+                  </mat-form-field>
+                </td>
+                <!-- <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="delivered_qty"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td> -->
+                <!-- <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="remaining_quantity"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td> -->
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input matInput readonly [value]="item.uom_name || 'NA'" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input type="text" matInput [value]="item.quantity" />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input
+                      type="text"
+                      matInput
+                      [value]="item?.price_per_unit || 'NA'"
+                    />
+                  </mat-form-field>
+                </td>
+                <!-- Total Price Field (Read-Only) -->
+                <td>
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [value]="item.total_price"
+                      placeholder="Total Price"
+                      readonly
+                    />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- product section end -->
+
+    <div class="col-12">
+      <div class="heading_neo mb-3 mt-2">
+        <h3>LR Details</h3>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <!-- LR Number -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>LR Number</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="lr_number" />
+        </mat-form-field>
+      </div>
+
+      <!-- LR Date -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>LR Date</mat-label>
+        <mat-form-field appearance="outline" class="w-100" floatLabel="auto">
+          <input
+            matInput
+            [matDatepicker]="lrDatePicker"
+            formControlName="lr_date"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="lrDatePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #lrDatePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- LR Issued By (Auto-filled) -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>LR Issued By</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="lr_issued_by"  />
+        </mat-form-field>
+      </div>
+
+      <!-- Total Packages -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Total Packages</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput type="number" formControlName="total_packages" />
+        </mat-form-field>
+      </div>
+
+      <!-- Total Weight -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>Total Weight</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <input matInput formControlName="total_weight" />
+        </mat-form-field>
+      </div>
+
+      <!-- Freight Type (Visible only for Vendor) -->
+      <div
+        *ngIf="toggleForm == 'vendor'"
+        class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12"
+      >
+        <mat-label>Freight Type</mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-select formControlName="freight_type">
+            <mat-option value="Paid">Paid</mat-option>
+            <mat-option value="To-Pay">To-Pay</mat-option>
+            <mat-option value="Partially Paid">Partially Paid</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!--LR Copy Upload -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <mat-label>LR Copy Upload</mat-label>
+        <input
+          type="file"
+          accept=".pdf,image/*"
+          (change)="onFileSelect($event)"
+          class="form-control mt-1"
+          formControlName="lr_copy"
+
+        />
+
+        <!-- Eye Button -->
+        <button
+          *ngIf="previewUrl"
+          class="btn btn-sm btn-outline-primary mt-2"
+          (click)="viewFile()"
+          title="View File"
+        >
+          👁️ View
+        </button>
+      </div>
+
+      <div class="right_data_all">
+        <div class="heading_neo mt-4">
+          <h3>Trip Document</h3>
+        </div>
+        <div class="form_basic mb-0">
+          <form class="form_set" [formGroup]="scheduleTripForm">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Documents Name</mat-label>
+                    <input matInput formControlName="document_name" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group-name-cat">
+                  <input
+                    (change)="onChange($event)"
+                    class="form-control"
+                    type="file"
+                    style="padding-right: 19%"
+                    title="Upload Document"
+                    formControlName="upload_document"
+                    accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+                  />
+                </div>
+              </div>
+
+              <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="add_button">
+                  <button type="button" (click)="addDocument()">
+                    Add Document
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive mt-4">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Document Name</th>
+                      <th>Document</th>
+                      <th *ngIf="action_type !== 'View'">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let doc of arrayDataPush; let i = index">
+                      <td>{{ doc?.document_name || "-" }}</td>
+                      <td>
+                        <a
+                          *ngIf="doc?.upload_document"
+                          (click)="viewDocument(doc)"
+                        >
+                          <mat-icon class="imgEmpCopy">visibility</mat-icon>
+                        </a>
+                      </td>
+
+                      <td
+                        *ngIf="action_type !== 'View'"
+                        style="color: #7c7c7c; cursor: pointer"
+                      >
+                        <i class="material-icons" (click)="deletData(doc, i)"
+                          >delete</i
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+    
+
+
+              <!-- <div class="row">
+                <div *ngIf="arrayDataPush.length<0">
+                  <p style="text-align: center; font-size: 16px">
+                    Documents Not Found
+                  </p>
+                </div>
+              </div> -->
+            </div>
+
+            <div *ngIf="hideButton && liveStatus!='STARTED'" class="common_button_sub">
+              <button (click)="onSubmitForm()" *ngIf="!action_type ">
+                Submit
+              </button>
+              <button (click)="onSubmitForm()" *ngIf="action_type == 'edit'">
+                Submit
+              </button>
+              <button
+                class="cancel_button_y"
+                routerLink="/master/sales/customer-list"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,254 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Warehouse Management</h1>
+        <p>
+            Warehouse Bifurcation
+            <i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Warehouse Bifurcation List</span>
+        </p>
+    </div>
+    <!-- <div class="add_button">
+        
+        <button type="button" class="" (click)="addNewRowCopy()">Add New Row copy</button>
+
+    </div> -->
+</div>
+<div class=" ">
+    <div class="row justify-content-between py-2">
+
+        <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+            <div class="form-group ">
+                <mat-form-field appearance="outline">
+                    <mat-label>Warehouse</mat-label>
+                    <mat-select [formControl]="warehouse_id" (selectionChange)="getWarehouseRowList($event)">
+                        <mat-option *ngFor="let warehouse of warehouseList" [value]="warehouse.id" (click)="getWarehouseData(warehouse)" >
+                            {{ warehouse?.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="this.warehouse_id.value" matSuffix (click)="clearWarehouse()">close</mat-icon>
+                </mat-form-field>
+            </div>
+        </div> -->
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+            <div class="form-group ">
+                <mat-form-field appearance="outline">
+                    <mat-label>Warehouse New</mat-label>
+                    <mat-select [formControl]="warehouse_id" (selectionChange)="getWarehouseRowListNew($event)">
+                        <mat-option *ngFor="let warehouse of WarehouseListNew" [value]="warehouse.id"
+                            (click)="getWarehouseData(warehouse)">
+                            {{ warehouse?.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="this.warehouse_id.value" matSuffix
+                        (click)="clearWarehouse()">close</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <ng-container *ngIf="getCapacity">
+            <div class="col-xxl-7 col-lg-7 col-md-7 col-sm-7 col-12 mt-2">
+                <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <p style="font-size: 1.0em; display: block;">Capacity</p>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <p style="font-size: 20px; float: right; color: rgb(117, 20, 20);">
+                            {{ totalCapacity }}/{{ getCapacity || 0 }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="meterCapacity">
+                            <span [style.width]="(totalCapacity * 100 / getCapacity) + '%'" [ngClass]="{
+                                    'green': totalCapacity * 100 / getCapacity > 0 && totalCapacity * 100 / getCapacity <= 50,
+                                    'yellow': totalCapacity * 100 / getCapacity > 50 && totalCapacity * 100 / getCapacity <= 75,
+                                    'red': totalCapacity * 100 / getCapacity > 75
+                                }">
+                            </span>
+                        </div>
+                        <span class="textClass">{{ (totalCapacity * 100 / getCapacity) | number:'1.0-0' }}%</span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3">
+            <!-- <div class="employee_2 " align="end">
+            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                placeholder="Search" [(ngModel)]="searchTerm"/>
+        </div> -->
+        </div>
+    </div>
+
+    <div *ngIf="rowList" class="mainDiv">
+        <span *ngIf="rowList.length < 1">No Row To Show</span>
+        <mat-accordion [multi]="false">
+            <mat-expansion-panel *ngFor="let row of rowList" class="mt-2">
+                <mat-expansion-panel-header (click)="getAllSelfList(row.id)">
+                    <mat-panel-title> Row
+                        <span class="shelf-name ellipsis" [title]="row.row_name">{{row.row_name}}</span>
+                    </mat-panel-title>
+                    <div class="col-xxl-7 col-lg-7 col-md-7 col-sm-7 col-12  mt-1">
+                        <div class="row">
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <h1 style="font-size: 1.0em; display: block; " class="heading">Capacity</h1>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <h1 style="font-size: 1.0em; float: right; margin-right: 18px; color: rgb(117, 20, 20);"
+                                    class="heading">{{row.totalCapacity}}/{{row.capacity}}</h1>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="meterCapacity">
+                                    <span [style.width]="row?.totalCapacity * 100 / row.capacity + '%'" [ngClass]="{
+                                    'green': row?.totalCapacity * 100 / row.capacity <= 50,
+                                    'dark-green': row?.totalCapacity * 100 / row.capacity > 50 && row?.totalCapacity * 100 / row.capacity <= 75,
+                                    'red': row?.totalCapacity * 100 / row.capacity > 75
+                                }">
+                                    </span>
+
+                                    <!-- <span [style.width]="row?.totalCapacity * 100 / row.capacity + '%'"></span>  -->
+                                </div>
+                                <span class="textClass">{{ (row?.totalCapacity * 100 / row.capacity) | number:'1.0-0'
+                                    }}%</span>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="center-button-container">
+                        <button class="add_new_button" (click)="addNewSelf($event,row.id)"> Add New Shelf </button>
+                    </div>
+                    <div class="edd-del" *ngIf="row?.totalCapacity">
+                        <mat-icon class="editButton" matTooltip="Edit"
+                            (click)="editRow($event,row.id,row.row_name)">edit</mat-icon>
+
+                        <mat-icon class="deleteButton" matTooltip="delete"
+                            (click)="deleteRow($event,row.id)">delete</mat-icon>
+                    </div>
+                </mat-expansion-panel-header>
+
+                <mat-accordion [multi]="false">
+                    <mat-expansion-panel *ngFor="let self of selfList">
+                        <mat-expansion-panel-header (click)="getAllSectionList(self.id)">
+                            <mat-panel-title> Shelf
+                                <span class="shelf-name ellipsis" [title]="self.self_name">{{self.self_name}}</span>
+
+                                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12 newClassList">
+                                    <div class="row">
+                                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <h1 style="font-size: 1.0em; display: block; " class="heading">Capacity</h1>
+                                        </div>
+                                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                            <h1 style="font-size: 1.0em; float: right; margin-right: 18px; color: rgb(117, 20, 20);"
+                                                class="heading">{{self.totalCapacity}}/{{self.capacity}}</h1>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                            <div class="meterCapacity">
+                                                <span [style.width]="self.totalCapacity * 100 / self.capacity + '%'"
+                                                    [ngClass]="{
+                                                    'green': self.totalCapacity * 100 / self.capacity <= 50,
+                                                    'dark-green': self.totalCapacity * 100 / self.capacity > 50 && self.totalCapacity * 100 / self.capacity <= 75,
+                                                    'red': self.totalCapacity * 100 / self.capacity > 75
+                                                }">
+                                                </span>
+                                            </div>
+                                            <span class="textClass">{{ (self?.totalCapacity * 100 / self.capacity) |
+                                                number:'1.0-0' }}%</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="add_buttons">
+                                    <button type="button" class="">Active</button>
+                                </div>
+                            </mat-panel-title>
+                            <div class="header-right action-buttons">
+                                <div class="center-button-container">
+                                    <button class="add_new_button" (click)="addNewSection($event,row.id,self.id)"> Add
+                                        New Section </button>
+                                </div>
+                                <div class="edd-del">
+                                    <mat-icon class="settingButton">settings</mat-icon>
+                                </div>
+                            </div>
+                        </mat-expansion-panel-header>
+
+
+
+                        <mat-accordion [multi]="false">
+                            <mat-expansion-panel *ngFor="let section of sectionList">
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
+                                        <div>
+                                            <span>Section</span>
+                                            <span class="shelf-name">{{section.section_name}}</span>
+                                        </div>
+                                    </mat-panel-title>
+                                    <div class="header-right" style="margin-left: auto; display: flex;">
+                                        <!-- <button mat-raised-button color="primary" style="margin-right: 10px;">
+                                            Occupied
+                                        </button> -->
+                                        <div class="add_buttons">
+                                            <button type="button" class="">Occupied</button>
+                                        </div>
+                                    </div>
+                                </mat-expansion-panel-header>
+                                <div class="row">
+                                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <h1 style="font-size: 1.0em; display: block;">Capacity</h1>
+                                    </div>
+                                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                        <h1
+                                            style="font-size: 1.0em; float: right; margin-right: 18px; color: rgb(117, 20, 20);">
+                                            {{section.totalCapacity}}/{{section.capacity}}</h1>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                        <div class="meterCapacity">
+                                            <span [style.width]="section.totalCapacity * 100 / section.capacity + '%'"
+                                                [ngClass]="{
+                                                    'green': section.totalCapacity * 100 / section.capacity <= 50,
+                                                    'dark-green': section.totalCapacity * 100 / section.capacity > 50 && section.totalCapacity * 100 / section.capacity <= 75,
+                                                    'red': section.totalCapacity * 100 / section.capacity > 75
+                                                }">
+                                            </span>
+                                        </div>
+                                        <span class="textClass">{{ (section?.totalCapacity * 100 / section.capacity) |
+                                            number:'1.0-0' }}%</span>
+
+                                    </div>
+                                </div>
+                                <!-- <div class="row"> 
+                                    <div div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 section_add">
+                                        <button type="button" class="add_new_button" (click)="navigateToDetails(section)" >Details</button>
+                                    </div>
+                                </div>     -->
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+
+</div>
+
+
+<!-- Ag-grid  -->
+
+<div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+        [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9" [rowData]="WarehouseListBifurcation"
+        (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+    </ag-grid-angular>
+</div>

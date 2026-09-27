@@ -1,0 +1,393 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>CRM Services</h1>
+        <p>Complain Details<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+            </i><span>{{ readable ? 'View' : (id ? 'Update' : 'Create') }}</span></p>
+    </div>
+</div>
+<div class="form_head mx-2">
+    <h3>Complain Details</h3>
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+</div>
+<div class="right_data_all">
+    <form class="form_set" [formGroup]="complaindetailsForm">
+        <fieldset [disabled]="readable">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Complaint ID</mat-label>
+                            <input type="text" matInput formControlName="complain_ID" readonly>
+                            <!-- <input type="number" matInput formControlName="contact_no"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['complain_ID'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['complain_ID'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>System Serial Number</mat-label>
+                            <input type="text" matInput formControlName="system_serial_no">
+                            <mat-error *ngIf="complaindetailsForm.get('system_serial_no')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Customer Phone</mat-label>
+                            <input type="text" matInput formControlName="customer_mobile_no">
+                            <!-- <input type="number" matInput formControlName="customer_mobile_no"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['customer_mobile_no'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['customer_mobile_no'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Alt Customer Phone</mat-label>
+                            <input type="text" matInput formControlName="alt_mobile_no">
+                            <!-- <input type="number" matInput formControlName="contact_no"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['alt_mobile_no'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['alt_mobile_no'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Issue</mat-label>
+                            <input type="text" matInput formControlName="issue">
+                            <mat-error *ngIf="complaindetailsForm.get('issue')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Customer Name</mat-label>
+                            <input type="text" matInput formControlName="customer_name">
+                            <mat-error *ngIf="complaindetailsForm.get('customer_name')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Issue Details</mat-label>
+                            <textarea matInput formControlName="issue_details" rows="4"
+                                placeholder="Enter your address"></textarea>
+                            <mat-error *ngIf="complaindetailsForm.get('issue_details')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Customer Address</mat-label>
+                            <textarea matInput formControlName="address" rows="4"
+                                placeholder="Enter your address"></textarea>
+                            <mat-error *ngIf="complaindetailsForm.get('address')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>State</mat-label>
+                            <mat-select formControlName="state_id">
+                                <mat-option value="State 1">Batch Only</mat-option>
+                                <mat-option value="state 2">S.No. Only</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="complaindetailsForm.get('state_id')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['state_id'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>City</mat-label>
+                            <mat-select formControlName="city_id">
+                                <mat-option value="City 1">Batch Only</mat-option>
+                                <mat-option value="City 2">S.No. Only</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="complaindetailsForm.controls['city_id'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['city_id'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" style="position: relative;">
+                    <div class="form-group">
+                        <input class="form-control" type="file" style="padding-right: 50px;" title="UPLOAD DOCUMENT"
+                            (change)="onChange($event)" aria-describedby="inputGroupFileAddon04"
+                            accept=".jpg,.jpeg,.png" formControlName="document" />
+                        <img [src]="imagePath ? imagePath : id ? generateImageUrl(singleItem?.item_document) : ''"
+                            *ngIf="imagePath || (id && ['jpg', 'jpeg', 'png', 'gif'].includes(getFileExtension(singleItem?.item_document)))"
+                            (click)="seePreview(singleItem?.item_document, imagePath)" class="img" alt="Image">
+                        <a [href]="generateFileUrl(singleItem?.item_document)"
+                            *ngIf="id && !['jpg', 'jpeg', 'png', 'gif'].includes(getFileExtension(singleItem?.item_document)) && singleItem?.item_document"
+                            class="viewBtn" target="_blank">View</a>
+                            <!-- <button (click)="generateFileUrl(complaindetailsForm.controls['document']?.value)"></button> -->
+                            <span class="badge text-bg-primary ms-2" *ngIf="id && image" type="button" (click)="generateFileUrl(complaindetailsForm.controls['document'].value)">View File</span>
+                    </div>
+                    <!-- Validation message can be enabled here -->
+                    <!-- <div *ngIf="complaindetailsForm.controls['document'].invalid" class="invalid-feedback">
+                        File is required
+                    </div> -->
+                </div>
+                
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" style="position: relative;">
+    <div class="form-group">
+        <input class="form-control" type="file" style="padding-right: 50px;" title="UPLOAD AUDIO"
+            (change)="onChange1($event)" aria-describedby="inputGroupFileAddon04"
+            accept=".mp3,.wav" formControlName="system_display_audio" />
+        <div *ngIf="audioToUpload">
+            <!-- <a href="javascript:void(0)" (click)="playAudio()" class="viewBtn">Listen to Uploaded Audio</a> -->
+            <audio #audioPlayer controls [src]="audioPath" style="display:box;"></audio>
+        </div>
+        <span class="badge text-bg-primary ms-2" *ngIf="id && audio" type="button" (click)="generateMp3Url(complaindetailsForm.controls['system_display_audio'].value)">View File</span>
+    </div>
+</div>
+
+                
+            </div>
+
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Complain Status</mat-label>
+                            <mat-select formControlName="complain_status">
+                                <mat-option [value]="item.complain_status" *ngFor="let item of complainStatus">{{item.complain_status}}</mat-option>
+                            </mat-select>
+                            <!-- <input type="number" matInput formControlName="contact_no"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['complain_status'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['complain_status'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4" *ngIf="complaindetailsForm.get('complain_status')?.value == 'Resolved'">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Collection Status</mat-label>
+                            <mat-select formControlName="collection_status">
+                                <mat-option value="True">True</mat-option>
+                                <mat-option value="False">False</mat-option>
+                            </mat-select>
+                            <!-- <input type="number" matInput formControlName="priority"> -->
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4" *ngIf="complaindetailsForm.get('complain_status')?.value == 'Resolved'">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Collection</mat-label>
+                          <input type="text" matInput formControlName="collection">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Priority</mat-label>
+                            <mat-select formControlName="priority">
+                                <mat-option value="High">High</mat-option>
+                                <mat-option value="Low">Low</mat-option>
+                                <mat-option value="Medium">Medium</mat-option>
+                            </mat-select>
+                            <!-- <input type="number" matInput formControlName="priority"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['priority'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['priority'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Complain Type</mat-label>
+                            <mat-select formControlName="complaint_type">
+                                <mat-option value="Amc">Amc</mat-option>
+                                <mat-option value="Non-Amc">Non-Amc</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="complaindetailsForm.get('complaint_type')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Brand</mat-label>
+                            <mat-select formControlName="brand">
+                                <mat-option value="Brand 1">Batch Only</mat-option>
+                                <mat-option value="Brand 2">S.No. Only</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="complaindetailsForm.controls['brand'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['brand'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Brand</mat-label>
+                            <input type="text" matInput formControlName="brand">
+                            <mat-error *ngIf="complaindetailsForm.get('brand')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <!-- //B2ND7VEZRB -->
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>System Type</mat-label>
+                            <input type="text" matInput formControlName="system_type">
+                            <mat-error *ngIf="complaindetailsForm.get('system_type')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>System Rating</mat-label>
+                            <input type="number" matInput formControlName="system_rating">
+                            <mat-error *ngIf="complaindetailsForm.get('system_rating')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.get('system_rating')?.hasError('pattern')">
+                               Please Enter Only Numeric Value!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="dp2" (click)="dp2.open()" formControlName="system_installation_date" />
+                            <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+                            <mat-datepicker #dp2></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Service Charge Applicable</mat-label>
+                            <mat-select formControlName="service_charge_cpplicable">
+                                <mat-option value="Yes">Yes</mat-option>
+                                <mat-option value="No">No</mat-option>
+                            </mat-select>
+                            <!-- <input type="number" matInput formControlName="contact_no"> -->
+                            <mat-error *ngIf="complaindetailsForm.controls['service_charge_cpplicable'].hasError('required')">
+                                Contact No is Required.
+                            </mat-error>
+                            <mat-error *ngIf="complaindetailsForm.controls['service_charge_cpplicable'].hasError('pattern')">
+                                Contact No is Only 10 Digit Alloweds.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group custom-outline">
+                        <label>In Warranty</label>
+                        <mat-radio-group formControlName="in_warranty">
+                            <mat-radio-button value="Yes">Yes</mat-radio-button>
+                            <mat-radio-button value="No">No</mat-radio-button>
+                        </mat-radio-group>
+                        <!-- <mat-error *ngIf="complaindetailsForm.controls['in_warranty'].hasError('required')">
+                            In Warranty is required.
+                        </mat-error> -->
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group custom-outline">
+                        <label>Blacklist/Hold</label>
+                        <mat-radio-group formControlName="blacklist_hold">
+                            <mat-radio-button value="Blacklist">Blacklist</mat-radio-button>
+                            <mat-radio-button value="Hold">Hold</mat-radio-button>
+                        </mat-radio-group>
+                        <!-- <input type="number" matInput formControlName="blacklist_hold"> -->
+                        <mat-error *ngIf="complaindetailsForm.controls['blacklist_hold'].hasError('required')">
+                            Blacklist/Hold is Required.
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="add_button" align="end">
+        <button class="backBtn" type="button" *ngIf="!readable" (click)="updatecompaindetail()">{{ id ? 'Update' : 'Save'
+            }}</button>
+        <button class="backBtn" type="button" (click)="cancel()">Cancel </button>
+    </div>
+</div>

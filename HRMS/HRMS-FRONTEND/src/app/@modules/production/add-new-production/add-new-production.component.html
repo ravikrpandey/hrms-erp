@@ -1,0 +1,290 @@
+<section class="section">
+  <div class="row">
+    <div class="employee_top my-1">
+      Production
+      <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"></i>
+        Add New Production</span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head mt-2">
+      <h3>Add New Production</h3>
+      <button class="backBtn" (click)="goBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+    <div class="form_basic px-4 pt-4">
+      <form [formGroup]="addProductionForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Select Product Name</mat-label>
+                <mat-select (selectionChange)="getProductVal($event)" formControlName="product_id">
+                  <mat-option *ngFor="let data of getAllProductData"
+                    [value]="data.id">{{data.product_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addProductionForm.get('product_id')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group ">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Select Product Variant</mat-label>
+                <mat-select formControlName="product_variant">
+                  <mat-option *ngFor="let data of getVariantList" [value]="data.id"
+                    (click)="getVariant(data)">{{data.variant_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addProductionForm.get('product_variant')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group  ">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Product Code</mat-label>
+                <input type="text" matInput formControlName="product_code" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-4 col-sm-12 col-12">
+            <div class="form-group service_description ">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Product Description</mat-label>
+                <input type="text" matInput formControlName="product_description" readonly />
+
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="mt-1  ">
+                <mat-label>Total Qty</mat-label>
+                <input type="text" matInput formControlName="total_qty" readonly />
+                <!-- <mat-error *ngIf="form.get('workflowType')?.hasError('required')">
+                                     This field is required!
+                                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mt-2">
+              <input type="file" class="form-control" (change)="onChange($event)" formControlName="image_upload" />
+              <ng-container *ngIf="production_id">
+                <img [src]="imageToUpload" class="imgEmp">
+              </ng-container>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Select Plants</mat-label>
+                <mat-select multiple formControlName="plantList">
+                  <mat-option *ngFor="let data of getAllPlantsData; index as i" [value]="data.id"
+                    (click)="getAllPlants(data,i)">{{data.plant_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+        </div>
+        <ng-container *ngIf="getSelectedPlants.length!==0">
+          <mat-tab-group (selectedTabChange)="getTabVal($event)" >
+            <mat-tab *ngFor="let plant of getSelectedPlants; index as i" label="Plant Name {{i+1}}"  >
+              <form [formGroup]="addProductionForm" class="mt-4">
+                <span class="plan_details mb-2 mt-2">Plant Details</span>
+                <div class="row mt-2">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Country</mat-label>
+                        <input type="text" matInput formControlName="country" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group ">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>State</mat-label>
+                        <input type="text" matInput formControlName="state" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group ">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Plant Name</mat-label>
+                        <input type="text" matInput formControlName="plant_name" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                    <div class="form-group ">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Plant Address</mat-label>
+                        <input type="text" matInput formControlName="plant_address" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Production Qty</mat-label>
+                        <input type="number" matInput formControlName="production_qty" min="0" (keyup)="calculateTotalQty()"  />
+                      </mat-form-field>
+                      <mat-error *ngIf="addProductionForm.get('production_qty')?.hasError('min')">Quantity cannot be negative</mat-error>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Start Date</mat-label>
+                        <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="start_date"  
+                        (dateChange)="setMinEndDate($event.value)" />
+                         
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>End Date</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="end_date"  [min]="minEndDate" />
+                         
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Employee</mat-label>
+                        <mat-select formControlName="production_manager_id">
+                          <mat-option *ngFor="let data of getAllData" [value]="data.employee_id">{{data.first_name}}
+                            {{data.last_name}}</mat-option>
+                        </mat-select>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <span class="plan_details mb-2 mt-2">Add Shift Details</span>
+                    <div class="form-group mt-2">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Select Shifts</mat-label>
+                        <mat-select multiple formControlName="shiftList">
+                          <mat-option *ngFor="let shift of shiftData; index as i"
+                            [value]="shift.id">{{shift.shift_name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class=" row">
+                  <div class=" col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <span class="plan_details mb-2 mt-2">Job Card</span>
+                    <table class="table table-bordered mt-2">
+                      <thead>
+                        <tr>
+                          <th scope="col">Work Station Name</th>
+                          <th scope="col">Type Of Workstation</th>
+                          <th scope="col">Running Cost per Hour</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="workstationList">
+                        <tr *ngFor="let workstationList of WorkStationFormArray['controls']; let i = index"
+                          [formGroupName]="i">
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Select Workstation</mat-label>
+                              <mat-select formControlName="workstation_id">
+                                <mat-option *ngFor="let data of getAllWorkStation; " [value]="data.id"
+                                  (click)="getWorkStationValue(data,i)">{{data.name_of_workstation}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="workstation_type"
+                                placeholder="Type Of Workstation" readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="running_cost"
+                                placeholder="Running cost per hour" readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="description" placeholder="Description"
+                                readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-icon matTooltip="Add Item" (click)="addWorkStation()">add_circle</mat-icon>
+                            <ng-container *ngIf="i+1!==1">
+                              <mat-icon matTooltip="delete Item" (click)="removeWorkStation(i)">delete_circle</mat-icon>
+                            </ng-container>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4 mb-4" *ngIf="this.view!=='view'">
+                  <button mat-raised-button color="primary" (click)="savePlantsData(i)">
+                    {{ finalSubmit ?  'Submit & Exit' :'Save Plant ' + (i + 1) }}
+                  </button>
+                  <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                  <!-- <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button> -->
+
+                </div>
+              </form>
+            </mat-tab>
+          </mat-tab-group>
+        </ng-container>
+
+        <!-- <div class="d-flex justify-content-end mt-2 mb-4"  *ngIf="view!=='view'" >
+              <button mat-raised-button color="primary" (click)="onSubmit(this.addProductionForm.value)">
+                 Schedule Production
+              </button>
+              <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+          </div> -->
+      </form>
+
+    </div>
+  </mat-card>
+</section>

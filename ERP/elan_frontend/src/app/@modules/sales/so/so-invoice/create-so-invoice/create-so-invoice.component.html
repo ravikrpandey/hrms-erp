@@ -1,0 +1,480 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales CRM</h1>
+        <p><span>Invoice</span></p>
+    </div>
+
+    <div class="add_button">
+        <button class="backBtn" type="button" (click)="location.back()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+
+<section class="right_data_all">
+
+    <form [formGroup]="salesInvoiceForm" (ngSubmit)="createSalesInvoice()">
+        <div class="heading_neo mt-4">
+            <h3>Sales Invoice</h3>
+        </div>
+
+        <div class="form_basic">
+            <div class="form_set">
+
+                <div class="row grid-4">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>SO No.</mat-label>
+                            <input matInput formControlName="so_no" readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>SO Date</mat-label>
+                            <input matInput formControlName="so_date" readonly>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Customer</mat-label>
+                            <input matInput formControlName="customer_name" readonly>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payment Terms</mat-label>
+
+                            <mat-select formControlName="payment_terms">
+                                <mat-option *ngFor="let term of paymentTermsList" [value]="term.value">
+                                    {{ term.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- 
+                <div class="row grid-4">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payment Terms</mat-label>
+
+                            <mat-select formControlName="payment_terms">
+                                <mat-option *ngFor="let term of paymentTermsList" [value]="term.value">
+                                    {{ term.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+                <div class="row grid-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Dispatch From </mat-label>
+                            <input matInput formControlName="dispatch_address" readonly>
+                        </mat-form-field>
+
+
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-md-8">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Billing Address</mat-label>
+
+                                <mat-select formControlName="billing_address_id">
+                                    <mat-option *ngFor="let add of billingAddressList" [value]="add.id">
+                                        {{add?.billing_address}}&nbsp; {{add?.billing_postal_address}}
+                                        <span *ngIf="add.gst_in">
+                                            ( {{add?.gst_in}})
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Contact Person</mat-label>
+
+                                <mat-select formControlName="billing_contact_person">
+                                    <mat-option *ngFor="let contact of contactPersonList" [value]="contact.id">
+                                        <!-- <mat-option *ngFor="let contact of contactPersonList" [value]="contact.title + ' ' + contact.contact_person_name + ' | ' + contact.mobile"> -->
+                                        {{ contact.title }}
+                                        {{ contact.contact_person_name }} |
+                                        {{ contact.mobile }}
+
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Shipping Address</mat-label>
+                                <input matInput formControlName="shipping_address" readonly>
+                            </mat-form-field>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Contact Person</mat-label>
+
+                                <mat-select formControlName="shipping_contact_person">
+                                    <mat-option *ngFor="let contact of contactPersonList" [value]="contact.id">
+                                        {{ contact.title }}
+                                        {{ contact.contact_person_name }} |
+                                        {{ contact.mobile }}
+
+                                    </mat-option>
+                                    <!-- <mat-option *ngFor="let contact of contactPersonList" [value]="contact.title + ' ' + contact.contact_person_name + ' | ' + contact.mobile">
+                                        {{ contact.title }}
+                                        {{ contact.contact_person_name }} |
+                                        {{ contact.mobile }}
+
+                                    </mat-option> -->
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right_data_all">
+                    <div class="heading_neo mt-4">
+                        <h3> Item Details</h3>
+                    </div>
+                    <div class="form_basic mb-0">
+                        <div class="form_set">
+                            <div class="row">
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordered">
+
+                                        <thead>
+                                            <tr>
+                                                <th>S.N.</th>
+                                                <th>Item Name</th>
+                                                <th>HSN</th>
+                                                <th>GST %</th>
+                                                <th>Qty</th>
+                                                <th>Price Per Unit</th>
+                                                <th>Discount Per Unit</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+
+
+                                            <ng-container *ngFor="let item of items; let i = index">
+                                                <tr style="font-weight:bold; background:#f5f5f5;">
+                                                    <td>{{ i + 1 }}</td>
+                                                    <td>{{ item.item_name }}<small style="color:gray;">
+                                                            ({{ item.item_type }})
+                                                        </small>
+                                                    </td>
+
+                                                    <td style="text-align:center;">{{ item.hsncode }}</td>
+                                                    <td style="text-align:center;">{{ item.igst }}</td>
+
+                                                    <td style="text-align:center;">
+                                                        {{ item.qty }} {{ item.UOM }}
+                                                    </td>
+
+
+
+                                                    <td style="text-align:right;">
+                                                        {{ item.price_per_unit }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ item.discount_per_unit }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ item.qty * item.price_per_unit }}
+                                                    </td>
+
+                                                    <!-- ACTION (PARENT ALLOWED) -->
+
+
+                                                </tr>
+
+                                                <!-- CHILD LOOP -->
+                                                <ng-container *ngFor="let child of item.children">
+
+                                                    <!-- CHILD ROW -->
+                                                    <tr style="background:#fff;">
+
+                                                        <td></td>
+
+                                                        <td style="padding-left:25px;">
+                                                            └ {{ child.item_name }}
+                                                            <small style="color:gray;">
+                                                                ({{ child.item_type }})
+                                                            </small>
+                                                        </td>
+
+                                                        <td style="text-align:center;">{{ child.hsncode }}</td>
+                                                        <td style="text-align:center;">{{ child.igst }}</td>
+
+                                                        <td style="text-align:center;">
+                                                            {{ child.qty }} {{ child.UOM }}
+                                                        </td>
+
+
+
+                                                        <td style="text-align:right;">
+                                                            {{ child.price_per_unit }}
+                                                        </td>
+
+                                                        <td style="text-align:right;">
+                                                            {{ child.discount_per_unit }}
+                                                        </td>
+
+                                                        <td style="text-align:right;">
+                                                            {{ child.qty * child.price_per_unit }}
+                                                        </td>
+
+                                                        <!-- ACTION (CHILD ALLOWED) -->
+
+
+                                                    </tr>
+
+                                                    <!-- GRAND CHILD LOOP -->
+                                                    <ng-container *ngFor="let sub of child.children">
+
+                                                        <!-- GRAND CHILD ROW -->
+                                                        <tr style="background:#fafafa;">
+
+                                                            <td></td>
+
+                                                            <td style="padding-left:50px;">
+                                                                └─ {{ sub.item_name }}
+                                                            </td>
+
+                                                            <td style="text-align:center;">{{ sub.hsncode }}</td>
+                                                            <td style="text-align:center;">{{ sub.igst }}</td>
+
+                                                            <td style="text-align:center;">
+                                                                {{ sub.qty }} {{ sub.UOM }}
+                                                            </td>
+
+                                                            <td>
+                                                                <!-- <input type="number" [(ngModel)]="sub.return_qty"
+                                                                [max]="sub.qty" min="0"> -->
+                                                            </td>
+
+                                                            <td style="text-align:right;">
+                                                                {{ sub.price_per_unit }}
+                                                            </td>
+
+                                                            <td style="text-align:right;">
+                                                                {{ sub.discount_per_unit }}
+                                                            </td>
+
+                                                            <td style="text-align:right;">
+                                                                {{ sub.qty * sub.price_per_unit }}
+                                                            </td>
+
+                                                            <!-- ACTION (GRAND CHILD HIDDEN) -->
+                                                            <td></td>
+
+                                                        </tr>
+
+                                                    </ng-container>
+
+                                                </ng-container>
+
+                                            </ng-container>
+                                            <!-- <tr>
+                                            <td colspan="9" style="text-align: right;"><b>Gross Amount</b></td>
+                                            <td colspan="2">{{currencySign}}{{ grossTotal | number:'1.2-2' }}</td>
+                                        </tr> -->
+
+                                            <!-- <tr *ngFor="let d of grossDiscountArray">
+                                            <td colspan="9" style="text-align: right;"><b> {{ d.discount_name }}</b>
+                                            </td>
+
+                                            <td colspan="2">
+                                                <span *ngIf="d.discount_type === 'flat'">
+                                                    {{currencySign}}{{ d.amount | number:'1.2-2' }}
+                                                </span>
+                                                <span *ngIf="d.discount_type === 'percent'">
+                                                    {{currencySign}}{{ d.amount }} ({{ d.discount }})
+                                                </span>
+                                            </td>
+                                        </tr> -->
+                                            <!-- <tr>
+                                            <td colspan="9" style="text-align: right;"><b>GST Value</b></td>
+                                            <td colspan="2">{{currencySign}}{{ gstTotal | number:'1.2-2' }}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;">
+                                                <b>Net Basic Offer Amount</b>
+                                            </td>
+                                            <td colspan="2"> {{currencySign}}{{ totalAMTAfterDiscount | number:'1.2-2'
+                                                }}</td>
+                                        </tr>
+                                        <ng-container *ngIf="chargeSummary?.appliedCharges?.length > 0">
+
+                                            <tr *ngFor="let c of chargeSummary.appliedCharges">
+
+                                                <td colspan="7"></td>
+
+                                                <td>{{ c.charge_type }}</td>
+
+                                                <td>{{ c.rule_name }}</td>
+
+                                                <td>{{ c.amount }}</td>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td colspan="8"></td>
+
+                                                <td>
+                                                    <b>Total Charges</b>
+                                                </td>
+
+                                                <td>
+                                                    {{ chargeSummary?.totalCharges }}
+                                                </td>
+
+                                            </tr>
+
+                                        </ng-container>
+                                        <tr>
+                                            <td colspan="9" style="text-align: right;"><b>Final Offer Amount Including
+                                                    GST</b></td>
+                                            <td colspan="2">{{currencySign}}{{ grant_total | number:'1.2-2' }}</td>
+                                        </tr> -->
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right_data_all" style="width:46% !important; float:right; padding-top:0px;">
+                    <!-- <div class="heading_neo mt-4">
+                        <h3> Calculation</h3>
+                    </div> -->
+                    <div class="form_basic mb-0">
+                        <div class="form_set">
+                              <div class="row">
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Total Advance</mat-label>
+                                        <input matInput formControlName="total_advance" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Utilize %</mat-label>
+                                        <input matInput formControlName="utilize" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Utilize Amount</mat-label>
+                                        <input matInput formControlName="utilize_amount" readonly>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row ">
+
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Gross Discount Amount</mat-label>
+                                        <input matInput formControlName="gross_discount_amt" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Remaining Discount Amount</mat-label>
+                                        <input matInput formControlName="remaining_gross_dis_amt" readonly>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-4">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Utilize Discount Amount</mat-label>
+                                        <input matInput formControlName="utilize_gross_dic_amt" type="number" (input)="inputDiscount()">
+                                        
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                            <div class="row grid-4">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Subtotal</mat-label>
+                                        <input matInput formControlName="subtotal" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Total Discount</mat-label>
+                                        <input matInput formControlName="discount_amount" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <div></div>
+                                <div></div>
+
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Total GST</mat-label>
+                                        <input matInput formControlName="total_gst" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Grand Total</mat-label>
+                                        <input matInput formControlName="grand_total" readonly>
+                                    </mat-form-field>
+                                </div>
+
+                            </div>
+                          
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn_section mt-4" *ngIf="invoiceStatus==='PENDING'">
+            <span style="color:red">Invoice are created in {{selectedCurrency?.Currency_Type}} by default. Change the
+                currency from header if needed.</span>
+            <button mat-raised-button color="primary" style="float:right"> Generate Sales Invoice </button>
+        </div>
+    </form>
+</section>

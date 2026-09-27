@@ -1,0 +1,1053 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales</h1>
+    <p>
+      Delivery Challan
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #063178">
+      </i
+      ><span>View Delivery Challan List </span>
+    </p>
+  </div>
+</div>
+
+<div class="form_head">
+  <h3>View Delivery Challan</h3>
+  <button class="backBtn" routerLink="/master/sales/delivery-challan-list">
+    <i class="fa fa-arrow-circle-left"></i> Back
+  </button>
+</div>
+<div class="d-flex gap-2 m-2">
+  <button class="my_class d-flex" (click)="printPdf()" matTooltip="Print">
+    <mat-icon class="mt-1">print</mat-icon>
+    <p class="">Print</p>
+  </button>
+  <button class="my_class d-flex" (click)="downloadData()" matTooltip="Download as PDF">
+    <mat-icon class="mt-1" [ngClass]="downloadPdf ? 'download-icon' : ''"
+      >download</mat-icon
+    >
+    <p class="">{{ downloadPdf ? "Downloading.." : "Download" }}</p>
+  </button>
+  <button class="my_class d-flex" (click)="sendEmail()" matTooltip="Send e-Mail">
+    <mat-icon class="mt-1">mail</mat-icon>
+    <p class="">Mail</p>
+  </button>
+  <button *ngIf="!salesInvoicesData" class="my_class d-flex" (click)="createInvoiceForDO()" matTooltip="Create Invoice">
+    <mat-icon class="mt-1">receipt</mat-icon>
+    <p class="">Convert To Invoice</p>
+  </button>
+  <!-- <button *ngIf="salesInvoicesData" class="my_class d-flex" (click)="viewInvoiceForDO()" matTooltip="View Invoice">
+    <mat-icon class="mt-1">receipt</mat-icon>
+    <p class="">View Invoice</p>
+  </button> -->
+</div>
+<div class="m-2 mt-3 new_card p-2">
+  <strong>Delivery Challan Created By :</strong
+  ><small class="mx-1 small_text">{{ getAllData?.lead_owner || "---" }}</small>
+</div>
+<div class="m-3 mt-3">
+  <div
+    style="
+      box-shadow: 0px 0px 5px #ccc;
+      padding: 0px;
+      width: 100%;
+      margin-bottom: 20px;
+      margin-top: 20px;
+    "
+  >
+    <table
+      cellpadding="0"
+      cellspacing="0"
+      border="1"
+      valign="top"
+      style="
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 14px;
+        border: 0px solid #000;
+        width: 100%;
+      "
+    >
+      <tbody>
+        <tr>
+          <td>
+            <table
+              cellpadding="0"
+              cellspacing="0"
+              style="clear: both; width: 100%; margin: 0"
+            >
+              <tbody>
+                <tr style="line-height: 23px">
+                  <td
+                    style="width: 50%; padding: 5px 7px"
+                    align="left"
+                    border="0"
+                  >
+                    <table
+                      cellpadding="0"
+                      style="width: 100%"
+                      cellspacing="0"
+                      border="0"
+                    >
+                      <tbody>
+                        <tr>
+                          <td style="padding: 0px; width: 35%">
+                            <b><span style="color: #000000">Quotation No.</span></b>
+                          </td>
+                          <td style="padding: 0px">
+                            :
+                            <span style="color: #000000; margin-left: 40px">{{
+                              getAllData?.proposal_no
+                            }}</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 0px">
+                            <b
+                              ><span style="color: #000000">Delivery Challan Date</span></b
+                            >
+                          </td>
+                          <td style="padding: 0px">
+                            :
+                            <span style="color: #000000; margin-left: 40px">
+                              {{ getAllData?.do_date }}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 0px">
+                            <b
+                              ><span style="color: #000000"
+                                > So. No.</span
+                              ></b
+                            >
+                          </td>
+                          <td style="padding: 0px">
+                            :
+                            <span style="color: #000000; margin-left: 40px"
+                              >{{ getAllData?.do_no}}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="padding: 0px">
+                            <b
+                              ><span style="color: #000000"
+                                >Billing Branch</span
+                              ></b
+                            >
+                          </td>
+                          <td style="padding: 0px">
+                            :
+                            <span style="color: #000000; margin-left: 40px"
+                              >{{ getAllData?.branch_name}}</span
+                            >
+                          </td>
+                        </tr>
+                       
+                      </tbody>
+                    </table>
+                  </td>
+                  <td
+                    style="width: 50%; vertical-align: middle; padding-top: 0pt"
+                    border="0"
+                  >
+                    <table
+                      cellpadding="5"
+                      style="width: 100%"
+                      cellspacing="0"
+                      border="0"
+                    >
+                      <tbody>
+                        <tr>
+                          <td style="text-align: center">
+                            <span
+                              style="
+                                color: #000000;
+                                font-size: 32px;
+                                font-weight: 600;
+                                text-align: center;
+                              "
+                              >Delivery Challan</span
+                            ><br />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr style="background-color: #f2f3f4" bgcolor="#F2F3F4">
+                  <td
+                    style="width: 50%; border-top: 1px solid; padding: 8px 5px"
+                    border="0"
+                  >
+                    <span
+                      style="color: #000000; font-size: 15px; font-weight: 600"
+                      >Bill To</span
+                    >
+                  </td>
+                  <td
+                    style="width: 50%; border-top: 1px solid; padding: 8px 5px"
+                    border="0"
+                  >
+                    <span
+                      style="color: #000000; font-size: 15px; font-weight: 600"
+                      >Ship To</span
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    style="
+                      width: 50%;
+                      border-top: 1px solid #000;
+                      padding: 12px 8px;
+                      line-height: 20px;
+                    "
+                    border="0"
+                  >
+                    <span
+                      style="color: #000000; font-size: 15px; font-weight: 600"
+                      >{{getAllData?.countryss_name}}<br>
+                      {{getAllData?.states_name}}<br>
+                      {{getAllData?.city_name}}<br>
+                      {{ getAllData?.customer_billing_add1 }} <br>
+                      {{ getAllData?.customer_billing_add2 }} <br>
+                      {{ getAllData?.customer_billing_pin }}
+                    </span>
+                    <br /><span
+                      style="color: #000000; font-size: 15px; font-weight: 600"
+                    ></span>
+                  </td>
+                  <td
+                    style="
+                      width: 50%;
+                      border-top: 1px solid #000;
+                      padding: 12px 8px;
+                      line-height: 20px;
+                      vertical-align: baseline;
+                    "
+                    border="0"
+                  >
+                    <span
+                      style="color: #000000; font-size: 15px; font-weight: 500"
+                      >
+                      {{getAllData?.shipping_country_name}}<br>
+{{getAllData?.shipping_state_name}}<br>
+{{getAllData?.shipping_city_name}}<br>
+                      {{ getAllData?.shipping_add1 }} <br>
+                      {{ getAllData?.shipping_add2 }} <br>
+                      {{ getAllData?.shipping_pin }}</span
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table cellpadding="5" style=" width: 100%; margin: 0; border-left: 0pt; border-right: 0pt; border-color: #1c0808 !important;
+              "
+              cellspacing="0"
+              border="1"
+            >
+              <thead>
+                <tr
+                  bgcolor="#F2F3F4"
+                  style="
+                    height: 40px;
+                    border-left: 0pt;
+                    border-right: 0pt;
+                    font-size: 14px;
+                    color: #0d0505;
+                    font-weight: 600;
+                  "
+                >
+                  <td style="padding: 7px 5px; width: 3%; text-align: left">
+                    S.NO.
+                  </td>
+                  <td
+                    style="padding: 7px 5px; width: 20%; text-align: left"
+                    colspan="6"
+                  >
+                    Product Name
+                  </td>
+                  <td
+                    style="padding: 7px 5px; width: 15%; text-align: left"
+                    colspan="6"
+                  >
+                    Product Code
+                  </td>
+                  <td
+                  style="padding: 7px 5px; width: 15%; text-align: left"
+                  colspan="6"
+                >
+                  HSN Code
+                </td>
+                  
+                  <td
+                    style="padding: 7px 5px; width: 7%; text-align: left"
+                    colspan="6"
+                  >
+                    UOM
+                  </td>
+                  <td
+                    style="padding: 7px 5px; width: 5%; text-align: right"
+                    colspan="2"
+                  >
+                    <b>Quantity</b>
+                  </td>
+                  <td
+                    style="padding: 7px 5px; width: 6%; text-align: right"
+                    colspan="2"
+                  >
+                    <b>Rate</b>
+                  </td>
+                  <!-- <td
+                    style="
+                      padding: 7px 5px;
+                      border-right: 0pt;
+                      width: 8%;
+                      text-align: right;
+                    "
+                    colspan="3"
+                  >
+                    <b>Discount % </b>
+                  </td> -->
+                  <td *ngIf="hasCgst" style="padding: 7px 5px; border-right: 0pt; width: 8%; text-align: right" colspan="3"><b>CGST %</b></td>
+                  <td *ngIf="hasSgst" style="padding: 7px 5px; border-right: 0pt; width: 8%; text-align: right" colspan="3"><b>SGST %</b></td>
+                  <td *ngIf="hasIgst" style="padding: 7px 5px; border-right: 0pt; width: 8%; text-align: right" colspan="3"><b>IGST %</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="let data of getAllData?.productDetailList; index as i"
+                  style="
+                    border-bottom: 1px solid #1c0808;
+                    color: #0d0505;
+                    font-weight: 500;
+                  "
+                >
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      border-bottom: 1px;
+                      font-size: 13px;
+                      border-top: 0px;
+                      text-align: center;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                  >
+                    {{ i + 1 }}
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.product_name }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.product_code }}</span>
+                  </td>
+                  <td
+                  style="
+                    padding: 7px 5px;
+                    font-size: 13px;
+                    border-bottom: 1px;
+                    border-top: 0px;
+                    text-align: left;
+                    border-color: #1c0808 !important;
+                  "
+                  valign="top"
+                  colspan="6"
+                >
+                  <span>{{ data?.hsn_sac_code }}</span>
+                </td>
+                 
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.uom_name }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="2"
+                  >
+                    <span>{{ data?.quantity }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="2"
+                  >
+                    <span>{{ data?.price_per_unit| number : "1.2-2" }}</span>
+                  </td>
+                  <!-- <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      border-right: 0pt;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="3"
+                  >
+                    <span>{{ data?.maximum_discount || 0 }}</span>
+                  </td> -->
+                  <td *ngIf="data?.cgst !== null"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      border-right: 0pt;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="3"
+                  >
+                    <span>{{ data?.cgst }}</span>
+                  </td>
+                  <td *ngIf="data?.sgst !== null"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      border-right: 0pt;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="3"
+                  >
+                    <span>{{ data?.sgst || 0 }}</span>
+                  </td>
+                  <td *ngIf="data?.igst !== null"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      border-right: 0pt;
+                      text-align: right;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="3"
+                  >
+                    <span>{{ data?.igst || 0 }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+              <!-- /////////////////// -->
+              <table
+              cellpadding="5"
+              style="
+                width: 100%;
+                margin: 0;
+                border-left: 0pt;
+                border-right: 0pt;
+                border-color: #1c0808 !important;
+              "
+              cellspacing="0"
+              border="1"
+            >
+            <thead *ngIf="additionalChargeList.length > 0">
+              <tr
+                bgcolor="#F2F3F4"
+                style="
+                  height: 40px;
+                  border-left: 0pt;
+                  border-right: 0pt;
+                  font-size: 14px;
+                  color: #0d0505;
+                  font-weight: 600;
+                "
+              >
+                <td style="padding: 7px 5px; width: 3%; text-align: left">S.No.</td>
+                <td style="padding: 7px 5px; width: 25%; text-align: left" colspan="6">
+                  Additional Charges Name
+                </td>
+                <td style="padding: 7px 5px; width: 29%; text-align: left" colspan="6">
+                  Description
+                </td>
+                <td style="padding: 7px 5px; width: 15%; text-align: left" colspan="6">
+                  HSN Code
+                </td>
+                <td style="padding: 7px 5px; width: 15%; text-align: left" colspan="6">
+                  Amount
+                </td>
+                
+                <td *ngIf="hasCgst" style="padding: 7px 5px; width: 7%; text-align: left" colspan="6">
+                  CGST %
+                </td>
+                <td  *ngIf="hasSgst" style="padding: 7px 5px; width: 7%; text-align: left" colspan="6">
+                  SGST %
+                </td>
+                <td *ngIf="hasIgst" style="padding: 7px 5px; width: 7%; text-align: left" colspan="6">
+                  IGST %
+                </td>
+                
+              </tr>
+            </thead>
+            
+              <tbody>
+                <tr
+                  *ngFor="let data of additionalChargeList; index as i"
+                  style="
+                    border-bottom: 1px solid #1c0808;
+                    color: #0d0505;
+                    font-weight: 500;
+                  "
+                >
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      border-bottom: 1px;
+                      font-size: 13px;
+                      border-top: 0px;
+                      text-align: center;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                  >
+                    {{ i + 1 }}
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.charge_name }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.description }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.hsn_code }}</span>
+                  </td>
+                  <td
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.amount }}</span>
+                  </td>
+                  
+                  <td *ngIf="hasCgst"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.tax_rate/2 }}</span>
+                  </td>
+                  <td *ngIf="hasSgst"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.tax_rate/2 }}</span>
+                  </td>
+                  <td *ngIf="hasIgst"
+                    style="
+                      padding: 7px 5px;
+                      font-size: 13px;
+                      border-bottom: 1px;
+                      border-top: 0px;
+                      text-align: left;
+                      border-color: #1c0808 !important;
+                    "
+                    valign="top"
+                    colspan="6"
+                  >
+                    <span>{{ data?.tax_rate }}</span>
+                  </td>
+                  
+                </tr>
+              </tbody>
+            </table>
+            <table
+              style="width: 100%; margin: 0px; border: 0px"
+              cellspacing="0"
+              cellpadding="0"
+              border="1"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    aling="top"
+                    colspan="9"
+                    style="
+                      border: 0px;
+                      padding: 0px;
+                      border-color: #1c0808 !important;
+                      vertical-align: baseline;
+                    "
+                  >
+                    <table
+                      style="width: 100%; margin: 0px; padding: 5px"
+                      cellspacing="0"
+                      cellpadding="5"
+                      border="0"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            style="
+                              font-size: 15px;
+                              font-weight: 600;
+                              color: #000;
+                              margin-bottom: 5px;
+                            "
+                          >
+                            Amount in Words :<br /><span
+                              style="font-weight: 500; font-size: 14px"
+                            >
+                              {{ words_total }} Only</span
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table
+                      style="width: 100%; margin: 25px 0 0 0"
+                      cellspacing="0"
+                      cellpadding="5"
+                      border="0"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            style="
+                              font-size: 15px;
+                              font-weight: 600;
+                              color: #000;
+                              margin-bottom: 5px;
+                            "
+                          >
+                            Notes <br /><span
+                              style="font-weight: 500; font-size: 14px"
+                              >{{ getAllData?.notes }}</span
+                            >
+                          </td>
+                        </tr>
+                        <tr>
+                          <td
+                            style="
+                              font-size: 15px;
+                              font-weight: 600;
+                              color: #000;
+                              margin-bottom: 5px;
+                            "
+                          >
+                            Terms &amp; Conditions<br /><span
+                              style="font-weight: 500; font-size: 14px"
+                              >{{ getAllData?.terms_and_conditions }}</span
+                            >
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                  <td
+                    colspan="8"
+                    style="
+                      width: 40.5%;
+                      padding: 0px;
+                      border-left: 1px solid;
+                      border-color: #1c0808 !important;
+                    "
+                  >
+                    <table
+                      border="0"
+                      width="100%"
+                      cellpadding="0"
+                      cellspacing="0"
+                    >
+                      <tbody>
+                        <tr style="line-height: 20px">
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 15px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >Sub Total</span
+                            >
+                          </td>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{ filteredData | number : "1.2-2" }}&nbsp;</span
+                            >
+                          </td>
+                        </tr>
+                        <tr style="line-height: 20px">
+                          <!-- <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 15px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >Total Discount</span
+                            >
+                          </td> -->
+                          <!-- <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                formattedTotalDiscount || 0 | number : "1.2-2"
+                              }}&nbsp;</span
+                            >
+                          </td> -->
+                        </tr>
+                        <tr style="line-height: 20px">
+                          <!-- <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 15px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >Additional Charges</span
+                            >
+                          </td> -->
+                          <!-- <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                getAllData?.additional_charges || 0
+                                  | number : "1.2-2"
+                              }}&nbsp;</span
+                            >
+                          </td> -->
+                        </tr>
+                        <tr *ngIf="formattedTotalCGST!=0.00" >
+                          <td 
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >CGST</span
+                            >
+                          </td>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                formattedTotalCGST | number : "1.2-2"
+                              }}&nbsp;</span
+                            >
+                          </td>
+                        </tr>
+                        <tr *ngIf="formattedTotalSGST!=0.00">
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >SGST</span
+                            >
+                          </td>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                formattedTotalSGST | number : "1.2-2"
+                              }}&nbsp;</span
+                            >
+                          </td>
+                        </tr>
+                        <tr *ngIf="formattedTotalIGST!=0.00">
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >IGST</span
+                            >
+                          </td>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                formattedTotalIGST | number : "1.2-2"
+                              }}&nbsp;</span
+                            >
+                          </td>
+                        </tr>
+                        
+                        <tr>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              style="
+                                font-size: 14px;
+                                font-weight: 600;
+                                color: #000;
+                                margin-bottom: 5px;
+                              "
+                              >Grand Total</span
+                            >
+                          </td>
+                          <td
+                            style="
+                              padding: 5px 5px 0px 0px;
+                              text-align: right;
+                              border-color: #1c0808 !important;
+                            "
+                            valign="top"
+                          >
+                            <span
+                              >{{
+                                formattedGrandTotal | number : "1.2-2"
+                              }}&nbsp;</span
+                            ><br /><br />
+                          </td>
+                        </tr>
+                        <tr style="text-align: center">
+                          <td
+                            colspan="2"
+                            width="100%"
+                            border="1"
+                            style="
+                              vertical-align: bottom;
+                              text-align: center;
+                              padding: 0px;
+                              border-bottom: 0px solid #000000;
+                            "
+                            align="center"
+                          ></td>
+                        </tr>
+                        <tr
+                          style="
+                            border-top: 1px solid #1c0808;
+                            text-align: center;
+                          "
+                        >
+                          <td
+                            colspan="2"
+                            width="100%"
+                            border="0"
+                            style="
+                              vertical-align: bottom;
+                              padding: 0px;
+                              border-bottom: 0px solid #000000;
+                              text-align: center;
+                            "
+                            height="150px"
+                            align="center"
+                          >
+                            &nbsp;<br /><br /><br />&nbsp;<br /><span
+                              style="font-size: 16px; font-weight: 600"
+                              >Authorized Signature&nbsp;</span
+                            ><br /><br />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

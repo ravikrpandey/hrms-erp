@@ -1,0 +1,177 @@
+<div class="section">
+    <div>
+        <mat-card>
+            <div class="row head">
+                <p>Admin</p>
+            </div>
+            <div class="row py-1">
+                <div class="employee_top">Item-Master
+                    <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+                        </i>
+                        View </span>
+                </div>
+            </div>
+            <div class="form_head">
+                <h3>Item View</h3>
+                <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+            </div>
+            <div class="form_basic">
+                <form class="form_set" [formGroup]="createPrItemForm">
+                    <fieldset [disabled]="id">
+                        <div class="row">
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Asset Category</mat-label>
+                                        <input matInput type="text" formControlName="asset_id" readonly/>
+                                        <!-- <mat-select formControlName="asset_id">
+                                            <mat-option *ngFor="let data of getCat_data"
+                                                [value]="data.id">{{data?.asset_category_name}}</mat-option>
+                                        </mat-select> -->
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Item Name</mat-label>
+                                        <input matInput type="text" formControlName="item_name" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Mvp</mat-label>
+                                        <input matInput type="number" formControlName="MVP" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>UOM</mat-label>
+                                        <input matInput type="text" formControlName="uom_id" />
+                                        <!-- <mat-select formControlName="uom_id">
+                                            <mat-option *ngFor="let data of getUom_data"
+                                                [value]="data.uom_id">{{data?.uom_name}}</mat-option>
+                                        </mat-select> -->
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Bar/QR code</mat-label>
+                                        <input matInput type="text" formControlName="Bar_QR_Code" />
+                                        <!-- <mat-select formControlName="Bar_QR_Code">
+                                            <mat-option value="ACTIVE">YES</mat-option>
+                                            <mat-option value="INACTIVE">NO</mat-option>
+                                        </mat-select> -->
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Manage By</mat-label>
+                                        <input matInput type="text" formControlName="manage_by" />
+                                        <!-- <mat-select formControlName="manage_by">
+                                            <mat-option value="Batch Only">Batch Only</mat-option>
+                                            <mat-option value="S.No. Only">S.No. Only</mat-option>
+                                        </mat-select> -->
+                                        <mat-error *ngIf="createPrItemForm.controls['manage_by'].hasError('required')">
+                                            *Required!</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Description</mat-label>
+                                        <input matInput type="text" formControlName="description" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Thershold Stock</mat-label>
+                                        <input matInput type="text" formControlName="threshold_stock" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                                *ngIf="singleItem?.item_document && singleItem?.item_document.length > 0">
+                                <div class="form-group">
+                                    <div class="mt-3">
+                                        <ng-container *ngIf="id?isImage(singleItem.item_document):''">
+                                            <img [src]="generateImageUrl(singleItem.item_document)"
+                                                (click)="seePreview(singleItem.item_document)" class="imgEmp"
+                                                alt="Uploaded Image">
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="id && getFileExtension(singleItem.item_document) !== 'png' && getFileExtension(singleItem.item_document) !== 'jpg' && getFileExtension(singleItem.item_document) !== 'jpeg' && getFileExtension(singleItem.item_document) !== 'gif'">
+                                            <a class="viewBtn" [href]="id?generateFileUrl(singleItem.item_document):''"
+                                                target="_blank">View</a>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Specifications</h3>
+                        <ng-container formArrayName="itemSpecification"
+                            *ngFor="let control of CF_1.itemSpecification['controls']; index as i">
+                            <div class="row" [formGroup]="control">
+                                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                                    <div class="form-group mt-2"></div>
+                                </div>
+                                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Specification Type</mat-label>
+                                            <input matInput type="text" formControlName="specificationType" />
+                                            <mat-error
+                                                *ngIf="control.controls['specificationType'].hasError('required')">
+                                                *Required!</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="form-group">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Specification Details</mat-label>
+                                            <input matInput type="text" formControlName="specificationDetails" />
+                                            <mat-error
+                                                *ngIf="control.controls['specificationDetails'].hasError('required')">
+                                                *Required!</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                                    <div class="form-group mt-2"
+                                        style="text-align: right; color: #5d6c7c; cursor: pointer;">
+                                        <i *ngIf="i>0" class="material-icons">delete</i>
+                                    </div>
+                                </div>
+                                <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                                    <div class="form-group mt-2">
+                                        <span style="cursor: pointer; font-size: 25px; color: #5d6c7c;"><i
+                                                class="fa fa-plus-circle" aria-hidden="true"></i></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </ng-container>
+                    </fieldset>
+                </form>
+            </div>
+        </mat-card>
+    </div>
+</div>

@@ -1,0 +1,29 @@
+<div class="custom-margin">
+  <section class="section-card">
+    <div class="heading_top">
+      <div class="page-title">
+        <h1>Manage RFP</h1>
+        <p>Closed RFP <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+          </i><span>Closed RFP List </span></p>
+      </div>
+
+    </div>
+
+      <div class="row mt-3 businessDetailPage">
+
+          <div class="col-md-8"></div>
+          <div class="col-md-3">
+              <div class="form-group  float-end search-inputbox">
+                  <input type="text" id="filter-text-box" class="form-control" placeholder="Search" (input)="onFilterTextBoxChanged()">
+                  <!-- <span class="search-icon"><i class="fas fa-search"></i></span> -->
+              </div>
+          </div>
+      </div>
+      <div class="ag_grid">
+          <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 430px" [rowData]="rowData"
+              [columnDefs]="columnDefsService.getColumnDefs()" [pagination]="true" [paginationPageSize]="10" [rowData]="rowData"
+              (gridReady)="onGridReady($event)" (cellClicked)="onCellClicked($event)" [rowClass]="rowClass">
+          </ag-grid-angular>
+      </div>
+  </section>
+</div>

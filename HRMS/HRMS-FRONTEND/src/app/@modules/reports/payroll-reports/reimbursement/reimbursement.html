@@ -1,0 +1,134 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>REPORTS</h1>
+    <p>
+      Payroll Reports
+      <i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #063178"
+      ></i>
+      <span> Reimbursement Reports</span>
+    </p>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>From Date</mat-label>
+            <mat-select [(ngModel)]="selectedYear">
+              <mat-option
+                *ngFor="let year of financialYearList"
+                [value]="year.financial_year"
+              >
+                {{ year.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear"> *Required! </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>To Date</mat-label>
+            <mat-select [(ngModel)]="selectedYear">
+              <mat-option
+                *ngFor="let year of financialYearList"
+                [value]="year.financial_year"
+              >
+                {{ year.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear"> *Required! </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Status Dropdown -->
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus">
+              <mat-option *ngFor="let status of statusList" [value]="status">
+                {{ status }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Expense Dropdown -->
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Expense</mat-label>
+            <mat-select [(ngModel)]="selectedExpense">
+              <mat-option *ngFor="let expense of expenseList" [value]="expense">
+                {{ expense }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Project Dropdown -->
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Project</mat-label>
+            <mat-select [(ngModel)]="selectedProject">
+              <mat-option *ngFor="let project of projectList" [value]="project">
+                {{ project }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Task Dropdown -->
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Task</mat-label>
+            <mat-select [(ngModel)]="selectedTask">
+              <mat-option *ngFor="let task of taskList" [value]="task">
+                {{ task }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Employee Name Dropdown -->
+        <div class="col-4 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Employee Name</mat-label>
+            <mat-select [(ngModel)]="selectedEmployee" multiple>
+              <mat-option
+                *ngFor="let emp of filterEmployee"
+                [value]="emp.employee_id"
+              >
+                {{ emp.first_name }} {{ emp.last_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="add_button">
+        <button
+          type="button"
+          class="btn_add"
+          (click)="generateFun()"
+          *ngIf="true"
+        >
+          Generate
+        </button>
+        <button
+          type="button"
+          class="btn_add"
+          (click)="cancelFun()"
+          *ngIf="true"
+        >
+          Cancel
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

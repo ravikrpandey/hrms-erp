@@ -1,0 +1,66 @@
+
+<!-- lead-management -->
+<div *ngIf="leadData">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">
+    Task Order Record
+  </h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Lead ID:</p>
+        <p>BR Number:</p>
+        <p>Associated Company:</p>
+        <p>Job Title:</p>
+        <p>Name:</p>
+        <p>Created Date:</p>
+        <p>Customer Type:</p>
+        <p>Work Order No:</p>
+        <p *ngFor="let item of rowData1">Booked Date</p>
+        <p>Status</p>
+
+      </div>
+      <div class="emp_value">
+       
+        <p>{{ leadData?.lead_genration_id }}</p>
+        <p>{{ leadData?.br_number || "-" }}</p>
+        <p>{{ leadData?.associated_company || "-" }}</p>
+        <p>{{ leadData?.job_title || "-" }}</p>
+        <p>{{ leadData?.first_name + " " + leadData?.last_name || "-" }}</p>
+        <p>{{ leadData?.lead_created_date | date }}</p>
+        <p>{{ leadData?.customer_type || "-" }}</p>
+        <p>{{ leadData?.workOrder_no || "NA" }}</p>
+        <p *ngFor="let item of rowData1">{{item.leadAuditor_bookedDate}}</p>
+        <form class="form_set" [formGroup]="leadForm">
+          <mat-form-field appearance="outline" style="margin-top: -10px;" *ngIf="((leadData?.certificate_type ==1)||(leadData?.certificate_type ==3))">
+            <mat-select formControlName="status" placeholder="Select Status">
+              <mat-option value="APPROVED TO">Approve</mat-option>
+              <mat-option value="REJECTED TO">Reject</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" style="margin-top: -10px;" *ngIf="((leadData?.certificate_type ==2)||(leadData?.certificate_type ==4))">
+            <mat-select formControlName="status" placeholder="Select Status">
+              <mat-option value="TrainingResult">Approve</mat-option>
+              <mat-option value="RejectedResult">Reject</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+    >
+      Close
+    </button>
+    <button mat-button
+    mat-dialog-close
+    mat-raised-button color="primary" (click)="updateLead()">Update</button>
+  </mat-dialog-actions>
+</div>

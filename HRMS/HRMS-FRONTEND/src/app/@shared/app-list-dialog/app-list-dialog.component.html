@@ -1,0 +1,652 @@
+<div *ngIf="singleEmpData">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">Job Record</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Job Id:</p>
+        <p>Job Title:</p>
+
+        <p>Job Designation:</p>
+        <!-- <p>No. of Position:</p> -->
+        <p>Requisition Status:</p>
+        <p>Start Date:</p>
+        <p>End Date:</p>
+        <p>Experience:</p>
+        <p>SPOC Name:</p>
+        <p>Assigned To:</p>
+        <p>Candidate Age:</p>
+        <p>Created By:</p>
+        <p>Created On:</p>
+        <p>Department:</p>
+        <p>Interview Level:</p>
+        <p>Location:</p>
+        <p>Qualification:</p>
+        <p>Requested By:</p>
+        <p>Salary Range:</p>
+        <p>Description:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ singleEmpData?.id }}</p>
+        <p>{{ singleEmpData?.job_title || "-" }}</p>
+
+        <p>{{ singleEmpData?.job_role || "-" }}</p>
+        <!-- <p>{{singleEmpData?.number_of_positions || "-"}}</p> -->
+        <p>{{ singleEmpData?.requisition_status }}</p>
+        <p>{{ singleEmpData?.start_date | date }}</p>
+        <p>{{ singleEmpData?.end_date | date }}</p>
+        <p>{{ singleEmpData?.experience || "-" }}</p>
+        <p>{{ singleEmpData?.spoc_name || "-" }}</p>
+        <p>{{ singleEmpData?.assigned_to_name }}</p>
+        <p>{{ singleEmpData?.candidate_age || "-" }}</p>
+        <p>{{ singleEmpData?.created_by || "-" }}</p>
+        <p>{{ singleEmpData?.created_on | date }}</p>
+        <p>{{ singleEmpData?.department || "-" }}</p>
+        <p>{{ singleEmpData?.interview_level || "-" }}</p>
+        <p>{{ singleEmpData?.location || "-" }}</p>
+        <p>{{ singleEmpData?.qualification || "-" }}</p>
+        <p>{{ singleEmpData?.requested_by_name || "-" }}</p>
+        <p>{{ singleEmpData?.salary_range || "-" }}</p>
+        <p>{{ singleEmpData?.description || "-" }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+    >
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- internal announcement -->
+<div *ngIf="announceData">
+  <h3 mat-dialog-title class="popHead">Announcement Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <!-- <p>CC Email:</p>
+        <p>BCC Email:</p>
+        <p>TO Email:</p>
+        <p>Subject:</p> -->
+        <p>Email Status</p>
+        <!-- <p>Text:</p> -->
+      </div>
+      <div class="emp_value">
+        <!-- <p>{{ announceData?.cc_email || "-" }}</p>
+        <p>{{ announceData?.bcc_email || "-" }}</p>
+        <p>{{ announceData?.to_email || "-" }}</p>
+        <p>{{ announceData?.subject || "-" }}</p> -->
+        <p>{{ announceData?.email_status || "-" }}</p>
+        <!-- <p>{{ announceData?.text || "-" }}</p> -->
+      </div>
+    </div>
+
+    <div class="dive">
+      <p class="head_parg">CC Email:</p>
+      <p class="paragrap">{{ announceData?.cc_email|| "-" }}</p>
+      <p class="head_parg">BCC Email:</p>
+      <p  class="paragrap">{{ announceData?.bcc_email || "-" }}
+        <p class="head_parg">TO Email:</p>
+        <p  class="paragrap">{{ announceData?.to_email || "-" }} </p>
+          <p class="head_parg">Subject:</p>
+        <p  class="paragrap">{{ announceData?.subject || "-" }}</p>
+        <p class="head_parg">Text:</p>
+        <p  class="paragrap">{{ announceData?.text || "-" }}</p>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<!-- achivment Employee -->
+<div *ngIf="achievemenList">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">
+    Achievement Record
+  </h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>achievement Id:</p>
+        <p>Achieved by:</p>
+        <p>Achievement:</p>
+        <p>Badges:</p>
+
+        <p>Course:</p>
+        <p>Achieve date:</p>
+        <!-- <p>Created at:</p> -->
+        <p>Course employee:</p>
+
+        <!-- <p>Candidate Age:</p> -->
+        <p>Recognized By:</p>
+        <p>Recognized On:</p>
+        <p>Reporting manager:</p>
+        <!-- <p>Updated at:</p> -->
+        <p>Status:</p>
+        <!-- <p>Achievement Description:</p>
+        <p>Notes:</p> -->
+      </div>
+      <div class="emp_value">
+        <p>{{ achievemenList?.achievement_id || "-" }}</p>
+        <p>{{ achievemenList?.achieved_by || "-" }}</p>
+        <p>{{ achievemenList?.achievements || "-" }}</p>
+        <p>{{ achievemenList?.badges || "-" }}</p>
+        <p>{{ achievemenList?.course || "-" }}</p>
+        <p>{{ achievemenList?.achieve_date | date : "dd-MM-yy" || "-" }}</p>
+        <!-- <p>{{achievemenList?.createdAt | date : 'dd-MM-yy'|| "-"}}</p> -->
+        <p>{{ achievemenList?.course_employee || "-" }}</p>
+
+        <p>{{ achievemenList?.recognized_by || "-" }}</p>
+        <p>{{ achievemenList?.recognized_date | date : "dd-MM-yy" || "-" }}</p>
+        <p>{{ achievemenList?.reporting_manager || "-" }}</p>
+        <!-- <p>{{achievemenList?.updatedAt| date : 'dd-MM-yy'|| "-"}}</p> -->
+        <p>{{ achievemenList?.status || "-" }}</p>
+        <!-- <p>{{ achievemenList?.achieve_description || "-" }}</p> -->
+        <!-- <p>{{ achievemenList?.notes || "-" }}</p> -->
+      </div>
+    </div>
+    <div class="dive">
+      <p style="font-weight: 600;">Achievement Description:</p>
+      <p class="paragrap">{{ achievemenList?.achieve_description || "-" }}</p>
+      <p  style="font-weight: 600;">Notes:</p>
+      <p  class="paragrap">{{ achievemenList?.notes || "-" }}
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+    >
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- grivance -->
+
+<div *ngIf="grivenceSingleData">
+  <h3 mat-dialog-title class="popHead">Grivance Record</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Employee Id:</p>
+        <!-- <p>Group Name:</p> -->
+        <p>Grievance Date:</p>
+        <p>Manager Name:</p>
+        <p>Employee Name:</p>
+        <p>Department Name:</p>
+        <p>Subject:</p>
+        <p>Grievance Type:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ grivenceSingleData?.employee_grievance_id }}</p>
+        <!-- <p>{{grivenceSingleData?.group_name}}</p> -->
+        <p>{{ grivenceSingleData?.grievance_date }}</p>
+        <p>{{ grivenceSingleData?.reporting_manager }}</p>
+        <p>{{ grivenceSingleData?.registered_user.first_name }}</p>
+        <p>{{ grivenceSingleData?.registered_user.department }}</p>
+        <p>{{ grivenceSingleData?.subject }}</p>
+        <p>{{ grivenceSingleData?.grievance_type }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!--complaint-->
+
+<div *ngIf="listComplaint">
+  <h3 mat-dialog-title class="popHead">Complaint Record</h3>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Complaint From:</p>
+        <p>Complaint Name:</p>
+        <p>Complaint Against:</p>
+        <p>Reporting manager:</p>
+        <p>Complaint Date:</p>
+        <!-- <p>Complaint Description:</p> -->
+        <p>Record Added by:</p>
+        <p>Record Added On:</p>
+        <!-- <p>Notes:</p> -->
+      </div>
+      <div class="emp_value">
+        <p>{{ listComplaint?.complaint_from }}</p>
+        <p>{{ listComplaint?.complaint_name }}</p>
+        <p>{{ listComplaint?.complaint_against }}</p>
+        <p>{{ listComplaint?.reporting_manager }}</p>
+        <p>{{ listComplaint?.complaint_date | date : "dd-MM-yy" }}</p>
+        <!-- <p>{{ listComplaint?.complaint_description }}</p> -->
+
+        <p>{{ listComplaint?.record_added_by }}</p>
+        <p>{{ listComplaint?.record_added_on | date : "dd-MM-yy" }}</p>
+        <!-- <p>{{ listComplaint?.notes }}</p> -->
+        <p>{{ listComplaint?.employee_id }}</p>
+      </div>
+    </div>
+
+    <div class="dive">
+      <p class="head_parg">Complaint Description:</p>
+      <p class="paragrap">{{listComplaint?.complaint_description||"-" }}</p>
+      <p class="head_parg">Notes:</p>
+      <p  class="paragrap">{{ listComplaint?.notes || "-" }}
+       
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+    >
+      Close
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<!-- help-disk -->
+<div *ngIf="helpDiskData">
+  <h3 mat-dialog-title class="popHead">Help Desk Record</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>S.No:</p>
+        <p>Subject:</p>
+        <p>First Name:</p>
+        <!-- <p>Type:</p> -->
+        <p>Priority:</p>
+        <p>Date:</p>
+        <p>Status:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ index }}</p>
+        <p>{{ helpDiskData?.subject }}</p>
+        <p>{{ helpDiskData?.requester }}</p>
+        <!-- <p>{{ helpDiskData?.type_of_document }}</p> -->
+        <p>{{ helpDiskData?.priority }}</p>
+        <p>{{ helpDiskData?.createdAt | date : "dd-MM-yyyy" }}</p>
+        <p>{{ helpDiskData?.status }}</p>
+
+        <!-- <p>{{singleEmpData?.first_name}}</p>
+            <p>{{singleEmpData?.group_name}}</p>
+            <p>{{singleEmpData?.department}}</p>
+            <p>{{singleEmpData?.grievance_type}}</p>
+            <p>{{singleEmpData?.grievance_date}}</p>
+            <p>{{singleEmpData?.reporting_manager}}</p>
+            <p>{{singleEmpData?.subject}}</p> -->
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="branchSetupData">
+  <h3 mat-dialog-title class="popHead">Branch Setup Record</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+  
+  <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+          <div class="emp_key">
+              <p>S.No:</p>
+              <p>Branch Name:</p>
+              <p>Branch Code:</p>
+              <p>GST No:</p>
+              <p>Contact Person Name:</p>
+              <p>Contact No:</p>
+              <p>Alt Contact No:</p>
+              <p>Email Id:</p>
+              <p>Alt Email Id:</p>
+              <p>Country:</p>
+              <p>State:</p>
+              <p>City:</p>
+              <p>Pin Code:</p>
+              <p>Address</p>
+          </div>
+          <div class="emp_value">
+              <p>{{branchSetupData?.id}}</p>
+              <p>{{branchSetupData?.branch_name}}</p>
+              <p>{{branchSetupData?.branch_code}}</p>
+              <p>{{branchSetupData?.branch_gstnumber}}</p>
+              <p>{{branchSetupData?.branch_contact_person_name}}</p>
+              <p>{{branchSetupData?.branch_contact_no}}</p>
+              <p>{{branchSetupData?.branch_alt_contact_no}}</p>
+              <p>{{branchSetupData?.branch_email}}</p>
+              <p>{{branchSetupData?.branch_alt_email}}</p>
+              <p>{{branchSetupData?.countryss_name}}</p>
+              <p>{{branchSetupData?.states_name}}</p>
+              <p>{{branchSetupData?.city_name}}</p>
+              <p>{{branchSetupData?.branch_pin_code}}</p>
+              <p>{{branchSetupData?.branch_address}}</p>
+          </div>
+      </div>
+  
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+      <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- resign -->
+<div *ngIf="resignData">
+  <h3 mat-dialog-title class="popHead"  style="padding-left: 5px">Resignation Data</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Employee Id:</p>
+        <p>Employee Resignation Id:</p>
+        <p>Employee Name:</p>
+        <p>Department:</p>
+        <p>Job Location:</p>
+        <p>Manager:</p>
+        <p>Reason:</p>
+        <p>Years of Service:</p>
+        <p>Joining Date:</p>
+        <p>Resign Date:</p>
+        <p>Resignation Status:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ resignData?.employee_id }}</p>
+        <p>{{ resignData?.employee_resignation_id }}</p>
+        <p>{{ resignData?.employee_name }}</p>
+        <p>{{ resignData?.department }}</p>
+        <p>{{ resignData?.job_location }}</p>
+        <p>{{ resignData?.manager }}</p>
+        <p>{{ resignData?.reason }}</p>
+        <p>{{ resignData?.years_of_service }}</p>
+        <p>{{ resignData?.joining_date }}</p>
+        <p>{{ resignData?.resign_date }}</p>
+        <mat-form-field appearance="outline">
+          <mat-select (selectionChange)="getStatus($event)">
+            <mat-option   value="APPROVED" >APPROVED</mat-option>
+            <mat-option  value="DENIED" >DENIED</mat-option>
+        </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button  mat-raised-button color="primary"  style="float: right" (click)="statusGet()">
+        Submit
+      </button>
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- background -->
+<div *ngIf="backgroundData">
+  <h3 mat-dialog-title class="popHead">Background Verification Data</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Candidate Id:</p>
+        <p>Candidate Name:</p>
+        <p>Email:</p>
+        <p>Email Verified:</p>
+        <p>Mobile Number:</p>
+        <p>Phone Verified:</p>
+        <p>Job Title:</p>
+        <p>Document:</p>
+        <!-- <p>Deatils Verified:</p> -->
+        <p>SPOC Name:</p>
+        <ng-container
+          *ngFor="let doc of backgroundData.precious_job_status; index as i"
+        >
+          <p>Previous Job Details {{ i + 1 }}:</p>
+        </ng-container>
+      </div>
+      <div class="emp_value">
+        <p>{{ backgroundData?.candidtaes_v_Id || "-" }}</p>
+        <p>{{ backgroundData?.candidate_name || "-" }}</p>
+        <p>{{ backgroundData?.email || "-" }}</p>
+        <p>
+          <span
+            style="color: #046f04ad"
+            *ngIf="backgroundData?.email_verification"
+          >
+            Verified</span
+          >
+          <span
+            style="color: #ff0000b8"
+            *ngIf="!backgroundData?.email_verification"
+          >
+            Not Verified</span
+          >
+        </p>
+        <p>{{ backgroundData?.mobile_no || "-" }}</p>
+        <p>
+          <span
+            style="color: #046f04ad"
+            *ngIf="backgroundData?.phone_verification"
+          >
+            Verified</span
+          >
+          <span
+            style="color: #ff0000b8"
+            *ngIf="!backgroundData?.phone_verification"
+          >
+            Not Verified</span
+          >
+        </p>
+        <p>{{ backgroundData?.job_applied || "-" }}</p>
+        <p>{{ backgroundData?.others_documents || "-" | slice : 0 : 20 }}</p>
+        <p>{{ backgroundData?.spoc_name || "-" }}</p>
+        <ng-container *ngFor="let doc of backgroundData.precious_job_status">
+          <p>
+            {{ doc?.precious_job_status || "-" }}
+            <span
+              style="color: #046f04ad"
+              *ngIf="doc?.precious_job_status_verification"
+            >
+              - Verified</span
+            >
+            <span
+              style="color: #ff0000b8"
+              *ngIf="!doc?.precious_job_status_verification"
+            >
+              - Not Verified</span
+            >
+          </p>
+        </ng-container>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- background -->
+<div *ngIf="interviewData">
+  <h3 mat-dialog-title class="popHead">Interview Status</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Candidate Id:</p>
+        <p>Candidate Name:</p>
+        <p>Email:</p>
+        <p>Mobile Number:</p>
+        <p>Job Title:</p>
+        <p>Job Designation:</p>
+        <p>Job Type:</p>
+        <p>Deaprtment:</p>
+        <p>Experience:</p>
+        <p>Created On:</p>
+        <p>Requisition Status:</p>
+        <p>Round Level:</p>
+        <p>SPOC Name:</p>
+        <p>Status:</p>
+        <!-- <p>Document:</p> -->
+      </div>
+      <div class="emp_value">
+        <p>{{ interviewData?.candidate_id || "-" }}</p>
+        <p>{{ interviewData?.condidate_name || "-" }}</p>
+        <p>{{ interviewData?.email || "-" }}</p>
+        <p>{{ interviewData?.mobile || "-" }}</p>
+        <p>{{ interviewData?.job_title || "-" }}</p>
+        <p>{{ interviewData?.job_role || "-" }}</p>
+        <p>{{ interviewData?.job_type || "-" }}</p>
+        <p>{{ interviewData?.department || "-" }}</p>
+        <p>{{ interviewData?.exprience || "-" }}</p>
+        <p>{{ interviewData?.createdAt | date }}</p>
+        <p>{{ interviewData?.requisition_status || "-" }}</p>
+        <p>{{ interviewData?.round_level || "-" }}</p>
+        <p>{{ interviewData?.spoc_name || "-" }}</p>
+        <p>{{ interviewData?.status || "-" }}</p>
+        <!-- <p><a [href]="interviewData?.upload_resume" download>{{ interviewData?.upload_resume || "-" }}</a></p> -->
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+  </mat-dialog-actions>
+</div>
+
+<!-- lead-management -->
+<div *ngIf="leadData">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">
+    {{leadData?.status}} Record
+  </h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Lead ID:</p>
+        <p>BR Number:</p>
+        <p>Associated Company:</p>
+        <p>Job Title:</p>
+        <p>Name:</p>
+        <p>Created Date:</p>
+        <p>Customer Type:</p>
+        <p>Work Order No:</p>
+        <!-- <p style="margin-top:40px">Status</p> -->
+      </div>
+      <div class="emp_value">
+        <p>{{ leadData?.lead_genration_id }}</p>
+        <p>{{ leadData?.br_number || "-" }}</p>
+        <p>{{ leadData?.associated_company || "-" }}</p>
+        <p>{{ leadData?.job_title || "-" }}</p>
+        <p>{{ leadData?.first_name + " " + leadData?.last_name || "-" }}</p>
+        <p>{{ leadData?.lead_created_date | date }}</p>
+        <p>{{ leadData?.customer_type || "-" }}</p>
+        <p>{{ leadData?.workOrder_no || "NA" }}</p>
+        <form class="form_set" [formGroup]="leadForm" *ngIf="leadData?.status=='TrainingResult'">
+        <mat-form-field appearance="outline" style="margin-top: -10px;">
+          <mat-select formControlName="status" placeholder="Select Status">
+            <mat-option value="Dates Managed">Approve</mat-option>
+            <mat-option value="REJECTED TO">Reject</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+    >
+      Close
+    </button>
+    <button mat-button *ngIf="leadData?.status =='TrainingResult'"
+    mat-dialog-close
+    mat-raised-button color="primary" (click)="updateTrainingStatus()">Update</button>
+    <!-- <button mat-button
+    mat-dialog-close
+    mat-raised-button color="primary" (click)="updateLead()">Update</button> -->
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="this.onBoardingData">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">
+   On Boarding Record
+  </h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>S.NO:</p>
+        <p>Candidate Name:</p>
+        <p>E - Mail Id:</p>
+        <p>Mobile Number:</p>
+        <p>Job Type:</p>
+        <p>Application Date:</p>
+        <p>Status:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ onBoardingData?.candidate_id }}</p>
+        <p>{{ onBoardingData?.condidate_name || "-" }}</p>
+        <p>{{ onBoardingData?.email || "-" }}</p>
+        <p>{{ onBoardingData?.mobile || "-" }}</p>
+        <p>{{ onBoardingData?.job_type || "-" }}</p>
+        <p>{{ onBoardingData?.application_date || '-' | date }}</p>
+        <p>{{ onBoardingData?.final_interview_status || "-" }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      mat-button
+      mat-dialog-close
+      mat-raised-button
+      color="primary"
+      style="float: right"
+      >
+      Close
+    </button>
+    <!-- <button mat-button (click)="updateLead()">Update</button>s -->
+  </mat-dialog-actions>
+ </div>

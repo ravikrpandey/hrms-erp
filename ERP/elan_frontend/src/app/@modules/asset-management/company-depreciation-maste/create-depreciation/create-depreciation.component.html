@@ -1,0 +1,109 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Depreciation Master </h1>
+        <p>Depreciation Master<i class="fa fa-angle-right" aria-hidden="true">
+        </i>
+        <span>{{id && mode!='view' ? 'Update Depreciation':id && mode=='view' ? 'View Depreciation':'Create Depreciation'}}</span>
+        </p>
+      </div>
+    
+  </div>
+  
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>{{id ? 'Update Depreciation' : 'Create Depreciation'}}</h3>
+    </div>
+  <mat-card>
+    <form class="form_set" [formGroup]="createDepreciationForm">
+      <div class="row">
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" [ngClass]="mode=='edit' ? 'readonly-select':''">
+              <mat-label>Asset Category</mat-label>
+              <mat-select formControlName="asset_id">
+                <mat-option *ngFor="let data of getCat_data" [value]="data.id">
+                  {{ data?.asset_category_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="createDepreciationForm.controls['asset_id'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+ 
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Calculation Method</mat-label>
+              <mat-select formControlName="calculation_id" >
+                <mat-option *ngFor="let data of calculateData" [value]="data.id">
+                  {{ data?.calculationMethod }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="createDepreciationForm.controls['calculation_id'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+       
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Determine Salvage Value (%)</mat-label>
+              <input matInput type="number" formControlName="salvage_value" 
+                     [readonly]="mode === 'view'" />
+              <mat-error *ngIf="createDepreciationForm.controls['salvage_value'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+     
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Frequency</mat-label>
+              <mat-select formControlName="frequency" >
+                <mat-option [value]="'Yearly'">Yearly</mat-option>
+                <mat-option [value]="'monthly'">Monthly</mat-option>
+                <mat-option [value]="'daily'">Daily</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createDepreciationForm.controls['frequency'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+  
+       
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Use Full life</mat-label>
+              <input matInput type="number" formControlName="use_full_life" 
+                     [readonly]="mode === 'view'" />
+              <mat-error *ngIf="createDepreciationForm.controls['use_full_life'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+  
+      
+      <div class="common_button_sub" align="end">
+        <span *ngIf="mode!='view'">
+        <button (click)="onSubmit()">{{ !id ? 'Save' : 'Update' }}</button>
+      </span>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </mat-card>
+  </div>
+  

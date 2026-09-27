@@ -1,0 +1,126 @@
+<header>
+  <div routerLink="ess/dashboard" class="logo">
+    <img src="../../../assets/company-logo.png" alt="company-logo" />
+  </div>
+
+  <button mat-icon-button class="ng-menu-click" (click)="toggleMenu()">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="float-right">
+    <div class="user_profile">
+      <ul>
+        <li
+          class="header_form boxButton1"
+          *ngIf="currencyList?.length > 0 && isShowCurrency"
+        >
+          <div class="form-group topHederBox">
+            <mat-form-field appearance="outline">
+              <mat-select
+                [(ngModel)]="selectedCurrencyId"
+                placeholder="Select Currency"
+                 [disabled]="page"
+              >
+                <mat-option
+                  *ngFor="let data of currencyList"
+                  [value]="data?.Currency_Convert_id"
+                  (click)="onCurrencyChange(data)"
+                >
+                  {{ data?.Currency_Type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </li>
+        <li
+          class="header_form boxButton2"
+          *ngIf="userData.entityList.length > 0"
+        >
+          <div class="form-group topHederBox">
+            <mat-form-field appearance="outline">
+              <mat-select
+                #matEntity
+                [(ngModel)]="selectedEntity"
+                placeholder="Select Entity"
+                (selectionChange)="selectEntity($event)"
+              >
+                <mat-option
+                  *ngFor="let item of userData.entityList"
+                  [value]="item?.entity_id"
+                >
+                  {{ item?.entity_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </li>
+
+        <li
+          class="header_form boxButton1"
+          *ngIf="userData.financeList.length > 0"
+        >
+          <div class="form-group topHederBox">
+            <mat-form-field appearance="outline">
+              <mat-select
+                #matYear
+                [(ngModel)]="financial_id"
+                placeholder="Select Financial Year"
+                (selectionChange)="getFinancialId($event)"
+              >
+                <ng-container *ngFor="let data of userData.financeList">
+                  <mat-option
+                    *ngIf="data.entity_id === selectedEntity"
+                    [value]="data?.id"
+                  >
+                    {{ data?.financial_year }}
+                  </mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </li>
+
+        <li>
+          <a>
+            <span class="user_picture">
+              <img
+                [src]="
+                  userData.employee_photo
+                    ? baseUrl + '/' + userData.employee_photo
+                    : ''
+                "
+                alt="Profile Photo"
+                (click)="seeProfile(userData.employee_photo)"
+                class="profileImg"
+                (error)="onImageError($event)"
+              />
+            </span>
+            <div class="star-rating">
+              <p class="name">
+                {{
+                  (userData.title ? userData.title : "") +
+                    " " +
+                    userData.first_name +
+                    " " +
+                    userData.last_name
+                }}
+              </p>
+              <div>
+                {{ userData.employee_code || "" }}
+              </div>
+            </div>
+          </a>
+          <div class="dropdown-profile">
+            <a (click)="changePassword()"
+              ><img src="assets/change-password.png" alt="Change Password" />
+              Change Password</a
+            >
+            <a (click)="onLogout()"
+              ><img src="assets/logout.png" alt="Sign Out" /> Logout</a
+            >
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

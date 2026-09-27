@@ -1,0 +1,83 @@
+<mat-icon class="close-icon" (click)="onNoClick()">close</mat-icon>
+<h3 class="popHead">Add Driver Detail</h3>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-12 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Driver Name</mat-label>
+            <input matInput formControlName="driver_name" />
+            <mat-error *ngIf="form.get('driver_name')?.hasError('required')"
+              >Driver name is required</mat-error
+            >
+          </mat-form-field>
+        </div>
+        <div class="col-md-12 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contact Number</mat-label>
+            <input
+              matInput
+              formControlName="driver_contact"
+              type="tel"
+              maxlength="12"
+            />
+            <mat-error *ngIf="form.get('driver_contact')?.hasError('required')"
+              >Contact number is required</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Vehicle Number</mat-label>
+            <input matInput formControlName="vehicle_number" />
+            <mat-error *ngIf="form.get('vehicle_number')?.hasError('required')"
+              >Vehicle number is required</mat-error
+            >
+            <mat-error *ngIf="form.get('vehicle_number')?.hasError('pattern')">
+              Vehicle number must be in format: DL01PQ1234
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="text-right mt-3 d-flex justify-content-end">
+        <!-- CASE 1: Data NULL → only Add & Verify -->
+        <button class="button-design"
+          *ngIf="!hasButtonData"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+          (click)="setButtonAction('ADD_VERIFY')"
+        >Add & Verify</button>
+
+        <!-- CASE 2: Data present → Verify -->
+        <button class="button-design"
+          *ngIf="hasButtonData"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+          (click)="setButtonAction('VERIFY')"
+        >Verify</button>
+
+        <!-- CASE 2: Data present → Update & Verify -->
+        <button class="button-design"
+          *ngIf="hasButtonData"
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="form.invalid"
+          (click)="setButtonAction('UPDATE_VERIFY')"
+        >Update & Verify</button>
+
+        <button
+          mat-raised-button
+          type="button"
+          color="warn"
+          (click)="onNoClick()"
+        >Close</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

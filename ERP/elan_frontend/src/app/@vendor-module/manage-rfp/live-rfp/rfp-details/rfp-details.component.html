@@ -1,0 +1,253 @@
+<ng-container>
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Manage RFP</h1>
+      <p> RFP <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span> RFP Details </span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+
+  </div>
+  <div class="section" style="padding: 35px;">
+
+    <div class="row form_head">
+      <h3>PR Details</h3>
+    </div>
+    <div class="row details">
+      <div class="col-md-6">
+        <table id="customers">
+
+          <tr>
+            <td class="head_task">RFP no</td>
+            <td class="tasklinks" class="tasklink"
+              >
+             {{this.rfpNo || "-"}}
+            </td>
+          </tr>
+          <tr>
+            <td class="head_task">Department</td>
+            <td>{{details_pr?.department_name || "-"}}</td>
+          </tr>
+
+
+
+
+        </table>
+      </div>
+      <div class="col-md-6">
+        <table id="customers">
+          <!-- <tr>
+            <td class="head_task">Created By</td>
+            <td>"test"</td>
+          </tr> -->
+          <tr>
+            <td class="head_task">Type/Capex||OPEX</td>
+            <td>{{details_pr?.pr_type || "-"}}</td>
+          </tr>
+          <tr>
+            <td class="head_task">Created Date</td>
+            <td>{{ details_pr?.createdAt ? (details_pr?.createdAt | date: 'dd-MM-yyyy') : '-' }}</td>
+          </tr>
+        </table>
+      </div>
+      </div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>File Name</th>
+
+            <th>File View</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of fileView; index as i">
+            <td>{{i + 1}}</td>
+            <td>{{file?.img_name}}</td>
+            <td>
+              <a href="{{sevralUrl()+file?.uploade_image}}" download target="_blank">
+                <mat-icon class="" matTooltip="View File">
+
+                  visibility</mat-icon>
+              </a>
+            </td>
+          </tr>
+          <tr  *ngIf="fileView.length == 0">
+            <td></td>
+            <td>No Records Found</td>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+        </table>
+    <div style="padding: 35px 0;">
+
+        <div class="row form_head">
+          <h3>SEND RFP</h3>
+        </div>
+        <div class="form_basic">
+          <form class="" [formGroup]="createPrForm" style="padding: 0 12px;">
+            <div class="row" style="overflow-y: auto;">
+
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="wide-column" style="width: 300px !important;">Image</th>
+                      <th *ngIf="this.type_pr == 'Item'">Item Name</th>
+                      <th *ngIf="this.type_pr == 'Service'">Service Name</th>
+                      <th *ngIf="this.type_pr == 'Bom'">Item Name</th>
+
+                      <th *ngIf="this.type_pr == 'Item'">Item Code</th>
+                      <th *ngIf="this.type_pr == 'Service'">Service Code</th>
+                      <th *ngIf="this.type_pr == 'Bom'">Item Code</th>
+
+                      <th >Priority</th>
+                      <!-- <th >Amount</th> -->
+                      <!-- <th *ngIf="!id" >Action</th> -->
+                      <th >Quantity</th>
+
+                      <th >Price /unit</th>
+                      <th>GST Type</th>
+                      <th >SGST(%)</th>
+                      <th >CGST(%)</th>
+                      <th >IGST(%)</th>
+                      <th >Delivery Charges</th>
+                      <th >Additional Charges</th>
+                      <th >Currency</th>
+                      <th >Total Amount</th>
+                      <th>Action</th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <ng-container formArrayName="rfpArray">
+                      <tr *ngFor="let control of CF_3.get('rfpArray')?.controls; let i = index" [formGroup]="control">
+                        <td>
+                          <img style="width: 100%;" [src]="control.get('item_document').value">
+                        </td>
+                        <td>{{ control.get('product_name').value }}</td>
+                        <td>{{ control.get('item_code').value }}</td>
+                        <td>{{ control.get('priority').value }}</td>
+                        <!-- <td>{{ control.get('mvp_product').value }}</td> -->
+                        <td>{{ control.get('product_quantity').value }}</td>
+
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput type="number" formControlName="price_amt" #amount (keyup)="keyUpPrice(control,i)" min="0" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <mat-select formControlName="gst_Type" (selectionChange)="gstType(control,i)">
+                                <mat-option [value]="'CGST/SGST'">CGST/SGST</mat-option>
+                                <mat-option [value]="'IGST'">IGST</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput formControlName="sgst" type="number" [disabled]="sgstDisabled"  #sgst (keyup)="keyUpPrice(control,i)" min="0"/>
+                            </mat-form-field>
+
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput formControlName="cgst"  type="number" #sgst (keyup)="keyUpPrice(control,i)" min="0"/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input  matInput formControlName="igst"  type="number" value="0" #sgst (keyup)="keyUpPrice(control,i)" min="0"/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput type="number" formControlName="delivery_charges" #sgst (keyup)="keyUpPrice(control,i)" min="0"/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline" style="width: 10vw">
+                            <input matInput type="number" formControlName="additional_charges" #sgst (keyup)="keyUpPrice(control,i)" min="0"/>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline" style="width: 10vw" >
+                            <mat-select formControlName="currency_id" (selectionChange)="currencySele($event,i,control)">
+                              <mat-option [value]="currency.Currency_Convert_id" *ngFor="let currency of currencyData">{{ currency.Currency_Type}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <!-- <td>{{totelAmount}}</td> -->
+                        <td>
+                          <mat-form-field appearance="outline" style="width: 10vw">
+                            <input matInput type="number" formControlName="totelAmount" min="0" [value]="totelAmount | number:'1.2-10'" readonly/>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-icon  matTooltip="Clear Value" (click)="remove(i)">clear</mat-icon>
+                        </td>
+                      </tr>
+                    </ng-container>
+                    <tr>
+                      <td colspan="13"></td>
+                      <td>
+                        <div class="row">
+                        <div class="col-6">
+                          <p style="font-size: 16px;
+                        font-weight: 500;">Total = </p>
+                        </div>
+                        <div class="col-4">
+                          <p style="font-size: 16px;
+                        font-weight: 500;">{{totalAmountPrice}}</p>
+                        </div>
+                      </div>
+                      </td>
+                    </tr>
+                  </tbody>
+
+
+
+                </table>
+
+            </div>
+          </form>
+            <br />
+
+            <br>
+
+            <br><br>
+            <!-- <h2 style="text-align: center;">Link will expire on {{endData}}</h2> -->
+            <div class="form_basic">
+              <form class="" [formGroup]="createPrForm">
+
+
+            <div class="" align="center">
+              <button style="padding: 20px 30px;" mat-raised-button color="primary" class="mx-3" (click)="fire()">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+        </div>
+
+    </div>
+  </div>
+</ng-container>
+
+
+

@@ -1,0 +1,299 @@
+<app-wrapper [title]="'Warehouse Management'" [subTitle]="'Setup Warehouse Bifurcation'" [subheading]="''"
+    [showActions]="true" [isBack]="true">
+    <div class="form_basic p-4">
+        <form [formGroup]="form">
+            <!-- Warehouse Summary Card -->
+            <div class="summary-card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="icon-wrapper"><mat-icon>store</mat-icon></div>
+                        <div>
+                            <span class="label">Warehouse Name</span>
+                            <span class="value">{{ form.get('warehouse_name')?.value || 'N/A' }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon-wrapper"><mat-icon>qr_code</mat-icon></div>
+                        <div>
+                            <span class="label">Warehouse Code</span>
+                            <span class="value">{{ form.get('warehouse_code')?.value || 'N/A' }}</span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon-wrapper"><mat-icon>square_foot</mat-icon></div>
+                        <div>
+                            <span class="label">Total Area</span>
+                            <span class="value">{{ form.get('area')?.value || 0 }} ft<sup>2</sup></span>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="icon-wrapper"><mat-icon>location_on</mat-icon></div>
+                        <div>
+                            <span class="label">Location</span>
+                            <span class="value" [matTooltip]="form.get('address')?.value">
+                                {{ form.get('address')?.value || 'N/A' }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hierarchy Section -->
+            <div class="hierarchy-section">
+                <div class="section-header">
+                    <h2>Warehouse Sub Location & Structure</h2>
+                    <button type="button" mat-flat-button color="primary" (click)="addZone()">
+                        <mat-icon>add</mat-icon>
+                        Add Sub Location
+                    </button>
+                </div>
+
+                <div formArrayName="zones">
+                    <ng-container *ngFor="let zone of zones.controls; let i = index">
+                        <mat-expansion-panel [formGroupName]="i" class="zone-panel" [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title class="panel-title">
+                                    <mat-icon>location_on</mat-icon>
+                                    Sub Location {{ i + 1 }}: {{ zone.get('name')?.value || 'Unnamed' }}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="panel-body px-3">
+                                <!-- Zone Configuration Fields -->
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Sub Location Type</mat-label>
+                                            <mat-select formControlName="zone_type_id">
+                                                <mat-option value="">Select Type</mat-option>
+                                                <mat-option *ngFor="let zType of zoneTypes" [value]="zType.id">
+                                                    {{ zType.zone_type }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error
+                                                *ngIf="zone.get('zone_type_id')?.hasError('required')">Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Sub Location Name</mat-label>
+                                            <input matInput formControlName="name">
+                                            <mat-error
+                                                *ngIf="zone.get('name')?.hasError('required')">Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Sub Location Area</mat-label>
+                                            <input matInput formControlName="area" type="number">
+                                            <mat-error
+                                                *ngIf="zone.get('area')?.hasError('required')">Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Item Categories</mat-label>
+                                            <mat-select formControlName="item_category" multiple>
+                                                <mat-option *ngFor="let cat of getAllCat" [value]="cat.id">
+                                                    {{ cat.asset_category_name }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error
+                                                *ngIf="zone.get('item_category')?.hasError('required')">Required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-md-1 d-flex align-items-center justify-content-end">
+                                        <button type="button" mat-icon-button color="warn" (click)="removeZone(i)"
+                                            [disabled]="zones.length === 1" matTooltip="Delete Zone">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Bay Management (Only for NPC) -->
+                                <!-- *ngIf="getSelectedZoneType(i)?.zone_type.toLowerCase().includes('npc') || getSelectedZoneType(i)?.zone_type.toLowerCase().includes('bulk storage')" -->
+                                <div class="mt-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <h5 class="m-0 text-secondary"><mat-icon
+                                                class="align-middle">view_quilt</mat-icon> Bays in Sub Location {{ i + 1 }}</h5>
+                                        <button type="button" mat-stroked-button color="primary" size="small"
+                                            (click)="addNewBay(i)">
+                                            <mat-icon>add</mat-icon> Add Bay
+                                        </button>
+                                    </div>
+
+                                    <div formArrayName="warehouseBay">
+                                        <div *ngFor="let bay of getBayFormArray(i).controls; let j = index"
+                                            [formGroupName]="j" class="nested-container bay-level mb-3">
+                                            <div class="nested-header">
+                                                <div class="title"><mat-icon>view_quilt</mat-icon> Bay {{ j + 1 }}: {{
+                                                    bay.get('name')?.value || 'Unnamed' }}</div>
+                                                <div class="actions">
+                                                    <button type="button" mat-icon-button color="primary"
+                                                        (click)="addNewRack(i, j)" matTooltip="Add Rack">
+                                                        <mat-icon>add</mat-icon>
+                                                    </button>
+                                                    <button type="button" mat-icon-button color="warn"
+                                                        (click)="removeBayAt(i, j)"
+                                                        [disabled]="getBayFormArray(i).length === 1"
+                                                        matTooltip="Delete Bay">
+                                                        <mat-icon>delete</mat-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="row g-3 mb-3">
+                                                <div class="col-md-3">
+                                                    <mat-form-field appearance="outline" dense>
+                                                        <mat-label>Bay Name</mat-label>
+                                                        <input matInput formControlName="name">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-form-field appearance="outline" dense>
+                                                        <mat-label>Area</mat-label>
+                                                        <input matInput formControlName="area" type="number">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-form-field appearance="outline" dense>
+                                                        <mat-label>Volume</mat-label>
+                                                        <input matInput formControlName="volume" type="number">
+                                                    </mat-form-field>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <mat-form-field appearance="outline" dense>
+                                                        <mat-label>Categories</mat-label>
+                                                        <mat-select formControlName="item_category" multiple>
+                                                            <mat-option *ngFor="let cat of getAllCat"
+                                                                [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <!-- Rack Management -->
+                                            <div formArrayName="warehouseRack">
+                                                <div *ngFor="let rack of getRackFormArray(i, j).controls; let k = index"
+                                                    [formGroupName]="k" class="nested-container rack-level mb-3">
+                                                    <div class="nested-header">
+                                                        <div class="title"><mat-icon>reorder</mat-icon>
+                                                            {{getSelectedZoneType(i)?.zone_type.toLowerCase().includes('bulk
+                                                            storage') ? 'Stack': 'Rack'}} {{ k + 1
+                                                            }}: {{ rack.get('name')?.value || 'Unnamed' }}</div>
+                                                        <div class="actions">
+                                                            <button type="button" mat-icon-button color="primary"
+                                                                (click)="addNewBin(i, j, k)" matTooltip="Add Bin">
+                                                                <mat-icon>add</mat-icon>
+                                                            </button>
+                                                            <button type="button" mat-icon-button color="warn"
+                                                                (click)="removeRackAt(i, j, k)"
+                                                                [disabled]="getRackFormArray(i, j).length === 1"
+                                                                matTooltip="Delete Rack">
+                                                                <mat-icon>delete</mat-icon>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-md-3">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Rack Name</mat-label>
+                                                                <input matInput formControlName="name">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Area</mat-label>
+                                                                <input matInput formControlName="area" type="number">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Volume</mat-label>
+                                                                <input matInput formControlName="volume" type="number">
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Categories</mat-label>
+                                                                <mat-select formControlName="item_category" multiple>
+                                                                    <mat-option *ngFor="let cat of getAllCat"
+                                                                        [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Bin Management -->
+                                                    <div formArrayName="warehouseBin">
+                                                        <div *ngFor="let bin of getBinFormArray(i, j, k).controls; let l = index"
+                                                            [formGroupName]="l" class="nested-container bin-level">
+                                                            <div class="nested-header">
+                                                                <div class="title"><mat-icon>inventory_2</mat-icon>
+                                                                    {{getSelectedZoneType(i)?.zone_type.toLowerCase().includes('bulk
+                                                                    storage') ? 'Level': 'Bin'}}
+                                                                    {{ l + 1 }}: {{ bin.get('name')?.value || 'Unnamed'
+                                                                    }}</div>
+                                                                <div class="actions">
+                                                                    <button type="button" mat-icon-button color="warn"
+                                                                        (click)="removeBinAt(i, j, k, l)"
+                                                                        [disabled]="getBinFormArray(i, j, k).length === 1"
+                                                                        matTooltip="Delete Bin">
+                                                                        <mat-icon>delete</mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row g-2">
+                                                                <div class="col-md-3">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label>Bin Name</mat-label>
+                                                                        <input matInput formControlName="name">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label>Area</mat-label>
+                                                                        <input matInput formControlName="area"
+                                                                            type="number">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label>Volume</mat-label>
+                                                                        <input matInput formControlName="volume"
+                                                                            type="number">
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label>Categories</mat-label>
+                                                                        <mat-select formControlName="item_category"
+                                                                            multiple>
+                                                                            <mat-option *ngFor="let cat of getAllCat"
+                                                                                [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </ng-container>
+                </div>
+
+                <div class="footer-actions">
+                    <button mat-raised-button color="primary" class="save-btn" (click)="onSubmit()">
+                        Save & Update Structure
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</app-wrapper>

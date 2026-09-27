@@ -1,0 +1,140 @@
+<div class="section">
+  <!-- ****************HR Dashboard head start******************** -->
+  <div class="heading_top">
+    <div class="page-title">
+    <h1>Recruitment</h1>
+    <p> Recruitment Module <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span> HR Dashboard </span></p>
+  </div>
+    <div class="add_button a_at_bg">
+      <button  routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+  <div class="right_white_bg">
+    <div class="page_heading">
+      <h3>HR Dashboard</h3>
+    </div>
+
+    <div class="right_data_bg_white">
+    <div class="employ_sube py-2">
+      <div class="">
+        <div class="example-header">
+       
+        </div>
+      </div>
+  
+    
+  
+      <div>
+        <input type="text" class="form-control"  [(ngModel)]="nameSearch" id="filter-text-box search" placeholder="Search" />
+      </div>
+  
+    </div>
+
+
+    <!-- ****************HR Dashboard head end******************** -->
+    <!-- ****************HR Dashbaard container start******************* -->
+  
+      
+        <div class="">
+          <!-- <div class="row gy-4 my-3"> -->
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4" *ngFor="let data of employeeData | filter:nameSearch">
+                    <div class="card" style="width: 18rem;">
+                        <img class="hr-profile" src="assets//icons/icon_DQS/employee.png" alt="" />
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="category">Candidate</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="Datatitle"> {{data?.condidate_name}}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="category">Job Description</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="Datatitle"> {{data?.job_title || "-"}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="category">Status</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="Datatitle"> {{data?.status}}</span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="category">Apprear Date</span>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <span class="Datatitle"> {{data?.application_date || "-"}}</span>
+                                </div>
+                            </div>
+                            <button class="round-info" (click)="openDialog(data.candidate_id)"> Round Info </button>
+                        </div>
+                    </div>
+                </div> -->
+
+          <div class="row">
+            <div
+              class="col-xxl-4 col-lg-4 col-md-6 col-sm-6 col-xm-12"
+              *ngFor="let data of employeeData | hrDashboardPipe : nameSearch"
+            >
+              <div class="card">
+                <img
+                  class="hr-profile"
+                  src="assets//icons/icon_DQS/employee.png"
+                  alt=""
+                />
+                <div class="card-body table_modal">
+
+                  <table width="100%" border="1">
+                    <tr>
+                      <th scope="row">Candidate</th>
+                      <td> {{ data?.condidate_name }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Job Title</th>
+                      <td> {{ data?.job_title || "-" }}</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Status</th>
+                      <td> {{ data?.status }}</td>
+                    </tr>
+                      <tr>
+                      <th scope="row">Appear Date</th>
+                      <td> {{ data?.application_date| date:'dd/MM/yyyy' || "-" }}</td>
+                    </tr>
+                  </table>
+                  <div class="col-lg-12 col-md-12 text-center">
+                    <div class="round_cir">
+                      <button
+                      class="round-info"
+                      (click)="openDialog(data.candidate_id)"
+                    >
+                      Round Info
+                    </button>
+                    </div>
+                   
+                  </div>
+                  </div>
+
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- </div> -->
+
+    <!-- ****************HR Dashbaard  container end******************* -->
+  </div>
+  </div>
+

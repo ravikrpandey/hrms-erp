@@ -1,0 +1,156 @@
+<div class="check"  >
+    <form class="" [formGroup]="remarksForm">
+    <h3 mat-dialog-title class="popHead">
+        Employee Appraisal Create
+        <!-- Close icon positioned at the top-right -->
+        <button mat-icon-button class="close-btn" (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </h3>
+
+    <mat-dialog-content class="mat-typography">
+      
+            <div class="cotain">
+                <div class="row form_set">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Salary Type</mat-label>
+                                <!-- <mat-select formControlName="salarytype">
+                                    <mat-option value="CTC">CTC</mat-option>
+                                   
+
+                                </mat-select> -->
+                                <input matInput formControlName="salarytype" type="text" readonly>
+                                
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Type<span class="alertspan">*</span></mat-label>
+
+                                <mat-select formControlName="type">
+                                    <mat-option value="Increment">Increment</mat-option>
+                                    <mat-option value="Decrement">Decrement</mat-option>
+
+                                </mat-select>
+                                <mat-error *ngIf="remarksForm.controls['type'].hasError('required')">
+                                    This field is required!
+                                  </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Salary Mode</mat-label>
+                                <mat-select formControlName="salary_mode" (selectionChange)="selectsalary($event)">
+                                    <mat-option value="Flat">Flat</mat-option>
+                                    <mat-option value="Percentage">Percentage(%)</mat-option>
+
+                                </mat-select>
+                                <mat-error *ngIf="remarksForm.controls['salary_mode'].hasError('required')">
+                                    This field is required!
+                                  </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css" *ngIf="percentage">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Component<span class="alertspan">*</span></mat-label>
+
+                                <mat-select formControlName="select_component">
+                                    <mat-option  value="Basic Salary"> Basic Salary</mat-option>
+                                    <mat-option  value="Gross Salary"> Gross Salary</mat-option>
+                                    <mat-option  value="CTC"> CTC</mat-option>
+                                </mat-select>
+
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css" *ngIf="percentage">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Enter Percentage<span class="alertspan">*</span></mat-label>
+
+                                <input matInput formControlName="calculation_percentage" type="number">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css" *ngIf="selectFlat">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Enter Amount<span class="alertspan">*</span></mat-label>
+
+                                <input matInput formControlName="flat_amount" type="number">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css" *ngIf="this.allData?.action">
+
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Remarks<span class="alertspan">*</span></mat-label>
+
+                                <input matInput formControlName="remarks" type="text">
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 row_css">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Date<span class="alertspan">*</span></mat-label>
+        
+                        <input matInput [matDatepicker]="dp1" (click)="dp1.open()" formControlName="salary_apply_date" readonly />
+                        <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                        <mat-datepicker #dp1></mat-datepicker>
+                       <mat-error *ngIf="remarksForm.controls['salary_apply_date'].hasError('required')">
+                                    This field is required!
+                                  </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+
+                </div>
+
+                <div class="row">
+
+                </div>
+            </div>
+      
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button  [disabled]="loading"  mat-button mat-raised-button color="primary" (click)="submitForm()">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+  <span *ngIf="!loading">Submit</span>
+        </button>
+        <button mat-button mat-raised-button color="warn" *ngIf="this.allData?.action !== 'Update'" (click)="closeDialog()">
+            Cancel
+        </button>
+        <!-- <button mat-button mat-raised-button color="warn" *ngIf="this.allData?.action === 'Update'" (click)="rejectForm()">
+            Reject
+        </button> -->
+    </mat-dialog-actions>
+</form>
+</div>

@@ -1,0 +1,84 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Sales CRM</h1>
+      <p><span>History of Sales Order</span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" routerLink="/master/sales/so">
+          <i class="fa fa-arrow-left"></i> Back
+      </button>
+  </div>
+  </div>
+  
+  <!-- <div class="data-container">
+    <h3>Quotation Details</h3>
+    <div class="data-row">
+      <div class="data-item">
+        <h4>Quotation Number</h4>
+        <p>{{ proposalDetailsData?.proposal_no }}</p>
+      </div>
+    
+      <div class="data-item">
+        <h4>Company Name </h4>
+        <p>{{ proposalDetailsData?.company_name }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Contact Person </h4>
+        <p>{{ proposalDetailsData?.contact_person_name }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Contact Number </h4>
+        <p>{{ proposalDetailsData?.contact_number }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Contact e-mail </h4>
+        <p>{{ proposalDetailsData?.mail_id }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Quotation Created By </h4>
+        <p>{{ proposalDetailsData?.lead_owner }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Quotation Date </h4>
+        <p>{{ proposalDetailsData?.createdAt | date: 'yyyy-MM-dd' }}</p>
+      </div>
+    </div>
+  </div> -->
+  
+  <div class="right_data_all">
+    <div class="employ_sube py-2">
+      <div class="example-header">
+        <select id="page-size" (change)="onPageSizeChanged()">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+      <div class="employee_2" align="end">
+        <input
+          type="text"
+          class="form-control"
+          id="filter-text-box"
+          (input)="onFilterTextBoxChanged()"
+          placeholder="Search"
+        />
+      </div>
+    </div>
+    <div class="ag_grid">
+      <ag-grid-angular
+        [rowClass]="rowClass"
+        class="ag-theme-alpine"
+        style="width: 100%; height: 426px"
+        [columnDefs]="columnDefs"
+        [pagination]="true"
+        [paginationPageSize]="9"
+        [rowData]="rowData"
+        (gridReady)="onGridReady($event)"
+        [gridOptions]="gridOptions"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+  

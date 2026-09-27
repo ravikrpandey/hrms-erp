@@ -1,0 +1,141 @@
+<div class="container-box">
+    <div class="heading_top">
+      <div class="row mt-3">
+        <div class="page-title">
+          <h1>{{id ? "Update Upload Declaration" : "Upload Declaration" }}</h1>
+        </div>
+      </div>
+      <hr>
+      <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div>
+    </div>
+  
+    <div class="achieveFormArea">
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="createComplaint">
+          <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+                <div class="form-group form_group" >
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-select': Type === 'view'}">
+                      <mat-select formControlName="financial_year" placeholder="Select Category" >
+                       <mat-option  *ngFor="let finance of rowData" [value]=finance?.id>
+                          {{finance.financial_year}}
+                        </mat-option>
+    
+                      </mat-select>
+                      
+                    </mat-form-field>
+                  </div>
+            </div>
+  
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Saving Amount</mat-label>
+                  <input matInput type="text" formControlName="taxable_amount"   />
+                  <mat-error *ngIf="createComplaint.controls['taxable_amount'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              
+              </div>
+            </div>
+<!--   
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <div class="form-group fileWithViewImg">
+                  <input 
+                      class="form-control" 
+                      type="file" 
+                      style="padding-right: 19%" 
+                      title="Termination Copy Upload"
+                      formControlName="documents" 
+                      (change)="uploadDoc($event)" 
+                      [ngClass]="{'readonly-wrapper': isReadonlyType()}"
+                      [readonly]="isReadonlyType()"
+                      accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+                  />
+              </div>
+              <mat-icon *ngIf="documents" class="formFileViewIcon" (click)="viewImg()">visibility</mat-icon>
+          </div> -->
+
+          <div class="listHeading">
+            <h3>List Of Documents</h3>
+          </div>
+          <div class="acor_data_y">
+            <div class="table_ip tableDesign table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th class="cen">S. No.</th>
+                    <th class="cen">Declaration Type</th>
+                    <th class="cen">Saving Amount</th>
+                    <th class="cen">Download File</th>
+                    <th *ngIf="Type !== 'view'" class="cen">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let document of documents; let i = index">
+                    <td class="center2">{{i+1}}</td>
+                  <td class="center2">{{document?.declaration_type}}</td>
+                    <td>{{document?.child_tax_amt}}</td>
+                    <td class="center2">
+                      <div class="flexRow">
+                        <div style="cursor:pointer;" (click)="downloadFile(baseUrl + '/' + document?.documents)"
+                          matTooltip="Download File">
+                          <mat-icon>download</mat-icon>
+                        </div>
+                        <div style="width:10px"></div>
+                        <div style="cursor:pointer" (click)="viewImage(document?.documents)"
+                          matTooltip="View Doc/Image">
+                          <mat-icon>visibility</mat-icon>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="text-center">
+                    <td colspan="4" *ngIf="documents?.length == 0 ">No record found</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+  
+          
+  
+           
+  
+          
+          </div>
+          
+          <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group form_group" >
+                <mat-form-field appearance="outline">
+                  <mat-label>Remarks</mat-label>
+                    <input matInput type="text" formControlName="remarks"/>
+                 
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                <div class="col-12 mb-16 common_button_sub">
+                    <button type="button" (click)="onSubmitForm(createComplaint.value)">Approve</button>
+                   
+                  </div>
+            </div>
+
+            <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+                <div class="col-12 mb-16 common_button_sub">
+                    <button type="button" class="cancel_button_y" (click)="goBackReject()">Reject</button>
+                   
+                  </div>
+              </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

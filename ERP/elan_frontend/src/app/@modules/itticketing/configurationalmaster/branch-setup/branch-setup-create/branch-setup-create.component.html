@@ -1,0 +1,393 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Branch Setups
+      <span class="employee_2" *ngIf="!employeId"><i class="fa fa-angle-right" aria-hidden="true"
+          style="color: #858586">
+        </i>
+        Create
+      </span>
+      <span class="employee_2" *ngIf="employeId"><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+        </i>
+        Update
+      </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card>
+  <div class="form_basic mb-0">
+    <!-- helpDiskForm -->
+    <form class="form_set" [formGroup]="branchSetupForm">
+      <div class="row css_set">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Branch Name</mat-label>
+              <input matInput type="text" formControlName="branch_name" />
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_name'].hasError('required')
+                ">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_name'].hasError('minlength')
+                ">
+                This field accepted minimum 2 length.
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_name'].hasError(
+                    'leadingSpaces'
+                  )
+                ">
+                *No leading spaces!
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_name'].hasError('maxlength')
+                ">
+                This field accepted maximum 150 length.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Branch Manager Name</mat-label>
+              <input matInput type="text" formControlName="branch_contact_person_name" />
+              <mat-error *ngIf="
+                  branchSetupForm.controls[
+                    'branch_contact_person_name'
+                  ].hasError('required')
+                ">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls[
+                    'branch_contact_person_name'
+                  ].hasError('minlength')
+                ">
+                This field accepted minimum 2 length.
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls[
+                    'branch_contact_person_name'
+                  ].hasError('leadingSpaces')
+                ">
+                *No leading spaces!
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls[
+                    'branch_contact_person_name'
+                  ].hasError('maxlength')
+                ">
+                This field accepted maximum 150 length.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+
+            <div class="wrapper countryCodeInput">
+              <ngx-intl-tel-input [cssClass]="'custom'" [enableAutoCountrySelect]="true" [enablePlaceholder]="true"
+                [searchCountryFlag]="true" [searchCountryField]="[
+                  SearchCountryField.Iso2,
+                  SearchCountryField.Name
+                ]" [selectFirstCountry]="false" [selectedCountryISO]="selectedCountryISO" [maxLength]="15"
+                [phoneValidation]="false" [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National" [enablePlaceholder]="true"
+                customPlaceholder="Branch Manager Contact" name="phone" formControlName="branch_contact_no">
+              </ngx-intl-tel-input>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+
+            <div class="wrapper countryCodeInput">
+              <ngx-intl-tel-input [cssClass]="'custom'" [enableAutoCountrySelect]="true" [searchCountryFlag]="true"
+                [searchCountryField]="[
+                    SearchCountryField.Iso2,
+                    SearchCountryField.Name
+                  ]" [selectFirstCountry]="false" [selectedCountryISO]="selectedAltCountryISO" [maxLength]="15"
+                [phoneValidation]="false" [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National" [enablePlaceholder]="true"
+                customPlaceholder="Contact Number" name="phone" formControlName="contact_no">
+              </ngx-intl-tel-input>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Email Id</mat-label>
+              <input matInput type="text" formControlName="branch_email" />
+              <mat-error *ngIf="
+                    branchSetupForm.controls['branch_email'].hasError('required')
+                  ">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="branchSetupForm.controls['branch_email'].errors?.['email']">
+                *Please enter a valid email</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Alt Email Id</mat-label>
+              <input matInput type="text" formControlName="branch_alt_email" />
+              <mat-error *ngIf="
+                    branchSetupForm.controls['branch_alt_email'].hasError(
+                      'required'
+                    )
+                  ">
+                *Required!
+              </mat-error>
+
+              <mat-error *ngIf="branchSetupForm.controls['branch_alt_email'].errors?.['email']">
+                *Please enter a valid email</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <label class="checkbox">
+          <mat-checkbox formControlName="sez_registration"></mat-checkbox>
+          <mat-label>SEZ Registration</mat-label>
+        </label>
+      </div>
+
+      <div class="row css_set">
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>Type of GST Registration</mat-label>
+              <mat-select formControlName="type_gst_registration">
+                <mat-option value="Regular">Regular</mat-option>
+                <mat-option value="Composition">Composition</mat-option>
+                <mat-option value="Casual">Casual</mat-option>
+                <mat-option value="SEZ">SEZ</mat-option>
+                <mat-option value="Exempted">Exempted</mat-option>
+                <mat-option value="Unregistered">Unregistered</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>GST Filing Cycle</mat-label>
+              <mat-select formControlName="gst_filing_cycle">
+                <mat-option value="Monthly">Monthly</mat-option>
+                <mat-option value="Quarterly">Quarterly</mat-option>
+                <mat-option value="Annual">Annual</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>GST NO.</mat-label>
+              <input matInput type="text" formControlName="branch_gstnumber" />
+              <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('minlength')">
+                This field accepted minimum 2 length.
+              </mat-error>
+              <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('maxlength')">
+                This field accepted maximum 150 length.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>PAN NUMBER</mat-label>
+              <input matInput type="text" formControlName="pan_number" (input)="transformUppercase($event)"
+                [attr.maxLength]="10" />
+              <mat-error *ngIf="panNumber.hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="panNumber.hasError('pattern')">
+                Invalid PAN format!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <label class="checkbox">
+            <mat-checkbox formControlName="e_wayBill"></mat-checkbox>
+            <mat-label>E-Way Bill Configuration</mat-label>
+          </label>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <label class="checkbox">
+            <mat-checkbox formControlName="gst_composition_scheme"></mat-checkbox>
+            <mat-label>GST Composition Scheme</mat-label> Applicable for the branch
+          </label>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <label class="checkbox">
+            <mat-checkbox formControlName="gst_lut_bond"></mat-checkbox>
+            <mat-label>GST LUT/Bond</mat-label> Applicable for export-oriented branches
+          </label>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+          *ngIf="branchSetupForm.controls['e_wayBill']?.value === true">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>E-Way Bill Amount*</mat-label>
+              <input matInput type="number" formControlName="eway_amount" min="0" />
+              <mat-error *ngIf="
+                    branchSetupForm.controls['eway_amount'].hasError(
+                      'required'
+                    )
+                  ">
+                *Required!
+              </mat-error>
+
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row css_set">
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>Country</mat-label>
+              <mat-select #productselect formControlName="country_id" (selectionChange)="optionEaCode($event)">
+                <mat-select-filter [array]="variables" (filteredReturn)="countryFilter($event)"></mat-select-filter>
+                <mat-option *ngFor="let country of checkData" [value]="country.countryss_id">{{ country.countryss_name
+                  }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['country_id'].hasError('required')
+                ">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>State/UT</mat-label>
+              <mat-select formControlName="state_id" (selectionChange)="stateChange($event)">
+                <mat-select-filter [array]="stateVar" (filteredReturn)="stateFilter($event)"></mat-select-filter>
+                <mat-option *ngFor="let state of stateList" [value]="state.states_id">{{ state.states_name
+                  }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['state_id'].hasError('required')
+                ">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>City</mat-label>
+              <mat-select formControlName="city_id">
+                <mat-select-filter [array]="cityVar" (filteredReturn)="cityFilter($event)"></mat-select-filter>
+                <mat-option *ngFor="let city of cityList" [value]="city.city_id">{{ city.city_name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="branchSetupForm.controls['city_id'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Pin Code</mat-label>
+              <input matInput type="text" maxlength="6" formControlName="branch_pin_code"
+                [value]="branchSetupForm.controls['branch_pin_code'].value | titlecase" />
+              <mat-error *ngIf="branchSetupForm.controls['branch_pin_code'].hasError('pattern')">
+                *Should contain 6 digit number
+              </mat-error>
+              <mat-error *ngIf="branchSetupForm.controls['branch_pin_code'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Address</mat-label>
+
+              <input matInput (keydown)="changedText()" type="text" formControlName="branch_address"
+                [attr.disabled]="words > 100 ? '' : null" (keydown)="wordCounter()" #text id="wmd-input"
+                name="post-text" class="wmd-input s-input bar0 js-post-body-field processed" data-post-type-id="2"
+                cols="92" rows="15" tabindex="101" data-min-length="" oncopy="return false;" onpaste="return false;"
+                oncut="return false;" />
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_address'].hasError(
+                    'required'
+                  )
+                ">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="
+                  branchSetupForm.controls['branch_address'].hasError(
+                    'leadingSpaces'
+                  )
+                ">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <span class="warn_text" *ngIf="extraWords">Please enter within the text limit: 50</span>
+        </div>
+      </div>
+      <div class="row css_set">
+        <div>
+          <label class="checkbox">
+            <mat-checkbox formControlName="reverse_charge_applicable"></mat-checkbox>
+            <mat-label>Reverse Charge Applicable</mat-label>
+          </label>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" class="checkbox">
+          <div class="form-group">
+            <mat-checkbox formControlName="useAsBillingAddress">Use this Branch as a billing
+              address</mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub">
+        <button *ngIf="!employeId" (click)="onSubmitForm()">Submit</button>
+
+        <button *ngIf="employeId" [disabled]="extraWords" (click)="updateForm($event)">
+          Update
+        </button>
+        <button color="warn" class="cancel_button_y" (click)="back()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</mat-card>

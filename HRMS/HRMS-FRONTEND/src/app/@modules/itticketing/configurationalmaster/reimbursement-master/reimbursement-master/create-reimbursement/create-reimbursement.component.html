@@ -1,0 +1,52 @@
+<!-- <app-wrapper
+  [title]="'Configurational Master'"
+  [subTitle]="'Reimbursement Master'"
+  [subheading]="'Add Reimbursement'"
+  [showActions]="true"
+  [isBack]="true"
+> -->
+<div class="heading_top">
+  <div class="page-title">
+    <h1> Configurational Master</h1>
+    <p>
+      Reimbursement Type Master
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178"></i>
+      {{ mode === 'edit' ? 'Update' : mode === 'view' ? 'View' : 'Add' }}
+    </p>
+
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="close()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<mat-card>
+  <section class="right_data_all">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="travel-type-form">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <input matInput id="travelTypeName" type="text" formControlName="name" placeholder="Reimbursement Type"
+            required />
+          <mat-error *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="col-6 px-2" *ngIf="type === 'conveyance'">
+          <!-- Select Option -->
+          <mat-select formControlName="parentId" placeholder="Select Type" required>
+            <mat-option *ngFor="let item of rowData;" [value]="item.id">{{item.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="form-actions mt-3 d-flex justify-content-end gap-2">
+        <!-- <button mat-button mat-dialog-close mat-raised-button color="warn" (click)="close()">
+        Close
+      </button> -->
+        <button *ngIf="mode !== 'view'" mat-raised-button color="primary" type="submit" [disabled]="form.invalid"
+          style="color: white;">{{mode
+          === 'edit'? 'Update' : 'Save'}}</button>
+      </div>
+    </form>
+  </section>
+</mat-card>
+<!-- </app-wrapper> -->

@@ -1,0 +1,25 @@
+<app-wrapper [title]="'Configurational Master'" [subTitle]="'Purchase Master'" [subheading]="'Port Master'"
+    [showActions]="true" [actions]="[{ label: 'Add Port', icon: 'add', color: 'primary', callback: add('') }
+  ]">
+    <div class="">
+        <div class="d-flex justify-content-between">
+            <select id="p-3" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+            <div class="justify-content-end">
+                <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                    placeholder="Search" />
+            </div>
+        </div>
+
+        <div class="ag_grid">
+            <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+                [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="rowData"
+                (gridReady)="onGridReady($event)" [rowSelection]="gridOptions.rowSelection" [gridOptions]="gridOptions">
+            </ag-grid-angular>
+        </div>
+    </div>
+</app-wrapper>

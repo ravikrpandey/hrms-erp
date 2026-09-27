@@ -1,0 +1,96 @@
+<h2 mat-dialog-title style="background-color:#00644d; color:white">
+  {{ type ? 'Select Serial Numbers':'Reason' }}
+</h2>
+
+<mat-dialog-content>
+
+  <!-- ================= SERIAL MODE ================= -->
+
+  <div class="item-info" *ngIf="type">
+    <div><strong>Item Code:</strong> {{data.serials?.item_code}}</div>
+    <div><strong>Item Name:</strong> {{data.serials?.item_name}}</div>
+    <div><strong>Description:</strong> {{data.serials?.item_description}}</div>
+    <div><strong>Qty:</strong> {{data.serials?.qty}}</div>
+    <div><strong>Return Qty:</strong> {{data.serials?.return_qty}}</div>
+  </div>
+  <table class="table table-bordered" *ngIf="type">
+
+    <thead>
+      <tr>
+        <th width="80">Select</th>
+        <th>Serial No</th>
+        <th>Batch No</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let serial of serials">
+
+        <td>
+          <mat-checkbox [(ngModel)]="serial.checked">
+          </mat-checkbox>
+        </td>
+
+        <td>{{serial.serial_no}}</td>
+        <td>{{serial.batch}}</td>
+        <td>
+          <span class="status-badge">
+            {{serial.status}}
+          </span>
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+  <!-- ================= REASON MODE ================= -->
+  <form [formGroup]="frmReason">
+    <div *ngIf="!type" style="padding:10px">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Return Reason</mat-label>
+
+        <mat-select formControlName="return_reason">
+          <mat-option *ngFor="let item of returnReasonList" [value]="item">
+            {{ item }}
+          </mat-option>
+        </mat-select>
+
+        <mat-error>
+          This field is required!
+        </mat-error>
+      </mat-form-field>
+
+    </div>
+    <div *ngIf="!type" style="padding:10px">
+
+      <mat-form-field appearance="outline" class="example-full-width">
+        <mat-label>Remark</mat-label>
+
+        <textarea matInput formControlName="remark" placeholder="Remark" rows="4" style="resize:none">
+      </textarea>
+
+      </mat-form-field>
+
+    </div>
+  </form>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+
+  <button mat-button (click)="close()">
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" (click)="save()">
+
+    {{ type ? 'Submit' : 'Save' }}
+
+  </button>
+
+</mat-dialog-actions>

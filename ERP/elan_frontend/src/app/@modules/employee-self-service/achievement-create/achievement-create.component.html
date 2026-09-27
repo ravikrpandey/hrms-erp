@@ -1,0 +1,226 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span> Achievement </span></p>
+  </div>
+  <div class="add_button">
+    <button routerLink="../achievement" type="button">List</button>
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+  <div class="achieveFormArea">
+    <mat-card>
+    
+      <form class="form-set" [formGroup]="achivementForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Achieved By</mat-label>
+                <mat-select formControlName="achieved_by">
+                  <mat-option *ngFor="let item of allAchievement" [value]="item.first_name">{{item.first_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Achievements</mat-label>
+                <input matInput type="text" formControlName="Achivements" />
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Reporting Manager</mat-label>
+                <mat-select formControlName="reporting_manager">
+                  <mat-option
+                    *ngFor="let val of reportingManagerList"
+                    [value]="val"
+                    >{{ val }}</mat-option
+                  >
+                </mat-select>
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['reporting_manager'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label> Achievement Date </mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="dp"
+                  (click)="dp.open()"
+                  formControlName="achieve_date"
+                />
+  
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['achieve_date'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Achievement Description</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="achieve_description"
+                />
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['achieve_description'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Notes</mat-label>
+                <input matInput type="text" formControlName="notes" />
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['notes'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Recognized by</mat-label>
+                <mat-select formControlName="recognized_by">
+                  <mat-option
+                    *ngFor="let val of allAchievement"
+                    [value]="val.employee_id"
+                    >{{ val.first_name }}</mat-option
+                  >
+                </mat-select>
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['recognized_by'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Course</mat-label
+                ><mat-select formControlName="course">
+                  <mat-option value="Sales & Marketting">Sales & Marketting</mat-option>
+                  <mat-option value="Finance & Marketting">Finance & Marketting</mat-option>
+                </mat-select>
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['course'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Grade</mat-label
+                ><mat-select formControlName="badges">
+                  <mat-option value="A+">A+</mat-option>
+                  <mat-option value="A">A</mat-option>
+                  <mat-option value="B">B</mat-option>
+                  <mat-option value="C">C</mat-option>
+                </mat-select>
+                <!-- <mat-error
+                *ngIf="achivementForm.controls['badges'].hasError('required')"
+              >
+                This field is required!
+              </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <!-- <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Employee ID</mat-label>
+                <mat-select formControlName="course_employee">
+                  <mat-option
+                    *ngFor="let val of allAchievement"
+                    [value]="val.employee_id"
+                    >{{ val.first_name }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div> -->
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <!-- <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label> Recognized Date </mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="dp1"
+                  (click)="dp1.open()"
+                  formControlName="recognized_date"
+                />
+  
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dp1"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+              </mat-form-field>
+            </div> -->
+          </div>
+        </div>
+        <div class="common_button_sub" *ngIf="!achievement_id">
+          <button
+            (click)="onSubmitForm()"
+            class="mx-3"
+          >
+            Submit
+          </button>
+          <button class="cancel_button_y"  (click)="cancelBtn()">
+            Cancel
+          </button>
+        </div>
+        <div  *ngIf="achievement_id">
+          <button
+            (click)="onUpdateForm()"
+            class=""
+          >
+            Update
+          </button>
+          <button class="cancel_button_y"  (click)="cancelBtn()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+

@@ -1,0 +1,319 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+  <p>Manpower Request <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span> New Request </span></p>
+  </div>
+  <div class="add_button">
+    <button routerLink="../achievement" type="button">List</button>
+    <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+<mat-card>
+  <form class="form_set" [formGroup]="requestNewPositionForm">
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Job Title </mat-label>
+          <input type="text" matInput formControlName="job_title" class="readonly-input" readonly>
+          
+        </mat-form-field>
+      </div>
+      
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        
+    
+    
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="department">
+            <mat-option *ngFor="let department of departments"
+            [value]="department.dept_id">{{department.department_name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('department')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+    
+      <!-- <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+        </div> -->
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <!-- <mat-radio-group formControlName="leaderPosition"  style="margin-top: 4px;margin-left: 20px">
+          <mat-radio-button value="Yes">Yes</mat-radio-button>
+          <mat-radio-button value="No">No</mat-radio-button>
+        </mat-radio-group> -->
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Leadership position</mat-label>
+    
+        <mat-select formControlName="leaderPosition">
+          <mat-option value="YES">Yes</mat-option>
+          <mat-option value="NO">No</mat-option>
+          <mat-option value="NO">No</mat-option>
+    
+        </mat-select>
+        </mat-form-field>
+        <!-- <mat-error *ngIf="requestNewPositionForm.get('jobSpecification')?.hasError('required')">
+          This field is required!
+        </mat-error> -->
+    </div>
+    </div>
+    
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Type Of Contract</mat-label>
+          <!-- <mat-select formControlName="contractType">
+            <mat-option
+              value="Yes">Master not Ready</mat-option>
+          </mat-select> -->
+          <mat-select formControlName="contractType">
+            <mat-option *ngFor="let contract of getContractData"
+            [value]="contract.id">{{contract.contract_type}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('contractType')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Reason For Recruitment</mat-label>
+          <!-- <mat-select formControlName="recruitmentReason">
+            <mat-option
+              value="Yes">Master not Ready</mat-option>
+          </mat-select> -->
+          <mat-select formControlName="recruitmentReason">
+            <mat-option *ngFor="let reason of getAllReasonData"
+            [value]="reason.id">{{reason.reason_for_recruitment}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('recruitmentReason')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label class="readonly-wrapper">Expected Start Date</mat-label>
+          <!-- <input [matDatepicker]="dp" (click)="dp.open()" matInput type="text" formControlName="expectedStartDate" />
+          <mat-datepicker-toggle matSuffix [for]="dp" class="readonly-wrapper"></mat-datepicker-toggle>
+          <mat-datepicker #dp class="readonly-wrapper"></mat-datepicker>
+          <mat-error *ngIf="requestNewPositionForm.get('start_date')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+          <input type="text" matInput formControlName="expectedStartDate">
+
+        </mat-form-field>
+      </div>
+    </div>
+     
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label class="readonly-wrapper">Expected End Date</mat-label>
+          <!-- <input [matDatepicker]="dp1" (click)="dp1.open()" matInput type="text" formControlName="expectedEndDate" />
+          <mat-datepicker-toggle matSuffix [for]="dp1" class="readonly-wrapper"   ></mat-datepicker-toggle>
+          <mat-datepicker #dp1></mat-datepicker>
+          <mat-error *ngIf="requestNewPositionForm.get('expectedEndDate')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+          <input type="text" matInput formControlName="expectedEndDate">
+
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Hierarchical superior</mat-label>
+          <!-- <mat-select formControlName="hierarchicalSuperior">
+            <mat-option *ngFor="let designation of designationList"
+            [value]="designation.designation_id">{{designation.designation_name}}</mat-option>
+          </mat-select> -->
+          <mat-select formControlName="hierarchicalSuperior">
+            <mat-option *ngFor="let emp of getAllSuperviserData"
+            [value]="emp.employee_id">{{emp.first_name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('hierarchicalSuperior')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+      
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Select Position</mat-label>
+          <!-- <mat-select formControlName="selectPosition">
+            <mat-option
+              value="Yes">Yes</mat-option>
+              <mat-option
+              value="Yes">No</mat-option>
+          </mat-select> -->
+          <mat-select formControlName="selectPosition" readonly>
+            <mat-option *ngFor="let contract of designationList"
+            [value]="contract.designation_id">{{contract.designation_name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('leadershipPosition')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+    </div>
+      
+    <div class="row job_css" >
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Location</mat-label>
+          <mat-select formControlName="location">
+            <mat-option *ngFor="let location of locations"
+            [value]="location.id">{{location.branch_name}}</mat-option>
+          </mat-select>
+          <!-- <mat-error *ngIf="requestNewPositionForm.get('location')?.hasError('required')">
+            This field is required!
+          </mat-error> -->
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" class="readonly-wrapper">
+          <mat-label>Sub Department</mat-label>
+          <!-- <mat-select formControlName="area">
+             <mat-option
+            value="">Master not ready</mat-option>
+            <mat-option *ngFor="let area of areaList"
+            [value]="area.id">{{area.area_name}}</mat-option>
+          </mat-select> -->
+          <input type="text" matInput formControlName="area">
+    
+          <mat-error *ngIf="requestNewPositionForm.get('area')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    
+    
+      
+    
+     
+    </div>
+    
+    <div class="row" style="margin: 20px 0;">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <mat-label><p style="margin-top: 5px; font-size: 14px;">job Discription</p> </mat-label>
+        </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <mat-radio-group formControlName="jobSpecification" (change)="onSelectedJobSpecification($event)" style="margin-top: 4px;margin-left: 20px" class="readonly-wrapper">
+          <mat-radio-button value="YES">Yes</mat-radio-button>
+          <mat-radio-button value="NO">No</mat-radio-button>
+        </mat-radio-group>
+        <!-- <mat-error *ngIf="requestNewPositionForm.get('jobSpecification')?.hasError('required')">
+          This field is required!
+        </mat-error> -->
+    </div>
+    
+    
+        <div class="col-xxl-5 col-lg-5 col-md-5 col-sm-5 col-12" *ngIf="selectJob" >
+          <div class="readonly-wrapper" >
+            <mat-label>Uploaded File</mat-label>
+            <input class="form-control"  type="file" multiple="true" style="padding-right: 19%" title="CHOOSE FILE" #fileInput
+              (change)="onChange($event)" formControlName="file"/>
+          </div>
+    
+          <a *ngIf="this.fileBind" href="{{generateImageUrl()+fileBind}}" download target="_blank">
+            <mat-icon class="imgEmp" >
+    
+              folder_open</mat-icon>
+          </a>
+         
+          </div>
+    
+    
+     
+      
+    </div>
+    <div class="row">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="!selectJob">
+        <!-- <mat-label>Type JD Here</mat-label>
+        <div class="form-group attach_file">
+          <ckeditor #editer id="ckediter" formControlName="jdEditor"></ckeditor>
+          <mat-error *ngIf="requestNewPositionForm?.get('jdEditor')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </div> -->
+        <div class="form-group attach_file" class="readonly-wrapper">
+          <ckeditor #editer id="ckediter" formControlName="text"></ckeditor>
+      </div>
+      </div>
+    </div>
+    
+    <div class="row" style="margin: 20px 0;">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <mat-label><span style="margin-top: 5px; font-size: 14px;">Budget:-</span> </mat-label>
+          </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <mat-radio-group class="readonly-wrapper" formControlName="budget" (change)="onSelectedBudget($event)" style="margin-top: 4px;margin-left: 20px">
+          <mat-radio-button value="YES">Yes</mat-radio-button>
+          
+          <mat-radio-button value="NO">No</mat-radio-button>
+        </mat-radio-group>
+        <!-- <mat-error *ngIf="requestNewPositionForm.get('budget')?.hasError('required')">
+          This field is required!
+        </mat-error> -->
+    </div>
+            
+     
+    
+        <div class="col-xxl-5 col-lg-5 col-md-5 col-sm-5 col-12" *ngIf="budgetCheck">
+          <mat-label> Cost Center</mat-label>
+            <mat-form-field appearance="outline" class="readonly-wrapper">
+              <!-- <mat-select formControlName="costCenter">
+                 <mat-option
+                value="1">Master not ready</mat-option>
+       
+              </mat-select> -->
+          <input type="text" matInput formControlName="costCenter">
+    
+              <!-- <mat-error *ngIf="requestNewPositionForm.get('costCenter')?.hasError('required')">
+                This field is required!
+              </mat-error> -->
+            </mat-form-field>
+          </div>
+    
+      <div class="col-xxl-5 col-lg-5 col-md-5 col-sm-5 col-12" *ngIf="!budgetCheck">
+            <mat-label>Enter Remark and Justification</mat-label>
+            <div>
+              <mat-form-field appearance="outline" class="readonly-wrapper">
+                <mat-label>Remark</mat-label>
+                <input type="text" matInput formControlName="remark">
+                <!-- <mat-error *ngIf="requestNewPositionForm.get('remark')?.invalid">
+                    invalid!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <mat-form-field appearance="outline">
+                <mat-label>justification</mat-label>
+                <input type="text" matInput formControlName="justification">
+                <mat-error *ngIf="requestNewPositionForm.get('justification')?.invalid">
+                    invalid!
+                </mat-error>
+              </mat-form-field>
+            </div> -->
+      </div>
+    </div>
+    <div class="row m-3"> 
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub">
+          <button  (click)="ngSubmit()">
+            Process To Approve/Reject
+          </button>
+          <!-- <button  (click)="onSubmitForm(this.requestNewPositionForm.value)">
+            Update
+          </button> -->
+          <button style="background: #b04646 !important" color="warn" (click)="reject()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    </form>
+</mat-card>
+
+

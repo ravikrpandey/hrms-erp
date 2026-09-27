@@ -1,0 +1,159 @@
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { GridApi, ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ConfigurationalmasterService } from 'src/app/@shared/services/configurationalmaster.service';
+import { BudgetActionComponent } from '../budget-limit/budget-action/budget-action.component';
+import { ReimbursementBudgetActionComponent } from './reimbursement-budget-action/reimbursement-budget-action.component';
+
+@Component({
+  selector: 'app-reimbursement-budget-master',
+  templateUrl: './reimbursement-budget-master.component.html',
+  styleUrls: ['./reimbursement-budget-master.component.scss']
+})
+export class ReimbursementBudgetMasterComponent {
+  rowClass: any;
+  private gridApi!: GridApi<any>;
+  rowData: any;
+  public gridOptions: any = { rowSelection: 'multiple' };
+  selectedRows: any[] = [];
+  isDeleteButtonVisible: boolean = false;
+
+  public columnDefs: ColDef[] = [
+    {
+      headerName: 'S.No.',
+      valueGetter: 'node.rowIndex + 1',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth: 150,
+    },
+    {
+      headerName: 'Reimburse Type',
+      field: 'travelType.name',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth: 150,
+    },
+    // {
+    //   headerName: 'Grades',
+    //   field: 'travelType.name',
+    //   sortable: true,
+    //   resizable: true,
+    //   wrapHeaderText: true,
+    //   autoHeaderHeight: true,
+    //   cellClass: 'grid-cell-centered',
+    //   flex: 1,
+    //   minWidth: 150,
+    // },
+    {
+      headerName: 'Budget Limit',
+      // field: 'budget_limit',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth: 150,
+      valueGetter: (params) => {
+        // First check if local_max_limit exists, else take from reimbursementsBudgets
+        return params.data?.local_max_limit
+          || params.data?.reimbursementsBudgets?.[0]?.budget_limit
+          || '';
+      }
+    },
+    {
+      headerName: 'Remark',
+      field: 'remark',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth: 150,
+    },
+    // {
+    //   headerName: 'DA',
+    //   field: 'daily_allowance',
+    //   sortable: true,
+    //   resizable: true,
+    //   wrapHeaderText: true,
+    //   autoHeaderHeight: true,
+    //   cellClass: 'grid-cell-centered',
+    //   flex: 1,
+    //   minWidth: 150,
+    // },
+    {
+      headerName: 'Action',
+      field: 'id',
+      flex: 1,
+      minWidth: 150,
+      cellRenderer: ReimbursementBudgetActionComponent,
+      cellRendererParams: {
+        className: 'mat-blue',
+        hideRequestButton: true,
+        hideDetailsButton: false,
+        hideDownloadIcon: false,
+        showCustomIcon: false, // Hide attachment icon
+      },
+    },
+  ];
+
+  constructor(
+    private router: Router,
+    private service: ConfigurationalmasterService
+  ) {
+    this.getData();
+  }
+
+  // getData() {
+  //   this.service.getAllReimbursementBudget().subscribe((data: any) => {
+  //     this.rowData = data.data;
+  //   });
+  // }
+  getData() {
+    this.service.getAllReimbursementBudget().subscribe((data: any) => {
+      this.rowData = data.data || [];
+    });
+  }
+  add(type: string) {
+    this.router.navigate(
+      ['/master/configurational-master/reimbursement-master/reimbursement-budget/create'],
+      {
+        queryParams: { type },
+      }
+    );
+  }
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    this.gridApi.addEventListener(
+      'selectionChanged',
+      this.onSelectionChanged.bind(this)
+    );
+  }
+
+  onSelectionChanged(event: any) {
+    this.selectedRows = event.api.getSelectedRows();
+    this.isDeleteButtonVisible = this.selectedRows.length > 0;
+  }
+
+  onPageSizeChanged() {
+    var value = (document.getElementById('page-size') as HTMLInputElement)
+      .value;
+    this.gridApi.paginationSetPageSize(Number(value));
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setQuickFilter(
+      (document.getElementById('filter-text-box') as HTMLInputElement).value
+    );
+  }
+}

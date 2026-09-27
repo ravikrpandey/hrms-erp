@@ -1,0 +1,328 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Workflow</h1>
+        <p>{{this.workflowId?'Update':'Add'}} Workflow</p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+    </div>
+</div>
+
+
+<section class="right_data_all">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="form">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <div *ngIf="this.workflowId">
+                                <mat-label>Workflow Type</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <input matInput type="text" readonly formControlName="job_request_id" />
+                                </mat-form-field>
+                            </div>
+                            <mat-form-field *ngIf="!this.workflowId" appearance="outline" class="mt-1">
+                                <mat-label>Workflow Type</mat-label>
+                                <mat-select (selectionChange)="onSelectedType($event)" formControlName="job_request_id">
+                                    <mat-select-filter [array]="types" (filteredReturn)="typeFilter($event)"></mat-select-filter>
+                                    <mat-option *ngFor="let data of typeData"
+                                        [value]="data.type">{{data.type}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('job_request_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="!showAddButton" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <!-- <mat-label>Type</mat-label> -->
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Budget Type</mat-label>
+                                <mat-select formControlName="budget_planning_type">
+                                    <mat-option value="Capex">
+                                        Capex
+                                    </mat-option>
+                                    <mat-option value="Opex">
+                                        Opex
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('budget_planning_type')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="showFieldQuotation">
+                        <div class="form-group mb-3">
+                          <div *ngIf="this.workflowId">
+                            <mat-label>Workflow Type</mat-label>
+                            <mat-form-field appearance="outline">
+                                <input matInput type="text" readonly formControlName="branch_name" />
+                            </mat-form-field>
+                        </div>
+                          <mat-form-field appearance="outline" *ngIf="!this.workflowId">
+                            <mat-label>Branch</mat-label>
+                            <mat-select formControlName="branch_id" (valueChange)="selectedBranch2($event)">
+                              <mat-option  *ngFor="let data of branchList" [value]="data.id">{{
+                                data.branch_name }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                          </div>
+                          </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!showFieldQuotation">
+                        <div class="form-group mb-3">
+                            <div *ngIf="this.workflowId" >
+                                <mat-label>Department</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <input matInput type="text" readonly formControlName="department_id" />
+                                </mat-form-field>
+                            </div>
+                            <mat-form-field *ngIf="!this.workflowId" appearance="outline" class="mt-1">
+                                <mat-label>Select Department</mat-label>
+                                <mat-select formControlName="department_id">
+                                    <mat-select-filter [array]="departments" (filteredReturn)="departmentFilter($event)"></mat-select-filter>
+                                    <mat-option *ngFor="let data of department"
+                                        [value]="data.dept_id">{{data.department_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('department_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                
+                <div formArrayName="roleFiled">
+                    <div class="row mt-3" *ngFor="let roleFieled of itemsFormArray['controls']; let i = index"
+                        [formGroupName]="i">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!showFieldQuotation">
+                            <div class="form-group mb-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select role</mat-label>
+                                    <mat-select formControlName="role_id" (selectionChange)="roleIdData($event,i)">
+                                        <mat-select-filter [array]="roles[i]" (filteredReturn)="roleFilter($event,i)"></mat-select-filter>
+                                        <mat-option *ngFor="let role of roleGet[i];"
+                                            [value]="role.role_master_id">{{role.role_master_name}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('roleId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 " *ngIf="showFieldQuotation">
+                          <div class="form-group ">
+                           
+                              <mat-form-field appearance="outline">
+                                  <mat-label>Branch</mat-label>
+                                  <mat-select formControlName="branch_id" (valueChange)="selectedBranch($event,i)">
+                                    <mat-option  *ngFor="let data of branchList" [value]="data.id">{{
+                                      data.branch_name }}</mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                                </div>
+                                </div>
+  
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select EMP</mat-label>
+                                    <mat-select formControlName="employee_id" (selectionChange)="selectemp($event,i)">
+                                        <mat-select-filter [array]="employees[i]" (filteredReturn)="empFilter($event,i)"></mat-select-filter>
+                                        <mat-option *ngFor="let data of roleGetByemployee[i]" [value]="data.employee_id"
+                                            (change)="selectemp(data.employee_id,i)">{{data.first_name}} [{{data.employee_code}}]</mat-option>
+
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('employeeId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="showFieldQuotation">
+                            <div class="form-group mb-4">
+                              <mat-form-field appearance="outline" >
+                                <mat-label>Level Type</mat-label>
+                                <mat-select formControlName="level_type_id">
+                                    <mat-option *ngFor="let data of levelType" [value]="data.id">{{data.level_type}}</mat-option>
+                                </mat-select>
+                                <mat-error
+                                  *ngIf="form.get('employeeId')?.hasError('required')">*Required!
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+
+                          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="showFieldQuotation">
+                            <div class="form-group mb-4">
+                              <mat-form-field appearance="outline" >
+                                <mat-label>Remark</mat-label>
+                                <input matInput type="text" formControlName="remark"/>
+                                <mat-error
+                                  *ngIf="form.get('remark')?.hasError('required')">*Required!
+                                </mat-error>
+                              </mat-form-field>
+                            </div>
+                          </div>
+                          <!-- <div formArrayName="itemList" *ngIf="showFieldQuotation">
+                            <div class="row" *ngFor="let items of discountItemList(i).controls; let j=index" [formGroupName]="j">
+                                
+                                  
+                                  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="showFieldQuotation">
+                                    <div class="form-group mb-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Category</mat-label>
+                                            <mat-select  >
+                                             <mat-option *ngFor="let category of categoryList" [value]="category">{{category}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                          
+                                    </div>
+                                  </div>
+                                  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="showFieldQuotation">
+                                    <div class="form-group mb-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Sub Category</mat-label>
+                                            <mat-select  >
+                                             <mat-option *ngFor="let subCat of subCatList" [value]="subCat">{{subCat}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                          
+                                    </div>
+                                  </div>
+                                  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="showFieldQuotation">
+                                    <div class="form-group mb-4">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Item</mat-label>
+                                            <mat-select  >
+                                             <mat-option *ngFor="let item of itemLists" [value]="item">{{item}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                          
+                                    </div>
+                                  </div>
+                                  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="showFieldQuotation">
+                                    <div class="form-group mb-4">
+                                      <mat-form-field appearance="outline" >
+                                        <mat-label>Discount Flat</mat-label>
+                                        <input matInput type="text" formControlName="discount_flat" maxlength="5" (keydown)="onKeyChange($event)"/>
+                                        <mat-error
+                                          *ngIf="form.get('discount_flat')?.hasError('required')">*Required!
+                                        </mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                        
+                                  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="showFieldQuotation">
+                                    <div class="form-group mb-4">
+                                      <mat-form-field appearance="outline" >
+                                        <mat-label>Discount (%)</mat-label>
+                                        <input matInput type="text" formControlName="discount_percent" maxlength="2" (keydown)="onKeyChange($event)"/>
+                                        <mat-error
+                                          *ngIf="form.get('discount_percent')?.hasError('required')">*Required!
+                                        </mat-error>
+                                      </mat-form-field>
+                                    </div>
+                                  </div>
+                              <div class="col-md-2">
+                                <mat-icon matTooltip="Remove" (click)="removeEmployeeSkill(i, j)">remove_circle</mat-icon>
+                                  
+                                <mat-icon matTooltip="Add Item"  (click)="addItemList(i)">add_circle</mat-icon>
+                              </div>
+                            </div>
+                           
+                          </div> -->
+                          <div formArrayName="itemList" *ngIf="showFieldQuotation" style="overflow: auto;">
+                            <table class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>Category</th>
+                                  <th>Sub Category</th>
+                                 
+                                  <th>Discount Flat</th>
+                                  <th>Discount (%)</th>
+                                  <th>Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let items of discountItemList(i).controls; let j = index" [formGroupName]="j">
+                                    <td>
+                                        <mat-form-field appearance="outline">
+                                          <mat-label>Select Item Category</mat-label>
+                                          <mat-select formControlName="product_category_id"
+                                            (selectionChange)="getSubCategory($event,i, j)">
+                                            <mat-option  *ngFor="let data of cetegory" [value]="data.id">{{
+                                              data.asset_category_name }}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </td>
+                                      <td>
+                                        <mat-form-field appearance="outline">
+                                          <mat-label>Select Item Sub Category</mat-label>
+                                          <mat-select formControlName="product_sub_category_id">
+                                            <mat-option  *ngFor="let data of subCategory[i]?.[j]" [value]="data.id"
+                                              >{{
+                                              data.sub_category_name }}</mat-option>
+                                          </mat-select>
+                                        </mat-form-field>
+                                      </td>
+                                  
+                                  <td>
+                                    <mat-form-field appearance="outline">
+                                      <mat-label>Discount Flat</mat-label>
+                                      <input matInput type="text" formControlName="discount_flat" maxlength="5" (keydown)="onKeyChange($event)" />
+                                      <mat-error *ngIf="items.get('discount_flat')?.hasError('required')">*Required!</mat-error>
+                                    </mat-form-field>
+                                  </td>
+                                  <td>
+                                    <mat-form-field appearance="outline">
+                                      <mat-label>Discount (%)</mat-label>
+                                      <input matInput type="text" formControlName="discount_percent" maxlength="2" (keydown)="onKeyChange($event)" />
+                                      <mat-error *ngIf="items.get('discount_percent')?.hasError('required')">*Required!</mat-error>
+                                    </mat-form-field>
+                                  </td>
+                                  <td>
+                                    <mat-icon matTooltip="Remove" (click)="removeEmployeeSkill(i, j)"  *ngIf="j>0" class="pointer">remove_circle</mat-icon>
+                                    <mat-icon matTooltip="Add Item" (click)="addItemList(i)" class="pointer">add_circle</mat-icon>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          
+                        <div *ngIf="showAddButton" class=" col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <div class="add_delete" style="padding: 10px 0;">
+                                <span class="edd-del">
+                                    
+                                    <mat-icon matTooltip="Add Item" (click)="addItem(i)">add_circle</mat-icon>
+                                </span>
+
+                                <span class="delete_del" *ngIf="i+1!==1" style="padding: 0 12px;">
+                                    <mat-icon style="position: absolute;
+                                    margin-top: -24px; margin-left:20px" matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- <div class=" col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                            <div class="add_delete">
+                               
+                            </div>
+                            </div> -->
+
+                    </div>
+                </div>
+                <div class="common_button_sub">
+                    <button  (click)="onSubmit(this.form.value)">
+                        {{this.workflowId?'Update':'Submit'}}
+                    </button>
+                    <!-- <button class="cancel_button_y" (click)="goBack()">Cancel</button> -->
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

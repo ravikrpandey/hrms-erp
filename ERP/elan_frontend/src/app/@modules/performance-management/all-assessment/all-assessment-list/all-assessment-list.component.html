@@ -1,0 +1,85 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Performance Assessment</h1>
+    <p>
+      Department Assessment<i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #858586"
+      >
+      </i
+      ><span>Assessment List</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div>
+  <div class="right_data_all">
+    <div class="parentDiv mt-3">
+      <div class="box">
+        <div class="innerBox">
+          <div class="heading"> Department Name</div>
+          <div class="value">{{depData[0]?.department_name}}</div>
+        </div>
+        <div class="innerBox">
+          <div class="heading">Total Number of Employee</div>
+          <div  class="value">{{depData[0]?.no_of_employee}}</div>
+        </div>
+       
+        <div class="innerBox">
+          <div class="heading">Pending Self Assessment </div>
+          <div  class="value">{{depData[0]?.pending_self_assessment}}</div>
+        </div>
+        <div class="innerBox">
+          <div class="heading">Committee Review Completed</div>
+          <div  class="value">{{depData[0]?.completed_assessment}}</div>
+        </div>
+        <div class="innerBox">
+          <div class="heading">Pending For Manager Review</div>
+          <div  class="value">{{depData[0]?.pending_manager_review}}</div>
+        </div>
+        <div class="innerBox">
+          <div class="heading">Pending For Committee Review</div>
+          <div  class="value">{{depData[0]?.pending_commitee_review}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <!-- <div class="add_btn">
+      <button type="button" class="btn_add" (click)="openDialog()">Add </button>
+  </div> -->
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select id="page-size" (change)="onPageSizeChanged()">
+        <option value="10" selected="">10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2 common_button_sub pb-0" align="end">
+      <button  (click)="onSubmit()" >Send Reminder</button>
+    </div>
+  </div>
+
+  <div class="ag_grid">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+      rowSelection="multiple"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="container-box">
+  <div class="heading_top">
+    <div class="row mt-3">
+      <div class="page-title">
+        <h1>{{ id ? 'Update Tax Slab' : 'Create Tax Slab' }}</h1>
+      </div>
+    </div>
+    <hr>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+  <div class="achieveFormArea">
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="createComplaint">
+        <div class="row">
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3" [ngClass]="{'disable-pointer-events': Type === 'view'}">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Tax Name</mat-label>
+                <input matInput type="text" formControlName="tax_name" />
+                <!-- <mat-error *ngIf="createComplaint.controls['min'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+              </mat-form-field>
+              <!-- <mat-checkbox formControlName="addmin" *ngIf="!createComplaint.controls['addmax'].value">Upto</mat-checkbox> -->
+            </div>
+          </div>
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3" [ngClass]="{'disable-pointer-events': Type === 'view'}">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Standard Deduction</mat-label>
+                <input matInput type="number" formControlName="standard_deduct" />
+                <!-- <mat-error *ngIf="createComplaint.controls['min'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+              </mat-form-field>
+              <!-- <mat-checkbox formControlName="addmin" *ngIf="!createComplaint.controls['addmax'].value">Upto</mat-checkbox> -->
+            </div>
+          </div>
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3" [ngClass]="{'disable-pointer-events': Type === 'view'}">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Expected Date</mat-label> 
+                <input [ngClass]="{'disable-pointer-events': Type === 'view'}" matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="start_date" />
+                <mat-datepicker-toggle [ngClass]="{'disable-pointer-events': Type === 'view'}" matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker [ngClass]="{'disable-pointer-events': Type === 'view'}" #dp></mat-datepicker>
+                <mat-error *ngIf="createComplaint.controls['start_date'].hasError('required')">
+                  This field is Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="Type !== 'view'" class="row">
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" *ngIf="!createComplaint.controls['addmin'].value">
+                <mat-label>Min</mat-label>
+                <input matInput type="text" formControlName="min" />
+                <mat-error *ngIf="createComplaint.controls['min'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="addmin" *ngIf="!createComplaint.controls['addmax'].value">Upto</mat-checkbox>
+            </div>
+          </div>
+
+          <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 mb-3">
+            <span class="to">To</span>
+          </div>
+
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" *ngIf="!createComplaint.controls['addmax'].value">
+                <mat-label>Max</mat-label>
+                <input matInput type="text" formControlName="max" />
+                <mat-error *ngIf="createComplaint.controls['max'].hasError('required') && createComplaint.controls['max'].touched">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="addmax" *ngIf="!createComplaint.controls['addmin'].value">Upto</mat-checkbox>
+            </div>
+          </div>
+
+          <div *ngIf="Type !== 'view'" class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Percentage</mat-label>
+                <input matInput type="number" formControlName="percentage" min="0" max="2"/>
+                <mat-error *ngIf="createComplaint.controls['percentage'].hasError('required') && createComplaint.controls['percentage'].touched">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+        
+
+          <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 mb-3">
+            <div>
+              <button style="width: 97px;height: 35px !important;" mat-raised-button color="primary" class="mx-3" (click)="onSubmitForm(createComplaint.value)">
+                <!-- {{ id ? 'Update' : 'Add' }} -->
+                {{ isEditing ? 'Update' : 'Save' }}
+              </button>
+            </div>
+          </div>
+
+        
+        </div>
+      </form>
+      
+      <div class="data_show">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>S NO</th>
+              <th>Min</th>
+              <th>Max</th>
+              <th>Percenatge</th>
+              <th *ngIf="Type !== 'view'">Action</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of arrayDataTaxSlab; index as i">
+              <td>{{i + 1}}</td>
+              <td>{{data?.min}}</td>
+              <td>{{data?.max}}</td>
+              <td>{{data?.percentage}}</td>
+              <td *ngIf="Type !== 'view'">
+                <div class="flexRow">
+                  <div class="edd-del">
+                    <mat-icon matTooltip="Edit" (click)="edit(data,i)">edit</mat-icon>
+                  </div>
+                  <div class="edd-del">
+                    <mat-icon matTooltip="Delete" (click)="deleteRow(data,i)">delete</mat-icon>
+                  </div>
+                </div>
+              </td>
+              <!-- <td>{{data?.start_date}}</td> -->
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div  *ngIf="Type !== 'view'" class="row">
+        <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 mb-3">
+          <div>
+            <button style="width: 97px;height: 35px !important;" mat-raised-button color="primary" class="mx-3" (click)="onSubmitFormFinal(createComplaint.value)">
+              {{ id ? 'Update' : 'Submit' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

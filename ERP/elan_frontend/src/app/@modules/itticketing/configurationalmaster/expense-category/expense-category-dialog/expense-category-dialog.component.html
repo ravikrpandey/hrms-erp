@@ -1,0 +1,40 @@
+<div>
+  <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!expenseId?"Add Expense Category":"Update Expense Category"}}</h3>
+  <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Expense Category</h3>
+  <fieldset [disabled]="view == 'view'">
+      <div class="m-3" [formGroup]="expenseCategoryForm">
+          <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                  <mat-label>Expense Category</mat-label>
+              </div>
+              <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                  <div class="form-group row">
+                      <!-- <p>Expense Category</p> -->
+                      <mat-form-field appearance="outline" readonly>
+                          <mat-label>Expense Category Name</mat-label>
+                          <input matInput type="text" formControlName="expenseforCopy_name" />
+                          <mat-error *ngIf="expenseCategoryForm.controls['expenseforCopy_name'].hasError('required')">
+                              *Required!
+                          </mat-error>
+                          <mat-error *ngIf="expenseCategoryForm.controls['expenseforCopy_name'].hasError('leadingSpaces')">
+                              *No leading spaces!
+                          </mat-error>
+                      </mat-form-field>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <mat-dialog-actions align="end" *ngIf="!view">
+          <button *ngIf="!expenseId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+              Submit
+          </button>
+          <button *ngIf="expenseId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+              Update
+          </button>
+          <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+              Close
+          </button>
+      </mat-dialog-actions>
+  </fieldset>
+</div>

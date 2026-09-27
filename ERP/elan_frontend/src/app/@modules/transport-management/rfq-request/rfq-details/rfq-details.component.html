@@ -1,0 +1,110 @@
+<div class="popup-container">
+  <div class="popup-header">
+    <h3>RFQ Transporter Details</h3>
+    <h4>Vehicle Planning Code : {{ planningList.planningCode }}</h4>
+    <button mat-icon-button (click)="closePopup()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="popup-body">
+    <!-- LEFT SECTION -->
+    <div class="left-section">
+      <div class="planning-card" *ngFor="let item of planningList?.soList">
+        <h4><b>SO Number : {{item?.warehousePlaningPickup?.sales_order_no}}</b></h4>
+
+        <div class="info-grid">
+          <div><b>Pickup Date</b><span>{{ item.pickup_date | date:'dd-MM-yyyy' }}</span></div>
+          <div><b>Delivery Date</b><span>{{ item.expected_delivery_date | date:'dd-MM-yyyy' }}</span></div>
+          <div><b>Warehouse Name</b><span>{{ item.WAREHOUSE_MASTER?.name }}</span></div>
+          <div><b>Loading Priority</b><span class="priority">{{ item.priority }}</span></div>
+        </div>
+
+        <div class="address">
+          <b>Pickup Address</b>
+          <p>{{ item.WAREHOUSE_MASTER?.address }}</p>
+        </div>
+
+        <div class="address">
+          <b>Delivery Address</b>
+          <p>
+            {{item?.warehousePlaningPickup?.address}},
+            {{item?.warehousePlaningPickup?.postal_address}},
+            {{item?.warehousePlaningPickup?.pincode}}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT SECTION -->
+    <div class="right-section">
+      <h4>Transporter Response</h4>
+      <div class="response-box">
+        <label>Amount: &nbsp;</label>₹{{ planningList?.amount || 'N/A' }}
+      </div>
+      <div class="response-box">
+        <label>Remarks: &nbsp;</label>{{ planningList?.remark || 'N/A' }}
+      </div>
+      <div class="response-box">
+        <label>Transporter Status: &nbsp;</label>{{ planningList?.transporter_status || 'PENDING' }}
+      </div>
+      <div class="response-box">
+        <label>Approval Status: &nbsp;</label>{{ planningList?.admin_status || 'PENDING' }}
+      </div>
+
+      <div class="card" *ngIf="planningList?.charges?.length > 0">
+        <h4 class="text-center mt-2"><b>Charges Details</b></h4>
+
+        <table class="table table-bordered table-sm mb-3">
+          <thead>
+            <tr>
+              <th style="width: 60%;">Charge Name</th>
+              <th class="text-end" style="width: 40%;">Amount (₹)</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let charge of planningList.charges">
+              <td>{{ charge.charge_name }}</td>
+              <td class="text-end">{{ charge.amount | number:'1.2-2' }}</td>
+            </tr>
+          </tbody>
+
+          <tfoot>
+            <tr class="fw-bold">
+              <td>Total</td>
+              <td class="text-end">{{ getTotalCharges() | number:'1.2-2' }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="card" *ngIf="planningList?.rateAgreement?.rate && planningList?.rateAgreement?.rate.length>0" >
+      <h4 style="text-align: center;">Rate Agreement Details</h4>
+        <table style="margin-left: 10px;">
+          <thead>
+            <tr>
+              <th colspan="5">
+                <b>{{ planningList?.rateAgreement?.agreement_no }} - {{ planningList?.rateAgreement?.agreement_type }} ({{ planningList?.rateAgreement?.valid_from | date:'dd-MM-yyyy' }} - {{ planningList?.rateAgreement?.valid_to | date:'dd-MM-yyyy' }})</b>
+              </th>
+            </tr>
+            <tr>
+              <th>From To City</th>
+              <th>Rate</th>
+              <th>Extra Charge</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let rate of planningList?.rateAgreement?.rate">
+              <td>{{rate?.rateAgreementDetails?.fromCity?.city_name}} To {{rate?.rateAgreementDetails?.toCity?.city_name}}</td>
+              <td>₹{{rate?.rateAgreementDetails?.rate | number:'1.0-0'}}</td>
+              <td>₹{{rate?.rateAgreementDetails?.extra_charge | number:'1.0-0'}}</td>
+              <td>{{rate?.rateAgreementDetails?.remark}}</td>
+            </tr>          
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

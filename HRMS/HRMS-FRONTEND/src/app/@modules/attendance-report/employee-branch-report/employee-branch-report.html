@@ -1,0 +1,181 @@
+<!-- EMPLOYEE BANK REPORT -->
+<div class="heading_top">
+  <div class="row">
+    <div class="col-md-10">
+      <h1>REPORTS</h1>
+      <p>
+        Employee Master Reports
+        <i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #858586"
+        ></i>
+        <span> Employees Bank Reports</span>
+      </p>
+    </div>
+    <div class="page-title-container">
+      <input
+        type="text"
+        class="form-control search-box"
+        id="filter-text-box"
+        #input
+        placeholder="Search"
+        (input)="onFilterTextBoxChanged()"
+      />
+      <span
+        class="icon_img"
+        (click)="exportToExcel()"
+        matTooltip="Download"
+        style="cursor: pointer"
+      >
+        <img src="assets/icons/top3.png" alt="Export" />
+      </span>
+    </div>
+  </div>
+</div>
+<div class="right_data_all pt-3">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Entity</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="entity_id"
+              (selectionChange)="checkIfAllSelected()"
+            >
+              <app-search-filter
+                [array]="entityList"
+                [placeholder]="'Search by entity name'"
+                [searchFields]="['entity_name']"
+                (filteredReturn)="originalEntityList = $event.data"
+              >
+              </app-search-filter>
+              <mat-checkbox
+                (change)="selectAll($event)"
+                [checked]="isAllSelect"
+              >
+                Select All
+              </mat-checkbox>
+              <mat-option
+                *ngFor="let item of originalEntityList"
+                [value]="item?.entity_id"
+              >
+                {{ item?.entity_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!entity_id || entity_id.length === 0">
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Department</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="dept_id"
+              (selectionChange)="checkAlldepartment()"
+            >
+              <app-search-filter
+                [array]="departmentdata"
+                [placeholder]="'Search by department name'"
+                [searchFields]="['department_name']"
+                (filteredReturn)="filterDepartment = $event.data"
+              >
+              </app-search-filter>
+              <mat-option
+                *ngFor="let dept of filterDepartment"
+                [value]="dept?.dept_id"
+              >
+                {{ dept?.department_name }} ({{dept?.entity_name}})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+  <mat-label>Branch Name</mat-label>
+  <mat-select
+    multiple
+    [(ngModel)]="branch_id"
+    (selectionChange)="checkAllBranchSelected()"
+  >
+    <app-search-filter
+      [array]="branchList"
+      [placeholder]="'Search by branch name'"
+      [searchFields]="['branch_name']"
+      (filteredReturn)="filteredBranchList = $event.data"
+    ></app-search-filter>
+
+    <mat-checkbox
+      (change)="selectAllBranch($event)"
+      [checked]="isAllBranchSelected"
+    >
+      Select All
+    </mat-checkbox>
+
+    <mat-option *ngFor="let branch of filteredBranchList" [value]="branch.id">
+      {{ branch.branch_name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+  <mat-label>Bank Name</mat-label>
+
+  <mat-select
+    multiple
+    [(ngModel)]="selectedBanks"
+    (selectionChange)="checkAllBankSelected()"
+  >
+    <app-search-filter
+      [array]="allBanks"
+      [placeholder]="'Search by Bank'"
+      [searchFields]="['bank_name']"
+      (filteredReturn)="filteredBanks = $event.data"
+    ></app-search-filter>
+
+    <mat-checkbox
+      (change)="selectAllBank($event)"
+      [checked]="isAllBanksSelected"
+    >
+      Select All
+    </mat-checkbox>
+
+    <mat-option *ngFor="let bank of filteredBanks" [value]="bank.id">
+      {{ bank.bank_name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+        </div>
+
+        <div class="col-12 col-sm-2" style="margin-top: 10px">
+          <button (click)="triggerExport()" class="download-button">
+            Search
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="ag_grid ag_final_dat tableGroup">
+  <ag-grid-angular
+    class="ag-theme-alpine"
+    id="myGrid"
+    style="width: 100%; height: 400px"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [pagination]="true"
+    [paginationPageSize]="10"
+    [rowData]="rowData"
+    (gridReady)="onGridReady($event)"
+    [rowClass]="rowClass"
+  >
+  </ag-grid-angular>
+</div>

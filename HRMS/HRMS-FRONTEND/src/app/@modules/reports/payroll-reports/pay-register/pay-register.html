@@ -1,0 +1,167 @@
+<div class="heading_top">
+  <div class="row">
+    <div class="col-md-10">
+      <h1>REPORTS</h1>
+      <p>
+        Payroll Reports
+        <i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #063178"
+        ></i>
+        <span> Pay Register Reports</span>
+      </p>
+    </div>
+    <div class="page-title-container">
+      <input
+        type="text"
+        class="form-control search-box"
+        id="filter-text-box"
+        #filterInput
+        placeholder="Search"
+        (input)="onFilterTextBoxChanged()"
+      />
+
+      <span
+        class="icon_img"
+        (click)="exportToExcel()"
+        matTooltip="Download"
+        style="cursor: pointer"
+      >
+        <img src="assets/icons/top3.png" alt="Export" />
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Department</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="dept_id"
+              (selectionChange)="checkAlldepartment()"
+            >
+              <app-search-filter
+                [array]="departmentdata"
+                [placeholder]="'Search by department name'"
+                [searchFields]="['department_name']"
+                (filteredReturn)="filterDepartment = $event.data"
+              ></app-search-filter>
+              <mat-checkbox
+                (change)="selectAllDepartments($event)"
+                [checked]="isAllDepartmentSelected"
+              >
+                Select All
+              </mat-checkbox>
+              <mat-option
+                *ngFor="let dept of filterDepartment"
+                [value]="dept?.dept_id"
+              >
+                {{ dept?.department_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Employee</mat-label>
+            <mat-select
+              multiple
+              [(ngModel)]="selectedEmployee"
+              (selectionChange)="checkAllEmployeeSelected()"
+            >
+              <app-search-filter
+                [array]="employeeList"
+                [placeholder]="'Search by employee name'"
+                [searchFields]="['full_name']"
+                (filteredReturn)="filteredEmployees = $event.data"
+              ></app-search-filter>
+              <mat-checkbox
+                (change)="selectAllEmployee($event)"
+                [checked]="isAllEmployeeSelected"
+              >
+                Select All
+              </mat-checkbox>
+              <mat-option
+                *ngFor="let emp of filteredEmployees"
+                [value]="emp?.employee_id"
+              >
+                {{ emp?.full_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Fiscal Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear">
+              <mat-option
+                *ngFor="let year of financialYearList"
+                [value]="year.financial_year"
+              >
+                {{ year.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear"> *Required! </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Pay Period Dropdown -->
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Month</mat-label>
+            <mat-select [(ngModel)]="selectedMonth">
+              <mat-option *ngFor="let month of monthList" [value]="month.value">
+                {{ month.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedMonth"> *Required! </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-2" style="margin:0px !important">
+        <!-- <button
+          type="button"
+          class="btn_add_cancels"
+          (click)="cancelFun()"
+          *ngIf="true"
+        >
+          Clear
+        </button> -->
+        <button
+          type="button"
+          class="btn_add_generate"
+          (click)="generateFun()"
+          *ngIf="true"
+        >
+          Search
+        </button>
+      </div>
+      </div>
+
+      <!-- Action Buttons -->
+      
+    </mat-card-content>
+  </mat-card>
+</div>
+<div class="ag_grid ag_final_dat tableGroup">
+  <ag-grid-angular
+    class="ag-theme-alpine"
+    id="myGrid"
+    style="width: 100%; height: 400px"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [pagination]="true"
+    [paginationPageSize]="10"
+    [rowData]="rowData"
+    (gridReady)="onGridReady($event)"
+    [rowClass]="rowClass"
+  >
+  </ag-grid-angular>
+</div>

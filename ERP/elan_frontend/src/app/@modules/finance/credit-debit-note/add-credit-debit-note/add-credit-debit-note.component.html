@@ -1,0 +1,223 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p> Credit & Debit Note</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+  </div>
+  <div class="heading_neo ">
+    <h3>Credit & Debit Note</h3>
+</div>
+<div class="form_basic mb-0 mt-2">
+<form [formGroup]="creditDebitBuilder">
+<div class="d-flex justify-content-center ">
+  <div class="tw-toggle" >
+    <label class="toggle toggle-yes" (checked)="getData('VENDER')" >Vendor</label> 
+    <input  type="radio" name="toggle" value="-1" (change)="getData('CUSTOMER')" [ngClass]="return_id?'disableClass':''">
+    <label class="toggle toggle-yes" >Customer</label> 
+    <input type="radio"  checked name="toggle" value="false"  (change)="getData('VENDOR')" [ngClass]="return_id?'disableClass':''">
+    <span></span>   
+  </div>
+</div>
+<div class="p-4">
+  <div class="row ">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="dp5" (click)="return_id?'':dp5.open()" formControlName="date" [readonly]="return_id" />
+          <mat-datepicker-toggle matSuffix [for]="dp5" *ngIf="!return_id"  ></mat-datepicker-toggle>
+          <mat-datepicker #dp5 ></mat-datepicker>
+          
+          </mat-form-field>
+      </div>
+  </div>
+
+   
+   <ng-container *ngIf="vendor">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group mb-3" [ngClass]="return_id?'disableClass':''">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Select Vendor</mat-label>
+            <mat-select  formControlName="vendor_id" > 
+              <mat-select-filter   [array]="vendorData1" (filteredReturn)="vendorFilter($event)"></mat-select-filter>
+                
+              <mat-option *ngFor="let vendor of vendorData" [value]="vendor.id">{{vendor.vendor_name}}</mat-option>
+            </mat-select>
+             <button mat-icon-button *ngIf="this.creditDebitBuilder.get('vendor_id')?.value"
+              matSuffix (click)="clearData('vendor_id')"  >
+              <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+            </button> 
+        </mat-form-field>
+    </div>
+    </div>
+   </ng-container>
+    <ng-container *ngIf="customer">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group  mb-3">                           
+          <mat-form-field appearance="outline">
+              <mat-label>Select Customer</mat-label>
+              <mat-select formControlName="customer_id" > 
+                <mat-select-filter   [array]="customersData1" (filteredReturn)="customerFilter($event)"></mat-select-filter>
+  
+                <mat-option *ngFor="let user of customersData" [value]="user.id">{{user.company_name}}</mat-option>
+              </mat-select>
+              <button mat-icon-button *ngIf="this.creditDebitBuilder.get('customer_id')?.value"
+              matSuffix (click)="clearData('customer_id')" >
+              <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+            </button> 
+          </mat-form-field>
+      </div>
+      </div>
+    </ng-container>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group mb-3">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Document Type</mat-label>
+            <ng-container  >
+              <mat-select  formControlName="category_id" (selectionChange)="getCategoryByInvoice($event)"> 
+              
+                <mat-option value="purchase_return"  *ngIf="vendor">Purchase Invoice</mat-option>
+                <mat-option value="sales_return" *ngIf="customer" >Sales Invoice</mat-option>
+              </mat-select>
+               
+            </ng-container>
+            
+        </mat-form-field>
+    </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Invoice Number</mat-label>
+            <mat-select  formControlName="invoiceNo"  > 
+                <mat-option *ngFor="let data of getAllINvoicesDataList" [value]="data.sales_invoice_id "  (click)="getAllInvoicesData(data)" >{{data.invoiceNo}}</mat-option>
+            </mat-select>
+            <button mat-icon-button *ngIf="this.creditDebitBuilder.get('invoiceNo')?.value" style="margin-top: 10px;"
+              matSuffix (click)="clearData('invoiceNo')"  >
+              <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+            </button>
+        </mat-form-field>
+    </div>
+    </div>
+     
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+        <div class="form-group mb-3">                           
+          <mat-form-field appearance="outline">
+              <mat-label>Note Type</mat-label>
+              <mat-select  formControlName="note_type" (selectionChange)="getNotedeta($event)"> 
+                  <mat-option value="debit_note">Debit Note</mat-option>
+                  <mat-option value="credit_note">Credit Note</mat-option>
+              </mat-select>
+               <button mat-icon-button *ngIf="this.creditDebitBuilder.get('note_type')?.value"
+              matSuffix (click)="clearData('note_type')"  >
+              <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+            </button> 
+          </mat-form-field>
+      </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Document Number</mat-label>
+            <input matInput type="text" formControlName="documentNo"  readonly/>
+          </mat-form-field>
+        </div>
+      </div>
+    
+
+       
+      
+      <div class="ag_grid ">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 300px"
+            [columnDefs]="columnDefs"  [pagination]="false"
+             [rowData]="return_id?replacementDataList:getAllInvoiceData" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+    </div>
+<!-- 
+   <div class="d-flex  justify-content-between heading_neo mt-2"    >
+    <th scope="col" style="color: black;">Total Invoice Amount</th>
+    <th scope="col" style="color: black;">{{total_invoice_amt || '00' | currency:'NGN':'symbol-narrow':'1.0-0'}}</th>
+   </div> -->
+
+   <hr>
+   <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+    <div class="form-group inp_disable mb-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Invoice Amount Due</mat-label>
+        <input matInput type="text" formControlName="invoice_due_amount"  readonly />
+      </mat-form-field>
+    </div>   
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+    <div class="form-group inp_disable mb-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Return Amount Due</mat-label>
+        <input matInput type="text" formControlName="due_amount"  readonly />
+      </mat-form-field>
+    </div>   
+  </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <input matInput type="text" formControlName="amount"   />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">
+        <input
+        class="form-control"
+        type="file"
+        style=" border-color:rgba(0, 0, 0, 0.38);
+    padding:12px 10px;"
+        title="Termination Copy Upload"
+        (change)="uploadDoc($event)"
+        formControlName="upload_document"
+        accept=".png, .jpg, .jpeg"
+      />
+      <img
+        *ngIf="upload_document"
+        [src]="baseUrl + '/' + upload_document"
+        alt
+        class="fileViewImage"
+        (click)="viewImg()"
+      />
+              
+      </div>
+    </div>
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Remarks</mat-label>
+          <input matInput type="text" formControlName="remarks"  />
+        </mat-form-field>
+      </div>
+    </div>
+   
+    <!-- <div class=" heading_neo  mb-2">
+      <h3 style="color: black;">Transaction History</h3>
+    </div> -->
+       <!-- <div class="ag_grid mt-2">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 240px"
+            [columnDefs]="columnDefsHistory"  [pagination]="false"
+             [rowData]="historyData" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+    </div> -->
+    
+  </div>
+</div>
+<div class="common_button_sub" *ngIf="!isViewMode">
+    <button   (click)="submitCreditDebitNote(creditDebitBuilder)"  >
+      Submit
+    </button>
+    <button    class="cancel_button_y" (click)="goBack()" >
+      Discard
+    </button>
+  </div>
+</form>
+</div>

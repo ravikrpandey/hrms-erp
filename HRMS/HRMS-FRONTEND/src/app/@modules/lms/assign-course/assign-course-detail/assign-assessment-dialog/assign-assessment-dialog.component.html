@@ -1,0 +1,44 @@
+<h2 mat-dialog-title class="dialog-title">Employee Assessment Details</h2>
+<div mat-dialog-content class="dialog-content">
+ 
+  <div class="employee-details-grid" style="background-color: #efebeb;">
+    <p><strong>Employee Name:</strong> {{ data.courseDetails.first_name }}</p>
+    <p><strong>Course Name:</strong> {{ data.courseDetails.course_name }}</p>
+    <p><strong>Course Start Date:</strong> {{ data.courseDetails.startDate | date }}</p>
+    <p><strong>Course End Date:</strong> {{ data.courseDetails.endDate | date }}</p>
+  </div>
+
+ 
+  <div *ngFor="let assessment of data.assessments" class="assessment-container">
+    <h2 class="assessment-title">{{ assessment.assessment_name }}</h2>
+    <div class="assessment-info-grid">
+      <p><strong>Total Marks:</strong> {{ assessment.total_marks }}</p>
+      <p><strong>Pass Percentage:</strong> {{ assessment.pass_percentage }}%</p>
+      <p><strong>Assessment Time:</strong> {{ assessment.assessment_time_minutes }} minutes</p>
+      <p><strong>Max Attempts:</strong> {{ assessment.max_attempts }}</p>
+    </div>
+  
+    <div *ngFor="let attempt of data.attempts; let i = index" class="attempt-container">
+      <div class="parent-container">
+        <h4 class="questions-title">Attempt {{i+1}}</h4>
+        <button class="toggle-questions-btn" (click)="attempt.showQuestions = !attempt.showQuestions">
+          <mat-icon>{{ attempt.showQuestions ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+        <div class="status" [ngClass]="{'pass-status': attempt?.submissionStatus === 'PASS', 'fail-status': attempt?.submissionStatus === 'FAIL'}">
+          Attempt Result: {{attempt?.submissionStatus}}
+        </div>
+      </div>
+      <div *ngIf="attempt.showQuestions" class="questions-list">
+        <div *ngFor="let question of attempt.attemptedQuestions" class="question-item">
+          <p><strong>Question:</strong> {{ question.LMS_COURSE_QUESTION.question_text }}</p>
+          <p><strong>Employee Answer:</strong> {{ question.employee_answer }}</p>
+          <p class="correct-answer"><strong>Correct Answer:</strong> {{ question.LMS_COURSE_QUESTION.correct_answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div mat-dialog-actions class="dialog-actions">
+    <button mat-button mat-dialog-close class="close-button">Close</button>
+  </div>
+</div>

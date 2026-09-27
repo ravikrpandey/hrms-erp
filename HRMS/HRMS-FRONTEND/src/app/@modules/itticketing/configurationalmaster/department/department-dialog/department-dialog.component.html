@@ -1,0 +1,256 @@
+<div class="department-dialogue">
+  <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">
+    {{ !departmentName ? 'Add Department' : 'Update Department' }}
+  </h3>
+  <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">Department Record</h3>
+
+
+  <ng-container *ngIf="view">
+    <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+        <div class="emp_key">
+          <p>Department Name :</p>
+          <p>CC Code :</p>
+          <p>Status :</p>
+        </div>
+        <div class="emp_value">
+
+          <p>{{ departmentName }}</p>
+          <p>{{ cc_code }}</p>
+          <p>{{ status }}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+    </mat-dialog-actions>
+  </ng-container>
+
+
+  <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+  <mat-checkbox formControlName="is_parent_dept" (change)="onParentDeptToggle($event)">
+    Is Parent Department
+  </mat-checkbox>
+</div> -->
+
+  <fieldset *ngIf="!view">
+    <form [formGroup]="departmentForm">
+      <div class="m-3">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Department Name</mat-label>
+              <input matInput type="text" formControlName="department_name" />
+              <mat-error *ngIf="departmentForm.get('department_name')?.hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="departmentForm.get('department_name')?.hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>CC Code</mat-label>
+              <input matInput type="text" formControlName="cc_code" />
+              <mat-error *ngIf="departmentForm.get('cc_code')?.hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="departmentForm.get('cc_code')?.hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Business Unit <span class="alertspan">*</span></mat-label>
+
+              <mat-select formControlName="bussiness_unit">
+                <!-- 🔍 Custom Search Filter -->
+                <app-search-filter [array]="businessUnitList" [placeholder]="'Search Business Unit'"
+                  [searchFields]="['businessunit_name']" (filteredReturn)="filteredBusinessUnitList = $event.data">
+                </app-search-filter>
+
+                <!-- 🔽 Filtered Options -->
+                <mat-option *ngFor="let unit of filteredBusinessUnitList" [value]="unit.business_unit_id">
+                  {{ unit.businessunit_name }}
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="departmentForm.get('bussiness_unit')?.hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Head of Department <span class="alertspan">*</span></mat-label>
+              <mat-select formControlName="head_of_dept">
+                <!--Search inside dropdown -->
+                <app-search-filter [array]="headList" [placeholder]="'Search Head of Department'"
+                  [searchFields]="['first_name', 'last_name', 'department_name']"
+                  (filteredReturn)="filteredHeadList = $event.data">
+                </app-search-filter>
+
+                <!-- Dropdown options -->
+                <mat-option *ngFor="let head of filteredHeadList" [value]="head.employee_id">
+                  {{ head.first_name }} {{ head.last_name }}
+                  — <small>{{ head.department_name }}</small>
+                  ({{ head.entity_name }})
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="departmentForm.get('head_of_dept')?.hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label> Budget allocation</mat-label>
+              <input matInput type="number" formControlName="budget_allocation" />
+              <mat-error *ngIf="departmentForm.get('budget_allocation')?.hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="departmentForm.get('budget_allocation')?.hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- ✅ Checkbox -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-checkbox formControlName="is_parent_dept" (change)="onParentDeptToggle($event)">
+              Is Parent Department
+            </mat-checkbox>
+          </div>
+
+          <!-- ✅ Parent Department Dropdown (will hide on tick) -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3"
+            *ngIf="!departmentForm.get('is_parent_dept')?.value">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Parent Department</mat-label>
+              <mat-select formControlName="parent_dept">
+                <mat-option *ngFor="let dept of filteredDepartmentList" [value]="dept.dept_id">
+                  {{ dept.department_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="departmentForm.get('parent_dept')?.hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Location <span class="alertspan">*</span></mat-label>
+
+              <mat-select formControlName="location">
+                <!-- 🔍 Search filter -->
+                <app-search-filter [array]="locationList" [placeholder]="'Search Location'"
+                  [searchFields]="['branch_name']"
+                  (filteredReturn)="filteredLocationList = $event.data">
+                </app-search-filter>
+
+                <!-- 🔽 Dropdown options -->
+                <mat-option *ngFor="let loc of filteredLocationList" [value]="loc.id">
+                  {{ loc.branch_name }}
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="departmentForm.get('location')?.hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Entity <span class="text-danger">*</span></mat-label>
+
+              <mat-select formControlName="entity_id" multiple>
+                <!-- 🔍 Custom search filter -->
+                <div class="p-2 border-bottom">
+                  <app-search-filter [array]="entityList" [placeholder]="'Search by entity name'"
+                    [searchFields]="['entity_name']" (filteredReturn)="filterEntitylist = $event.data">
+                  </app-search-filter>
+                </div>
+
+                <!-- ✅ Select all option -->
+                <div class="px-3 py-1 border-bottom d-flex align-items-center">
+                  <mat-checkbox (change)="selectallentityid($event)" [checked]="isAllSelect">
+                    Select All
+                  </mat-checkbox>
+                </div>
+
+                <!-- 🏢 Entity list -->
+                <mat-option *ngFor="let item of filterEntitylist" [value]="item?.entity_id">
+                  {{ item?.entity_name }}
+                </mat-option>
+              </mat-select>
+
+              <!-- ⚠️ Error message -->
+              <mat-error *ngIf="departmentForm.get('entity_id')?.hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+        </div>
+
+        <div hidden class="row mt-3">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Designation</mat-label>
+              <mat-select formControlName="role_name" (selectionChange)="get_all_employeeBy_User_role($event)">
+                <mat-option *ngFor="let role of roles" [value]="role.role_master_id">
+                  {{ role.role_master_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Employee</mat-label>
+              <mat-select formControlName="employee_name" [disabled]="!roleSelected">
+                <mat-option *ngFor="let employee of employees" [value]="employee.employee_id">
+                  {{ employee.first_name + ' ' + employee.middle_name + ' ' + employee.last_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+
+      <mat-dialog-actions align="end">
+        <button *ngIf="!departmentName" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+          Submit
+        </button>
+        <button *ngIf="departmentName" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+          Update
+        </button>
+        <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+      </mat-dialog-actions>
+    </form>
+  </fieldset>
+</div>

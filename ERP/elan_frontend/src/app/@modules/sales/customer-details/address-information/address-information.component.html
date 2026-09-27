@@ -1,0 +1,463 @@
+<div class="right_data_all">
+  <div class="heading_neo mt-4">
+    <h3>Billing & Shipping Address</h3>
+  </div>
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="contactInfoForm">
+      <div class="row">
+
+        <div>
+
+          <div class="shipping-box" style="overflow: auto;">
+
+            <table class="table table-bordered table-sm w-100" formArrayName="billing_address_data">
+
+              <thead>
+                <tr>
+                  <th>S. No.</th>
+                  <th>Country</th>
+                  <th>State</th>
+                  <th>City</th>
+                  <th>Pincode</th>
+                  <th>Postal Address</th>
+                  <th>Billing Address</th>
+                  <th>GST Type</th>
+                  <th style="width:200px">GST No</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr *ngFor="let row of billingAddressFormArray.controls; let i = index" [formGroupName]="i">
+                  <td>{{i+1}}</td>
+                  <!-- Country -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Billing Country</mat-label>
+                      <mat-select formControlName="billing_country_id"
+                        (selectionChange)="presentCountryChange($event, i)">
+                        <mat-form-field>
+                          <input matInput [formControl]="filterBillCountryControl" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!billingCountryList?.length" disabled>Country Not Found</mat-option>
+                        <mat-option *ngFor="let country of billingCountryList" [value]="country.countryss_id">
+                          {{country.countryss_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <!-- State -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Billing State / Province / Region</mat-label>
+                      <mat-select formControlName="billing_state_id" (selectionChange)="billingStateChange($event, i)">
+                        <mat-form-field>
+                          <input matInput [formControl]="filterBillStateControl" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!billingSteteData[i]" disabled>State Not Found</mat-option>
+                        <mat-option *ngFor="let state of billingSteteData[i]" [value]="state.states_id">
+                          {{state.states_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <!-- City -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Billing City</mat-label>
+                      <mat-select formControlName="billing_city_id">
+                        <mat-form-field>
+                          <input matInput [formControl]="filterBillingCityControl" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!billingCityList[i]" disabled>City Not Found</mat-option>
+                        <mat-option *ngFor="let city of billingCityList[i]" [value]="city.city_id">
+                          {{city.city_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <!-- Pincode -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Billing Postal Code / ZIP Code</mat-label>
+                      <input matInput type="text" maxlength="30" formControlName="billing_pin_code"
+                        (blur)="fetchBillingPinDetails(row.get('billing_pin_code')?.value,i)" />
+                    </mat-form-field>
+                  </td>
+
+                  <!-- Postal -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Choose Postal Address</mat-label>
+                      <mat-select formControlName="billing_postal_address">
+                        <mat-option *ngFor="let post of billingPostOffice[i]"
+                          [value]="post.Name + ', ' + post.District">
+                          {{post.Name +", " +post.District}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <!-- Address -->
+                  <td>
+
+                    <mat-form-field appearance="outline">
+                      <mat-label>Billing Address</mat-label>
+                      <input matInput type="text" formControlName="billing_address" />
+                    </mat-form-field>
+                  </td>
+
+                  <!-- GST Type -->
+                  <td>
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-select formControlName="gst_category" (selectionChange)="selectGstCat($event, i)">
+                        <mat-option *ngFor="let gstCat of gstCategory" [value]="gstCat.key">
+                          {{ gstCat.value }}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="!row.get('isGstType')?.value">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <input matInput formControlName="gst_in">
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="row.get('isGstType')?.value">
+                    —
+                  </td>
+                  <!-- Action -->
+                  <td class="text-center">
+                    <button mat-icon-button color="primary" (click)="addBillingAddressRow()">
+                      <mat-icon>add_circle</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" *ngIf="i > 0" (click)="removeBillingAddressRow(i)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="form-group mb-3">
+              <p>
+                <mat-slide-toggle labelPosition="before" [(ngModel)]="myFlagForSlideToggle"
+                  formControlName="same_as_bussiness_address" (change)="onToggleChange($event)">Is shipping adddress
+                  same as billing address ?</mat-slide-toggle>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="shipping-box" style="overflow: auto;">
+          <table class="table table-bordered table-sm w-100" formArrayName="shipping_address_data">
+
+            <thead>
+              <tr>
+                <th>S. No.</th>
+                <th>Country</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Pincode</th>
+                <th>Postal Address</th>
+                <th>Shipping Address</th>
+                <th>GST Type</th>
+                <th style="width:200px">GST No</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let row of shippingAddressFormArray.controls; let i = index" [formGroupName]="i">
+                <td>{{i+1}}</td>
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Shipping Country</mat-label>
+                    <mat-select formControlName="shipping_country_id"
+                      (selectionChange)="shippingCountryChange($event,i)">
+                      <input matInput [formControl]="filterShipCountryControl" placeholder="Search" />
+                      <mat-option *ngFor="let country of shippingCountryList" [value]="country.countryss_id">
+                        {{ country.countryss_name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Shipping State</mat-label>
+                    <mat-select formControlName="shipping_state_id" (selectionChange)="shippingStateChange($event,i)">
+                      <input matInput [formControl]="filterShipStateControl" placeholder="Search" />
+                      <mat-option *ngFor="let state of shippingSteteData[i]" [value]="state.states_id">
+                        {{ state.states_name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Shipping City</mat-label>
+                    <mat-select formControlName="shipping_city_id">
+                      <input matInput [formControl]="filterShipCityControl" placeholder="Search" />
+                      <mat-option *ngFor="let city of shippingCityList[i]" [value]="city.city_id">
+                        {{ city.city_name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Shipping Pincode</mat-label>
+                    <input matInput type="text" formControlName="shipping_pin_code"
+                      (blur)="fetchPinDetails(row.get('shipping_pin_code')?.value,i)" />
+                  </mat-form-field>
+                </td>
+
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Choose Postal Address</mat-label>
+                    <mat-select formControlName="shipping_postal_address">
+                      <mat-option *ngFor="let post of postOffice[i]" [value]="post.Name + ', ' + post.District">
+                        {{post.Name +", " +post.District}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+
+                <td>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Shipping Address</mat-label>
+                    <input matInput type="text" formControlName="shipping_address" />
+                  </mat-form-field>
+
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select formControlName="shipping_gst_category" (selectionChange)="selectGstCat2($event, i)">
+                      <mat-option *ngFor="let gstCat of gstCategory" [value]="gstCat.key">
+                        {{ gstCat.value }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+                <!-- GST No -->
+                <td *ngIf="!row.get('shippingGstType')?.value">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input matInput formControlName="shipping_gst_in">
+                    <mat-error *ngIf="row.get('shipping_gst_in')?.hasError('required')">
+                      GST No is required
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="row.get('shippingGstType')?.value">—</td>
+
+                <td>
+                  <button mat-icon-button color="primary" (click)="addShippingAddressRow()">
+                    <mat-icon>add_circle</mat-icon>
+                  </button>
+
+                  <button mat-icon-button color="warn" (click)="removeShippingAddressRow(i)" *ngIf="i !== 0">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+
+
+
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+
+
+
+
+
+        <div class="formBasicArea">
+          <div class="row">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>S. No.</th>
+                    <th>Title.</th>
+
+                    <th>Contact Person Name</th>
+                    <th>Contact Number</th>
+                    <th>Email ID</th>
+                    <th>Designation</th>
+                    <th>Department</th>
+                    <th [hidden]="id">Action</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="contact_info_data">
+                  <tr *ngFor="
+                let stakeHolderRow of stakeHoldersFormArray.controls;
+                let i = index
+              " [formGroupName]="i">
+                    <td>
+                      <div class="form-group-name-cat center">
+                        <div>{{ i + 1 }}</div>
+                      </div>
+                    </td>
+                    <td>
+
+
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Title</mat-label>
+                          <mat-select formControlName="title">
+                            <mat-option [value]="'Mr'">Mr</mat-option>
+                            <mat-option [value]="'Mrs'">Mrs</mat-option>
+                            <mat-option [value]="'Miss'">Miss</mat-option>
+                          </mat-select>
+
+                        </mat-form-field>
+                      </div>
+
+
+
+                    </td>
+
+                    <td>
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Contact Person
+                            Name</mat-label>
+                          <input matInput type="text" appCapitalize formControlName="contact_person_name" />
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('contact_person_name')?.hasError('required') &&
+                                              !contactInfoForm.get('contact_info_data').at(i)?.get('contact_person_name')?.hasError('leadingSpaces')">
+                            Required!
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('contact_person_name')?.hasError('leadingSpaces')">
+                            No Leading Spaces!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Contact Number</mat-label>
+                          <input matInput type="text" formControlName="mobile" />
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('mobile')?.hasError('required') &&
+                                              !contactInfoForm.get('contact_info_data').at(i)?.get('mobile')?.hasError('leadingSpaces')">
+                            Required!
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('mobile')?.hasError('leadingSpaces')">
+                            No Leading Spaces!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Email ID</mat-label>
+                          <input matInput type="text" formControlName="email_id" />
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('email_id')?.hasError('required') &&
+                                              !contactInfoForm.get('contact_info_data').at(i)?.get('email_id')?.hasError('leadingSpaces')">
+                            Required!
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('email_id')?.hasError('leadingSpaces')">
+                            No Leading Spaces!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Designation</mat-label>
+                          <input matInput type="text" formControlName="designation" />
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('designation')?.hasError('required') &&
+                                              !contactInfoForm.get('contact_info_data').at(i)?.get('designation')?.hasError('leadingSpaces')">
+                            Required!
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('designation')?.hasError('leadingSpaces')">
+                            No Leading Spaces!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group-name-cat">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Department</mat-label>
+                          <input matInput type="text" formControlName="department" />
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('department')?.hasError('required') &&
+                                              !contactInfoForm.get('contact_info_data').at(i)?.get('department')?.hasError('leadingSpaces')">
+                            Required!
+                          </mat-error>
+
+                          <mat-error
+                            *ngIf="contactInfoForm.get('contact_info_data').at(i)?.get('department')?.hasError('leadingSpaces')">
+                            No Leading Spaces!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <!-- [hidden]="id" -->
+                    <td>
+                      <div class="edit_del flexRow">
+                        <div (click)="addNewItem()">
+                          <mat-icon class="addButton" matTooltip="Add Item">add_circle</mat-icon>
+                        </div>
+                        <div>
+                          <ng-container *ngIf="i + 1 !== 1">
+                            <mat-icon class="deleteButton" matTooltip="delete Item"
+                              (click)="removeStakeHoldersRow(i)">delete_circle</mat-icon>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="common_button_sub">
+        <button (click)="onSubmitForm()" *ngIf="!action_type">
+          Save
+        </button>
+        <button (click)="onSubmitForm()" *ngIf="action_type == 'edit'">
+          Update
+        </button>
+        <!-- <button class="cancel_button_y">Cancel</button> -->
+      </div>
+    </form>
+  </div>
+</div>

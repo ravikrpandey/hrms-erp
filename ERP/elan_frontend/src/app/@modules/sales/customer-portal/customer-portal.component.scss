@@ -1,0 +1,618 @@
+.page-wrapper {
+    background: #f4f6fb;
+    min-height: 100vh;
+    padding-bottom: 50px;
+}
+
+
+/* =====================================================
+   PAGE HEADING
+===================================================== */
+
+.page-heading-wrapper {
+    padding: 10px;
+}
+
+.main-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.85rem;
+    color: #00644d;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    &::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(
+            to right,
+            #00644d,
+            rgba(0, 100, 77, 0.08)
+        );
+    }
+}
+
+.main-sub {
+    color: #718096;
+    font-size: 14px;
+    margin: 4px 0 0;
+}
+
+
+/* =====================================================
+   TOP SUMMARY - ONLY 3 CARDS
+===================================================== */
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.summary-card {
+    background: #fff;
+    border: 1px solid #e3e7ed;
+    border-radius: 9px;
+    padding: 18px 20px;
+    min-height: 108px;
+
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
+    }
+}
+
+
+/* =====================================================
+   SUMMARY ICONS
+===================================================== */
+
+.card-icon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+
+    border-radius: 9px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        font-size: 23px;
+        width: 23px;
+        height: 23px;
+    }
+}
+
+.order-icon {
+    background: #e8f4f1;
+    color: #00644d;
+}
+
+.pending-icon {
+    background: #fff4df;
+    color: #d48a00;
+}
+
+.completed-icon {
+    background: #e9f7ef;
+    color: #218653;
+}
+
+
+/* =====================================================
+   SUMMARY TEXT
+===================================================== */
+
+.summary-label {
+    font-size: 13px;
+    color: #718096;
+    margin-bottom: 5px;
+}
+
+.summary-value {
+    font-size: 25px;
+    font-weight: 700;
+    color: #00644d;
+    line-height: 1.2;
+}
+
+.summary-info {
+    font-size: 11px;
+    color: #9aa5b1;
+    margin-top: 5px;
+}
+
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.75fr);
+    gap: 18px;
+    align-items: stretch;
+    padding: 10px;
+}
+
+
+/* =====================================================
+   COMMON DASHBOARD CARD
+===================================================== */
+
+.dashboard-card {
+    background: #fff;
+    border: 1px solid #e3e7ed;
+    border-radius: 9px;
+    padding: 20px;
+}
+
+.dashboard-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    border-bottom: 1px solid #edf0f4;
+    padding-bottom: 14px;
+    margin-bottom: 0;
+
+    h3 {
+        margin: 0;
+        color: #263238;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    p {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: #8a96a3;
+    }
+
+    > mat-icon {
+        color: #00644d;
+        font-size: 22px;
+    }
+}
+
+
+/* =====================================================
+   VIEW ALL
+===================================================== */
+
+.view-all {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+
+    color: #00644d;
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+    }
+
+    &:hover {
+        color: #004d3b;
+    }
+}
+
+
+/* =====================================================
+   RECENT ORDERS
+===================================================== */
+
+.recent-orders {
+    min-height: 365px;
+    overflow: hidden;
+}
+
+
+/* TABLE HEADER */
+
+.order-table-header {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 0.85fr;
+
+    align-items: center;
+
+    padding: 12px 8px;
+
+    background: #f8fafb;
+
+    border-bottom: 1px solid #edf0f4;
+
+    font-size: 10px;
+    font-weight: 600;
+    color: #8994a2;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+
+/* ORDER ROW */
+
+.recent-order {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 0.85fr;
+
+    align-items: center;
+
+    min-height: 60px;
+    padding: 8px;
+
+    border-bottom: 1px solid #f0f2f5;
+
+    transition: background 0.15s ease;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: #fafcfb;
+    }
+}
+
+
+/* =====================================================
+   ORDER NUMBER
+===================================================== */
+
+.order-number {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-icon-small {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 7px;
+
+    background: #edf7f4;
+    color: #00644d;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.order-number strong {
+    display: block;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #344054;
+}
+
+.order-number small {
+    display: block;
+
+    font-size: 10px;
+    color: #98a2b3;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   ORDER DATE
+===================================================== */
+
+.order-date {
+    font-size: 11px;
+    color: #667085;
+}
+
+
+/* =====================================================
+   ORDER AMOUNT
+===================================================== */
+
+.order-amount {
+    font-size: 12px;
+    font-weight: 600;
+    color: #344054;
+}
+
+
+/* =====================================================
+   ORDER STATUS
+===================================================== */
+
+.order-status {
+    justify-self: start;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    padding: 5px 9px;
+
+    border-radius: 15px;
+
+    white-space: nowrap;
+}
+
+.order-status.completed {
+    background: #e9f7ef;
+    color: #218653;
+}
+
+.order-status.progress {
+    background: #eaf1fb;
+    color: #2865a7;
+}
+
+.order-status.pending {
+    background: #fff4df;
+    color: #c47a00;
+}
+
+
+/* =====================================================
+   CREDIT & ADVANCE
+===================================================== */
+
+.financial-overview {
+    min-height: 365px;
+}
+
+
+/* FINANCIAL ITEM */
+
+.financial-item {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 15px;
+
+    margin-bottom: 12px;
+
+    border: 1px solid #edf0f3;
+    border-radius: 8px;
+
+    background: #fff;
+
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #fafcfb;
+        border-color: #dce8e4;
+    }
+}
+
+
+/* FINANCIAL ICON */
+
+.financial-icon {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    border-radius: 8px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.credit-small {
+    background: #eaf1fb;
+    color: #2865a7;
+}
+
+.advance-small {
+    background: #f4eafa;
+    color: #8446a8;
+}
+
+
+/* FINANCIAL DETAILS */
+
+.financial-details span {
+    display: block;
+
+    color: #7b8794;
+    font-size: 11px;
+}
+
+.financial-details strong {
+    display: block;
+
+    color: #00644d;
+    font-size: 18px;
+
+    margin-top: 4px;
+}
+
+.financial-details small {
+    display: block;
+
+    color: #9aa5b1;
+    font-size: 10px;
+
+    margin-top: 3px;
+}
+
+
+/* =====================================================
+   ACCOUNT STATUS
+===================================================== */
+
+.account-status {
+    margin-top: 17px;
+
+    padding: 12px 13px;
+
+    border-radius: 7px;
+
+    background: #f1f9f5;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    min-width: 9px;
+
+    border-radius: 50%;
+
+    background: #28a56a;
+}
+
+.account-status strong {
+    display: block;
+
+    font-size: 12px;
+    color: #24734e;
+}
+
+.account-status span {
+    display: block;
+
+    font-size: 10px;
+    color: #7b9184;
+
+    margin-top: 2px;
+}
+
+
+/* =====================================================
+   FINANCIAL FOOTER
+===================================================== */
+
+.financial-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    margin-top: 18px;
+
+    border-top: 1px solid #edf0f4;
+    padding-top: 15px;
+
+    gap: 15px;
+}
+
+.financial-footer div {
+    span {
+        display: block;
+
+        font-size: 10px;
+        color: #98a2b3;
+    }
+
+    strong {
+        display: block;
+
+        font-size: 12px;
+        color: #344054;
+
+        margin-top: 4px;
+    }
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1200px) {
+
+    .dashboard-content {
+        grid-template-columns: 1fr;
+    }
+
+    .financial-overview {
+        min-height: auto;
+    }
+}
+
+
+@media (max-width: 850px) {
+
+    .dashboard-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .order-table-header {
+        display: none;
+    }
+
+    .recent-order {
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 12px 8px;
+    }
+
+    .order-date,
+    .order-amount {
+        display: none;
+    }
+
+    .order-status {
+        grid-column: 2;
+        grid-row: 1;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .page-heading-wrapper {
+        padding: 10px 0 15px;
+    }
+
+    .main-heading {
+        font-size: 1.5rem;
+    }
+
+    .summary-card {
+        min-height: 95px;
+    }
+
+    .dashboard-card {
+        padding: 15px;
+    }
+
+    .financial-footer {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,153 @@
+<section class="section">
+    <div class="row">
+      <div class="employee_top my-1">
+        Quality Control
+        <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+          Add Sample</span>
+      </div>
+    </div>
+    <mat-card>
+      <div class="form_head mt-2">
+        <h3> Add Sample</h3>
+        <button class="backBtn" (click)="goBack()">
+          <i class="fa fa-arrow-circle-left"></i> Back
+        </button>
+      </div>
+      <div class="form_basic px-4 pt-4">
+        <form [formGroup]="addSample">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="mt-1">
+                    <mat-label>Select Shift</mat-label>
+                    <mat-select   formControlName="shift_id">
+                      <mat-option  *ngFor="let item of shiftList" [value]="item.shift_id">{{item.
+                        MASTER_SHIFT
+                        .shift_name
+                        }}</mat-option>
+                     
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="mt-1">
+                    <mat-label>Select Workstation</mat-label>
+                    <mat-select   formControlName="workstation_id">
+                      <mat-option  *ngFor="let item of workStationList" [value]="item.workstation_id" (click)="getWorkStation(item)" >
+                        {{item.MASTER_WORKSTATION?.name_of_workstation
+                        }}</mat-option>
+                     
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group ">
+                  <mat-form-field appearance="outline" class="">
+                    <mat-label> Workstation Incharge Name</mat-label>
+                    <input type="text" matInput formControlName="workstation_incharge_name"   />
+                  </mat-form-field>
+                </div>
+              </div>
+          </div>
+         
+        <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Select Date</mat-label>
+                        <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="date"  
+                          />
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                      </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="">
+                        <mat-label>Sample No</mat-label>
+                        <input type="text" matInput formControlName="sample_no" readonly />
+        
+                      </mat-form-field>
+                </div>
+              </div>
+        </div>
+         
+          <div class=" row mb-4 mt-2">
+            <div class=" col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="overflow: auto;">
+              <table class="table table-bordered " >
+                <thead>
+                  <tr>
+                    <th scope="col">S.No</th>
+                    <th scope="col">Quality Parameter</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Remark</th>
+                    <th scope="col">Action</th>
+                     
+                  </tr>
+                </thead>
+                <tbody *ngIf="!workStationData">
+                  <td colspan="6"  class="text-center p-4"> 
+                    <mat-label>Record not found !</mat-label>
+                </td>
+                </tbody>
+                <tbody formArrayName="qualityParameter" *ngIf="workStationData">
+                 <tr *ngFor="let qualityParameter of qualityParameterFormArray['controls']; let i = index"
+                 [formGroupName]="i">
+                      
+                    <td>{{i+1}}</td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="quality_parameter_name"
+                          placeholder="Quality Parameter" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline" >
+                        <mat-label>Select Status</mat-label>
+                      <mat-select   formControlName="quality_status">
+                        <mat-option value="Pass" >Pass</mat-option>
+                        <mat-option value="Fail" >Fail</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="value"
+                          placeholder="Value" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="remark"
+                          placeholder="Remark" />
+                      </mat-form-field>
+                    </td>                    
+                    <td>
+                      <div class="circle-icon" matTooltip="Settings"  >
+                        <mat-icon>build</mat-icon>
+                      </div>
+                    </td>
+                 </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+         
+           
+          <div  style="float: right; margin-bottom: 2rem;">
+             
+            <button mat-raised-button color="primary" class="mx-3" (click)="saveSampleData(addSample.value)">Save</button>
+        </div>
+        </form>
+  
+      </div>
+    </mat-card>
+  </section>
+  
+  
+  

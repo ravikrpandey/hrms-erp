@@ -1,0 +1,106 @@
+<div class="container mt-3">
+  <h2 class="page-heading">Compliance Financial Year Limit Master</h2>
+  <div class="underline mb-4"></div>
+
+  <form [formGroup]="limitForm" (ngSubmit)="onSubmit()">
+
+    <table class="compliance-table">
+      <thead>
+        <tr>
+          <th>Compliance Code </th>
+          <th>Compliance Name </th>
+          <th>Individual Limit <span class="text-danger">*</span></th>
+          <th>Aggregate Capping <span class="text-danger">*</span></th>
+          <th>Remarks <span class="text-danger">*</span></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- EPF Row -->
+        <tr>
+          <td>EPF</td>
+          <td>Employer Share to recognised PF</td>
+          <td>
+            <input matInput type="number" formControlName="epf_individual_limit" placeholder="Enter Individual Limit" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('epf_individual_limit')?.touched && limitForm.get('epf_individual_limit')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="number" formControlName="epf_aggregate_cap" placeholder="Enter Aggregate Cap" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('epf_aggregate_cap')?.touched && limitForm.get('epf_aggregate_cap')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="text" formControlName="epf_remarks" placeholder="Enter Remarks" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('epf_remarks')?.touched && limitForm.get('epf_remarks')?.invalid">Required</small>
+          </td>
+        </tr>
+
+        <!-- NPS Row -->
+        <tr>
+          <td>NPS</td>
+          <td>Employer Share to NPS</td>
+          <td>
+            <input matInput type="number" formControlName="nps_individual_limit" placeholder="Enter Individual Limit" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('nps_individual_limit')?.touched && limitForm.get('nps_individual_limit')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="number" formControlName="nps_aggregate_cap" placeholder="Enter Aggregate Cap" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('nps_aggregate_cap')?.touched && limitForm.get('nps_aggregate_cap')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="text" formControlName="nps_remarks" placeholder="Enter Remarks" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('nps_remarks')?.touched && limitForm.get('nps_remarks')?.invalid">Required</small>
+          </td>
+        </tr>
+
+        <!-- SAF Row -->
+        <tr>
+          <td>SAF</td>
+          <td>Employer Share to Approved Super Annuation</td>
+          <td>
+            <input matInput type="number" formControlName="saf_individual_limit" placeholder="Enter Individual Limit" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('saf_individual_limit')?.touched && limitForm.get('saf_individual_limit')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="number" formControlName="saf_aggregate_cap" placeholder="Enter Aggregate Cap" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('saf_aggregate_cap')?.touched && limitForm.get('saf_aggregate_cap')?.invalid">Required</small>
+          </td>
+          <td>
+            <input matInput type="text" formControlName="saf_remarks" placeholder="Enter Remarks" />
+            <small class="text-danger"
+              *ngIf="limitForm.get('saf_remarks')?.touched && limitForm.get('saf_remarks')?.invalid">Required</small>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Status -->
+    <mat-form-field appearance="outline" class="w-50 mt-3">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option value="ACTIVE">ACTIVE</mat-option>
+        <mat-option value="INACTIVE">INACTIVE</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="mt-3 alert alert-info text-center fw-bold">
+      <span class="fw-bold">Note:</span> If employer contributions to PF, NPS, and superannuation exceeds the tax-free annual limit mentioned above, the excess will be added to the employees' taxable income and TDS will be applied.
+    </div>
+
+
+
+    <div class="text-end mt-4">
+      <button mat-raised-button color="primary" type="submit">
+        {{ recordId ? 'Update' : 'Save' }}
+      </button>
+    </div>
+
+  </form>
+</div>

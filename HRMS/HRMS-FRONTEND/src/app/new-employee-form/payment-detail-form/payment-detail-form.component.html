@@ -1,0 +1,150 @@
+<section>
+    <div class="conatiner">
+      <mat-card>
+        <div class="row form_head">
+          <h3>PAYMENT DETAILS</h3>
+        </div>
+  
+        <div class="form_basic">
+          <form class="form_set" [formGroup]="paymentForm">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Name</mat-label>
+                    <mat-select formControlName="bank_name">
+                      <mat-option
+                        *ngFor="let bank of allBanks"
+                        [value]="bank.bank_id"
+                        >{{ bank.bank_name }}</mat-option
+                      >
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Employee Name in Bank</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      maxlength="30"
+                      formControlName="emp_name_in_bank"
+                      [value]="
+                        paymentForm.controls['emp_name_in_bank'].value | titlecase
+                      "
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Bank Adress</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      maxlength="50"
+                      maxlength="50"
+                      formControlName="branch_address"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Account No</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      maxlength="17"
+                     min="1"
+                      formControlName="account_number"
+                    />
+  
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Re-enter Account No</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      min="1"
+                      maxlength="17"
+                      formControlName="reEnterName"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>IFSC Code</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      formControlName="ifsc_code"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>PF Account No.</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      maxlength="22"
+                      formControlName="pf_number"
+                     
+                    />
+                   </mat-form-field>
+                  <mat-error
+                        *ngIf="paymentForm.controls['pf_number'].hasError('pattern')"
+                      > PF Number is invalid..
+                      </mat-error>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>UAN Account</mat-label>
+                    <input
+                      matInput
+                      type="text"
+                      maxlength="12"
+                      formControlName="uan_number"
+                    />
+                   
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div class="mt-3" align="end">
+              <button
+                mat-raised-button
+                color="primary"
+                class="mx-3"
+                (click)="onCreate()"
+              >
+              {{employee_ids ? 'Update & Next' :'Save & Next'}}
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+  

@@ -1,0 +1,107 @@
+<div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Business Details</h3>
+    </div>
+      <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="customerProfileForm">
+        <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Preferred Payment Terms</mat-label>
+                    <mat-select formControlName="preffered_payment_terms">
+                      <mat-option value="ADVANCE PAYMENT"> Advance Payment</mat-option>
+                      <mat-option value="30 DAYS"> 30 Days</mat-option>
+                      <mat-option value="60 DAYS"> 60 Days</mat-option>
+                      <mat-option value="90 DAYS"> 90 Days</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="customerProfileForm.controls['preffered_payment_terms'].hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Existing Vendor Code</mat-label>
+                <input matInput type="text" formControlName="existing_vendor_code" maxlength="30"/>
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Name </mat-label>
+                <input matInput type="text" formControlName="bank_name" maxlength="30"/>
+                <mat-error *ngIf="customerProfileForm.controls['bank_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Bank Account Number </mat-label>
+                <input matInput type="text" formControlName="bank_account_number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0"/>
+                <mat-error *ngIf="customerProfileForm.controls['bank_account_number'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Name of the Beneficiary </mat-label>
+                <input matInput type="text" formControlName="beneficiary_name" />
+                <mat-error *ngIf="customerProfileForm.controls['beneficiary_name'].hasError('required')">
+                      This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Account Type</mat-label>
+                <input matInput type="text" formControlName="account_type" />
+                <mat-error *ngIf="customerProfileForm.controls['account_type'].hasError('required')">
+                      This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>RTGS/NEFT IFSC CODE</mat-label>
+                <input matInput type="text" formControlName="ifsc_code" />
+                <mat-error *ngIf="customerProfileForm.controls['ifsc_code'].hasError('required')">
+                      This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+         
+
+       
+        </div>
+     
+        <div class="common_button_sub">
+          <button (click)="onSubmitForm()" *ngIf="!action_type">
+            Save
+          </button>
+          <button (click)="onSubmitForm()" *ngIf="action_type==='edit'">
+            Update
+          </button>
+          <!-- <button class="cancel_button_y">Cancel</button> -->
+        </div>
+      </form>
+    </div>
+  </div>

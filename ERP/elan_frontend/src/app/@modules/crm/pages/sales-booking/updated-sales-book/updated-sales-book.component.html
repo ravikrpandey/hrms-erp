@@ -1,0 +1,45 @@
+<h3 mat-dialog-title class="popHead">Reject Status</h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<form class="form_cond" [formGroup]="form">
+  <mat-dialog-content class="mat-typography" >
+    <div class="cotain">
+      <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="data?.status === 'customerReject'">
+           
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Status</mat-label>
+                  <mat-select  formControlName="update_status">
+                    <mat-option *ngFor="let data of allReasone" [value]="data?.id">{{data?.sales_reason}}</mat-option>
+                    
+
+                  </mat-select>
+                  </mat-form-field>
+                </div>
+          
+            </div>
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" >
+             
+                <div class="form-group">
+                  <mat-form-field appearance="outline" readonly>
+                    <mat-label>Remarks</mat-label>
+                    <input matInput type="text" formControlName="remarks" />
+
+                    </mat-form-field>
+                  </div>
+               
+              </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" >
+    <button mat-button mat-dialog-close mat-raised-button class="cancel_button_y">
+      Cancel
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="primary" (click)="updateDate()">
+      Reject
+    </button>
+  </mat-dialog-actions>
+</form>

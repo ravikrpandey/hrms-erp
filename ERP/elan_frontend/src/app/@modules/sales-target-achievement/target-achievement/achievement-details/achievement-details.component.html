@@ -1,0 +1,139 @@
+<app-wrapper 
+    [title]="'Sales Target & Achievement Management'"
+    [subTitle]="'Achievement Details'"
+    [showActions]="true"
+    [isBack]="true"
+    [actions]="actions">
+
+    <ng-container>
+        <mat-card class="p-3 mb-3">
+            <div class="row">
+                <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="view-box">
+                        <label>Target Name:&nbsp;</label>
+                        <span>{{ getData?.target_name }}</span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="view-box">
+                        <label>Date Range:&nbsp;</label>
+                        <span>
+                            {{ getData?.valid_from | date:'dd-MM-yyyy' }}
+                            -
+                            {{ getData?.valid_to | date:'dd-MM-yyyy' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="view-box">
+                        <label>Total Target Amount:&nbsp;</label>
+                        <span>
+                            ₹ {{ getData?.target_amount | number:'1.0-0':'en-IN' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+                    <div class="view-box">
+                        <label>Reporting Manager:&nbsp;</label>
+                        <span>{{ getData?.reportingManagerName }}</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card>
+
+        <!-- EMPLOYEE LIST -->
+        <mat-card class="p-3">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Employee Name</th>
+                            <th>Target Amount</th>
+                            <th>Achievement Amount</th>
+                            <th>Achievement %</th>
+                            <th align="center">Invoice Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of getData?.employeeList; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                                {{ item.employee_name }}
+                            </td>
+                            <td>
+                                ₹ {{ item.target_amount | number:'1.0-0':'en-IN' }}
+                            </td>
+                            <td>
+                                ₹ {{ item.achievement_amount | number:'1.0-0':'en-IN' }}
+                            </td>
+                            <td>
+                                <span class="achieve-badge"
+                                    [ngClass]="{
+                                        'success-badge': item.achievement_percentage >= 100,
+                                        'warning-badge': item.achievement_percentage < 100
+                                    }">
+                                    {{ item.achievement_percentage || 0 }} %
+                                </span>
+                            </td>
+                            <td align="center">
+                                <button
+                                    mat-icon-button
+                                    color="primary"
+                                    (click)="openSOPopup(item)">
+                                    <mat-icon>
+                                        receipt_long
+                                    </mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-card>
+    </ng-container>
+</app-wrapper>
+
+<div class="modal-backdrop" *ngIf="isSOModalOpen">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h4>Invoice Details</h4>
+      <button mat-icon-button (click)="closeSOPopup()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="modal-body">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Invoice No</th>
+            <th>SO No</th>
+            <th>Invoice Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of selectedInvoices; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ inv.invoice_no }}</td>
+            <td>{{ inv.so_number }}</td>
+            <td>{{ inv.invoice_date | date:'dd-MM-yyyy' }}</td>
+            <td>₹ {{ inv.invoice_amount }}</td>
+            <td>{{ inv.invoice_status }}</td>
+          </tr>
+
+          <tr *ngIf="!selectedInvoices?.length">
+            <td colspan="6" class="text-center">
+              No invoices found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

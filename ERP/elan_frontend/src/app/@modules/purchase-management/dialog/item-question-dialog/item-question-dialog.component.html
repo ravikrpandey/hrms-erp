@@ -1,0 +1,67 @@
+<h1 mat-dialog-title>
+    Manage Questions for: {{ data.item.item_name }}
+</h1>
+
+<div mat-dialog-content>
+
+    <!-- ✅ Top Form to Add/Edit -->
+    <form [formGroup]="form" class="w-100">
+
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Question Type</mat-label>
+            <mat-select formControlName="type">
+                <mat-option value="Subjective">Subjective</mat-option>
+                <!-- <mat-option value="Objective">Objective</mat-option> -->
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Question</mat-label>
+            <textarea matInput formControlName="question"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary"
+            [disabled]="form.get('type')?.invalid || form.get('question')?.invalid" (click)="saveQuestion()">
+            {{ editIndex !== null ? 'Update Question' : 'Add Question' }}
+        </button>
+    </form>
+
+    <h3 class="mt-4">Question List</h3>
+
+    <table mat-table [dataSource]="questions.value" class="w-100 mt-2">
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Item ID</th>
+            <td mat-cell *matCellDef="let row">{{ row.item_id }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="question">
+            <th mat-header-cell *matHeaderCellDef>Question</th>
+            <td mat-cell *matCellDef="let row">{{ row.question }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row; let i = index">
+                <button mat-icon-button color="accent" (click)="editQuestion(i)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteQuestion(i)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['id','type','question','actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['id','type','question','actions']"></tr>
+    </table>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button (click)="close()">Submit</button>
+</div>

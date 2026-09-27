@@ -1,0 +1,805 @@
+<form *ngIf="formType == 'transfer_from_another_account'" [formGroup]="formGroup" class="mt-2">
+  <div class="form-group mb-3">
+  <label class="form-label">To Account: </label>
+<mat-form-field appearance="outline"  >
+<mat-label>Select Account</mat-label>
+<mat-select formControlName="to_account">
+  <mat-option *ngFor="let data of toAccList" [value]="data.id" >
+    {{data.account_name}}
+  </mat-option>
+</mat-select>
+<mat-error *ngIf="formGroup.get('to_account')?.hasError('required')">
+    This field is required!
+  </mat-error>
+</mat-form-field>
+</div>
+
+  <div class="form-group mb-3">
+    <label class="form-label">From Account: </label>
+    <mat-form-field appearance="outline">
+      <mat-label>Select Account</mat-label>
+      <mat-select formControlName="from_account">
+          <mat-option *ngFor="let account of accountList1" [value]="account.id">
+            {{ account.account_name }}
+          </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('from_account')?.hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+
+<ng-container>
+  <div class="form-group mb-3">
+    <label class="form-label">Date: </label>
+
+
+<mat-form-field appearance="outline">
+  <mat-label>Date</mat-label>
+  <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate"
+    (dateChange)="Date($event)"/>
+  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+  <mat-datepicker #dp></mat-datepicker>
+  <!-- <mat-error *ngIf="formGroup.controls['date'].hasError('required')">
+    This field is required!
+  </mat-error> -->
+  <button mat-icon-button *ngIf="formGroup.get('date')?.value" matSuffix (click)="clearDate('date')">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+</div>
+</ng-container>
+
+<div class="form-group mb-3">
+  <label class="form-label">Amount (INR):</label>
+
+  <mat-form-field appearance="outline" class="mt-1">
+    <input
+      matInput
+      type="number"
+      formControlName="amount" />
+
+    <mat-error *ngIf="formGroup.get('amount')?.hasError('required')">
+      This field is required!
+    </mat-error>
+
+    <mat-hint *ngIf="formGroup.get('amount')?.value">
+      {{ formatCurrency(formGroup.get('amount')?.value) }}
+    </mat-hint>
+
+  </mat-form-field>
+</div>
+
+<div  class="form-group mb-3">
+<label class="form-label">Reference#</label>
+<mat-form-field appearance="outline" class="mt-1">
+<input matInput type="text" formControlName="reference" />
+
+</mat-form-field>
+</div>
+
+
+<div class="form-group mb-3">
+<label class="form-label">Description: </label>
+<mat-form-field appearance="outline" class="mt-1">
+<input matInput type="text" formControlName="description" />
+
+</mat-form-field>
+</div><div class="form-group mb-3">
+  <label class="form-label">Upload Files: </label>
+  <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+  </div>
+
+
+<div>
+  <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+</div>
+<div>
+  <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+    <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+    <mat-list-item *ngFor="let file of uploadedFiles">
+      <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+      <button mat-icon-button (click)="removeFile(file)">
+        <mat-icon >delete</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</div><div class="common_button_sub" style="text-align:left;">
+  <button (click)="onSubmit(this.formGroup.value)">
+      Save
+  </button>
+  <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+  </div>
+
+
+</form>
+
+<form *ngIf="formType == 'interest_income'" [formGroup]="interestIncomeForm" class="mt-2">
+
+
+
+  <ng-container>
+    <div class="form-group mb-3">
+      <label class="form-label">Date: </label>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate"
+      (dateChange)="Date($event)"/>
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp></mat-datepicker>
+    <!-- <mat-error *ngIf="formGroup.controls['date'].hasError('required')">
+      This field is required!
+    </mat-error> -->
+    <button mat-icon-button *ngIf="interestIncomeForm.get('date')?.value" matSuffix (click)="clearDate('date')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  </div>
+  </ng-container>
+
+  <div class="form-group mb-3">
+
+    <label class="form-label">
+    Amount (INR):
+    </label>
+
+    <mat-form-field appearance="outline">
+
+    <input
+    matInput
+    type="number"
+    formControlName="amount">
+
+    <mat-error *ngIf="interestIncomeForm.get('amount')?.hasError('required')">
+    This field is required!
+    </mat-error>
+
+    <mat-hint>
+    {{ currencySymbol }}
+    {{ convertAmount(interestIncomeForm.get('amount')?.value) | number:'1.2-2' }}
+    </mat-hint>
+
+    </mat-form-field>
+
+    </div>
+
+  <div class="form-group mb-3">
+    <label class="form-label">To Account: </label>
+  <mat-form-field appearance="outline" >
+  <mat-label>Select Account</mat-label>
+  <mat-select formControlName="to_account">
+    <mat-option *ngFor="let data of toAccList" [value]="data.id" >
+      {{data.account_name}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="formGroup.get('to_account')?.hasError('required')">
+      This field is required!
+    </mat-error>
+  </mat-form-field>
+  </div>
+
+
+
+  <div class="form-group mb-3">
+    <label class="form-label">From Account: </label>
+    <mat-form-field appearance="outline" class="mt-1" >
+      <mat-label>Select Account</mat-label>
+      <mat-select formControlName="from_account">
+        <mat-option  *ngFor="let data of accountList1" [value]="data.id">
+          {{data.account_name}}
+        </mat-option>
+      </mat-select>
+
+      <mat-error *ngIf="interestIncomeForm.get('from_account')?.hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+    </div>
+
+
+  <div  class="form-group mb-3">
+  <label class="form-label">Reference#</label>
+  <mat-form-field appearance="outline" class="mt-1">
+  <input matInput type="text" formControlName="reference" />
+
+  </mat-form-field>
+  </div>
+
+
+
+
+
+  <div class="form-group mb-3">
+  <label class="form-label">Description: </label>
+  <mat-form-field appearance="outline" class="mt-1">
+  <input matInput type="text" formControlName="description" />
+
+  </mat-form-field>
+  </div>
+
+
+  <div class="form-group mb-3">
+    <label class="form-label">Upload Files: </label>
+    <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+    </div>
+
+
+  <div>
+    <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+  </div>
+  <div>
+    <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+      <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+      <mat-list-item *ngFor="let file of uploadedFiles">
+        <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+        <button mat-icon-button (click)="removeFile(file)">
+          <mat-icon >delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+
+
+  <div class="common_button_sub" style="text-align:left;">
+    <button (click)="onSubmit(this.interestIncomeForm.value)">
+        Save
+    </button>
+    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+    </div>
+
+
+  </form>
+
+
+
+  <form *ngIf="formType == 'other_income'" [formGroup]="otherIncomeForm" class="mt-2">
+
+  <!-- <div  class="form-group mb-3">
+    <label class="form-label">From Account: </label>
+  <mat-form-field appearance="outline">
+  <mat-label>Select Account</mat-label>
+  <mat-select formControlName="from_account">
+    <mat-option [value]="data.id" *ngFor="let data of otherIncomeAccList">
+      {{data.account_name}}
+    </mat-option>
+  </mat-select>
+  <mat-error *ngIf="otherIncomeForm.get('from_account')?.hasError('required')">
+      This field is required!
+    </mat-error>
+  </mat-form-field>
+  </div>  -->
+
+  <div class="form-group mb-3">
+    <label class="form-label">From Account: </label>
+    <mat-form-field appearance="outline">
+      <mat-label>Select Account</mat-label>
+      <mat-select formControlName="from_account">
+          <mat-option *ngFor="let account of accountList1" [value]="account.id">
+            {{ account.account_name }}
+          </mat-option>
+
+      </mat-select>
+      <mat-error *ngIf="otherIncomeForm.get('from_account')?.hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+
+
+
+
+
+  <ng-container>
+    <div class="form-group mb-3">
+      <label class="form-label">Date: </label>
+
+
+  <mat-form-field appearance="outline">
+    <mat-label>Date</mat-label>
+    <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate"
+      (dateChange)="Date($event)"/>
+    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp></mat-datepicker>
+    <!-- <mat-error *ngIf="formGroup.controls['date'].hasError('required')">
+      This field is required!
+    </mat-error> -->
+    <button mat-icon-button *ngIf="otherIncomeForm.get('date')?.value" matSuffix (click)="clearDate('date')">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  </div>
+  </ng-container>
+
+  <div class="form-group mb-3">
+
+    <label class="form-label">
+    Amount (INR):
+    </label>
+
+    <mat-form-field appearance="outline">
+
+    <input
+    matInput
+    type="number"
+    formControlName="amount">
+
+    <mat-error *ngIf="otherIncomeForm.get('amount')?.hasError('required')">
+    This field is required!
+    </mat-error>
+
+    <mat-hint>
+    {{ currencySymbol }}
+    {{ convertAmount(otherIncomeForm.get('amount')?.value) | number:'1.2-2' }}
+    </mat-hint>
+
+    </mat-form-field>
+
+    </div>
+
+
+  <div class="form-group mb-3">
+    <label class="form-label">To Account: </label>
+    <mat-form-field appearance="outline" class="mt-1" >
+      <mat-label>Select Account --</mat-label>
+      <mat-select formControlName="to_account">
+        <mat-option [value]="data.id" *ngFor="let data of toAccList">
+          {{data.account_name}}
+        </mat-option>
+      </mat-select>
+
+      <mat-error *ngIf="otherIncomeForm.get('to_account')?.hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+    </div>
+
+
+  <div  class="form-group mb-3">
+    <label class="form-label">Reference#</label>
+    <mat-form-field appearance="outline" class="mt-1">
+    <input matInput type="text" formControlName="reference" />
+
+    </mat-form-field>
+    </div>
+
+
+  <div class="form-group mb-3">
+  <label class="form-label">Description: </label>
+  <mat-form-field appearance="outline" class="mt-1">
+  <input matInput type="text" formControlName="description" />
+
+  </mat-form-field>
+  </div>
+
+
+
+
+  <!-- <div  class="form-group">
+    <label class="form-label">Transfer Amount: </label>
+    <mat-form-field appearance="outline" class="mt-1">
+      <input matInput type="number" formControlName="transfer_amount" />
+      <mat-error *ngIf="formGroup.get('transfer_amount')?.hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div> -->
+  <!-- Other fields for Transfer From Another Account -->
+
+
+
+  <div class="form-group mb-3">
+    <label class="form-label">Upload Files: </label>
+    <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+    </div>
+
+
+  <div>
+    <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+  </div>
+  <div>
+    <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+      <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+      <mat-list-item *ngFor="let file of uploadedFiles">
+        <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+        <button mat-icon-button (click)="removeFile(file)">
+          <mat-icon >delete</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+
+
+  <div class="common_button_sub" style="text-align:left;">
+    <button (click)="onSubmit(this.otherIncomeForm.value)">
+        Save
+    </button>
+    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+    </div>
+
+
+  </form>
+
+
+
+    <!-- <form *ngIf="formType == 'deposit_from_other_accounts'" [formGroup]="formGroup" class="mt-2">
+
+
+      <ng-container>
+        <div class="form-group">
+          <label class="form-label">Date: </label>
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" [max]="maxDate"
+          (dateChange)="Date($event)"/>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+
+        <button mat-icon-button *ngIf="formGroup.get('from_date')?.value" matSuffix (click)="clearDate('from_date')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      </div>
+      </ng-container>
+
+      <div class="form-group">
+      <label class="form-label">Amount: </label>
+      <mat-form-field appearance="outline" class="mt-1">
+      <input matInput type="number" formControlName="payment" />
+      <mat-error *ngIf="formGroup.get('payment')?.hasError('required')">
+      This field is required!
+      </mat-error>
+      </mat-form-field>
+      </div>
+
+
+
+
+      <div class="form-group">
+      <label class="form-label">Received Via: </label>
+      <mat-form-field appearance="outline" class="mt-1">
+        <mat-label>Select an option</mat-label>
+        <mat-select formControlName="received_via">
+
+          <mat-option [value]="null">None</mat-option>
+          <mat-option value="bank_transfer">Bank Transfer</mat-option>
+          <mat-option value="cash">Cash</mat-option>
+          <mat-option value="cheque">Cheque</mat-option>
+          <mat-option value="credit_card">Credit Card</mat-option>
+          <mat-option value="upi">UPI</mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+
+
+      <div  class="form-group">
+        <label class="form-label">From Account: </label>
+      <mat-form-field appearance="outline">
+      <mat-label>Select Account</mat-label>
+      <mat-select formControlName="customer_id">
+        <mat-option [value]="data.id" *ngFor="let data of list">
+          {{data.account_name}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="formGroup.get('customer_id')?.hasError('required')">
+          This field is required!
+        </mat-error>
+      </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <label class="form-label">Received From: </label>
+        <mat-form-field appearance="outline" class="mt-1">
+          <mat-label>Select an option</mat-label>
+          <mat-select formControlName="received_via">
+
+            <mat-option [value]="null">None</mat-option>
+            <mat-option value="bank_transfer">Bank Transfer</mat-option>
+            <mat-option value="cash">Cash</mat-option>
+            <mat-option value="cheque">Cheque</mat-option>
+            <mat-option value="credit_card">Credit Card</mat-option>
+            <mat-option value="upi">UPI</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+      <div  class="form-group">
+        <label class="form-label">Reference#</label>
+        <mat-form-field appearance="outline" class="mt-1">
+        <input matInput type="number" formControlName="reference" />
+
+        </mat-form-field>
+        </div>
+
+
+      <div class="form-group">
+      <label class="form-label">Description: </label>
+      <mat-form-field appearance="outline" class="mt-1">
+      <input matInput type="number" formControlName="description" />
+
+      </mat-form-field>
+      </div>
+
+
+      <div class="form-group">
+        <label class="form-label">Upload Files: </label>
+        <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+        </div>
+
+
+      <div>
+        <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+      </div>
+      <div>
+        <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+          <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+          <mat-list-item *ngFor="let file of uploadedFiles">
+            <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+            <button mat-icon-button (click)="removeFile(file)">
+              <mat-icon >delete</mat-icon>
+            </button>
+          </mat-list-item>
+        </mat-list>
+      </div>
+
+
+
+      <div class="">
+      <button mat-raised-button color="primary" (click)="onSubmit(this.formGroup.value)">
+          Save
+      </button>
+      <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+      </div>
+
+
+      </form> -->
+
+
+      <form *ngIf="formType == 'owner_contribution'" [formGroup]="ownersContributionForm" class="mt-2">
+
+
+        <div  class="form-group mb-3">
+          <label class="form-label">From Account: </label>
+        <mat-form-field appearance="outline">
+        <mat-label>Select Account</mat-label>
+        <mat-select formControlName="from_account">
+          <mat-option  *ngFor="let data of accountList1" [value]="data.id">
+            {{data.account_name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="ownersContributionForm.get('from_account')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+        </div>
+
+
+        <ng-container>
+          <div class="form-group mb-3">
+            <label class="form-label">Date: </label>
+
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate"
+            (dateChange)="Date($event)"/>
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp></mat-datepicker>
+          <!-- <mat-error *ngIf="formGroup.controls['date'].hasError('required')">
+            This field is required!
+          </mat-error> -->
+          <button mat-icon-button *ngIf="ownersContributionForm.get('date')?.value" matSuffix (click)="clearDate('date')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        </div>
+        </ng-container>
+
+        <div class="form-group mb-3">
+
+          <label class="form-label">
+          Amount (INR):
+          </label>
+
+          <mat-form-field appearance="outline">
+
+          <input
+          matInput
+          type="number"
+          formControlName="amount">
+
+          <mat-error *ngIf="ownersContributionForm.get('amount')?.hasError('required')">
+          This field is required!
+          </mat-error>
+
+          <mat-hint>
+          {{ currencySymbol }}
+          {{ convertAmount(ownersContributionForm.get('amount')?.value) | number:'1.2-2' }}
+          </mat-hint>
+
+          </mat-form-field>
+
+          </div>
+
+
+
+
+        <div class="form-group mb-3">
+          <label class="form-label">To Account: </label>
+          <mat-form-field appearance="outline" class="mt-1" >
+            <mat-label>Select Account</mat-label>
+            <mat-select formControlName="to_account">
+              <mat-option *ngFor="let data of toAccList" [value]="data.id" >
+                {{data.account_name}}
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="ownersContributionForm.get('to_account')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+          </div>
+
+
+        <div  class="form-group mb-3">
+          <label class="form-label">Reference#</label>
+          <mat-form-field appearance="outline" class="mt-1">
+          <input matInput type="text" formControlName="reference" />
+
+          </mat-form-field>
+          </div>
+
+
+        <div class="form-group mb-3">
+        <label class="form-label">Description: </label>
+        <mat-form-field appearance="outline" class="mt-1">
+        <input matInput type="text" formControlName="description" />
+
+        </mat-form-field>
+        </div>
+
+
+        <div class="form-group mb-3">
+          <label class="form-label">Upload Files: </label>
+          <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+          </div>
+
+
+        <div>
+          <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+        </div>
+        <div>
+          <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+            <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+            <mat-list-item *ngFor="let file of uploadedFiles">
+              <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+              <button mat-icon-button (click)="removeFile(file)">
+                <mat-icon >delete</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+
+
+        <div class="common_button_sub" style="text-align:left;">
+          <button (click)="onSubmit(this.ownersContributionForm.value)">
+              Save
+          </button>
+          <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+          </div>
+
+
+        </form>
+
+        <!-- <form *ngIf="formType == 'vendor_credit_refund'" [formGroup]="vendorCreditRefundForm" class="mt-2">
+
+
+          <div  class="form-group mb-3">
+            <label class="form-label">Vendor: </label>
+          <mat-form-field appearance="outline">
+          <mat-label>-Select-</mat-label>
+          <mat-select formControlName="vendor_id">
+            <mat-option [value]="data.id" *ngFor="let data of vendorList">
+              {{data.vendor_name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="vendorCreditRefundForm.get('vendor_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+          </div>
+
+
+          <ng-container>
+            <div class="form-group mb-3">
+              <label class="form-label">Date: </label>
+          <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate"
+              (dateChange)="Date($event)"/>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+
+            <button mat-icon-button *ngIf="vendorCreditRefundForm.get('date')?.value" matSuffix (click)="clearDate('date')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+          </div>
+          </ng-container>
+
+
+
+
+          <div class="form-group mb-3">
+            <label class="form-label">Received Via: </label>
+            <mat-form-field appearance="outline" class="mt-1" [ngClass]="'NewClass'">
+              <mat-select formControlName="to_account">
+                <mat-option [value]="data.id" *ngFor="let data of toAccList">
+                  {{data.account_name}}
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="vendorCreditRefundForm.get('to_account')?.hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+            </div>
+
+
+
+          <div  class="form-group mb-3">
+            <label class="form-label">Reference#</label>
+            <mat-form-field appearance="outline" class="mt-1">
+            <input matInput type="text" formControlName="reference" />
+
+            </mat-form-field>
+            </div>
+
+
+          <div class="form-group mb-3">
+          <label class="form-label">Description: </label>
+          <mat-form-field appearance="outline" class="mt-1">
+          <input matInput type="text" formControlName="description" />
+
+          </mat-form-field>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label">Upload Files: </label>
+            <input type="file" (change)="onFileSelected($event)" multiple accept="*" class="file-input">
+            </div>
+
+          <div>
+            <p style="margin-left: 15px; margin-top: 12px;">You can upload a maximum of 5 files, 10MB each.</p>
+          </div>
+          <div>
+            <mat-list *ngIf="uploadedFiles.length > 0" class="uploaded-files-list">
+              <h4 style="margin-left: 15px;">Uploaded Files:</h4>
+              <mat-list-item *ngFor="let file of uploadedFiles">
+                <span>{{ file.name }} ({{ file.size / 1024 | number: '1.0-0' }} KB)</span>
+                <button mat-icon-button (click)="removeFile(file)">
+                  <mat-icon >delete</mat-icon>
+                </button>
+              </mat-list-item>
+            </mat-list>
+          </div>
+
+
+
+          <div class="common_button_sub" style="text-align:left;">
+          <button (click)="onSubmit(this.vendorCreditRefundForm.value)">
+              Save
+          </button>
+          <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+          </div>
+
+
+          </form> -->
+

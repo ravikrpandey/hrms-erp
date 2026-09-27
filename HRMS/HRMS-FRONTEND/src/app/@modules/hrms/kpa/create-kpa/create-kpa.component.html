@@ -1,0 +1,157 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS </h1>
+    <p>Kpa Master<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>Create Kpa Master</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="container mt-3 mb-3">
+    <form [formGroup]="kpaRegForm" (ngSubmit)="onSubmitKpa()">
+      <div class="row">
+        <div *ngIf="!disableField" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Objective <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="objective_id">
+                <mat-option *ngFor="let objective of objectiveList" [value]="objective?.id">{{ objective?.objective_name
+                  }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="kpaRegForm.controls['objective_id'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="disableField" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Objective <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="text" [value]="objective" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Activity <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="text" formControlName="activity" [readonly]="disableField" />
+              <mat-error *ngIf="kpaRegForm.controls['activity'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="kpaRegForm.controls['activity'].hasError('leadingSpaces')">
+                No Leading Spaces
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+      <!-- ck editor -->
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form-group mt-3 mb-3">
+            <!-- <ckeditor
+            #editer
+            id="ckediter"
+            formControlName="kpi_data"
+            [readOnly]="disableField"
+          >
+          </ckeditor> -->
+
+            <ckeditor (ready)="onReady($event)" style="height:400px" [editor]="Editor" formControlName="kpi_data">
+            </ckeditor>
+            <mat-error *ngIf="kpaRegForm.get('kpi_data')?.touched && kpaRegForm.get('kpi_data')?.hasError('required')">
+              * Required!
+            </mat-error>
+          </div>
+        </div>
+      </div>
+
+      <!-- department -->
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-label style="font-size:14px !important;">Applicable For: </mat-label>
+          <mat-error
+            *ngIf="kpaRegForm.get('aplicable_for')?.touched && kpaRegForm.get('aplicable_for')?.hasError('required')">
+            * Required!
+          </mat-error>
+          <mat-radio-group formControlName="aplicable_for">
+
+            <mat-radio-button value="Department_User" [checked]="department_and_user"
+              (change)="onSelectedApplicable($event.value)">
+              All Department And User
+            </mat-radio-button>
+
+            <mat-radio-button [value]="'Selected_User'" [checked]="department_user"
+              (change)="onSelectedApplicable($event.value)">
+              Selected User
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+      </div>
+      <div class="row mt-3" *ngIf="applicableFor == 'Selected_User'">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Department <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': disableField}">
+              <mat-select formControlName="aplicable_department_id"
+                (selectionChange)="getDepartmentEmployee($event.value)">
+                <app-search-filter [array]="AllDepartment" [placeholder]="'Search by department name'"
+                  [searchFields]="['department_name']" (filteredReturn)="filterWithDepartment = $event.data">
+                </app-search-filter>
+                <mat-option *ngFor="let department of filterWithDepartment" [value]="department?.dept_id">
+                  {{ department?.department_name }}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="kpaRegForm.get('aplicable_department_id')?.touched && kpaRegForm.get('aplicable_department_id')?.hasError('required')">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- employee name -->
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Employee Name <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': disableField}">
+              <mat-select formControlName="employee_name" multiple [(ngModel)]="selectedEmployee">
+                  <app-search-filter [array]="employeeList" [placeholder]="'Search by employee name'"
+                  [searchFields]="['first_name','last_name']" (filteredReturn)="filterEmployeeData = $event.data">
+                </app-search-filter>
+                <mat-option *ngFor="let item of filterEmployeeData" [value]="item?.employee_id">
+                  {{ item?.first_name }} {{ item?.last_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="kpaRegForm.get('employee_name')?.touched && kpaRegForm.get('employee_name')?.hasError('required')">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group" *ngIf="applicableFor == 'Department_User'">
+            <mat-checkbox class="checkbox" formControlName="probation_employee"
+              (change)="checkProbationEmployee($event)">
+              - Not Applicable for probation period employee
+            </mat-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub">
+        <button type="submit" [hidden]="disableField">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

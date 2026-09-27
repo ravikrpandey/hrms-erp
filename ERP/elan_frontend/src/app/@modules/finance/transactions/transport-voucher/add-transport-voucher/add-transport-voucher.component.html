@@ -1,0 +1,409 @@
+<div>
+    <div class="page-title">
+        <h1>Finance & Accounting</h1>
+        <p>Transactions <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+          </i><span> Transport Voucher</span></p>
+      </div>
+      <div class="add_button">
+    <button type="button" (click)=back()><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+<div class="heading_neo " style="margin-top: 90px;">
+    <h3>Basic Details</h3>
+
+  </div>
+  <form [formGroup]="transportForm"  (ngSubmit)="onSubmit()">
+   <mat-card>
+    <div class="row form_set">
+       <div class="mt-1">
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Transporter Name</mat-label>
+              <mat-select #select2 formControlName="transport_id">
+                <mat-select-filter *ngIf="select2.focused" [array]="vendorPartyData1"
+                          (filteredReturn)="searchByParty($event)"></mat-select-filter>
+                <mat-option [value]="data.id" *ngFor="let data of vendorPartyData;let i = index"
+              (click) = 'geVendorById(data)'  >
+                  {{data.tm_name}}
+              </mat-option>
+            </mat-select>
+        </mat-form-field>
+      </div>
+
+<div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  >
+                <mat-label>TDS Section</mat-label>
+                <mat-select  formControlName="tds_id">
+                  <ng-container>
+                    <mat-option [value]="data.id" *ngFor="let data of getAllTdsSection" (click)="getAllNatureTransaction(data)" [hidden]="data.hidden">
+                      {{data.section}}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  >
+                <mat-label>TDS Nature</mat-label>
+                <input matInput type="text" formControlName="nature" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  >
+                <mat-label>Nature Of Transaction</mat-label>
+                <mat-select  formControlName="nature_id">
+                  <ng-container>
+                    <mat-option [value]="data.id" *ngFor="let data of getAllNatureOfTrsanction" [hidden]="data.hidden"
+                     (click)="getTdsRate(data)">
+                      {{data.nature_of_transaction}}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="transport_date" readonly />
+            <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+            <mat-datepicker #dp4></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+   <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline" >
+                  <mat-label>Branch</mat-label>
+                  <mat-select formControlName="branch_id">
+                    <mat-option [value]="branch.id" *ngFor="let branch of getAllBranchData" (click)="getBranchId(branch)">{{branch.branch_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <input matInput value="" formControlName="address" readonly>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+            <mat-label>Bill / Invoice No</mat-label>
+            <input matInput value="" formControlName="bill_invoice_number">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline">
+            <mat-label>GSTIN</mat-label>
+            <input matInput type="text" value="" formControlName="gstin" readonly>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 mt-3">
+        <mat-form-field appearance="outline">
+            <mat-label>GST Rate %</mat-label>
+            <input matInput type="number" formControlName="gst_rate" (input)="onGstRateChange()">
+        </mat-form-field>
+      </div>
+      <div class="col-md-4 mt-3">
+        <mat-checkbox formControlName="rcm_check" (change)="onRcmChange($event.checked)">
+          RCM Apply
+        </mat-checkbox>
+      </div>
+
+<hr >
+<div class="row form_head">
+    <h3>Transport Details</h3>
+  </div>
+<div class="table-responsive col-12 mt-2">
+    <table class="table table-bordered" formArrayName="transportList">
+      <thead>
+        <tr>
+          <th>LR NO.</th>
+          <th>LR Date</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Vehicle No.</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let group of transportList.controls; let i = index" [formGroupName]="i">
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>LR NO.</mat-label>
+              <mat-select formControlName="LR_id" (selectionChange)="onLRSelect($event.value, i)">
+                <mat-option *ngFor="let lr of lrList" [value]="lr.LR_id" (click)="getData(lr)">
+                  {{ lr.LR_number }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>LR Date</mat-label>
+              <input matInput formControlName="LR_Date" readonly/>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>From</mat-label>
+              <input matInput formControlName="billing_address" readonly/>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>To</mat-label>
+              <input matInput formControlName="shipping_address" readonly/>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline">
+              <mat-label>Vehicle No.</mat-label>
+              <input matInput value="" formControlName="vehicle_number" readonly>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="transportList.length>1">delete</mat-icon>
+            <mat-icon matTooltip="Add Item" (click)="addItem(i)" class="pointer">add_circle</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+<div class="row p-0 mt-2">
+
+  <!-- Charges Details -->
+  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12 mt-1">
+    <div class="row form_head">
+      <div class="d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">
+          Charges Details
+        </h3>
+        <h3 class="mb-0">
+          Total Charges {{ commonService.formatCurrency(totalAmt || 0, currencyCode) }}
+        </h3>
+      </div>
+    </div>
+
+    <div formArrayName="Account_details">
+      <!-- Show message when no charges loaded -->
+      <div *ngIf="!hasChargesLoaded || Account_details.length === 0" class="no-charges-message">
+        <div class="message-box">
+          <mat-icon class="info-icon">info</mat-icon>
+          <span class="message-text">Please select transport details to view charges</span>
+        </div>
+      </div>
+
+      <!-- Show charges table when charges are loaded -->
+      <ng-container *ngIf="hasChargesLoaded && Account_details.length > 0">
+        <table class="table table-bordered charges-table">
+          <thead>
+            <tr>
+              <th>Parent Account</th>
+              <th>Account</th>
+              <th>Charges Name</th>
+              <th>Amount ({{currencyCode}})</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let item of Account_details.controls; let i=index" [formGroupName]="i">
+              <tr *ngIf="isFirstRowOfLorry(i)" class="lorry-header">
+                <td colspan="5">
+                  <div class="lorry-header-content">
+                    <mat-icon class="lorry-icon">local_shipping</mat-icon>
+                    <span class="lorry-number">
+                      {{ getLorryNumber(i) }}
+                    </span>
+                    <span class="lorry-total">
+                      Total: {{ commonService.formatCurrency(getLorryTotal(getLorryNumber(i)), currencyCode) }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select #select2 formControlName="parent_chart_account_id"
+                      (selectionChange)="onAccountChange($event,i)">
+                      <mat-select-filter *ngIf="select2.focused"
+                        [array]="chartedAccount1"
+                        (filteredReturn)="accountFilter($event,i)">
+                      </mat-select-filter>
+                      <mat-option *ngFor="let data of filteredChartedAccount" [value]="data.id">
+                        {{data.account_name}}
+                      </mat-option>
+                    </mat-select>
+                    <button mat-icon-button matSuffix
+                      *ngIf="Account_details.controls[i].get('parent_chart_account_id')?.value"
+                      (click)="clearDropdown('parent_chart_account_id',i)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                    <mat-error *ngIf="Account_details.controls[i].get('parent_chart_account_id')?.touched &&
+                      Account_details.controls[i].get('parent_chart_account_id')?.errors?.['required']">
+                      * Required!
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-select formControlName="child_chart_account_id">
+                      <mat-option *ngFor="let data of getAllData[i]" [value]="data.id">
+                        {{data.account_name}}
+                      </mat-option>
+                    </mat-select>
+                    <button mat-icon-button matSuffix
+                      *ngIf="Account_details.controls[i].get('child_chart_account_id')?.value"
+                      (click)="clearDropdown('child_chart_account_id',i)">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input matInput type="text" formControlName="charges_name">
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" class="w-100">
+                    <input matInput type="number" formControlName="amount"
+                      (input)="onAmountChange(i)">
+                  </mat-form-field>
+                </td>
+                <td class="text-center">
+                  <button mat-icon-button color="warn" type="button" (click)="removeAccount(i)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                  <button mat-icon-button type="button" (click)="addAccount(i)">
+                    <mat-icon>add_circle</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </ng-container>
+    </div>
+    <div class="row mb-3">
+                <div class="col-12 text-end">
+                    <button type="button"  style="background-color:#00644d"
+                            class="btn btn-primary me-2"
+                            (click)="showLedgerPreview()"
+                            [disabled]="!hasAccounts()">
+                        <i class="fa fa-eye"></i> View Ledger Preview
+                    </button>
+                </div>
+            </div>
+  </div>
+
+  <!-- Summary Section -->
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="summary-box">
+      <div class="summary-row">
+        <label>Taxable Value</label>
+        <span>{{commonService.formatCurrency(summary.taxable, currencyCode)}}</span>
+      </div>
+      <div class="summary-row">
+        <label>GST Type</label>
+        <span>{{rcm_charge ? 'RCM' : 'Forward'}}</span>
+      </div>
+      <div class="summary-row">
+        <label>IGST</label>
+        <span>{{commonService.formatCurrency(summary.igst, currencyCode)}}</span>
+      </div>
+      <div class="summary-row">
+        <label>CGST</label>
+        <span>{{commonService.formatCurrency(summary.cgst, currencyCode)}}</span>
+      </div>
+      <div class="summary-row">
+        <label>SGST</label>
+        <span>{{commonService.formatCurrency(summary.sgst, currencyCode)}}</span>
+      </div>
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-row">
+        <label>Gross Total</label>
+        <span>{{commonService.formatCurrency(summary.gross, currencyCode)}}</span>
+      </div>
+      <div class="summary-row">
+        <label>TDS</label>
+        <span>{{commonService.formatCurrency(summary.tds, currencyCode)}}</span>
+      </div>
+      <div class="summary-row">
+        <label>GST Total</label>
+        <span>{{commonService.formatCurrency(summary.gstTotal, currencyCode)}}</span>
+      </div>
+      <div class="summary-row" *ngIf="rcm_charge">
+        <label>RCM Liability</label>
+        <span class="text-danger fw-semibold">
+          {{commonService.formatCurrency(summary.gstTotal, currencyCode)}}
+        </span>
+      </div>
+      <div class="summary-row">
+        <label style="font-weight:600">Net Payable to vendor</label>
+        <span style="font-weight:600">
+          {{commonService.formatCurrency(summary.net, currencyCode)}}
+        </span>
+      </div>
+      <div class="summary-row">
+        <label class="mt-2">Less Amount ({{currencyCode}})</label>
+        <mat-form-field appearance="outline" style="width:200px">
+          <input matInput type="number" #val
+            (input)="calculatePayableAmount(val.value)"
+            [value]="less_amt"
+            placeholder="Enter amount">
+        </mat-form-field>
+      </div>
+      <div class="summary-row">
+        <label style="font-weight:600">Payable Amount</label>
+        <span style="font-weight:600">
+          {{commonService.formatCurrency(summary.payableAmount, currencyCode)}}
+        </span>
+      </div>
+
+      <!-- ROUND OFF SECTION -->
+      <div class="summary-row" *ngIf="is_round_off">
+        <label>Round Off</label>
+        <span>{{commonService.formatCurrency(round_off, currencyCode)}}</span>
+      </div>
+      <div class="summary-row" *ngIf="is_round_off">
+        <label style="font-weight:600">Rounded Payable Amount</label>
+        <span style="font-weight:600">
+          {{commonService.formatCurrency(rounded_payable_amount, currencyCode)}}
+        </span>
+      </div>
+      <div class="summary-row">
+        <button type="button" class="btn btn-primary btn-sm mt-2" (click)="roundOffAmount()" style="background-color:#00644d">
+          <i class="fa fa-circle"></i> Round Off
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm mt-2 ms-2" (click)="resetRoundOff()" *ngIf="is_round_off">
+          <i class="fa fa-undo"></i> Reset Round Off
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="mt-3 common_button_sub">
+    <button *ngIf="status!='view'">
+      Submit
+    </button>
+    <button class="cancel_button_y" (click)="back()">
+      Cancel
+    </button>
+  </div>
+    </div>
+   </mat-card>
+</form>

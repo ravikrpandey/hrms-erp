@@ -1,0 +1,88 @@
+<aside class="left_nav_bar" id="sidebar">
+  <!-- new sidebar start -->
+  <nav class="left_sidebar">
+    <div class="nav_bar new_menu_left">
+      <div class="search-container">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input type="search" placeholder="Search menus..." (input)="onSearch($any($event.target).value)"
+          [value]="searchTerm" class="search-input" />
+      </div>
+      <ul>
+        <li [ngClass]="dashboardActive ? 'active_sidebar_menu' : ''"
+          *ngIf="!searchTerm || 'dashboard'.includes(searchTerm.toLowerCase())">
+          <a routerLink="/master/ess/dashboard">
+            <span>
+              <span style="display: flex; align-items: center">
+                <mat-icon class="addicon">home</mat-icon>
+                <h4>Dashboard</h4>
+              </span>
+            </span>
+          </a>
+        </li>
+        <li [ngClass]="menuActive ? 'active_sidebar_menu' : ''" *ngIf="
+            loginId == 107 &&
+            (!searchTerm || 'menu management'.includes(searchTerm.toLowerCase()))
+          ">
+          <a routerLink="/master/menu-management/menu-listing">
+            <span>
+              <span style="display: flex; align-items: center">
+                <mat-icon class="addicon">menu</mat-icon>
+                <h4>Menu Management</h4>
+              </span>
+            </span>
+          </a>
+        </li>
+        <li *ngFor="let module of moduleList; let i = index">
+          <span>
+            <span routerLinkActive="active" (click)="openModule(module)"
+              [ngClass]="module?.isActive ? 'active_sidebar_menu' : ''">
+              <div class="ADsdsv" [ngClass]="{ 'bold-label': moduleList.length === 1 }">
+                <mat-icon class="addicon">{{ module.icon }}</mat-icon>
+                <h4>{{ module.name }}</h4>
+              </div>
+
+              <i *ngIf="moduleList.length > 1" class="fa-angle-down fas icon_arrow_do"></i>
+            </span>
+
+            <ul *ngIf="moduleList.length === 1 || module?.isActive" class="sub_menu_n">
+              <li *ngFor="let menu of module.children; let j = index">
+                <a [routerLink]="menu?.children?.length ? null : getFullUrl(module, menu)">
+                  <span (click)="openMenu(menu, module)" [ngClass]="menu?.isActive ? 'active_sidebar_menu' : ''">
+                    <mat-icon>{{ menu.icon }}</mat-icon>{{ menu.name }}
+                  </span>
+                </a>
+                <ul *ngIf="menu?.isActive" class="submenu_inner">
+                  <li *ngFor="let subMenu of menu.children; let k = index">
+                    <a [routerLink]="getFullUrl(module, menu, subMenu)">
+                      <span routerLinkActive="activ" (click)="openSubMenu(subMenu, menu, module)"
+                        [ngClass]="subMenu?.isActive ? 'active_sidebar_menu' : ''">
+                        <mat-icon>{{ subMenu.icon }}</mat-icon>
+                        {{ subMenu.name }}
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Switch to HRMS bottom menu item -->
+  <div class="sidebar_bottom_action">
+    <div class="nav_bar new_menu_left">
+      <ul>
+        <li class="switch_hrms_item">
+          <span (click)="switchToHrms()" [matTooltip]="'Switch to HRMS'" class="switch_hrms_btn">
+            <div class="ADsdsv">
+              <mat-icon class="addicon switch_hrms_icon">people_alt</mat-icon>
+              <h4>Switch to HRMS</h4>
+            </div>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</aside>

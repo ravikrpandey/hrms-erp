@@ -1,0 +1,42 @@
+<app-wrapper [title]="'Configurational Master'" [subTitle]="'Purchase Master'" [subheading]="'Add Incoterm Master'"
+    [showActions]="true" [isBack]="true">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="travel-type-form">
+        <div class="form-group row p-2">
+            <div class="col-4 px-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Incoterm Code</mat-label>
+                    <input matInput id="incoterm_code" type="text" formControlName="incoterm_code"
+                        placeholder="Enter Incoterm Code" />
+                </mat-form-field>
+            </div>
+            <div class="col-4 px-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Incoterm Meaning</mat-label>
+                    <input matInput id="incoterm_meaning" type="text" formControlName="incoterm_meaning"
+                        placeholder="Enter Incoterm Meaning" />
+                </mat-form-field>
+            </div>
+            <div class="col-4 px-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Incoterm Responsibility</mat-label>
+                    <input matInput id="incoterm_responsibility" type="text" formControlName="incoterm_responsibility"
+                        placeholder="Enter Incoterm Responsibility" />
+                </mat-form-field>
+            </div>
+            <div class="col-4 px-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Status</mat-label>
+                    <mat-select formControlName="status" placeholder="Select Status">
+                        <mat-option [value]="'ACTIVE'">Active</mat-option>
+                        <mat-option [value]="'INACTIVE'">Inactive</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-actions mt-3 d-flex justify-content-end gap-2" *ngIf="mode !== 'view'">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+                {{ mode === "edit" ? "Update" : "Save" }}
+            </button>
+        </div>
+    </form>
+</app-wrapper>

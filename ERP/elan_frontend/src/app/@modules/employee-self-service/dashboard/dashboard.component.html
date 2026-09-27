@@ -1,0 +1,144 @@
+<div class="dashboard-wrapper">
+  <!-- ─── Hero Header ─────────────────────────────────────────────── -->
+  <header class="dashboard-hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="welcome-text">
+        <span class="greeting">Welcome Back,</span>
+        <h1>{{ userData.title }} {{ userData.first_name }}</h1>
+        <p class="org-info" *ngIf="userData.organization">
+          <mat-icon>business</mat-icon> {{ userData.organization.name }} | {{ userData.organization.address }}
+        </p>
+        <p class="portal-info" *ngIf="userData.organization_id">Elanpro 3rd Party Portal</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          <mat-icon>today</mat-icon>
+          <span>{{ currentDate }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Daily Hub (Widgets) ─────────────────────────────────────── -->
+  <section class="daily-hub" *ngIf="!userData?.organization">
+    <div class="widget-grid">
+      <!-- HRMS Portal Quick Access Widget -->
+      <div class="widget-card hrms-portal-widget">
+        <div class="widget-header">
+          <mat-icon>badge</mat-icon>
+          <h3>HRMS Portal</h3>
+        </div>
+        <div class="portal-card-body">
+          <p class="portal-desc">
+            Daily Attendance, Leave Applications, and Payroll are managed in the dedicated <strong>Zyno HRMS</strong> portal.
+          </p>
+          <button mat-raised-button color="primary" class="btn-hrms-launch" (click)="switchToHrms()">
+            <mat-icon>launch</mat-icon>
+            <span>Open HRMS Portal</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Employee & Access Management Quick Card -->
+      <div class="widget-card quick-access-widget">
+        <div class="widget-header">
+          <mat-icon>manage_accounts</mat-icon>
+          <h3>Employee & Access</h3>
+        </div>
+        <div class="quick-access-links">
+          <a routerLink="/master/hrms/employee-master/employ" class="quick-link-item">
+            <mat-icon>groups</mat-icon>
+            <div class="link-info">
+              <span class="link-title">Employee Master</span>
+              <span class="link-subtitle">Manage employee directory</span>
+            </div>
+            <mat-icon class="chevron">chevron_right</mat-icon>
+          </a>
+          <a routerLink="/master/hrms/rbacmaster/user-permission" class="quick-link-item">
+            <mat-icon>security</mat-icon>
+            <div class="link-info">
+              <span class="link-title">RBAC & Permissions</span>
+              <span class="link-subtitle">Role & user access control</span>
+            </div>
+            <mat-icon class="chevron">chevron_right</mat-icon>
+          </a>
+        </div>
+      </div>
+
+      <!-- Upcoming Holidays Widget -->
+      <div class="widget-card holiday-widget">
+        <div class="widget-header">
+          <mat-icon>celebration</mat-icon>
+          <h3>Upcoming Holidays</h3>
+        </div>
+        <div class="holiday-list custom-scroll">
+          <div *ngFor="let holiday of holidays" class="holiday-item">
+            <span class="name">{{ holiday.holiday_name }}</span>
+            <span class="date">{{ holiday.formattedDate }}</span>
+          </div>
+          <div *ngIf="holidays.length === 0" class="empty-msg">No upcoming holidays</div>
+        </div>
+      </div>
+
+      <!-- Celebration Widget -->
+      <div class="widget-card celebration-widget">
+        <div class="widget-header">
+          <mat-icon>cake</mat-icon>
+          <h3>Celebrations</h3>
+        </div>
+        <div class="celebration-carousel">
+          <div *ngIf="images && images.length > 0; else noCelebrations">
+            <div slickContainer #slickController="slick" [slickConfig]="config">
+              <div class="celebration-item" *ngFor="let item of images" slickItem>
+                <div class="item-avatar">
+                  <img [src]="baseUrl + '/' + item.employee_photo" alt="Employee" />
+                </div>
+                <div class="item-info">
+                  <span class="name">{{ item.first_name }} {{ item.last_name }}</span>
+                  <span class="role">{{ item.designation_name }}</span>
+                  <div class="event-msg">
+                    <span *ngFor="let msg of item.event_type; let i = index">
+                      {{ msg }}<span *ngIf="i < item.event_type.length - 1">, </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #noCelebrations>
+            <div class="empty-msg">No celebrations today</div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Main Insights (Calendars) ────────────────────────────────── -->
+  <section class="insights-section" *ngIf="!userData?.organization">
+    <div class="insight-grid single-insight">
+      <!-- Travel Calendar -->
+      <mat-card class="insight-card calendar-card">
+        <div class="card-header">
+          <div class="title-group">
+            <mat-icon>flight_takeoff</mat-icon>
+            <h2>My Travel Plans</h2>
+          </div>
+          <button mat-raised-button color="primary" class="header-action" (click)="openTravelPlanDialog()">
+            <mat-icon>add</mat-icon> Travel Plan
+          </button>
+        </div>
+        <div class="card-body">
+          <full-calendar *ngIf="tavelCalendarVisible" [options]="travelCalendarOptions">
+            <ng-template #travelEventContent let-arg>
+              <div class="calendar-event-pill">
+                <b>{{ arg.timeText }}</b>
+                <i>{{ arg.event.title }}</i>
+              </div>
+            </ng-template>
+          </full-calendar>
+        </div>
+      </mat-card>
+    </div>
+  </section>
+</div>

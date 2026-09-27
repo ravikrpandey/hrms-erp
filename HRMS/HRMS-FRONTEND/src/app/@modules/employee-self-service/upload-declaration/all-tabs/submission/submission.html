@@ -1,0 +1,97 @@
+<div class="container-box">
+  <div class="heading_top">
+    <div class="row mt-3">
+      <div class="page-title">
+        <h1>Submission</h1>
+      </div>
+    </div>
+    <hr />
+  </div>
+
+  <div class="achieveFormArea">
+    <form class="form_set" [formGroup]="declParentForm">
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="financial_year" placeholder="Financial Year">
+              <mat-option *ngFor="let finance of rowData" [value]="finance?.id">
+                {{ finance.financial_year_range }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="declParentForm.get('financial_year')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+    <div class="container">
+      <mat-toolbar color="primary">
+        <span>List Of Declarations</span>
+      </mat-toolbar>
+
+      <mat-card class="declarations-card">
+        <mat-card-content>
+          <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 full-width-table">
+
+            <!-- S.No Column -->
+            <ng-container matColumnDef="sno">
+              <th mat-header-cell *matHeaderCellDef> S.No </th>
+              <td mat-cell *matCellDef="let element; let i = index"> {{ getSNo(i) }} </td>
+            </ng-container>
+
+            <!-- Declaration Type Column -->
+            <ng-container matColumnDef="declaration_type">
+              <th mat-header-cell *matHeaderCellDef> Declaration Type </th>
+              <td mat-cell *matCellDef="let element"> {{ formatDeclarationType(element.declaration_type) }} </td>
+            </ng-container>
+
+            <!-- Total Amount Column -->
+            <ng-container matColumnDef="total_amount">
+              <th mat-header-cell *matHeaderCellDef>Saving Amount </th>
+              <td mat-cell *matCellDef="let element"> {{ element.total_amount | number:'1.2-2' }} </td>
+            </ng-container>
+
+            <!-- Document Column -->
+            <ng-container matColumnDef="document">
+              <th mat-header-cell *matHeaderCellDef> Document </th>
+              <td mat-cell *matCellDef="let element">
+                <ng-container *ngIf="element.document; else noDoc">
+                  <button mat-icon-button color="primary" (click)="viewDocument(element.document)"
+                    matTooltip="View Document">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </ng-container>
+                <ng-template #noDoc>-</ng-template>
+              </td>
+            </ng-container>
+
+
+
+            <!-- Header and Rows -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" [class.grand-total]="isGrandTotal(row)"></tr>
+
+            <!-- No Records -->
+            <tr class="no-data-row" *ngIf="!dataSource || dataSource.length === 0">
+              <td colspan="4">
+                <div class="no-records-message">
+                  <mat-icon>info</mat-icon>
+                  <span>No records found</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+         <div class="row mt-3">
+  <div class="col-12 text-end">
+    <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="declParentForm.invalid">
+      Submit
+    </button>
+  </div>
+</div>
+
+        </mat-card-content>
+      </mat-card>
+    </div>

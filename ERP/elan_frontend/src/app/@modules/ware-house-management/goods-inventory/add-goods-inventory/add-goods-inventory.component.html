@@ -1,0 +1,345 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+            Goods Inventory<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Add New Inventory</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="" [formGroup]="createGoodsInventory">
+                <div class="heading_neo">
+                    <h3>Basic Details</h3>
+                </div>                
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Item</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Item</mat-label>
+                                    <mat-select formControlName="item_id" (selectionChange)="getItemDetails($event)">
+                                        <mat-option *ngFor="let item of itemsList" [value]="item.id">
+                                          {{ item?.item_name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['item_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Item is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3 readonly-select">
+                                <mat-label>Category</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Category</mat-label>
+                                    <mat-select formControlName="asset_id">
+                                        <mat-option *ngFor="let cat of categoryList" [value]="cat.id" class="readonly-select">
+                                          {{ cat?.asset_category_name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['asset_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Category is Required.
+                                    </mat-error>
+                                    
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3 readonly-select">
+                                <mat-label>Manufacture</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Manufacture</mat-label>
+                                    <mat-select formControlName="product_id">
+                                        <mat-option *ngFor="let product of getAllProducts" [value]="product.id" class="readonly-select">
+                                          {{ product?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                                        createGoodsInventory.controls['product_id'].hasError(
+                                            'required'
+                                        )
+                                        ">
+                                        Manufacture is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Batch Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Batch Number</mat-label>
+                                    <input matInput type="text" formControlName="batch_number" readonly/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['batch_number'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Batch Number is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Inward Date</mat-label>
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Inward Date</mat-label>
+                                    <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="inward_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp4></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['inward_date'].hasError('required')
+                    ">
+                                        Inward Date is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Batch Expiry Date</mat-label>
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Batch Expiry Date</mat-label>
+                                    <input matInput [matDatepicker]="dp5" (click)="dp5.open()" formControlName="batch_expiry_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp5></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['batch_expiry_date'].hasError('required')
+                    ">
+                                        Batch Expiry Date is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Quantity</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Quantity</mat-label>
+                                    <input matInput type="text" formControlName="quantity" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0" (input)="CalculateValue()"/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['quantity'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Quantity is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Basic Rate</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Basic Rate</mat-label>
+                                    <input matInput type="text" formControlName="basic_rate" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0" (input)="CalculateValue()"/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['basic_rate'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Basic Rate is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3 readonly-select">
+                                <mat-label>Total Value</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Total Value</mat-label>
+                                    <input matInput type="number" formControlName="total_value" readonly/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['total_value'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Total Value is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Usage</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Usage</mat-label>
+                                    <mat-select formControlName="uses_id">
+                                        <mat-option *ngFor="let usage of getAllUses" [value]="usage.id">
+                                          {{ usage?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['uses_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Usage is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                            <mat-label>Upload Documents</mat-label>
+                            <input class="form-control" type="file" multiple title="Choose File" #fileInput (change)="onChange($event)" formControlName="uploadedFile" />
+                            <mat-error *ngIf="createGoodsInventory.controls['uploadedFile'].hasError('required') && (createGoodsInventory.controls['uploadedFile'].dirty || createGoodsInventory.controls['uploadedFile'].touched)">
+                            File is required
+                            </mat-error>
+                            <mat-error *ngIf="createGoodsInventory.controls['uploadedFile'].hasError('acceptTypes')">
+                            Only Image files are allowed
+                            </mat-error>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Warehouse</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Warehouse</mat-label>
+                                    <mat-select formControlName="warehouse_id" (selectionChange)="getWarehouseRowList($event)">
+                                        <mat-option *ngFor="let warehouse of warehouseList" [value]="warehouse.id">
+                                          {{ warehouse?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['warehouse_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                Warehouse is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    
+                        <ng-container *ngIf="rowList.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-1" >
+                              <div class="form-group"  >
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Add Rows</mat-label>
+                                    <mat-select  formControlName="row_id"  >
+                                        <mat-option  *ngFor="let data of rowList" (click)="getAllSelfList(data.id)"  [value]="data.id" >{{data.row_name}}</mat-option>
+                                    </mat-select>
+                                    
+                                </mat-form-field>
+                            </div>
+                            </div>
+                          </ng-container>
+                    
+                          <ng-container *ngIf="selfList.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-1" >
+                              <div class="form-group"  >
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Add Shelf</mat-label>
+                                    <mat-select  formControlName="shelf_id"  >
+                                        <mat-option  *ngFor="let data of selfList" (click)="getAllSectionList(data.id)"  [value]="data.id" >{{data.self_name}}</mat-option>
+                                    </mat-select>
+                                    
+                                </mat-form-field>
+                            </div>
+                            </div>
+                          </ng-container>
+                    
+                          <ng-container *ngIf="sectionList.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-1" >
+                              <div class="form-group"  >
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Add Section</mat-label>
+                                    <mat-select  formControlName="section_id"  >
+                                        <mat-option  *ngFor="let data of sectionList"   [value]="data.id" >{{data.section_name}}</mat-option>
+                                    </mat-select>
+                                    
+                                </mat-form-field>
+                            </div>
+                            </div>
+                          </ng-container>
+
+                    </div>
+                </div>
+                <div class="heading_neo">
+                    <h3>Inventory History</h3>
+                </div>
+                <div class="right_data_all">
+                    <div class="employ_sube py-2">
+                        <div class="example-header">
+                            <select id="page-size" (change)="onPageSizeChanged()">
+                                <option value="10" selected="">10</option>
+                                <option value="100">100</option>
+                                <option value="500">500</option>
+                                <option value="1000">1000</option>
+                            </select>
+                        </div>
+                        <div class="employee_2" align="end">
+                            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()" placeholder="Search">
+                        </div>
+                    </div>
+                
+                    <div class="ag_grid">
+                        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 300px"
+                            [columnDefs]="columnDefs"  [pagination]="true"
+                            [paginationPageSize]=8 [rowData]="goodsInventoryHistory" (gridReady)="onGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+              
+                <div class="heading_neo">
+                    <h3>Remarks</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Remarks</mat-label>
+                                    <input matInput type="text" formControlName="remarks" maxlength="150"/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['remarks'].hasError(
+                        'required'
+                      )
+                    ">
+                                        remarks is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['remarks'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="common_button_sub mt-4" align="end">
+                    <button (click)="onSubmitForm()">Add New Stock</button>
+                    <button class="cancel_button_y" (click)="goBack()">Discard</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

@@ -1,0 +1,150 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Register Complain</h1>
+  <p>Register Complain<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+  </i><span>Register Complain List</span></p>
+</div>
+</div>
+
+<div class="right_data_all">
+    <form class="form_set" [formGroup]="registercompainForm">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>System serial No.</mat-label>
+            <input type="text" matInput formControlName="system_serial_no" readonly>
+            <mat-error *ngIf="registercompainForm.get('system_serial_no')?.hasError('required')">
+                This field is required!
+              </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Customer Phone No.</mat-label>
+              <input type="text" matInput formControlName="customer_mobile_no">
+              <mat-error *ngIf="registercompainForm.get('customer_mobile_no')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="registercompainForm.get('customer_mobile_no')?.hasError('pattern')">
+                  Enter 10 digit valid mobile no.
+                </mat-error>
+            </mat-form-field>
+          </div>
+          </div>
+          <div class="row">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Customer Name</mat-label>
+                <input type="text" matInput formControlName="customer_name">
+                <mat-error *ngIf="registercompainForm.get('customer_name')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <mat-form-field appearance="outline">
+                <mat-label>Issue</mat-label>
+                <input type="text" matInput formControlName="issue">
+                <mat-error *ngIf="registercompainForm.get('issue')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+      
+          </div>
+              <div class="row">
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Address</mat-label>
+                    <textarea matInput formControlName="address" rows="3" placeholder="Enter your address"></textarea>
+                    <mat-error *ngIf="registercompainForm.get('address')?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Issue details</mat-label>
+                    <input type="text" matInput formControlName="issue_details">
+                    <mat-error *ngIf="registercompainForm.get('issue_details')?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                  <div class="form-group">
+                      <mat-form-field appearance="outline">
+                          <mat-label>Complain Type</mat-label>
+                          <mat-select formControlName="complaint_type">
+                              <mat-option value="Amc">Amc</mat-option>
+                              <mat-option value="Non-Amc">Non-Amc</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="registercompainForm.get('complaint_type')?.hasError('required')">
+                            This field is required!
+                          </mat-error>
+                          <!-- <input type="number" matInput formControlName="priority"> -->
+                      </mat-form-field>
+                  </div>
+              </div>
+              </div>
+          
+          <div class="row">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <mat-form-field appearance="outline">
+                <mat-label>System type</mat-label>
+                <input type="text" matInput formControlName="syatem_type">
+                <mat-error *ngIf="registercompainForm.get('syatem_type')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <mat-form-field appearance="outline">
+                <mat-label>System Rating</mat-label>
+                <input type="text" matInput formControlName="syatem_rating">
+                <mat-error *ngIf="registercompainForm.get('syatem_rating')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="registercompainForm.get('syatem_rating')?.hasError('pattern')">
+                  must be numeric an not more than 3 digit
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+              <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Alt Phone No.</mat-label>
+                    <input type="text" matInput formControlName="alt_mobile_no">
+                    <mat-error *ngIf="registercompainForm.get('alt_mobile_no')?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                    <mat-error *ngIf="registercompainForm.get('alt_mobile_no')?.hasError('pattern')">
+                      Enter 10 digit valid mobile no.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" style="position: relative;">
+                  <div class="form-group">
+                    <input class="form-control" type="file" style="padding-right: 50px;" title="UPLOAD DOCUMENT"
+                      (change)="onChange($event)" aria-describedby="inputGroupFileAddon04" accept=".jpg,.jpeg,.png"
+                      formControlName="document" />
+                    <!-- <img [src]="imagePath?imagePath:id?generateImageUrl(singleItem?.item_document):''"
+                                  *ngIf="imagePath || id && (getFileExtension(singleItem?.item_document) === 'jpg' || getFileExtension(singleItem?.item_document) === 'jpeg' || getFileExtension(singleItem?.item_document) === 'png' || getFileExtension(singleItem?.item_document) === 'gif')"
+                                  (click)="seePreview(this.singleItem?.item_document, imagePath)" class="img" alt="Image">
+                                <a [href]="generateFileUrl(singleItem?.item_document)"
+                                  *ngIf="id && getFileExtension(singleItem?.item_document) !== 'png' && getFileExtension(singleItem?.item_document) !== 'jpg' && getFileExtension(singleItem?.item_document) !== 'jpeg' && getFileExtension(singleItem?.item_document) !== 'gif' && singleItem?.item_document"
+                                  class="viewBtn" target="_blank">View</a> -->
+                  </div>
+                  <!-- <div *ngIf="createPrItemForm.controls['image']" class="invalid-feedback">
+                                file is required
+                              </div> -->
+                </div>
+              </div>
+        <div class="add_button" align="end">
+          <button class="backBtn" type="button" (click)="submitData()">Submit</button>
+          <button class="backBtn" type="button" (click)="cancel()">Cancel </button>
+        </div>
+    </form>
+  </div>
+  

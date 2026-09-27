@@ -1,0 +1,61 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Ticket Management</h1>
+    <p>Dashboard</p>
+  </div>
+</div>
+
+<div *ngIf="statusdata && statusdata.length > 0; else noData">
+  <div class="status-container">
+    <div *ngFor="let data of statusdata" class="status-card">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="status-card-item open-status">
+            <h1 (click)="OpenOrClose()">OPEN</h1>
+            <p>{{ data.open_count }}</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="status-card-item close-status">
+            <h1 (click)="OpenOrClose()">CLOSE</h1>
+            <p>{{ data.close_count }}</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="status-card-item allocated-status">
+            <h1 (click)="AllocatedTo()">Allocated To</h1>
+            <p>{{ data.allocate_count }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Show Dummy Card When No Data Exists -->
+<ng-template #noData>
+  <div class="status-container">
+    <div class="status-card">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="status-card-item open-status">
+            <h1>OPEN</h1>
+            <p>0</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="status-card-item close-status">
+            <h1>CLOSE</h1>
+            <p>0</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="status-card-item allocated-status">
+            <h1>Allocated To</h1>
+            <p>0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

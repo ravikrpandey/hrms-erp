@@ -1,0 +1,87 @@
+
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p> Account Subtype <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span> {{subtypeId?"Update":"Add"}} Add Subtypes</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+  </div>
+<section class="right_data_all">
+    <mat-card>
+       
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="form">
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                        <div class="form-group">
+                            <mat-label>Account Type</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select A/C Type</mat-label>
+                                <mat-select formControlName="account_type_id">
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of getAccount_data"
+                                            [value]="data.id">{{data.account_type_name}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('account_type_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                        <div class="form-group">
+                            <mat-label>Name Of A/C Subtype</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Name Of A/C Subtype</mat-label>
+                                <input matInput type="text" formControlName="account_subtype_name" />
+                                <mat-error *ngIf="form.get('account_subtype_name')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('account_subtype_name')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                        <div class="form-group">
+                            <mat-label>Subtype Code</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Subtype Code</mat-label>
+                                <input matInput type="text" formControlName="subtype_code" readonly />
+                                <mat-error *ngIf="form.get('subtype_code')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12 mb-3">
+                        <div class="form-group">
+                            <mat-label>Subtype Description</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Subtype Description</mat-label>
+                                <input matInput type="text" formControlName="subtype_description" />
+                                <mat-error *ngIf="form.get('subtype_description')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('subtype_description')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button mat-raised-button color="primary" (click)="onSubmit(this.form.value)">
+                        {{this.subtypeId?'Update':'Submit'}}
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

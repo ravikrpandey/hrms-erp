@@ -1,0 +1,101 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>ESS</h1>
+        <p>Checklist Approval<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Checklist Approval</span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+  
+  <section class="right_data_all pt-4 pb-5">
+    <div class="heading_neo">
+      <h3>Checklist Approval</h3>
+    </div>
+      <mat-card>
+          <form class="form_set" [formGroup]="roleMasterForm">
+            <div class="row">
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Name </mat-label>
+                      <input type="text" matInput formControlName="name" [value]="this.dataObj?.first_name + ' ' + this.dataObj?.last_name" [readonly]="disable"> 
+                  </mat-form-field>
+                </div>
+        
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Employee Code</mat-label>
+                      <input type="text" matInput formControlName="employee_code" [value]="this.dataObj?.employee_code" [readonly]="disable">
+                  </mat-form-field>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Reporting Manager</mat-label>
+                      <input type="text" matInput formControlName="reporting_manager" [value]="this.dataObj?.reporting_manager" [readonly]="disable">
+                  </mat-form-field>
+                </div>
+           
+                  
+           
+               
+           </div>
+
+           <div class="row" *ngFor="let item of reviewData; let i = index">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mb-2">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="review" [value]=[item.review] [readonly]="disable" [(ngModel)]="item.review"/>
+                </mat-form-field>
+              </div>
+            </div>
+          
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-4">
+              <mat-radio-group 
+                formControlName="status" 
+                [value]="item.comment" 
+                class="custom-radio" 
+                [disabled]="disable">
+                <mat-radio-button value="yes">
+                  <label class="abc">Yes</label>
+                </mat-radio-button>
+                <mat-radio-button value="no">
+                  <label class="abc">No</label>
+                </mat-radio-button>
+                <mat-radio-button value="na">
+                  <label class="abc">NA</label>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-2">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Remark</mat-label>
+                  <input matInput type="text" formControlName="checklist_remark" [(ngModel)]="item.checklist_remark"/>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          
+                
+              
+
+              <div class="mt-3 common_button_sub">
+                <button  (click)="roleSubmitForm()">
+                  Submit
+                </button>
+                <!-- <button class="cancel_button_y" (click)="back()">
+                  Cancel
+                </button> -->
+              </div>
+          </form>
+      </mat-card>
+  </section>
+  
+  <!--Role Functionality Assign Menu start-->
+  
+  
+  <!--Role Functionality Assign Menu end-->

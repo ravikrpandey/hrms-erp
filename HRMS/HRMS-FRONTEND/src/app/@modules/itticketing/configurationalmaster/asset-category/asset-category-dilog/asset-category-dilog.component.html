@@ -1,0 +1,69 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!asset_categoryId?"Add Asset Category":"Update Asset Category"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Asset Category</h3>
+    <fieldset [disabled]="view == 'view'">
+        <div class="m-3" [formGroup]="AssetCategoryForm">
+
+
+            <!-- <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <p>Asset Category Code</p>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="asset_category_code" />
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_code'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_code'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+            
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <p>Asset Category Name</p>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="asset_category_name" />
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <p>Description</p>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="asset_category_description" />
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_description'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AssetCategoryForm.controls['asset_category_description'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!asset_categoryId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="asset_categoryId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+            
+        </mat-dialog-actions>
+    </fieldset>
+</div>

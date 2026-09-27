@@ -1,0 +1,130 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Production</h1>
+  <p>Production Tracking<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+  </i><span>Production Maintenance</span></p>
+</div>
+<div class="add_button">
+  <button  class="backBtn" tabindex="0" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+</div>
+</div>
+
+<div class="right_data_all">
+    <mat-card>
+      <div class="form_basic px-4 pt-4">
+        <form  [formGroup]="productionMaintenance">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" class="">
+                      <mat-label>Product Name</mat-label>
+                      <input type="text" matInput formControlName="product_name"  readonly />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                  <div class="form-group ">
+                    <mat-form-field appearance="outline" class="">
+                        <mat-label>Select Shift</mat-label>
+                        <mat-select formControlName="shift_id">
+                            <mat-option *ngFor="let shift of shiftList" [value]="shift.shift_id" >{{shift.shift.shift_name}}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="productionMaintenance.get('shift_id')?.hasError('required')">
+                            This field is required!
+                          </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+          <div class="row">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group ">
+                <mat-form-field appearance="outline" class="">
+                    <mat-label>Select Work Station</mat-label>
+                    <mat-select formControlName="workstation_id">
+                        <mat-option *ngFor="let workStation of workStationList" [value]="workStation. workstation_id" >{{workStation.Workstation.name_of_workstation}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="productionMaintenance.get('workstation_id')?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+              
+          </div>
+          <div class="row mt-2">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group ">
+                <mat-form-field appearance="outline" class="">
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="picker1" format="DD-MM-YY" formControlName="start_date"  
+                    /> 
+                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  <mat-error *ngIf="productionMaintenance.get('start_date')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12  ">
+              <div class="form-group ">
+                <mat-form-field appearance="outline">
+                  <mat-label>Start Time</mat-label>
+                  <input matInput name="selected_time_B" [format]=24  
+                      [ngxMatTimepicker]="pickerB" formControlName="start_time" readonly />
+                  <mat-icon matSuffix (click)="pickerB.open()"> watch_later </mat-icon>
+                  <mat-error *ngIf="productionMaintenance.get('start_time')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+              </mat-form-field>
+              <ngx-mat-timepicker color="accent" #pickerB></ngx-mat-timepicker>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+              <div class="form-group ">
+                <mat-form-field appearance="outline" class=" ">
+                  <mat-label>End Date</mat-label>
+                  <input matInput [matDatepicker]="picker2" format="DD-MM-YY"  formControlName="end_date"   
+                    /> 
+                  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                  <mat-error *ngIf="productionMaintenance.get('end_date')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12  ">
+              <div class="form-group ">
+                <mat-form-field appearance="outline">
+                  <mat-label>End Time</mat-label>
+                  <input matInput name="selected_time_B" [format]=24  
+                      [ngxMatTimepicker]="pickerC" readonly formControlName="end_time" />
+                  <mat-icon matSuffix (click)="pickerC.open()"> watch_later </mat-icon>
+                  <mat-error *ngIf="productionMaintenance.get('end_time')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+              </mat-form-field>
+              <ngx-mat-timepicker color="accent" #pickerC></ngx-mat-timepicker>
+              </div>
+            </div>
+ 
+          </div>
+           
+            <hr />
+               
+             <div class="d-flex justify-content-end mt-2 mb-4"   >
+              <button mat-raised-button color="primary" (click)="saveMaintenance(productionMaintenance.value)" >
+                Save
+              </button>
+              <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Back</button>
+          </div>
+        </form>
+  
+      </div>
+    </mat-card>
+  </div>

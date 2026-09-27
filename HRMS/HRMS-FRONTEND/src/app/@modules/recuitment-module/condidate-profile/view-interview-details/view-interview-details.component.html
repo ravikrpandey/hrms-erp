@@ -1,0 +1,120 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>HRMS</h1>
+      <p>Recruitment Job Description List <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>Job Description List </span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+  <div class="right_data_all">
+    <mat-card class="mb-4 p-3 mt-3">
+      <div class="basic_details basicInfos">
+        <h2>Basic Details</h2>
+        <div class="row">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Candidate Name</h5>
+            <p>{{basicDetails?.first_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Contact No</h5>
+            <p>{{basicDetails?.contact_number}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Email ID</h5>
+            <p>{{basicDetails?.email}}</p>
+          </div>
+        </div>
+
+        <form [formGroup]="interviewStatusForm">
+          <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Status <span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="selection_status">
+                    <mat-option *ngFor="let status of statusList" [value]="status?.id">{{status?.value}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="interviewStatusForm.controls['selection_status'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-9 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Remark <span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" maxlength="300" formControlName="final_remarks" />
+                  <mat-error *ngIf="interviewStatusForm.controls['final_remarks'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            
+          </div>
+        </form>
+        <div class="common_button_sub">
+          <button (click)="handleSubmit()">Submit</button>
+        </div>
+      </div>
+    </mat-card>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let data of dataList; let i = index">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Round - {{data?.interview_round}}
+            <span class="ml25p">Final Rating - {{data?.final_rating}}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="handleTwoTable">
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Skill</th>
+                <th>Avg Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let skillData of data?.skill_list">
+                <td>{{ skillData?.skill_name }}</td>
+                <td>{{ skillData?.avg_skill_rating_point }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-scroll">
+            <div class="table-wrap">
+              <div class="main-table">
+                <div class="table_head">
+                  <div class="d-flex">
+                    <div class="table_hd" *ngFor="let interviewerData of data?.interviewer_list">
+                      <div class="d-flex">
+                        <span class="mr_2p">{{interviewerData?.first_name}}</span>
+                        <mat-icon matTooltip="{{interviewerData?.final_remarks}}">visibility</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="table_body">
+                  <div *ngFor="let interviewData of data?.interviewer_list">
+                    <div>
+                      <div class="table_td" *ngFor="let interviewDetailsData of interviewData?.interview_details">
+                        {{interviewDetailsData?.skill_rating }} ({{ interviewDetailsData?.skill_rating_point }})</div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>

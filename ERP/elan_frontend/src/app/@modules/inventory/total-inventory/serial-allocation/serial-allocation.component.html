@@ -1,0 +1,172 @@
+<form class="form_set" [formGroup]="serialAllocationForm">
+  <div class="row m-3">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Asset Category</mat-label>
+        <input matInput readonly name="assetCategory" formControlName="asset_Category" />
+      </mat-form-field>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Item Name</mat-label>
+        <input matInput readonly name="itemName" formControlName="item_Name" />
+      </mat-form-field>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Managed By</mat-label>
+        <input matInput readonly name="managedBy" formControlName="managed_By" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row m-3">
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <mat-radio-group formControlName="radio">
+        <mat-radio-button value="employee" (click)="toggleMode('employee')">Employee</mat-radio-button>
+        <mat-radio-button value="location" (click)="toggleMode('location')">Location</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div *ngIf="selectedMode === 'location'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Branch Name</mat-label>
+          <mat-select formControlName="branch_Name">
+            <mat-option *ngFor="let branch of allBranchData" [value]="branch.id">{{ branch.branch_name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div *ngIf="selectedMode === 'employee'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Employee Name</mat-label>
+          <mat-select formControlName="employee_Name">
+            <mat-option *ngFor="let employee of employeeData" [value]="employee.employee_id">{{ employee.first_name
+              }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row m-3">
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Total Inventory</mat-label>
+        <input matInput readonly formControlName="total_Inventory" />
+      </mat-form-field>
+    </div>
+    <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Total Allocated</mat-label>
+        <input matInput readonly formControlName="total_Allocated" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row m-3">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <mat-radio-group formControlName="method_radio">
+        <mat-radio-button (click)="toggleMethod('Last_IN')" value="Last_IN">Last In</mat-radio-button>
+        <mat-radio-button (click)="toggleMethod('First_IN')" value="First_IN">First In</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <div class="row m-3">
+    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+      <span>GRN Date</span>
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input [matDatepicker]="dp" (click)="dp.open()" matInput type="text" readonly formControlName="grn_from" />
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+      <br>
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input [matDatepicker]="dp1" (click)="dp1.open()" matInput type="text" readonly formControlName="grn_to" />
+        <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+        <mat-datepicker #dp1></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-1">
+    </div>
+
+    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+      <span>Manufactured Date</span>
+      <mat-form-field appearance="outline">
+        <mat-label>From</mat-label>
+        <input [matDatepicker]="dp2" (click)="dp2.open()" matInput type="text" readonly formControlName="mfd_from" />
+        <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+        <mat-datepicker #dp2></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+      <br>
+      <mat-form-field appearance="outline">
+        <mat-label>To</mat-label>
+        <input [matDatepicker]="dp3" (click)="dp3.open()" matInput type="text" readonly formControlName="mfd_to" />
+        <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+        <mat-datepicker #dp3></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+      <div class="common_button_sub">
+        <button (click)="dateFilter()">
+          GET
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4 align-right">
+    <input type="text" class="form-control" id="filter-text-box" #input placeholder="Search"
+      (input)="onFilterTextBoxChanged()">
+  </div>
+
+  <div class="row m-3">
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="ag_grid batchAllocation">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:226px;"
+          [rowData]="rowData" [columnDefs]="columnDefs" (gridReady)="onGridReady($event)"
+          [overlayNoRowsTemplate]="customNoRowsTemplate"
+          [rowSelection]="gridOptions.rowSelection" [gridOptions]="gridOptions">
+        </ag-grid-angular>
+      </div>
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+    </div>
+  </div>
+
+  <div class="row m-3">
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+      <mat-form-field style="height:123px" appearance="outline">
+        <mat-label>Remarks</mat-label>
+        <textarea matInput type="text" formControlName="remarks"></textarea>
+      </mat-form-field>
+    </div>
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+      <div class="common_button_sub" style="margin-top:40px">
+        <button (click)="submit()">
+          Allocate
+        </button>
+        <button routerLink="../">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

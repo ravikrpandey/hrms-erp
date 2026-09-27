@@ -1,0 +1,138 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ICellRendererParams } from 'ag-grid-community';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { EmpMasterService } from 'src/app/@shared/services/emp-master.service';
+import { ApplyLeaveDialogComponent } from '../leave-apply-list/apply-leave-dialog/apply-leave-dialog.component';
+import Swal from 'sweetalert2';
+import { LeaveApplyService } from 'src/app/@shared/services/ess/leave-apply.service';
+import { RbacMasterService } from 'src/app/@shared/services/rbac-master.service';
+import { CommonService } from 'src/app/@shared/services/common.service';
+
+@Component({
+  selector: 'app-leave-apply-action',
+  templateUrl: './leave-apply-action.component.html',
+  styleUrls: ['./leave-apply-action.component.scss'],
+})
+export class LeaveApplyActionComponent implements OnInit {
+  leave_id: any;
+  leaveId: any;
+  paramsVal: any;
+  employeeId: any;
+  signInUser: string | null;
+  public cellValue: any;
+  status: any;
+  assignAction: any;
+
+  constructor(
+    private route: Router,
+    public dialog: MatDialog,
+    private emp_master: EmpMasterService,
+    private LeaveApplyService: LeaveApplyService,
+    private _commonService: CommonService,
+    private toast: ToastrService,
+    private _rabcService: RbacMasterService
+  ) {}
+
+  ngOnInit(): void {
+    this.assignAction = this._rabcService.accessAssignAction();
+    // Retrieve the stored JSON string from localStorage
+    this.signInUser = localStorage.getItem('signInUser');
+    if (this.signInUser) {
+      // Parse the JSON string to get the JavaScript object
+      const userObject = JSON.parse(this.signInUser);
+
+      // Access the employee_id field from the parsed object
+      this.employeeId = userObject.employee_id;
+    } else {
+      console.error('No signInUser found in localStorage');
+    }
+  }
+
+  agInit(params: ICellRendererParams): void {
+    this.leaveId = params.data.id;
+    this.paramsVal = params.data.emptype_id;
+    this.status = params.data.approval_status;
+    this.cellValue = this.getValueToDisplay(params);
+  }
+
+  getValueToDisplay(params: ICellRendererParams) {
+    this.leave_id = params.data.emp_leave_id;
+    return params.valueFormatted
+      ? params.valueFormatted
+      : params.data.emp_leave_id;
+  }
+
+  refresh(params: ICellRendererParams): boolean {
+    this.cellValue = this.getValueToDisplay(params);
+    return true;
+  }
+
+  edit() {
+    this.route.navigate(['master/ess/leave-apply-form'], {
+      queryParams: { leave_ID: this.leaveId, mode: 'editMode' },
+    });
+  }
+
+  visible() {
+    this.route.navigate(['master/ess/leave-apply-form'], {
+      queryParams: {
+        leave_ID: this.leaveId,
+        mode: 'viewMode',
+        status: this.status,
+      },
+    });
+  }
+
+  delete() {
+    Swal.fire({
+      title: 'Are you sure you want to delete your applied leave?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: '#f44336',
+      confirmButtonColor: '#858586',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+    }).then((result: any) => {
+      if (result.value) {
+        this._commonService?.showLoader();
+        this.LeaveApplyService.deleteAppliedLeave(this.leaveId).subscribe(
+          (res: any) => {
+            // this.route.navigate(['master/ess/leave-apply']);
+            this.reloadCurrentRoute();
+            this.toast.success(res.message);
+            this._commonService?.hideLoader();
+          },
+          (err: any) => {
+            this.toast.error(`${err.error.message}`);
+            console.error('Error fetching leave data', err);
+            this._commonService?.hideLoader();
+          }
+        );
+      }
+    });
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.route.url;
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.route.navigate([currentUrl]);
+    });
+  }
+
+  // openDialog() {
+  //   const dialogRef
+  //     = this.dialog.open(ApplyLeaveDialogComponent, {
+  //       // width: '100%',
+  //       // maxWidth: '100vw',
+  //       // maxHeight: '100vh',
+  //       // height: '100%',
+  //       panelClass: 'full-screen-modal',
+  //       data: { id: this.cellValue }
+  //     });
+  //   // dialogRef.afterClosed().subscribe(result => {
+  //   //
+  //   // });
+  // }
+}

@@ -1,0 +1,150 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1><span>{{ paramsType == 'view' ? 'View' : 'Add' }} Colleague Review</span></h1>
+    <p>
+      ESS 
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178"></i>
+      Colleague Review
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<div class="right_data_all">
+  <div >
+  <form [formGroup]="review" class="formClass">
+    <div class="row pd">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline"  [ngClass]="{'disable-pointer-events': true}">
+              <mat-label>Financial Year </mat-label>
+              <mat-select formControlName="financial_year_id" placeholder="Enter Financial Year" (selectionChange)="getAssessment($event)" >
+                <mat-select-filter [array]="years"
+                (filteredReturn)="yearSearch($event)"></mat-select-filter>  
+                <mat-option *ngFor="let data of financialYear" [value]="data.id">{{data.financial_year}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="review.get('financial_year_id')?.hasError('required')">
+                  * Required!
+                </mat-error>
+          </mat-form-field>
+          </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+            <mat-label>Assessment Name </mat-label>
+            <mat-select  formControlName="assessment_name" (selectionChange)="updateValues()">
+              <mat-select-filter [array]="assessmentList"
+              (filteredReturn)="assessmentSearch($event)"></mat-select-filter>  
+              <mat-option *ngFor="let data of assessments" [value]="data.yearly_assessment_id">{{data.assessment_name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="review.get('assessment_name')?.hasError('required')">
+                * Required!
+              </mat-error>
+          </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+    <div class="row pd">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role_id" (selectionChange)="onSelectionChange($event)">
+              <mat-select-filter [array]="rolesList"
+              (filteredReturn)="roleSearch($event)"></mat-select-filter>
+              <mat-option *ngFor="let data of roles" [value]="data.role_master_id">
+                {{ data.role_master_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="review.get('role_id')?.hasError('required')">required!</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+            <mat-label>Employee Name</mat-label>
+            <mat-select formControlName="employee_id" (selectionChange)="onSelect($event)">
+              <mat-select-filter [array]="employeeList"
+              (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+              <mat-option *ngFor="let data of employees" [value]="data.employee_id">
+                {{ data.employee_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="review.get('employee_id')?.hasError('required')">required!</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div formArrayName="reviews">
+      <div class="employee_basic_details">
+        
+          <div class="heading_neo">
+            <h3>Review</h3>
+          </div>
+         
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Competence</th>
+                <th>Rating</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of Competence; let i = index" [formGroupName]="i">
+                <td  class="flexCenter td1">
+                  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+                    <input
+                      matInput
+                      type="text"
+                      [value]="row"
+                      formControlName="Competence"
+                      readonly
+                    />
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td class="td2">
+                  <div class="td2Content">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabled}">
+                        <mat-select
+                          formControlName="rating"
+                          aria-label="Default select example"
+                        >
+                          <mat-option selected disabled value="">Rating</mat-option>
+                          <mat-option *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                            {{ data.self_rating }} ({{ data.self_rating_value }})
+                            <span *ngIf="paramsType == 'view'">({{ data.self_rating_value }})</span>
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="reviews.controls[i].get('rating')?.touched && reviews.controls[i].get('rating')?.errors?.['required']">
+                          * Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      
+      </div>
+    </div>
+
+    <br />
+    <br />
+    <div class="common_button_sub">
+      <button *ngIf="!isDisabled" style="float:right" (click)="onSubmit()" class="btn btn-primary mt-2" [hidden]="paramsType == 'view'" [disabled]="isButtonDisabled">Submit</button>
+
+    </div>
+    </form>
+  </div>
+</div>

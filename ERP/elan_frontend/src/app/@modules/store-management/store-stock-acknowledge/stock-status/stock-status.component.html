@@ -1,0 +1,33 @@
+<h3 mat-dialog-title class="popHead">Status Details</h3>
+
+<mat-dialog-content class="mat-typography mt-4">
+    <div class="emp_key">
+
+      <!-- <div class="not_created" *ngIf="this.notCreatedFlow">
+        <p >Work Flow Is Not Created!</p>
+
+      </div> -->
+      <div class="table-responsive">
+        <table class="table table-bordered mb-0" *ngIf="!this.notCreatedFlow">
+            <thead>
+              <tr>
+                <th>Approver</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody  *ngFor="let control of getData; index as i">
+              <tr>
+                <td>{{control?.employee_full_name}}</td>
+                <td>{{control?.store_transfer_status}}</td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+    </div>
+ 
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button mat-dialog-close class="cancel_button_y">
+    Close
+  </button>
+</mat-dialog-actions>

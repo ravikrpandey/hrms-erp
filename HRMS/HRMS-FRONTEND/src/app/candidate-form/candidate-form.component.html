@@ -1,0 +1,292 @@
+<div class="right_data_all candidateOffer">
+    <!-- First mat-card (existing card) -->
+    <mat-card class="candidate_Details">
+        <mat-card-header>
+            <mat-card-title class="TopHeading">
+                <h4>External Job Advertisement - Position - Ref Number</h4>
+            </mat-card-title>
+            <mat-card-subtitle>
+                <p class="midHeading"> Zyno Group Welcomes You to a Redefined Global Business Travel.</p>
+                <p>Here at Zyno Group, we're redefining corporate travel to ensure global sustainability,
+                    safety, efficiency, and savings. Let’s come together for a specially designed worldwide
+                    travel program that is skillfully executed throughout all of your operating regions. Our
+                    unique approach is creating travel plans that systematically enhance every facet of your
+                    team and company, both locally and internationally. You've come to the correct place if
+                    you're looking for a personalized travel management system with a quantifiable return on
+                    investment. Discover what makes Zyno Group unique.</p>
+            </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-actions class="p-4">
+            <a *ngIf="jobDataBy?.jobSpecification == 'YES'" href="{{generateImageUrl()+jobDataBy?.upload_document}}"
+                download target="_blank">
+                <button mat-button class="downloadButton" (click)="downloadJD()">
+                    Download JD
+                    <mat-icon aria-hidden="false" aria-label="Example download" fontIcon="download"></mat-icon>
+                </button>
+            </a>
+            <button *ngIf="jobDataBy?.jobSpecification == 'NO'" mat-button class="downloadButton"
+                (click)="openDialog()">
+                View JD
+                <mat-icon aria-hidden="false" aria-label="Example download" fontIcon="download"></mat-icon>
+            </button>
+
+            <button mat-button class="applyButton" (click)="applyNow()">
+                Apply
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
+
+    <div class="main candidate_Details" *ngIf="openUserForm">
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <mat-card class="form-card">
+                    <mat-card-title>
+                        <h3>Fill the below Form</h3>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <form [formGroup]="myForm">
+
+                            <!-- First row with three fields -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Location <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="location" placeholder="">
+                                            <!-- <mat-error *ngIf="myForm.get('name')?.hasError('required')">Location is
+                                            required</mat-error> -->
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Job title <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="job_title" placeholder="">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Job Position<span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="position" placeholder=" ">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End of first row -->
+
+                            <!-- Remaining fields -->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Expected
+                                            End Date <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+
+                                            <input matInput [matDatepicker]="dp3" (click)="dp3.open()"
+                                                formControlName="end_date" readonly />
+
+                                            <mat-datepicker-toggle disabled="true" matSuffix
+                                                [for]="dp3"></mat-datepicker-toggle>
+                                            <mat-datepicker #dp3></mat-datepicker>
+
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Department <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="department" placeholder="">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Sub Department <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="area">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Exp. Required(In Years) <span class="alertspan">*</span></mat-label>
+
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="exp_required">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Level of Interview <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="level_of_interview">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Qualification<span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="qualification">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Skills Required<span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                                            <input matInput formControlName="skill">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>First Name <span class="alertspan">*</span></mat-label>
+
+                                        <mat-form-field appearance="outline">
+                                            <input matInput formControlName="first_name">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Middle Name</mat-label>
+                                        <mat-form-field appearance="outline">
+                                            <input matInput formControlName="middle_name">
+                                        </mat-form-field>
+                                    </div>
+
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Last Name <span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline">
+                                            <input matInput formControlName="last_name">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                    <div class="codeArea">
+                                        <div class="form-group addCoding">
+                                            <mat-form-field class="country-codes" style="
+                                            width: 125%;">
+                                                <mat-select formControlName="country_code">
+                                                    <mat-select-filter
+                                                        (keyup)="filterCountryCode2($event)"></mat-select-filter>
+                                                    <mat-option *ngFor="let countryCode of filteredCountryCodeList2"
+                                                        [value]="countryCode?.dialing_code">
+                                                        +{{ countryCode?.dialing_code }}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="form-group">
+                                            <mat-label>Contact Number <span class="alertspan">*</span></mat-label>
+                                            <mat-form-field>
+                                                <input matInput type="number" formControlName="contact_number" />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>Email<span class="alertspan">*</span></mat-label>
+                                        <mat-form-field appearance="outline">
+                                            <input matInput formControlName="email">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group mb-3">
+                                        <mat-label>CV <span class="alertspan">*</span></mat-label>
+                                        <input class="form-control" type="file" multiple="true"
+                                            style="padding-right: 19%" title="CHOOSE FILE" #fileInput
+                                            (change)="onChangeCv($event)" formControlName="cv_upload"
+                                            accept=".pdf,.doc,.docx" />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="answereArea">
+            <p>Please Give Your Answer</p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="border">S.No</th>
+                        <th class="border">Questions</th>
+                        <th class="border">Answer</th>
+                        <!-- <th class="border">Action</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of allJobArray?.getAllData_question; index as i">
+                        <td class="border">{{ i + 1 }}</td>
+                        <td class="border">{{ item.question }}</td>
+                        <td class="border">
+                            <mat-form-field appearance="outline">
+                                <mat-select formControlName="question_answer_user"
+                                    (selectionChange)="getAnswer(item,$event)">
+                                    <mat-option value="YES">YES</mat-option>
+                                    <mat-option value="NO">NO</mat-option>
+
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="text-align: center">
+                            <button mat-button class="applyButton" (click)="saveQuestion()">
+                                Save
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row m-3">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="common_button_sub">
+                    <button (click)="ngSubmit()" [disabled]="isDisabled">
+                        Submit
+                    </button>
+                    <!-- <button  (click)="onSubmitForm(this.requestNewPositionForm.value)">
+              Update
+            </button> -->
+                    <!-- <button style="background: #b04646 !important" color="warn" (click)="cancel()">
+              Cancel
+            </button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

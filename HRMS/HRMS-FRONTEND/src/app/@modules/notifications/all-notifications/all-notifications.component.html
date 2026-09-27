@@ -1,0 +1,41 @@
+<mat-card>
+    <div class="notification-header">
+
+        <mat-tab-group class="tabs" (selectedTabChange)="onTabChange($event.index)">
+            <mat-tab [label]="selectedTab === 0 ? 'All (' + unreadCount + ')' : 'All'"></mat-tab>
+            <mat-tab [label]="selectedTab === 1 ? 'Read (' + unreadCount + ')' : 'Read'"></mat-tab>
+            <mat-tab [label]="selectedTab === 2 ? 'Unread (' + unreadCount + ')' : 'Unread'"></mat-tab>
+        </mat-tab-group>
+
+        <button mat-raised-button color="primary" (click)="markAllAsRead()" *ngIf="is_read_value =='unread'">Mark All as Read</button>
+    </div>
+
+      <mat-card-content>
+        <div class="content-wrapper">
+          <div *ngFor="let notification of rowDataNotifications; let i = index" class="notification-row">
+            <!-- Dot with color based on read status -->
+            <span [ngClass]="notification.is_read ? 'notification-dot read-dot' : 'notification-dot unread-dot'"></span>
+    
+            <!-- Message and Time -->
+            <div class="notification-content">
+              <div class="notification-message" [ngClass]="{'bold-message': !notification.is_read}" (click)="handleNotificationClick(notification)">
+                <p>{{ notification.message }}</p>
+              </div>
+              <div class="notification-time">
+                <small>{{ notification.updatedAt | date: 'short' }}</small>
+              </div>
+            </div>
+    
+            <mat-divider></mat-divider>
+          </div>
+    
+          <div class="no_noti" *ngIf="notificarray == 0">
+            <h1>Empty</h1>
+          </div>
+    
+          <div *ngIf="loading" class="loader">
+            <mat-spinner diameter="30"></mat-spinner>
+          </div>
+        </div>
+      </mat-card-content>
+</mat-card>

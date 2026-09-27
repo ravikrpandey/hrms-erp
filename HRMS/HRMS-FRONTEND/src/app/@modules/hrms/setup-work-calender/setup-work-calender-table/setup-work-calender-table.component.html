@@ -1,0 +1,129 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>{{ translate('pageTitle') }}</h1>
+    <p>
+      {{ translate('master') }}
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>{{ translate('masterTable') }}</span>
+    </p>
+  </div>
+</div>
+<div class="right_data_all">
+  <form [formGroup]="attForm">
+    <div class="row mt-3">
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <div class="form-group">
+          <mat-label>Department <span class="alertspan">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="dept_id" (selectionChange)="getDepartmentEmployee($event.value)">
+              <app-search-filter [array]="AllDepartment" [placeholder]="'Search by department name'"
+                [searchFields]="['department_name']" (filteredReturn)="filteractivedepartment = $event.data">
+              </app-search-filter>
+              <mat-option *ngFor="let department of filteractivedepartment" [value]="department?.dept_id">
+                {{ department?.department_name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="attForm.get('dept_id')?.touched && attForm.get('dept_id')?.hasError('required')">
+              * Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <div class="form-group">
+          <mat-label>Employee Name <span class="alertspan">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="employee_id" multiple>
+               <app-search-filter [array]="employeeList" [placeholder]="'Search by employee name'"
+                [searchFields]="['employee_id','first_name','last_name']" (filteredReturn)="filterEmployeedata = $event.data">
+              </app-search-filter>
+              <mat-checkbox class="check" [checked]="isAllSelect" (change)="selectAllEmployee($event)">
+                Select All
+              </mat-checkbox>
+              <mat-option *ngFor="let item of filterEmployeedata" [value]="item?.employee_id">
+                {{ item?.first_name }} {{ item?.last_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="attForm.get('employee_id')?.touched && attForm.get('employee_id')?.hasError('required')">
+              * Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+  <mat-card>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">ALL</th>
+          <th scope="col">1st</th>
+          <th scope="col">2nd</th>
+          <th scope="col">3rd</th>
+          <th scope="col">4th</th>
+          <th scope="col">5th</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let day of calenderList">
+          <th scope="row">{{ day.week_name }}</th>
+          <td>
+            <label>
+              <input type="checkbox" [(ngModel)]="day.allCheck" (change)="checkAll(day)">
+            </label>
+          </td>
+          <td class="commonGap">
+            <input type="checkbox" [(ngModel)]="day.firstCheck" (change)="toggleCheckbox(day)">
+            <select class="custom-select" [(ngModel)]="day.week_1st" [disabled]="day.dropdownDisabled_1st">
+              <option value="" disabled>Select...</option>
+              <option value="Full Day">Full Day</option>
+              <option value="1st Half">1st Half</option>
+              <option value="2nd Half">2nd Half</option>
+            </select>
+          </td>
+          <td class="commonGap">
+            <input type="checkbox" [(ngModel)]="day.secondCheck" (change)="toggleCheckbox(day)">
+            <select class="custom-select" [(ngModel)]="day.week_2nd" [disabled]="day.dropdownDisabled_2nd">
+              <option value="" disabled>Select...</option>
+              <option value="Full Day">Full Day</option>
+              <option value="1st Half">1st Half</option>
+              <option value="2nd Half">2nd Half</option>
+            </select>
+          </td>
+          <td class="commonGap">
+            <input type="checkbox" [(ngModel)]="day.thirdCheck" (change)="toggleCheckbox(day)">
+            <select class="custom-select" [(ngModel)]="day.week_3rd" [disabled]="day.dropdownDisabled_3rd">
+              <option value="" disabled>Select...</option>
+              <option value="Full Day">Full Day</option>
+              <option value="1st Half">1st Half</option>
+              <option value="2nd Half">2nd Half</option>
+            </select>
+          </td>
+          <td class="commonGap">
+            <input type="checkbox" [(ngModel)]="day.fourthCheck" (change)="toggleCheckbox(day)">
+            <select class="custom-select" [(ngModel)]="day.week_4th" [disabled]="day.dropdownDisabled_4th">
+              <option value="" disabled>Select...</option>
+              <option value="Full Day">Full Day</option>
+              <option value="1st Half">1st Half</option>
+              <option value="2nd Half">2nd Half</option>
+            </select>
+          </td>
+          <td class="commonGap">
+            <input type="checkbox" [(ngModel)]="day.fifthCheck" (change)="toggleCheckbox(day)">
+            <select class="custom-select" [(ngModel)]="day.week_5th" [disabled]="day.dropdownDisabled_5th">
+              <option value="" disabled>Select...</option>
+              <option value="Full Day">Full Day</option>
+              <option value="1st Half">1st Half</option>
+              <option value="2nd Half">2nd Half</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+
+    </table>
+    <div class="common_button_sub" style="padding-right:40px;">
+      <button (click)="submitForm()">Submit</button>
+    </div>
+  </mat-card>
+</div>

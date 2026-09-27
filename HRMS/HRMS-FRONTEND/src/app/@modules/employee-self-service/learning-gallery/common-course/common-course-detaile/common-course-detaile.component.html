@@ -1,0 +1,50 @@
+<ng-container>
+  <div>
+    <div class="card">
+      <div class="thumbnail_view">
+        <img [src]="baseUrl + '/' + this.courseData?.thumbnail" alt="">
+      </div>
+      <div class="detail">
+        <div >
+          <p class="label">Category</p>
+          <p class="input">{{ this.courseData?.category }}</p>
+        </div>
+        <div >
+          <p class="label">Name</p>
+          <p class="input">{{ this.courseData?.course_name }}</p>
+        </div>
+
+      </div>
+    </div>
+    <div class="form_basic">
+      <table class="table table-bordered text-center" style="width: 100%;">
+        <thead>
+          <tr>
+            <th scope="col">S.No</th>
+            <th scope="col">File Type</th>
+            <th scope="col">Content Name</th>
+            <!-- <th scope="col">File</th> -->
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let content of contentData; let i = index">
+            <td>{{ i+1 }}</td>
+            <td>{{ content.content_file_type }}</td>
+            <td>{{ content.content_name }}</td>
+
+            <td>
+              <button mat-icon-button color="primary" type="button" class="clickable" *ngIf="content?.content_file_link"
+                (click)="openlink(content.content_file_link)">
+                <mat-icon>link</mat-icon>
+              </button>
+              <button matTooltip="View" mat-icon-button color="primary" type="button" class="clickable" (click)="openContent(content)">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</ng-container>

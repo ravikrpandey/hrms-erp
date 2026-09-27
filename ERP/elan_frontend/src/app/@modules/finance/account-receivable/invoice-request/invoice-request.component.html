@@ -1,0 +1,98 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Finance & Accounting</h1>
+  <p> Account Recievable <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+  </i><span>Invoice Reqeust</span></p>
+</div>
+</div>
+
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+      <div class="example-header">
+          <select id="page-size" (change)="onPageSizeChanged()">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+          </select>
+      </div>
+          <div class="employee_2" align="end">
+              <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                  placeholder="Search">
+      </div>
+  </div>
+
+
+    <div class="row list_order mb-3">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"></div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 form_heads1 p-2">
+          <h3 class="m-0">Invoice List </h3>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 form_heads2 p-2" (click)="navigate()">
+          <h3 class="m-0">Make Manual Invoice</h3>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"></div>
+    </div>
+         <div fxflex="100%">
+          <div class="row">
+            <div class="tab_menu">
+              <div class="tab-item">
+                <button class="main-button " [routerLink]="['invoice-request-list']" routerLinkActive="active" color="primary" (click)="pending()">Pending</button>
+                <button class="main-button " [routerLink]="['approved-invoice-list']" routerLinkActive="active" color="primary" (click)="approved()">Approved</button>
+                <button class="main-button " [routerLink]="['reject-invoice-list']" routerLinkActive="active" color="primary"   (click)="reject()">Reject</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        
+       <!-- <div class="add_btn">
+          <button type="button" class="btn_add" routerLink="manual-invoice">Make Manual Invoice</button>
+          <button type="button" class="btn_add" routerLink="manual-invoice">check Invoice</button>
+       </div> -->
+       <router-outlet></router-outlet>
+
+
+
+
+
+     <!-- <div class="div"  *ngIf="pendingStatus">
+      <div class="form_head">
+        <h3>Invoice Reqeust</h3>
+      </div>
+      <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+          [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10 [rowData]="rowData"
+          (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+     </div>
+
+
+    <div class="div"  *ngIf="approvedStatus">
+      <div class="form_head">
+        <h3>Approved Invoice Reqeust</h3>
+      </div>
+      <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+          [columnDefs]="columnDefsApproved" [pagination]=true [paginationPageSize]=10 [rowData]="rowDataApproved"
+          (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </div>
+
+
+
+    <div class="div" *ngIf="rejectStatus">
+      <div class="form_head">
+        <h3>Reject Invoice Reqeust</h3>
+      </div>
+      <div class="ag_grid" >
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+          [columnDefs]="columnDefsReject" [pagination]=true [paginationPageSize]=10 [rowData]="rowDataRejct"
+          (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </div> -->
+  
+  </div>

@@ -1,0 +1,164 @@
+<div class="dialog-container">
+  <!-- Custom Dialog Header -->
+  <div class="dialog-header">
+    <!-- <h2 class="dialog-title">Add Vehicle for {{ data.vendor_name }}</h2> -->
+    <h3>Vehicle Details</h3>
+  </div>
+
+ <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()">
+    <div class="dialog-body">
+      <div class="row">
+        <!-- Vehicle Type -->
+        <div class="col-4 col-6">
+          <div class="form-group">
+            <mat-label>Vehicle Type <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select
+                formControlName="vehicle_category_id"
+                [disabled]="typeStatus === 'view'"
+                placeholder="Select Vehicle Type"
+              >
+                <mat-option
+                  *ngFor="let vehicle of vehicleTypeList"
+                  [value]="vehicle.id"
+                >
+                  {{ vehicle.vehical_category_name }}
+                  <!-- -
+                {{ vehicle.vehicle_number }} -->
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Vehicle Number -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="vehicle_number"
+              >Vehicle Number <span class="alertspan">*</span></label
+            >
+            <input
+              class="form-control"
+              formControlName="vehicle_number"
+              placeholder="Enter Vehicle Number"
+            />
+          </div>
+        </div>
+        <!-- RC Number -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">RC Number</label>
+            <input
+              class="form-control"
+              formControlName="rc_number"
+              placeholder="Enter RC Number"
+            />
+          </div>
+        </div>
+        <!-- Chassis Number -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">Chassis Number</label>
+            <input
+              class="form-control"
+              formControlName="chassis_number"
+              placeholder="Enter Chassis Number"
+            />
+          </div>
+        </div>
+        <!-- Engine Number -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">Engine Number</label>
+            <input
+              class="form-control"
+              formControlName="engine_number"
+              placeholder="Enter Engine Number"
+            />
+          </div>
+        </div>
+        <!-- Load Capacity (UOM: Ton/Kg) -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">Load Capacity (Ton/Kg)</label>
+            <input
+              class="form-control"
+              formControlName="max_load_capacity"
+              placeholder="Enter Capacity (Ton/Kg)"
+            />
+          </div>
+        </div>
+        <!-- Model -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">Vehicle Model</label>
+            <input
+              class="form-control"
+              formControlName="vehicle_model"
+              placeholder="Enter Vehicle Model"
+            />
+          </div>
+        </div>
+        <!-- Make/Brand -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="rc_number">Make/Brand</label>
+            <input
+              class="form-control"
+              formControlName="vehicle_make"
+              placeholder="Enter Make/Brand"
+            />
+          </div>
+        </div>
+        <!--GPS Enable -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="fuel_type">GPS Enable</label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select
+                formControlName="gps_enabled"
+                placeholder="Select GPS Enable"
+              >
+                <mat-option value="Yes">Yes</mat-option>
+                <mat-option value="No">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Fuel Type -->
+        <div class="col-4 col-6">
+          <div class="form-group mb-3">
+            <label for="fuel_type">Fuel Type</label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select
+                formControlName="fuel_type"
+                placeholder="Select Fuel Type"
+              >
+                <mat-option value="Diesel">Diesel</mat-option>
+                <mat-option value="Petrol">Petrol</mat-option>
+                <!-- <mat-option value="CNG">CNG</mat-option> -->
+                <mat-option value="Electric">Electric</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+<div class="dialog-footer text-end mt-3">
+  <button
+    mat-flat-button
+    color="warn"
+    mat-dialog-close
+    class="cancel-button"
+  >
+    <mat-icon class="me-1">close</mat-icon>
+    Close
+  </button>
+</div>
+
+
+  </form>
+</div>

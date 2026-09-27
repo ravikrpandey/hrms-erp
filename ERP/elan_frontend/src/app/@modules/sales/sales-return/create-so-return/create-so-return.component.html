@@ -1,0 +1,523 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales CRM</h1>
+        <p *ngIf="status && returnType=='INVOICE_CANCEL'"><span> View Sales Invoice</span></p>
+        <p *ngIf="!status && returnType!=='INVOICE_CANCEL'"><span> Create Sales Return</span></p>
+        <p *ngIf="!status && returnType=='INVOICE_CANCEL'"><span> Cancel Sales Invoice</span></p>
+    </div>
+
+    <div class="add_button">
+
+
+        <button class="backBtn" type="button" (click)="download()" *ngIf="returnType === 'INVOICE_CANCEL' && status"><i
+                class="fa fa-download"></i> Download</button>
+        <button class="backBtn" type="button" (click)="location.back()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+
+    </div>
+</div>
+
+<section class="right_data_all">
+    <form [formGroup]="salesReturnForm">
+        <div class="form_basic">
+            <div class="right_data_all">
+                <div class="heading_neo mt-4">
+                    <h3> Basic Information</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+                            <div class="grid-4">
+
+                                <div class="form-group" *ngIf="!status && returnType!=='INVOICE_CANCEL'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Return Type</mat-label>
+                                        <input matInput type="text" formControlName="return_type" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{returnType!=='INVOICE_CANCEL'?'Sales Order':'Invoice
+                                            No'}}</mat-label>
+                                        <input matInput type="text" formControlName="sales_order" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Customer</mat-label>
+                                        <input matInput type="text" formControlName="customer" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Warehouse</mat-label>
+                                        <input matInput type="text" formControlName="warehouse" readonly />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Bill To -->
+                        <div class="row mt-3" *ngIf="returnType=='INVOICE_CANCEL'">
+                            <div class="col-md-8">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4>Bill To</h4>
+
+                                    <p>{{ resData?.billing_address }}
+                                        {{ resData?.billing_postal_address }}</p>
+                                </mat-card>
+                            </div>
+
+                            <div class="col-md-4">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4>Contact Person</h4>
+
+                                    <p>
+                                        {{ resData?.billing_contact_person }}
+                                        {{ resData?.billing_contact_person_no ? ' | ' +
+                                        resData?.billing_contact_person_no : '' }}
+                                    </p>
+                                </mat-card>
+                            </div>
+                        </div>
+
+                        <!-- Ship To -->
+                        <div class="row mt-3" *ngIf="returnType=='INVOICE_CANCEL'">
+                            <div class="col-md-8">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4>Ship To</h4>
+
+                                    <p>{{ resData?.shipping_address }}
+                                        {{ resData?.shipping_postal_address }}</p>
+                                </mat-card>
+                            </div>
+
+                            <div class="col-md-4">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4>Contact Person</h4>
+
+                                    <p>
+                                        {{ resData?.shipping_contact_person }}
+                                        {{ resData?.shipping_contact_person_no ? ' | ' +
+                                        resData?.shipping_contact_person_no : '' }}
+                                    </p>
+                                </mat-card>
+                            </div>
+                        </div>
+
+                        <!-- Delivery Address -->
+                        <div class="row mt-3" *ngIf="returnType=='INVOICE_CANCEL'">
+                            <div class="col-md-12">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4 class="mb-3">Dispatch From</h4>
+
+                                    <p>{{ resData?.dispatch_address }}
+                                        {{ resData?.dispatch_postal_address }}</p>
+                                </mat-card>
+                            </div>
+
+                          <!--  <div class="col-md-4">
+                                <mat-card class="address-card" style="padding-left: 10px;padding-top: 5px;">
+                                    <h4 class="mb-3">Contact Person</h4>
+
+                                    <p>
+                                        {{ resData?.dispatch_contact_person }}
+                                        {{ resData?.dispatch_contact_person_no ? ' | ' +
+                                        resData?.dispatch_contact_person_no : '' }}
+                                    </p>
+                                </mat-card>
+                            </div> -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="right_data_all">
+                <div class="heading_neo mt-4">
+                    <h3> Item Details</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+                            <div class="table-wrapper">
+
+                                <table class="table table-bordered">
+
+                                    <thead>
+                                        <tr>
+                                            <th>S.N.</th>
+                                            <th>Item Name</th>
+                                            <th>HSN</th>
+                                            <th>GST %</th>
+                                            <th>Qty</th>
+                                            <th *ngIf="this.returnType!=='INVOICE_CANCEL'">Return Qty</th>
+                                            <th>Rate</th>
+                                            <th>Discount</th>
+                                            <th>Total</th>
+                                            <th *ngIf="this.returnType!=='INVOICE_CANCEL'" style="width:130px">Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <!-- PARENT LOOP -->
+                                        <ng-container *ngFor="let item of items; let i = index">
+
+                                            <!-- PARENT ROW -->
+                                            <tr style="font-weight:bold; background:#f5f5f5;">
+                                                <td>{{ i + 1 }}</td>
+
+                                                <td>
+                                                    {{ item.item_name }}
+                                                    <small style="color:gray;">
+                                                        ({{ item.item_type }})
+                                                    </small>
+                                                </td>
+
+                                                <td style="text-align:center;">{{ item.hsncode }}</td>
+                                                <td style="text-align:center;">{{ item.igst }}</td>
+
+                                                <td style="text-align:center;">
+                                                    {{ item.qty }} {{ item.UOM }}
+                                                </td>
+
+                                                <td *ngIf="this.returnType!=='INVOICE_CANCEL'">
+                                                    <input type="number" [value]="item.return_qty"
+                                                        (input)="onReturnQtyChange($event, item)"
+                                                        name="return_qty_{{i}}" min="0" [max]="item.qty">
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ item.price_per_unit }}
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ item.discount_per_unit }}
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ (item.qty * item.price_per_unit)-(item.qty *
+                                                    item.discount_per_unit) }}
+                                                </td>
+
+                                                <!-- ACTION (PARENT ALLOWED) -->
+                                                <td *ngIf="this.returnType!=='INVOICE_CANCEL'">
+                                                    <button matButton="elevated" *ngIf="this.returnType!=='RETURN'"
+                                                        style="border-radius: 5px;
+    border-style: hidden;" matTooltip="Cancel" (click)="cancel(i, item)">Select Reason</button>
+                                                    <!-- <button mat-icon-button matTooltip="Cancel" style="font-size:15px; display:flex" *ngIf="this.returnType!=='RETURN'"
+                                                        (click)="cancel(i, item)">
+                                                        Select Reason
+                                                        
+                                                    </button> -->
+                                                    <button mat-icon-button matTooltip="Select serial no."
+                                                        *ngIf="this.returnType=='RETURN'" (click)="openDialog(i, item)">
+                                                        <mat-icon>open_in_new</mat-icon>
+                                                    </button>
+                                                </td>
+
+                                            </tr>
+
+                                            <!-- CHILD LOOP -->
+                                            <ng-container *ngFor="let child of item.children">
+
+                                                <!-- CHILD ROW -->
+                                                <tr style="background:#fff;">
+
+                                                    <td></td>
+
+                                                    <td style="padding-left:25px;">
+                                                        └ {{ child.item_name }}
+                                                        <small style="color:gray;">
+                                                            ({{ child.item_type }})
+                                                        </small>
+                                                    </td>
+
+                                                    <td style="text-align:center;">{{ child.hsncode }}</td>
+                                                    <td style="text-align:center;">{{ child.igst }}</td>
+
+                                                    <td style="text-align:center;">
+                                                        {{ child.qty }} {{ child.UOM }}
+                                                    </td>
+
+                                                    <td *ngIf="this.returnType!=='INVOICE_CANCEL'">
+                                                        <!-- <input type="number" 
+                                                            [max]="child.qty" min="0"> -->
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ child.price_per_unit }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ child.discount_per_unit }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ child.qty * child.price_per_unit }}
+                                                    </td>
+
+                                                    <!-- ACTION (CHILD ALLOWED) -->
+                                                    <td *ngIf="this.returnType!=='INVOICE_CANCEL'">
+                                                        <!-- <button mat-icon-button matTooltip="Cancel"
+                                                            (click)="cancel(i, child)">
+                                                            <mat-icon>cancel</mat-icon>
+                                                        </button> -->
+                                                    </td>
+
+                                                </tr>
+
+                                                <!-- GRAND CHILD LOOP -->
+                                                <ng-container *ngFor="let sub of child.children">
+
+                                                    <!-- GRAND CHILD ROW -->
+                                                    <tr style="background:#fafafa;">
+
+                                                        <td></td>
+
+                                                        <td style="padding-left:50px;">
+                                                            └─ {{ sub.item_name }}
+                                                        </td>
+
+                                                        <td style="text-align:center;">{{ sub.hsncode }}</td>
+                                                        <td style="text-align:center;">{{ sub.igst }}</td>
+
+                                                        <td style="text-align:center;">
+                                                            {{ sub.qty }} {{ sub.UOM }}
+                                                        </td>
+
+                                                        <td *ngIf="this.returnType!=='INVOICE_CANCEL'">
+                                                            <!-- <input type="number" [(ngModel)]="sub.return_qty"
+                                                                [max]="sub.qty" min="0"> -->
+                                                        </td>
+
+                                                        <td style="text-align:right;">
+                                                            {{ sub.price_per_unit }}
+                                                        </td>
+
+                                                        <td style="text-align:right;">
+                                                            {{ sub.discount_per_unit }}
+                                                        </td>
+
+                                                        <td style="text-align:right;">
+                                                            {{ sub.qty * sub.price_per_unit }}
+                                                        </td>
+
+                                                        <!-- ACTION (GRAND CHILD HIDDEN) -->
+                                                        <td *ngIf="this.returnType!=='INVOICE_CANCEL'"></td>
+
+                                                    </tr>
+
+                                                </ng-container>
+
+                                            </ng-container>
+
+                                        </ng-container>
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Gross Amount</b>
+                                            </td>
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ grossTotal | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngFor="let d of grossDiscountArray">
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>{{ d.discount_name }}</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                <span *ngIf="d.discount_type === 'flat'">
+                                                    {{currencySign}}{{ d.amount | number:'1.2-2' }}
+                                                </span>
+
+                                                <span *ngIf="d.discount_type === 'percent'">
+                                                    {{currencySign}}{{ d.amount }} ({{ d.discount }})
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>GST Value</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ gstTotal | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Net Basic Offer Amount</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ totalAMTAfterDiscount | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+
+                                        <ng-container *ngIf="chargeSummary?.appliedCharges?.length > 0 && !status">
+
+                                            <tr *ngFor="let c of chargeSummary.appliedCharges">
+
+                                                <td [attr.colspan]="isInvoiceCancel ? 5 : 7"></td>
+
+                                                <td>{{ c.charge_type }}</td>
+
+                                                <td>{{ c.rule_name }}</td>
+
+                                                <td>{{ c.amount }}</td>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td [attr.colspan]="isInvoiceCancel ? 6 : 8"></td>
+
+                                                <td>
+                                                    <b>Total Charges</b>
+                                                </td>
+
+                                                <td>
+                                                    {{ chargeSummary?.totalCharges }}
+                                                </td>
+
+                                            </tr>
+
+                                        </ng-container>
+
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Discount Amount</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ discountAmt | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Utilize Advance Amount</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ utilizedAdvance | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Utilize Gross Discount Amount</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ existingTotalDiscountAmount | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td [attr.colspan]="footerColspan" style="text-align: right;">
+                                                <b>Final Offer Amount Including GST</b>
+                                            </td>
+
+                                            <td [attr.colspan]="isInvoiceCancel ? 1 : 2">
+                                                {{currencySign}}{{ grant_total | number:'1.2-2' }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="right_data_all" *ngIf="returnType!=='SO_CANCEL' && returnType!=='INVOICE_CANCEL' ">
+                <div class="heading_neo mt-4">
+                    <h3> Transport Information</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+                            <div class="grid-4">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Transporter</mat-label>
+                                        <input matInput type="text" formControlName="transporter" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Vehicle Number</mat-label>
+                                        <input matInput type="text" formControlName="vehicle_no" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>LR Number</mat-label>
+                                        <input matInput type="text" formControlName="lr_number" readonly />
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Driver Name</mat-label>
+                                        <input matInput type="text" formControlName="driver_name" readonly />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="right_data_all" *ngIf="returnType!=='SO_CANCEL' && returnType!=='INVOICE_CANCEL'">
+                <div class="heading_neo mt-4">
+                    <h3> Audit Timeline</h3>
+                </div>
+                <div class="form_basic mb-0">
+                    <div class="form_set">
+                        <div class="row">
+
+
+                            <div class="audit-log">
+
+                                <div class="audit-item">
+
+                                    <h4>Sales Return Created</h4>
+
+                                    <p>
+                                        Ajay Kumar | 20 May 2026 10:30 AM
+                                    </p>
+
+                                </div>
+
+                                <div class="audit-item">
+
+                                    <h4>Inventory Hold Released</h4>
+
+                                    <p>System Generated</p>
+
+                                </div>
+
+                                <div class="audit-item">
+
+                                    <h4>QC Pending</h4>
+
+                                    <p>Warehouse Team</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <button mat-raised-button color="primary" (click)="createSalesReturn()" *ngIf="!status" style="float: right;">
+            {{returnType!=='INVOICE_CANCEL'?'SO Action':'Invoice Action'}}
+        </button>
+    </form>
+</section>

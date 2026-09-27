@@ -1,0 +1,221 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Attendance ess<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Attendance Calendar</span></p>
+  </div>
+
+</div>
+
+<div class="right_data_all pt-3">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Month Selector -->
+        <div class="col-12 col-sm-4 col-md-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Month</mat-label>
+              <!-- <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()"> -->
+              <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="get_attendanceBYmonth()">
+                <mat-option *ngFor="let month of months" [value]="month">
+                  {{ month }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="!selectedMonth">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Year Selector -->
+        <div class="col-12 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear" (ngModelChange)="get_attendanceBYmonth()">
+              <mat-option *ngFor="let year of financialYearList" [value]="year?.financial_year">
+                {{ year?.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear">
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Global Minutes</mat-label>
+            <input matInput placeholder="Placeholder" [(ngModel)]="gmData" readonly>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Container for Calendar and Legend -->
+      <div class="calendar-legend-container">
+        <!-- Attendance Calendar Table -->
+        <div class="calendar-container">
+          <div *ngIf="calendarDays.length">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th *ngFor="let day of daysOfWeek" scope="col">{{ day }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let week of calendarDays">
+                  <td *ngFor="let day of week" (click)="showFullDetail(day)">
+            
+                    <div class="day-cell">
+                      <div *ngIf="day?.details?.length">
+                        <p class="wfh_show" *ngIf="day?.details[0]?.job_type == 'WFH'">WFH</p>
+                      </div>
+                      <p class="wfh_show coliday_show" *ngIf="day?.holiday_name" [title]="day?.holiday_name">
+                        Holiday</p>
+                      {{ day?.date !== '' ? day?.date : '' }}
+                      <div class="border-stick" [ngStyle]="{'background-color': day?.color || 'default-color'}"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Color Legend -->
+        <!-- <div class="color-legend">
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#28a745'}"></div>
+            <span>Present</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#dc3545'}"></div>
+            <span>Absent</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#007bff'}"></div>
+            <span>Paid Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#fd7e14'}"></div>
+            <span>Unpaid Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#6c757d'}"></div>
+            <span>Default Absent</span>
+          </div>
+          <!-- <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#d4edda'}"></div>
+            <span>Default Present</span>
+          </div> -->
+          <!-- <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#ffc107'}"></div>
+            <span>Half Day</span>
+          </div> -->
+          <!-- <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#86c1ff'}"></div>
+            <span>Paid HalfDay Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#ffe5b4'}"></div>
+            <span>Unpaid HalfDay Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#dd4bf5'}"></div>
+            <span>Holiday</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#fde50f'}"></div>
+            <span>Week Off</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#03fff3'}"></div>
+            <span>Comp Off</span>
+          </div>
+        </div> --> 
+        <div class="color-legend">
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#198754'}"></div>
+                        <span>Present (P / DP)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#dc3545'}"></div>
+                        <span>Absent (A)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#6c757d'}"></div>
+                        <span>Default Absent (DA)</span>
+                    </div>
+
+                    <!-- Paid Leave -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#0d6efd'}"></div>
+                        <span>Paid Leave Full Day (PFD)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#66b2ff'}"></div>
+                        <span>Paid Leave Half Day (PHD)</span>
+                    </div>
+
+                    <!-- Half Paid Leave -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#6f42c1'}"></div>
+                        <span>Half Paid Leave Full Day (HPFD)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#cda6ff'}"></div>
+                        <span>Half Paid Leave Half Day (HPHD)</span>
+                    </div>
+
+                    <!-- Non Paid Leave -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#fd7e14'}"></div>
+                        <span>Non Paid Leave Full Day (NPFD)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#ffc896'}"></div>
+                        <span>Non Paid Leave Half Day (NPHD)</span>
+                    </div>
+
+                    <!-- Unpaid without Quota -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#b02a37'}"></div>
+                        <span>Unpaid Leave (UL)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#e07a88'}"></div>
+                        <span>Unpaid Half Leave (UHL)</span>
+                    </div>
+
+                    <!-- Half Day -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#20c997'}"></div>
+                        <span>Half Day (HD)</span>
+                    </div>
+
+                    <!-- Comp Off -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#0dcaf0'}"></div>
+                        <span>Comp Off (CO)</span>
+                    </div>
+
+                    <!-- Week Off -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#ffc107'}"></div>
+                        <span>Week Off Full Day (WFO)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#ffec99'}"></div>
+                        <span>Week Off Half Day (WHO)</span>
+                    </div>
+
+                    <!-- Holiday -->
+                    <div class="legend-item">
+                        <div class="color-box" [ngStyle]="{'background-color': '#f032e6'}"></div>
+                        <span>Holiday (H)</span>
+                    </div>
+                </div>
+      </div>
+    </mat-card-content> 
+  </mat-card>
+</div>

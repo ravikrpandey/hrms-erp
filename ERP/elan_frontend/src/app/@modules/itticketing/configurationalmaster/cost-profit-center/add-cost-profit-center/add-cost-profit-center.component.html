@@ -1,0 +1,60 @@
+<div class="deparment-dialoge">
+    <h3 *ngIf="!view" mat-dialog-title class="popHead">Add Type</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead"> Add Type Record</h3>
+  
+    <ng-container *ngIf="view">
+      <mat-dialog-content class="mat-typography mt-3">
+        <div class="cotain">
+          <div class="emp_key">
+            <p>Type Name :</p>
+            <p>name </p>
+           
+          </div>
+        </div>
+      </mat-dialog-content>
+      <mat-dialog-actions align="end" class="common_button_sub mb-2">
+        <button mat-dialog-close class="cancel_button_y">Close</button>
+      </mat-dialog-actions>
+    </ng-container>
+  
+    <fieldset *ngIf="!view">
+      <div class="m-3" [formGroup]="departmentForm">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>select type</mat-label>
+              <mat-select formControlName="selected_type" placeholder=" --None-- " >
+                <mat-option value="profit_center">Profit Center</mat-option>
+                <mat-option value="cost_center">Cost Center</mat-option>
+            </mat-select>
+             
+            </mat-form-field>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" formControlName="name" />
+              <mat-error *ngIf="departmentForm.get('name')?.hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="departmentForm.get('name')?.hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          
+          
+        </div>
+      </div>
+  
+      <mat-dialog-actions align="end" *ngIf="!view" class="common_button_sub mb-3">
+        <button (click)="onSubmitForm()"   *ngIf='data?.status != "view" '>
+            {{data?.status == 'edit'? 'Update':'Save'}}
+        </button>
+       
+        <button  mat-dialog-close class="cancel_button_y">
+          Close
+        </button>
+      </mat-dialog-actions>
+    </fieldset>
+  </div>

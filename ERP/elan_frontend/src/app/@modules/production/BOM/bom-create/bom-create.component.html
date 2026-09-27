@@ -1,0 +1,300 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            BOM
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+               {{viewDetails=='view'?'View BOM Record':'Add new BOM'}} </span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head mt-3">
+            <h3> {{viewDetails=='view'?'View BOM Record':'Add new BOM'}}</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+       <fieldset [disabled]="viewDetails=='view'">
+        <form [formGroup]="AddNewForm">
+            <div>
+                <div class="row mt-4 mx-3">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3">
+                        <mat-label class="mat_label">BOM Type</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>BOM TYPE</mat-label>
+                                <mat-select formControlName="bom_type" (selectionChange)="getProductionType()" >
+                                    <mat-option value="FINISH_GOOD">FINISH GOOD</mat-option>
+                                    <mat-option value="PACKGING">PACKGING</mat-option>
+                                    <mat-option value="SFG">SFG</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('bom_type')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <mat-label class="mat_label">Category</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Category</mat-label>
+                                <mat-select formControlName="cetegory" (selectionChange)="getAllActiveProduct($event)">
+                                    <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('cetegory')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <mat-label class="mat_label">Product Name</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Product Name</mat-label>
+                                <mat-select formControlName="product_id" (selectionChange)="getProductItem($event)">
+                                    <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('product_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <mat-label class="mat_label">Product Variant</mat-label>
+                    </div> 
+                   <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Variant Name</mat-label>
+                                <mat-select formControlName="product_variant" >
+                                    <mat-option *ngFor="let data of getAllVariantData" [value]="data.id"> {{ data?.variant_name }}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('product_variant')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3" *ngIf="AddNewForm.controls['bom_type'].value == 'SFG'">
+                        <mat-label class="mat_label">SFG Type</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="AddNewForm.controls['bom_type'].value == 'SFG'">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select SFG Type</mat-label>
+                                <mat-select formControlName="sfg_id" (selectionChange)="getSFGItem($event)">
+                                    <mat-option *ngFor="let data of getAllSFG" [value]="data.id">{{data.item_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('sfg_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2 mx-3" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3">
+                        <mat-label class="mat_label">Product Rating</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Product Rating</mat-label>
+                                <input type="text" matInput formControlName="product_rating" readonly>
+                                <mat-error *ngIf="AddNewForm.get('product_rating')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2 mx-3" *ngIf="AddNewForm.controls['bom_type'].value == 'FINISH_GOOD' || AddNewForm.controls['bom_type'].value == 'PACKGING'">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mt-3">
+                        <mat-label class="mat_label">Product Code</mat-label>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Product Code</mat-label>
+                                <input type="text" matInput formControlName="product_code" readonly>
+                                <mat-error *ngIf="AddNewForm.get('product_code')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2 mx-3">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+                        <mat-label class="mat_label">Description</mat-label>
+                    </div>
+                    <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-9 col-12 mt-2">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Description</mat-label>
+                                <input type="text" matInput formControlName="product_description" readonly>
+                                <mat-error *ngIf="AddNewForm.get('wokflowcategory')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3 mx-1 mb-3">
+                    <div style="overflow-x: auto; width: 100%;">
+                        <table class="border" style="min-width: 100%; table-layout: auto;">
+                            <thead>
+                                <tr class="border">
+                                    <th class="border p-3 text-center">Item Type</th>
+                                    <th class="border p-3 text-center">Item Category</th>
+                                    <th class="border p-3 text-center">Item Name</th>
+                                    <th class="border p-3 text-center">Item Code</th>
+                                    <th class="border p-3 text-center">Qty</th>
+                                    <th class="border p-3 text-center">Type</th>
+                                    <th class="border p-3 text-center">Scrape %</th>
+                                    <th class="border p-3 text-center">Scrape reusable</th>
+                                    <th class="border p-3 text-center">UOM</th>
+                                    <th class="border p-3 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody formArrayName="bomDetails">
+                                <tr *ngFor="let roleFieled of itemsFormArray['controls']; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <div class="form-group-name-cat" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <mat-select formControlName="item_type_id">
+                                                    <mat-option *ngFor="let data of itemType" (click)="getCategoryVal(data.id,i)" [value]="data.id">{{data.itemType}}</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('item_type')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name-cat" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <mat-select formControlName="asset_id">
+                                                    <mat-option *ngFor="let data of assetData[i]" (click)="getAssetCateVal(data.id,i)" [value]="data.id">{{data.asset_category_name}}</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('asset_id')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <mat-select formControlName="item_master_id">
+                                                    <mat-option *ngFor="let data of getItemById[i]" [value]="data.MASTER_ITEM?.id" (onSelectionChange)="getItemData(data,i)">
+                                                        {{data.MASTER_ITEM?.item_name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('item_master_id')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <input type="text" matInput formControlName="item_code" readonly>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('item_code')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <input type="number" matInput formControlName="bom_qty">
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('bom_qty')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <mat-select formControlName="type">
+                                                    <mat-option value="Fixed">Fixed</mat-option>
+                                                    <mat-option value="Round of">Round of</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('type')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name">
+                                            <mat-form-field appearance="outline">
+                                                <input type="number" matInput formControlName="scrape">
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('invalidRange')?.invalid">
+                                                    Accept 1 - 100!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name-cat" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <mat-select formControlName="scrape_reuseable">
+                                                    <mat-option value="Yes">Yes</mat-option>
+                                                    <mat-option value="No">No</mat-option>
+                                                </mat-select>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('scrape_reuseable')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group-name" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-form-field appearance="outline">
+                                                <input type="text" matInput formControlName="uom_id" readonly>
+                                                <mat-error *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('uom_id')?.invalid">
+                                                    required!
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="edit_del" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                            <mat-icon matTooltip="Add Item" (click)="addItem()">add_circle</mat-icon>
+                                            <ng-container *ngIf="i+1!==1">
+                                                <mat-icon matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                            </ng-container>
+                                            <mat-icon matTooltip="View Item" (click)="viewItem(i)" *ngIf="AddNewForm.get('bomDetails')?.get(i.toString())?.get('item_type_id')?.value == '3'">visibility</mat-icon>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="submit_btn" *ngIf="viewDetails!=='view'">
+                    <button mat-raised-button color="primary" (click)="ngSubmitBom(this.AddNewForm.value)">
+                        {{UOMID?'Update':'Submit'}}
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                </div>
+            </div>
+        </form>
+       </fieldset>
+    </mat-card>
+</section>

@@ -1,0 +1,110 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Warehouse management </h1>
+    <p>Allocate Items<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span>Allocate Items To Warehouse</span></p>
+  </div>
+  </div>
+  <div class="p-2">
+<form [formGroup]="form">
+     <div class="row mt-3 p-3">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Items</mat-label>
+                  <input matInput type="text" formControlName="items" maxlength="30" readonly/>
+                </mat-form-field>
+              </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group ">
+                <mat-form-field appearance="outline">
+                  <mat-label>Items Area (ft)<sup>2</sup></mat-label>
+                  <input matInput type="text" formControlName="area" maxlength="30" readonly />
+                </mat-form-field>
+              </div>
+        </div>
+
+     
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+            <div class="form-group ">
+              <mat-form-field appearance="outline">
+                <mat-label>Warehouse Type</mat-label>
+                <mat-select formControlName="zone_type">
+                  <mat-option *ngFor="let data of getAllzonesData" [value]="data.zoneType" (click)="getWarehouseId(data)"
+                    >{{data.zoneType=='1'?'Rack':'Bulk Storage'}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+           <div *ngIf="form.get('zone_type')?.value">
+            ({{areaWarehouse?.zone_type=='1'?'Rack Area':'Bulk Storage Area'}} {{areaWarehouse?.zone_size}} || {{areaWarehouse?.bulk_zone_area}} ft²)
+           </div>
+          </div>
+          <ng-container *ngIf="form.get('zone_type')?.value=='1'">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+            <div class="form-group ">
+              <mat-form-field appearance="outline">
+                <mat-label>Rack Name</mat-label>
+                <mat-select formControlName="rack_id">
+                  <mat-option *ngFor="let data of zonesData" [value]="data.id" (click)="getRackById(data)"
+                    >{{data.rack_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div *ngIf="form.get('rack_id')?.value">
+            Rack Area:{{rackarea?.rack_Of_volume}}  ft²
+             </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+            <div class="form-group ">
+              <mat-form-field appearance="outline">
+                <mat-label>Shelf Name</mat-label>
+                <mat-select formControlName="shelf_id">
+                  <mat-option *ngFor="let data of shelfData" [value]="data.id" (click)="getShelfData(data)"
+                    >{{data.shelf_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div *ngIf="form.get('shelf_id')?.value">
+
+            Shelf Area:{{shelfarea?.shelf_volume}}  ft²
+
+          </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+            <div class="form-group ">
+              <mat-form-field appearance="outline">
+                <mat-label>Bin Name</mat-label>
+                <mat-select formControlName="bin_id">
+                  <mat-option *ngFor="let data of getAllBinsData" [value]="data.id" (click) = "getBinData(data)"
+                    >{{data.bin_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+            <div *ngIf="form.get('bin_id')?.value">
+
+           Bin Area: {{binarea?.bin_area}}  ft²
+
+          </div>
+          </div>
+       </ng-container>
+     </div> 
+
+     <div class="col-md-12">
+        <div class="common_button_sub">
+          <button (click)="allocateItems()">Allocate Items</button>
+          <button type="button" class="cancel_button_y" (click)="close()" >
+            Close
+          </button>
+        </div>
+      </div>
+
+</form>
+
+
+  </div>
+  

@@ -1,0 +1,55 @@
+<app-wrapper
+  [title]="'Expense Management'"
+  [subTitle]="'Travel Expense'"
+  [subheading]="
+    typeCheck === 'view'
+      ? 'View Travel Expense'
+      : typeCheck === 'edit'
+      ? 'Edit Travel Expense'
+      : typeCheck === 'process-approval'
+      ? 'Approval-Process'
+      : 'Create Travel Expense'
+  "
+  [showActions]="true"
+  [isBack]="true"
+>
+  <div *ngIf="typeCheck === 'new_expense'">
+    <form [formGroup]="form" class="col-md-8">
+      <app-mat-form-select-filter
+        formControlName="travelId"
+        id="id"
+        key="id"
+        [items]="trData"
+        [displayKey]="['travel_request_number']"
+        placeholder="Select Travel Request"
+        aria-describedby="travelrequest"
+        (selectionChange)="onSelectionChange($event)"
+      ></app-mat-form-select-filter>
+    </form>
+    <div class="travel-details mt-4">
+      <ng-container *ngIf="travelId; else noSelection">
+        <app-dash-create-travel-request
+          [travelReqid]="travelId"
+          [typeCheck]="typeCheck"
+          (dialogClose)="close()"
+        ></app-dash-create-travel-request>
+      </ng-container>
+
+      <ng-template #noSelection>
+        <mat-card class="empty-state-card">
+          <mat-card-content class="empty-state-content">
+            <mat-icon color="accent" class="empty-icon">info_outline</mat-icon>
+            <p class="empty-text">Please select a travel request to proceed.</p>
+          </mat-card-content>
+        </mat-card>
+      </ng-template>
+    </div>
+  </div>
+
+  <app-dash-create-travel-request
+    *ngIf="travelexpid"
+    [travelexpid]="travelexpid"
+    [typeCheck]="typeCheck"
+    (dialogClose)="close()"
+  ></app-dash-create-travel-request>
+</app-wrapper>

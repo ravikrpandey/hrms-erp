@@ -1,0 +1,40 @@
+<div class="right_data_all">
+  <div class="add_button">
+    <p (click)="add()" style="padding: 10px 10px 0px 0px;color: #fff;cursor: pointer;">+ Select Items</p>
+  </div>
+  <div class="heading_neo">
+    <h3>Manage Items</h3>
+  </div>
+  <form [formGroup]="frmItem" class="form_basic mb-0" style="padding: 10px;">
+    <div class="row mt-3" *ngIf="!isHidden">
+      <div class="col-xxl-2 col-lg-2 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-0">
+          <app-mat-form-select-filter formControlName="category_id" [key]="'id'" [items]="categoryList"
+            [displayKey]="'asset_category_name'" placeholder="Select Category">
+          </app-mat-form-select-filter>
+        </div>
+      </div>
+      <div class="col-xxl-2 col-lg-2 col-md-3 col-sm-3 col-12">
+        <div class="form-group mb-0">
+          <app-mat-form-select-filter formControlName="sub_category_id" [key]="'id'" [items]="subCategoryList"
+            [displayKey]="'sub_category_name'" placeholder="Select Sub Category">
+          </app-mat-form-select-filter>
+        </div>
+      </div>
+      <div class="col-md-8">
+         <div class="common_button_sub" *ngIf="!isHidden">
+      <div class="add_button">
+        <button (click)="getSelectedRows()">Save Items</button>
+      </div>
+      <!-- <button type="button" class="cancel_button_y" (click)="cancel()">Cancel</button> -->
+    </div>
+      </div>
+    </div>
+    <div class="ag_grid">
+      <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 400px" [rowData]="rowData"
+        [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [rowClass]="rowClass"
+        rowSelection="multiple" (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+    </div>
+  </form>
+</div>

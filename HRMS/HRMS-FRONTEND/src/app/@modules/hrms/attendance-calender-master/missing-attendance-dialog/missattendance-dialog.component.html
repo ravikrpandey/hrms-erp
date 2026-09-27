@@ -1,0 +1,31 @@
+<ng-container>
+  <h3 class="popHead">Mark Missing Attendance</h3>
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" (dateChange)="onStartDateChange()">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" [min]="startDate">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+    </div>
+    <mat-dialog-actions class="button-actions">
+      <div class="button-row">
+        <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+        <button mat-button mat-dialog-close mat-raised-button color="primary" (click)="onSubmit2()">Mark</button>
+      </div>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+</ng-container>

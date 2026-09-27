@@ -1,0 +1,531 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Performance Assessment</h1>
+    <p>Team Performance Assessment<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>{{paramsType == 'view' ? 'View':'Add'}} Assessments</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+<div class="form_basic mb-0">
+  <form [formGroup]="employeeDetail">
+    <div class="row">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Employee Name</mat-label>
+          <mat-form-field appearance="outline">
+            <input [readonly]="isDisabled" matInput type="text" formControlName="emp_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Employee Code</mat-label>
+          <mat-form-field class="emp_codes" appearance="outline">
+            <input [readonly]="isDisabled" matInput type="text" formControlName="emp_number" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Department</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput [readonly]="isDisabled" type="text" formControlName="department_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Area </mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput [readonly]="isDisabled" type="text" formControlName="area_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Reporting Manager</mat-label>
+          <mat-form-field appearance="outline">
+            <input [readonly]="isDisabled" matInput type="text" formControlName="hierarchical_superio" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="paramsType =='assessment'">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <div class="form-group">
+          <mat-label>Assessment Name</mat-label>
+          <mat-form-field appearance="outline">
+            <input [readonly]="isDisabled" matInput type="text" formControlName="assessment_name" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Start Date</mat-label>
+          <mat-form-field appearance="outline">
+            <input readonly matInput type="text" [value]="s_date" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>End Date</mat-label>
+          <mat-form-field appearance="outline">
+            <input readonly matInput type="text" [value]="e_date" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="paramsType =='feedback'">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <label for="emp_month">Select Month</label>
+        <mat-form-field appearance="outline">
+          <mat-select formControlName="emp_month" aria-label="Default select example">
+            <!-- <mat-option selected disabled value="">Select Month</mat-option> -->
+            <mat-option *ngFor="let data of Months" [value]="data">
+              {{ data}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <hr>
+  <div class="cardBoxes">
+    <div class="row">
+      <div class="col-md-2 col-lg-2 col-sm-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Bad</h3>
+            <p class="card-text">The Employee demonstrates a level of
+              proficiency in the role much lower than what is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Does not satisfy</h3>
+            <p class="card-text">The Employee demonstrates a level of
+              proficiency in the role that is lower than what is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Satisfies</h3>
+            <p class="card-text">The Employee demonstrates a level of
+              proficiency in the role in line with what is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Good</h3>
+            <p class="card-text">The Employee demonstrates a level of
+              proficiency in the role higher than what is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Great</h3>
+            <p class="card-text">The Employee demonstrates a level of
+              proficiency in the role much higher than what is required.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Not applicable</h3>
+            <p class="card-text">The specific Objective or Competence is not
+              applicable to the Employee within the scope of the Assessment
+              Process.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="form_basic p-0 mt-3">
+    <form [formGroup]="technicalAssement">
+      <div class="heading_neo">
+        <h3>Technical Assessment</h3>
+      </div>
+      <div formArrayName="technicalItems">
+        <div class="form_sePo">
+          <mat-card class="Document_Details">
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th>Objectives</th>
+                    <th>Activity</th>
+                    <th>KPI</th>
+                    <th>Self Rating</th>
+                    <th>Reporting Manager Rating</th>
+                    <th>Approval Manager Rating</th>
+                    <th>Final Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let data of kpa_assessment; let i = index" [formGroupName]="i">
+                    <td>{{ mode != "innitiate" ? data.kpa_objective_name :
+                      data.objective_name }}</td>
+                    <td>{{ mode != "innitiate" ? data.kpa_activity : data.activity
+                      }}</td>
+                    <td [innerHTML]="mode != 'innitiate' ? data.kpa_kpi_data : data.kpi_data"></td>
+
+                    <td>
+                      <select style="border: 1px solid #A9A9A9" class="form-select" formControlName="self_rating_id"
+                        aria-label="Default select example">
+                        <option selected disabled value>Self Rating</option>
+                        <option *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                      </select>
+                      <mat-error
+                        *ngIf="this.technicalItems.controls[i].get('self_rating_id')?.touched && this.technicalItems.controls[i].get('self_rating_id')?.errors?.['required']">
+                        * Required!
+                      </mat-error>
+                    </td>
+                    <td>
+                      <select style="border: 1px solid #A9A9A9" class="form-select" formControlName="manager_rating_id"
+                        aria-label="Default select example" >
+                        <option  *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                      </select>
+                      <mat-error
+                        *ngIf="this.technicalItems.controls[i].get('manager_rating_id')?.touched && this.technicalItems.controls[i].get('manager_rating_id')?.errors?.['required']">
+                        * Required!
+                      </mat-error>
+                    </td>
+                    <td>
+                      <select style="border: 1px solid #A9A9A9" class="form-select"
+                        formControlName="approval_manager_rating_Id" aria-label="Default select example"
+                        (change)="onApprovalManagerRating($event,i)">
+                        <option [value]="data.id" *ngFor="let data of selfAssessmentRating">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                        
+                      </select>
+                      <mat-error
+                        *ngIf="this.technicalItems.controls[i].get('approval_manager_rating_Id')?.touched && this.technicalItems.controls[i].get('approval_manager_rating_Id')?.errors?.['required']">
+                        * Required!
+                      </mat-error>
+                    </td>
+                    <td >
+                      <input style="border: 1px solid #A9A9A9;
+                        font-size: 14px;
+                        padding: 7px 10px;" type="text" class="form-control" formControlName="final_rating" readonly />
+                    </td>
+                   
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="form_basic p-0 mt-3">
+    <form [formGroup]="behaviorAssessment">
+      <div class="heading_neo">
+        <h3>Behavioral Values Assessment</h3>
+      </div>
+      <div formArrayName="behaviorItems">
+        <div class="form_sePo">
+          <mat-card class="Document_Details">
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th>Competence</th>
+                    <th>Self Rating</th>
+                    <th>Reporting Manager Rating</th>
+                    <th>Approval Manager Rating</th>
+                    <th>Final Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of Competence; let i = index" [formGroupName]="i">
+                    <td>
+                      <input style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;" type="text" 
+                             placeholder="{{ row }}" class="form-control" [value]="row" formControlName="Competence" readonly />
+                    </td>
+                    <td>
+                      <select class="form-select" style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;" 
+                              formControlName="self_rating_id" >
+                        <option selected disabled>Self Rating</option>
+                        <option *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                      </select>
+                    </td>
+                    <td>
+                      <select style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;" 
+                              class="form-select" formControlName="manager_rating_id" >
+                        <option *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                      </select>
+                    </td>
+                    <td>
+                      <select style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;" 
+                              class="form-select" formControlName="approval_manager_rating_Id" 
+                              (change)="onApprovalManagerRating2($event, i)">
+                        <option *ngFor="let data of selfAssessmentRating" [value]="data.id">
+                          {{ data.self_rating }} ({{ data.self_rating_value }})
+                        </option>
+                      </select>
+                    </td>
+                    <td >
+                      <input style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;" type="text" 
+                             class="form-control" formControlName="final_rating" readonly />
+                    </td>
+                    
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card>
+        </div>
+      </div>
+    </form>
+  </div>
+  
+  <div class="form_basic p-0 mt-3">
+    <form [formGroup]="skillDevelopmentForm">
+      <div class="heading_neo">
+        <h3>Skill Development Plan</h3>
+      </div>
+      
+        
+        <div class="form-group mb-3">
+          <!-- <label for="skillPlan">Skill Plan Description</label> -->
+          <ckeditor [editor]="Editor" formControlName="remark"></ckeditor>
+        </div>
+        <div class="col-md-6 col-lg-6 mb-3">
+          <select class="form-select" style="border: 1px solid #A9A9A9; font-size: 14px; padding: 7px 10px;"
+            formControlName="frequency">
+            <option value="Monthly">
+              Monthly
+            </option>
+            <option value="Yearly">
+              Yearly
+            </option>
+          </select>
+        </div>
+      <!-- <div formArrayName="items">
+        <div class="form_sePo">
+          <mat-card class="Document_Details">
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th>Need For Development</th>
+                    <th>Action Plan</th>
+                    <th>Initiate Date</th>
+                    <th>End Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of items?.controls; let i = index" [formGroupName]="i">
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="development" placeholder="Development"
+                            [readonly]="isDisabledSkill || isDisabledSkill2" />
+                          <mat-error
+                            *ngIf="items.controls[i].get('development')?.touched && items.controls[i].get('development')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="action_plan" placeholder="Action Plan"
+                            [readonly]="isDisabledSkill || isDisabledSkill2" />
+                          <mat-error
+                            *ngIf="items.controls[i].get('action_plan')?.touched && items.controls[i].get('action_plan')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabledSkill}">
+                          <input matInput [matDatepicker]="sdpstartDatePicker" placeholder="Start Date"
+                            name="sdpStartDate" formControlName="initiate_date"
+                            [readonly]="isDisabledSkill || isDisabledSkill2" />
+                          <mat-datepicker-toggle [disabled]="isDisabledSkill || isDisabledSkill2" matSuffix
+                            [for]="sdpstartDatePicker"></mat-datepicker-toggle>
+                          <mat-datepicker #sdpstartDatePicker></mat-datepicker>
+                          <mat-error
+                            *ngIf="items.controls[i].get('initiate_date')?.touched && items.controls[i].get('initiate_date')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                          <mat-error
+                            *ngIf="items.controls[i].get('initiate_date')?.touched && items.controls[i].get('initiate_date')?.hasError('startDateInvalid')"
+                            class="mt-2">
+                            Initiate date must be after previous selected end
+                            date
+                          </mat-error>
+                          <mat-error
+                            *ngIf="items.controls[i].get('initiate_date')?.touched && items.controls[i].get('initiate_date')?.hasError('currentendDateInvalid')"
+                            class="mt-2">
+                            Initiate date must be before end date
+                          </mat-error>
+
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': isDisabledSkill}">
+                          <input matInput [matDatepicker]="sdpEndDatePicker" placeholder="End Date" name="sdpEndDate"
+                            formControlName="end_date" [readonly]="isDisabledSkill || isDisabledSkill2" />
+                          <mat-datepicker-toggle [disabled]="isDisabledSkill || isDisabledSkill2" matSuffix
+                            [for]="sdpEndDatePicker"></mat-datepicker-toggle>
+                          <mat-datepicker #sdpEndDatePicker></mat-datepicker>
+                          <mat-error
+                            *ngIf="items.controls[i].get('end_date')?.touched && items.controls[i].get('end_date')?.hasError('endDateInvalid')"
+                            class="mt-2">
+                            End date must be after start date
+                          </mat-error>
+                          <mat-error
+                            *ngIf="items.controls[i].get('end_date')?.touched && items.controls[i].get('end_date')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+
+                    </td>
+                    <td>
+                      
+                      <div
+                        *ngIf="getFileName(i) && ( getFileExtension(i)=='.jpg' || getFileExtension(i)=='.jpeg' || getFileExtension(i)=='.png')"
+                        (click)="download2(baseUrl + getFileName(i),i)">
+                        <img style="height: 50px; width: 50px; display: inline-block;" [src]="baseUrl + getFileName(i)"
+                          alt="" class="fileViewImage" />
+                      </div>
+                      <div class="pointer"
+                        *ngIf="getFileName(i) && ( getFileExtension(i)=='.pdf' || getFileExtension(i)=='.xlsx')">
+                        <ng-container>
+                          <mat-icon matTooltip="Download File"
+                            (click)="download(baseUrl + getFileName(i),i)">download</mat-icon>
+                        </ng-container>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card>
+        </div>
+      </div> -->
+    </form>
+  </div>
+  <div class="form_basic p-0 mt-3">
+    <form [formGroup]="suggestSkillDevelopmentForm">
+      <div class="heading_neo">
+        <h3>Suggest Skill Development Plan</h3>
+      </div>
+      <div formArrayName="suggestDevelopment">
+        <div class="form_sePo">
+          <mat-card class="Document_Details">
+            <div class="table-responsive">
+              <table class="table table-bordered mb-0">
+                <thead>
+                  <tr>
+                    <th>Need For Development</th>
+                    <th *ngIf="mode!='view'">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of suggestDevelopment?.controls; let i = index" [formGroupName]="i">
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="development" placeholder="Development"
+                            [readonly]="isDisabledSkill" />
+                          <mat-error
+                            *ngIf="suggestDevelopment.controls[i].get('development')?.touched && suggestDevelopment.controls[i].get('development')?.hasError('required')">
+                            * Required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td *ngIf="mode!='view'" class="flexCenter">
+                      <div class="form-group" style="display: flex; align-items: center;margin-top:9px"
+                        [hidden]="paramsType == 'view'">
+                        <div class="edit_del flexRow">
+                          <div (click)="SuggestAddRow()">
+                            <mat-icon matTooltip="Add Item" class="addCircle">add_circle</mat-icon>
+                          </div>
+                          <div>
+                            <ng-container *ngIf="i+1!==1">
+                              <mat-icon matTooltip="delete Item" (click)="romoveSuggestRow(i)">delete_circle</mat-icon>
+                            </ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card>
+          <div class="row">
+            <div class="col-md-12 mt-4">
+              <div class="form-group mb-3">
+                <mat-label>Remark By Employee</mat-label>
+                <textarea style="border: 1px solid #A9A9A9" class="form-control"
+                  formControlName="remark_by_employee"  value="{{employeeRemark}}"></textarea>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+              <div class="form-group mb-3">
+                <mat-label>Remark By Manager</mat-label>
+                <textarea style="border: 1px solid #A9A9A9; height: 43px" matInput class="form-control"
+                  formControlName="remark"  value="{{managerRemark}}"></textarea>
+                <mat-error
+                  *ngIf="suggestSkillDevelopmentForm.get('remark')?.touched && suggestSkillDevelopmentForm.get('remark')?.hasError('required')">
+                  * Required!
+                </mat-error>
+              </div>
+            </div>
+            <div class="col-md-6 col-lg-6">
+              <div class="form-group mb-3">
+                <mat-label>Date</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput readonly placeholder="Current Date" name="currentDate" value="{{CurrentDate}}"
+                    formControlName="current_date" />
+                </mat-form-field>
+                <mat-error
+                  *ngIf="suggestSkillDevelopmentForm.get('current_date')?.touched && suggestSkillDevelopmentForm.get('current_date')?.hasError('required')">
+                  * Required!
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div *ngIf="mode=='edit'" class="common_button_sub">
+    <button (click)="onSubmit()" [disabled]="isButtonDisabled" [hidden]="paramsType === 'view'">Save</button>
+  </div>
+</div>

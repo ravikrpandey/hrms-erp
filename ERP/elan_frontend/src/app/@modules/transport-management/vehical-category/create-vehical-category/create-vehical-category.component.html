@@ -1,0 +1,64 @@
+<ng-container *ngIf="visibility=='visible'">
+  <h3 mat-dialog-title class="popHead">Issue Type Record</h3>
+  <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+          <div class="emp_key">
+              <p> Vehicle Category Code : </p>
+              <p> Vehicle Category Name : </p>
+              <p>Description :</p>
+          </div>
+          <div class="emp_value">
+              <p>{{singleProductData?.vehical_category_code}}</p>
+              <p>{{singleProductData?.vehical_category_name}}</p>
+              <p> {{singleProductData?.description}}</p>
+          </div>
+      </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+  </mat-dialog-actions>
+</ng-container>
+
+
+<ng-container *ngIf="visibility!=='visible'">
+  <h3 mat-dialog-title class="popHead"> Vehicle Category </h3>
+  <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+          <form [formGroup]="vehicalCategoryForm">
+              <div class="row">
+                <div class="col-md-20">
+                  <mat-form-field appearance="outline">
+                      <mat-label> Vehicle Category Name</mat-label>
+                      <input matInput type="text" formControlName="vehical_category_name" />
+                      <mat-error *ngIf="vehicalCategoryForm.controls['vehical_category_name'].hasError('required')">
+                          *Required!
+                      </mat-error>
+
+                  </mat-form-field>
+
+              </div>
+
+            </div>
+            <div class="row">
+              <div class="col-md-20">
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <input matInput type="text" formControlName="description" />
+                    <mat-error *ngIf="vehicalCategoryForm.controls['description'].hasError('required')">
+                        *Required!
+                    </mat-error>
+
+                </mat-form-field>
+
+            </div>
+            </div>
+          </form>
+      </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+      <button mat-button mat-raised-button color="primary"
+          (click)="SubmitProductCategory(vehicalCategoryForm)">Submit</button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>

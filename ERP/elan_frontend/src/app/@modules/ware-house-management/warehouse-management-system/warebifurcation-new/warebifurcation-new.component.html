@@ -1,0 +1,453 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Warehouse Management</h1>
+    <p> Warehouse</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back </button>
+  </div>
+</div>
+<div class="right_data_all">
+  <div class="heading_neo mt-4">
+    <h3>Warehouse Details</h3>
+  </div>
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="warehouseForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group ">
+            <mat-form-field appearance="outline">
+              <mat-label>Warehouse Name</mat-label>
+              <input matInput type="text" formControlName="warehouse_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group ">
+            <mat-form-field appearance="outline">
+              <mat-label>Warehouse Code</mat-label>
+              <input matInput type="text" formControlName="warehouse_code" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group ">
+            <mat-form-field appearance="outline">
+              <mat-label>Warehouse Locations</mat-label>
+              <input matInput type="text" formControlName="locations" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+          <div class="form-group ">
+            <mat-form-field appearance="outline">
+              <mat-label> Area (ft) <sup>2</sup></mat-label>
+              <input matInput type="text" formControlName="area" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label> Capacity</mat-label>
+              <input matInput type="text" formControlName="capacity" readonly />
+            </mat-form-field>
+          </div>
+        </div> -->
+      </div>
+      <!-- <div formArrayName="zones"><div *ngFor="let zone of zones.controls; let i = index" [formGroupName]="i" class="row align-items-center mb-3 zone-row"><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><mat-form-field appearance="outline" class="full-width"><mat-label>Zone ID</mat-label><input matInput type="text" formControlName="zone_id" readonly /></mat-form-field></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><mat-form-field appearance="outline" class="full-width"><mat-label>Zone Type</mat-label><mat-select formControlName="zoneType_id"><mat-option [value]="1">Bulk Storage</mat-option><mat-option [value]="2">Cold Storage</mat-option><mat-option [value]="3">Hazardous material Storage</mat-option><mat-option [value]="4">Receiving Area</mat-option><mat-option [value]="5">Sorting and Consolidation Area</mat-option><mat-option [value]="6">Packing and Kitting Area</mat-option><mat-option [value]="7">Quality control Zone</mat-option><mat-option [value]="8">Aisles and pathways</mat-option><mat-option [value]="9">Shipping and Dispatch Zone</mat-option><mat-option [value]="10">Cross-Docking Area</mat-option><mat-option [value]="11">Office and admin area</mat-option><mat-option [value]="12">Break rooms and rest areas</mat-option><mat-option [value]="13">Equipment and maintenance area</mat-option><mat-option [value]="14">Battery charging stations</mat-option><mat-option [value]="15">Returns and reverse logistics area</mat-option></mat-select></mat-form-field></div><div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"><mat-form-field appearance="outline" class="full-width"><mat-label>Zone Size</mat-label><input matInput type="text" formControlName="zone_size" /></mat-form-field></div><div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 d-flex align-items-center justify-content-start zone-action-buttons"><button mat-icon-button color="primary" class="action-icon add-icon" (click)="addZone()" *ngIf="i === zones.length - 1"><mat-icon>add_circle</mat-icon></button><button mat-icon-button color="warn" class="action-icon remove-icon" (click)="removeZone(i)" *ngIf="zones.length > 1"><mat-icon>remove_circle</mat-icon></button></div></div></div> -->
+      <!-- <div class="row"><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Number of Shelf</mat-label><input matInput type="text" formControlName="number_of_shlef" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Number of Bin</mat-label><input matInput type="text" formControlName="Number_of_Bin" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>What product can be stored</mat-label><input matInput type="text" formControlName="what_product_stored" /></mat-form-field></div></div></div> -->
+      <!-- <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12"><div class="common_button_sub button-group justify-end"><button type="submit" class="primary-button" (click)="submitdata()">
+                CREATE LAYOUT
+              </button><button type="button" class="secondary-button" (click)="redirectToList()">
+                Cancel
+              </button></div></div> -->
+      <div class="heading_neo mt-1 mb-2">
+        <h3>Warehouse Zones And Volume</h3>
+      </div>
+      <form [formGroup]="warehouseForm" style="margin: auto;">
+        <div class="row">
+          <!-- <div class="col-6"><mat-form-field appearance="outline"><mat-label>Total Area</mat-label><input matInput formControlName="totalArea" type="text" required><mat-error *ngIf="warehouseForm.get('totalArea')?.hasError('required')">
+          Total Area is required
+        </mat-error></mat-form-field></div> -->
+          <!-- <div class="col-6"><div class="flexRow"><div class="padding"><input type="radio" formControlName="selectedType" value="item">
+      Capacity
+    </div><div class="padding"><input type="radio" formControlName="selectedType" value="service">
+      Size
+    </div></div></div> -->
+        </div>
+        <div formArrayName="zonesCopy">
+          <div *ngFor="let zone of zonesCopy.controls; let zoneIndex = index" [formGroupName]="zoneIndex"
+            class="zone-container">
+            <div class="zone-header" (click)="toggleZone(zoneIndex)" style="cursor: pointer;margin-top: -10px;">
+              <h3 class="zone-title">Zone {{ zoneIndex + 1 }}</h3>
+              <div class="zone-actions">
+                <button mat-icon-button color="primary" class="zone-toggle-btn">
+                  <mat-icon>{{ zoneExpanded[zoneIndex] ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="removeZone(zoneIndex)" class="zone-delete-btn">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div *ngIf="zoneExpanded[zoneIndex]" class="zone-details">
+
+              <!-- <mat-form-field appearance="outline" class="zone-form-field">
+                <mat-label>Zone Type</mat-label>
+                <mat-select formControlName="zoneType" required>
+                  <mat-option value="">Select</mat-option>
+                  <mat-option value="1">NPC</mat-option>
+                  <mat-option value="2">Bulk Storage</mat-option>
+                  <mat-option value="3">Scrape</mat-option>
+                </mat-select>
+                <mat-error *ngIf="zone.get('zoneType')?.hasError('required')">Zone Type is required</mat-error>
+              </mat-form-field> -->
+
+              <mat-form-field appearance="outline" class="zone-form-field">
+                <mat-label>Zone Type</mat-label>
+                <mat-select formControlName="zoneType" required>
+                  <mat-option value="">Select</mat-option>
+                  <mat-option *ngFor="let zType of zoneTypeList" [value]="zType.id.toString()">
+                    {{ zType.zone_type }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="zone.get('zoneType')?.hasError('required')">
+                  Zone Type is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="zone-form-field" *ngIf="zone.get('zoneType')?.value=='1'">
+                <mat-label>Zone Name</mat-label>
+                <input matInput formControlName="zone_name" type="name" required>
+                <mat-error *ngIf="zone.get('zone_name')?.hasError('required')">Zone Name is required</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="zone-form-field" *ngIf="zone.get('zoneType')?.value=='1'">
+                <mat-label>Zone Area</mat-label>
+                <input matInput formControlName="zone_size" type="number" required>
+                <mat-error *ngIf="zone.get('zone_size')?.hasError('required')">Zone Size is required</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="zone.get('zoneType')?.value === '1'" class="rack-section">
+              <div class=" ">
+                <mat-form-field appearance="outline" class="zone-form-field">
+                  <mat-label>Number of Racks</mat-label>
+                  <input matInput formControlName="numberOfRacks" type="number" min="1">
+                </mat-form-field>
+                <!-- <mat-form-field appearance="outline" class="zone-form-field"><mat-label>Capacity</mat-label><input matInput formControlName="rack_capacity" type="number" min="1"></mat-form-field> -->
+              </div>
+              <button mat-raised-button color="primary" (click)="createRacks(zoneIndex)" class="save-racks-btn"> Save
+                Racks </button>
+              <ng-container *ngIf="getRacks(zoneIndex) as racks">
+                <div *ngIf="racks.length > 0" formArrayName="racks" class="rack-list">
+                  <div *ngFor="let rack of racks.controls; let rackIndex = index" [formGroupName]="rackIndex"
+                    class="rack-container">
+                    <div class="rack-header">
+                      <h3 class="rack-title">Rack {{ rackIndex + 1 }}</h3>
+                      <button mat-icon-button color="primary" (click)="toggleRack(zoneIndex, rackIndex)"
+                        class="rack-toggle-btn">
+                        <!-- <mat-icon>{{ rackExpanded[zoneIndex]?.[rackIndex] ? 'expand_less' : 'expand_more' }}</mat-icon> -->
+                        <mat-icon>{{ rackExpanded[zoneIndex][rackIndex] ? 'expand_less' : 'expand_more' }}</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="rackExpanded[zoneIndex]?.[rackIndex]" class="row rack-details"
+                      style="margin-top: -20px;">
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <mat-form-field appearance="outline" class="rack-form-field">
+                          <mat-label>Rack Name</mat-label>
+                          <input matInput formControlName="rackName">
+                        </mat-form-field>
+                      </div>
+                      <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <mat-form-field appearance="outline" class="rack-form-field">
+                          <mat-label>Volume of Rack</mat-label>
+                          <input type="number" matInput formControlName="rackOfVolume">
+                        </mat-form-field>
+                      </div> -->
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <mat-form-field appearance="outline" class="rack-form-field">
+                          <mat-label>Area of Rack</mat-label>
+                          <input type="number" matInput formControlName="rack_capacity">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+                        <mat-form-field appearance="outline" class="rack-form-field">
+                          <mat-label>Number of Shelves</mat-label>
+                          <input matInput formControlName="numberOfShelves" type="number">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                        <div class="form-group mb-4">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Category</mat-label>
+                            <mat-select formControlName="rack_item_category" multiple required>
+                              <mat-option *ngFor="let cat of getAllCat"
+                                [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <button mat-raised-button color="accent" (click)="createShelves(zoneIndex, rackIndex)"
+                        class="save-shelves-btn" style="width: 150px;background-color: #00644d; margin-top: 12px;"> Save
+                        Shelves </button>
+                      <!-- Shelves FormArray -->
+                      <ng-container *ngIf="getShelves(zoneIndex, rackIndex) as shelves">
+                        <div *ngIf="shelves.length > 0" formArrayName="shelves" class="shelf-list">
+                          <div *ngFor="let shelf of shelves.controls; let shelfIndex = index"
+                            [formGroupName]="shelfIndex" class="shelf-container">
+                            <div class="shelf-header">
+                              <h4 class="shelf-title">Shelf {{ shelfIndex + 1 }}</h4>
+                              <button mat-icon-button (click)="toggleShelf(zoneIndex, rackIndex, shelfIndex)"
+                                class="shelf-toggle-btn">
+                                <!-- <mat-icon>{{ shelfExpanded[zoneIndex]?.[rackIndex]?.[shelfIndex] ? 'expand_less' : 'expand_more' }}</mat-icon> -->
+                                <mat-icon>{{ shelfExpanded[zoneIndex][rackIndex][shelfIndex] ? 'expand_less' :
+                                  'expand_more' }}</mat-icon>
+                              </button>
+                            </div>
+                            <div *ngIf="shelfExpanded[zoneIndex]?.[rackIndex]?.[shelfIndex]" class="row shelf-details">
+                              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                <mat-form-field appearance="outline" class="shelf-form-field">
+                                  <mat-label>Name of Shelf</mat-label>
+                                  <input matInput formControlName="shelfName">
+                                </mat-form-field>
+                              </div>
+                              <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                <mat-form-field appearance="outline" class="shelf-form-field">
+                                  <mat-label>Volume Shelf</mat-label>
+                                  <input type="number" matInput formControlName="shelfVolume">
+                                </mat-form-field>
+                              </div> -->
+                              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                <mat-form-field appearance="outline" class="shelf-form-field">
+                                  <mat-label>Area Shelf</mat-label>
+                                  <input type="number" matInput formControlName="shelf_capacity">
+                                </mat-form-field>
+                              </div>
+                              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                <mat-form-field appearance="outline" class="shelf-form-field">
+                                  <mat-label>Number of Bins</mat-label>
+                                  <input matInput formControlName="numberOfBins" type="number">
+                                </mat-form-field>
+                              </div>
+                              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                <div class="form-group mb-4">
+                                  <mat-form-field appearance="outline">
+                                    <mat-label>Item Category</mat-label>
+                                    <mat-select formControlName="shelf_item_category" multiple required>
+                                      <mat-option *ngFor="let cat of getAllCat"
+                                        [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                                    </mat-select>
+                                  </mat-form-field>
+                                </div>
+                              </div>
+                              <button mat-raised-button color="warn"
+                                (click)="createBins(zoneIndex, rackIndex, shelfIndex)" class="save-bins-btn"
+                                style="width: 157px;background-color: #00644d;"> Save Bins </button>
+                              <!-- Bins FormArray -->
+                              <ng-container *ngIf="getBins(zoneIndex, rackIndex, shelfIndex) as bins">
+                                <div *ngIf="bins.length > 0" formArrayName="bins" class="bin-list">
+                                  <div *ngFor="let bin of bins.controls; let binIndex = index"
+                                    [formGroupName]="binIndex" class="bin-container">
+                                    <div class="bin-header">
+                                      <h5 class="bin-title">Bin {{ binIndex + 1 }}</h5>
+                                      <button mat-icon-button
+                                        (click)="toggleBin(zoneIndex, rackIndex, shelfIndex, binIndex)"
+                                        class="bin-toggle-btn">
+                                        <!-- <mat-icon>{{ binExpanded[zoneIndex]?.[rackIndex]?.[shelfIndex]?.[binIndex] ? 'expand_less' : 'expand_more' }}</mat-icon> -->
+                                        <mat-icon>{{ binExpanded[zoneIndex][rackIndex][shelfIndex][binIndex] ?
+                                          'expand_less' : 'expand_more' }}</mat-icon>
+                                      </button>
+                                    </div>
+                                    <div *ngIf="binExpanded[zoneIndex]?.[rackIndex]?.[shelfIndex]?.[binIndex]"
+                                      class="row bin-details">
+                                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                        <mat-form-field appearance="outline" class="bin-form-field">
+                                          <mat-label>Name of Bin</mat-label>
+                                          <input matInput formControlName="binName">
+                                        </mat-form-field>
+                                      </div>
+                                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                        <mat-form-field appearance="outline" class="bin-form-field">
+                                          <mat-label>Area of Bin</mat-label>
+                                          <input type="number" matInput formControlName="bin_capacity">
+                                        </mat-form-field>
+                                      </div>
+                                      <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                        <mat-form-field appearance="outline" class="bin-form-field">
+                                          <mat-label>Volume of Bin</mat-label>
+                                          <input type="number" matInput formControlName="binVolume">
+                                        </mat-form-field>
+                                      </div> -->
+                                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                                        <div class="form-group ">
+                                          <mat-form-field appearance="outline">
+                                            <mat-label>Item Category</mat-label>
+                                            <mat-select formControlName="bin_item_category" multiple required>
+                                              <mat-option *ngFor="let cat of getAllCat"
+                                                [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div *ngIf="zone.get('zoneType')?.value === '2'" class="rack-section">
+              <div class="row">
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Dimensions</mat-label>
+                      <mat-select formControlName="dimentions" multiple required>
+                        <mat-option value="length">Length</mat-option>
+                        <mat-option value="width">Width</mat-option>
+                        <mat-option value="height">Height</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div> -->
+
+                <mat-form-field appearance="outline" class="zone-form-field" *ngIf="zone.get('zoneType')?.value=='2'">
+                <mat-label>Zone Name</mat-label>
+                <input matInput formControlName="zone_name" type="name" required>
+                <mat-error *ngIf="zone.get('zone_name')?.hasError('required')">Zone Name is required</mat-error>
+              </mat-form-field>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Area</mat-label>
+                      <input matInput type="number" formControlName="bulk_zone_area" />
+                    </mat-form-field>
+                  </div>
+                </div>
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Stack Height</mat-label>
+                      <input matInput type="number" formControlName="bulk_stack_height" />
+                    </mat-form-field>
+                  </div>
+                </div> -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Item Category</mat-label>
+                      <mat-select formControlName="bulk_item_category" multiple required>
+                        <mat-option *ngFor="let cat of getAllCat"
+                          [value]="cat.id">{{cat.asset_category_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-md-12">
+                  <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Available Status</mat-label>
+                      <mat-select formControlName="bulk_zone_status" required>
+                        <mat-option value="occupied">Occupied</mat-option>
+                        <mat-option value="blocked">Blocked</mat-option>
+                        <mat-option value="under_maintenance">Under Maintenance</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <button mat-raised-button color="accent" (click)="addZoneCopy()" style="background-color: #00644d;">+ Add
+              Zone</button>
+          </div>
+          <div>
+            <button mat-raised-button color="primary" type="submit" style="margin-top: 20px;"
+              (click)="onSubmit()">Update</button>
+          </div>
+        </div>
+      </form>
+    </form>
+  </div>
+  <!-- <div class="heading_neo mt-4"><h3>Integration and Compliance Details</h3></div><div class="form_basic mb-0"><form class="form_set" [formGroup]="warehouseForm"><div class="row"><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>GST Number</mat-label><input matInput type="text" formControlName="gst_number" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>PAN/TIN number</mat-label><input matInput type="text" formControlName="pan_number" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Warehouse License Number</mat-label><input matInput type="text" formControlName="warehouse_license_number" /></mat-form-field></div></div></div></form></div><div class="heading_neo mt-4"><h3>3 PL Warehouse Specific Fields (only for 3PL Warehouse Type)</h3></div><div class="form_basic mb-0"><form class="form_set" [formGroup]="warehouseForm"><div class="row"><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>3PL Provider Name</mat-label><input matInput type="text" formControlName="pl_provider_name" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Contract Start Date</mat-label><input matInput type="text" formControlName="contract_start_date" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Contract End Date</mat-label><input matInput type="text" formControlName="contract_end_date" /></mat-form-field></div></div></div><div class="row"><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group fileWithViewImg"><input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                                (change)="uploadDoc($event)" formControlName="employee_photo" accept=".png, .jpg, .jpeg" /></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"><div class="form-group mb-4"><mat-form-field appearance="outline"><mat-label>Remarkrrr</mat-label><input matInput type="text" formControlName="Remark" /></mat-form-field></div></div><div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngFor="let file of fileArray; let i = index"
+                      style="padding: 15px 10px; display: flex; align-items: center;"><div style="margin-right: 10px; display: flex; flex-direction: row; align-items: center;"><div (click)="addFileInput(i)" style="cursor: pointer;"><mat-icon matTooltip="Add Item">add_circle</mat-icon></div><div (click)="removeFileInput(i)" style="cursor: pointer;"><mat-icon matTooltip="Remove Item">remove_circle</mat-icon></div></div><div style="position: relative; flex-grow: 1;"><input class="form-control" type="file" title="Upload Document" formControlName="filemaltiple" (change)="onChange($event, i)" style="    width: 100%;
+                            padding-right: 10px;
+                            height: 42px;
+                            padding-top: 8px;" accept=".jpg,.jpeg,.png,.pdf .doc,.docx" /><p>(DOCX,PDF,Image Files)</p></div></div><div class="row"></div></div></form></div> -->
+</div>
+<!-- start new -->
+<!-- Drag n drop -->
+<!-- <div class="warehouse-container" [style.height.px]="totalAreaPx"><div *ngFor="let zone of dragData.zone_data"
+           class="zone"
+           [style.height.px]="getZoneHeight(zone.zone_size)"><h3 class="zone-title">
+          {{ zone.zoneType }} ({{ zone.zone_size }} m²)
+        </h3><div *ngIf="zone.zoneType === 'Rack'" class="rack-zone"><div *ngFor="let rack of zone.racks"
+               class="rack"
+               [style.height.px]="getRackHeight(rack.areaOfRack, zone.zone_size)"><h4 class="rack-title">{{ rack.rackName }}</h4><div *ngFor="let shelf of rack.shelves"
+                 class="shelf"
+                 [style.height.px]="getShelfHeight(shelf.shelfSize, rack.areaOfRack)"><div class="shelf-label">{{ shelf.shelfName }}</div><div class="bins-row" *ngIf="shelf.bins && shelf.bins.length > 0"><div *ngFor="let bin of shelf.bins"
+                     class="bin"
+                     [style.width.px]="getBinWidth(bin.binSize, shelf.shelfSize)">
+                  {{ bin.binName }}
+                </div></div></div></div></div><div *ngIf="zone.zoneType !== 'Rack'" class="non-rack-zone">
+          {{ zone.zoneType }} - {{ zone.zone_size }} m²
+        </div></div></div> -->
+<!-- new drag -->
+<!-- <div class="layout-container"><div class="header"><label>Total Area:</label><input [value]="dragData.totalArea" readonly> sqmt.
+      </div><ng-container *ngFor="let zone of dragData.zone_data"><div class="zone-title"><h3>{{ zone.zoneType }}</h3><p>Zone Size: {{ zone.zone_size }} sqmt.</p></div><div *ngIf="zone.zoneType === 'Rack'"><div *ngFor="let rack of zone.racks" class="rack"><div class="rack-title">{{ rack.rackName }}</div><div class="size-row">Size: {{ rack.rackSize }} sqmt.</div><div class="bar-row"><div class="bar occupied" [style.width]="getBarWidth(rack.rackOccupiedSize, rack.rackSize)"></div><div class="bar vacant" [style.width]="getBarWidth(rack.rackVacantSize, rack.rackSize)"></div></div><div *ngFor="let shelf of rack.shelves" class="shelf"><div class="shelf-title">↳ {{ shelf.shelfName }} ({{ shelf.shelfSize }} sqmt.)</div><div class="bar-row"><div class="bar occupied" [style.width]="getBarWidth(shelf.shelfOccupiedSize, shelf.shelfSize)"></div><div class="bar vacant" [style.width]="getBarWidth(shelf.shelfVacantSize, shelf.shelfSize)"></div></div><div *ngFor="let bin of shelf.bins" class="bin"><div class="bin-title">➡ {{ bin.binName }} ({{ bin.binSize }} sqmt.)</div><div class="bar-row"><div class="bar occupied" [style.width]="getBarWidth(bin.binOccupiedSize, +bin.binSize)"></div><div class="bar vacant" [style.width]="getBarWidth(bin.binVacantSize, +bin.binSize)"></div></div></div></div></div></div><div *ngIf="zone.zoneType === 'Bulk Storage'" class="bulk"><div class="bulk-row"><div class="zone-name">📦 {{ zone.zoneType }}</div><div class="bar-row"><div class="bar occupied" [style.width]="getBarWidth(zone.bulkOccupiedSize, zone.zone_size)"></div><div class="bar vacant" [style.width]="getBarWidth(zone.bulkVacantSize, zone.zone_size)"></div></div></div><div class="bulk-metrics"><div class="box">BRSS capacity {{ zone.brss_capacity }}</div><div class="box">Fragility factor {{ zone.fragility_factor }}</div><div class="box">Temperature control {{ zone.temperature_control }}</div><div class="box">Barcode {{ zone.barcode }}</div><div class="box">Stacking rules {{ zone.stacking_rules }}</div><div class="box">Product category compatibility {{ zone.product_category_compat }}</div></div></div></ng-container></div> -->
+<!-- <div class="form-wrapper"><form><div class="form-row"><label>Total Area :</label><input type="number" [value]="totalArea" readonly /><span class="unit">sqmt.</span></div><div class="form-row"><label>Zone Types :</label><div class="dropdown"><label><input type="checkbox" [(ngModel)]="showRacks" name="racks" /> Racks
+            </label><label><input type="checkbox" [(ngModel)]="showBulkStorage" name="bulk" /> Bulk Storage
+            </label></div><label class="zone-size-label">Zone Size:</label><input type="number" [value]="zoneSize" readonly /><span class="unit">sqmt.</span><div class="legend"><div><span class="vacant-box"></span> Vacant</div><div><span class="occupied-box"></span> Occupied</div></div></div></form></div><div class="rack-layout"><div class="rack-list" *ngIf="showRacks"><button *ngFor="let rack of rackss; let i = index" (click)="selectRack(i)">
+          {{ rack.rackName }}
+        </button></div><div class="rack-details" *ngIf="showRacks && selectedRack"><table><thead><tr><th>Rack Name</th><th>Size (sqmt.)</th><th>Occupied</th><th>Vacant</th></tr></thead><tbody><ng-container><tr><td><p>{{selectedRack?.rackName}}</p></td><td><p>{{selectedRack?.rackSize}}</p></td><td><div class="bar"><div class="occupied-bar" [style.width.%]="selectedRack.rackOccupiedSize"></div></div>
+                  {{ selectedRack.rackOccupiedSize }}%
+                </td><td>{{ 100 - selectedRack.rackOccupiedSize }}%</td></tr></ng-container><ng-container *ngFor="let shelf of selectedRack.shelves; let j = index"><tr><td><button (click)="toggleShelfs(j)">
+                    {{ shelf.shelfName }}
+                  </button></td><td>{{ shelf.shelfSize }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="shelf.occupied"></div></div>
+                  {{ shelf.occupied }}%
+                </td><td>{{ 100 - shelf.occupied }}%</td></tr><tr
+                *ngFor="let bin of shelf.bins"
+                class="bin-row"
+                [hidden]="!shelf.expanded"
+              ><td class="indent">➤ {{ bin.binName }}</td><td>{{ bin.binSize }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="bin.occupied"></div></div>
+                  {{ bin.occupied }}%
+                </td><td>{{ 100 - bin.occupied }}%</td></tr></ng-container></tbody></table></div></div><div class="bulk-storage" *ngIf="showBulkStorage && bulk"><h3>Bulk Storage</h3><table><thead><tr><th>Zone Type</th><th>Zone</th><th>Size (sqmt.)</th><th>Occupied</th><th>Vacant</th></tr></thead><tbody><tr><td>{{ bulk.zoneType }}</td><td>{{ bulk.zone }}</td><td>{{ bulk.size }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="bulk.occupied"></div></div>
+              {{ bulk.occupied }}%
+            </td><td>{{ bulk.vacant }}%</td></tr></tbody></table><ul class="bulk-details"><li>▪ BRSS Capacity: {{ bulk.attributes.brssCapacity }}</li><li>▪ Fragility Factor: {{ bulk.attributes.fragilityFactor }}</li><li>▪ Temperature Control: {{ bulk.attributes.temperatureControl }}</li><li>▪ Barcode: {{ bulk.attributes.barcode }}</li><li>▪ Stacking Rules: {{ bulk.attributes.stackingRules }}</li><li>▪ Product Category Compatibility: {{ bulk.attributes.productCategoryCompatibility }}</li></ul></div>
+     -->
+<!-- Zone Type Selector -->
+<!-- ye perfect chal raha hai -->
+<!-- <div class="row" style="padding:20px 0"><div class="col-md-6"><mat-form-field appearance="outline"><mat-label>Zone Types</mat-label><mat-select [(ngModel)]="selectedZoneTypes" multiple><mat-option *ngFor="let zone of allZoneTypes" [value]="zone">
+                {{ zone?.zoneType}}-{{zone?.zone_size}}sqmt.
+              </mat-option></mat-select></mat-form-field></div><div class="col-md-6"><div class="legend"><div><span class="vacant-box"></span> Vacant</div><div><span class="occupied-box"></span> Occupied</div></div></div></div><div class="rack-layout" *ngIf="hasZoneType('Rack')"><div class="rack-list"><button
+      *ngFor="let rack of rackZone?.rackss; let i = index"
+      (click)="selectRack(i)"
+      [ngClass]="{ 'active-rack': selectedRackIndex === i }"
+    >
+      {{ rack.rackName }}
+    </button></div><div class="rack-details" *ngIf="selectedRack"><table><thead><tr><th>Rack Name</th><th>Size (sqmt.)</th><th>Occupied</th><th>Vacant</th></tr></thead><tbody><tr><td>{{ selectedRack.rackName }}</td><td>{{ selectedRack.rackSize }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="selectedRack.rackOccupiedSize"></div></div>
+            {{ selectedRack.rackOccupiedSize }}%
+          </td><td>{{ 100 - selectedRack.rackOccupiedSize }}%</td></tr><ng-container *ngFor="let shelf of selectedRack.shelves; let j = index"><tr><td><button 
+                (click)="toggleShelfs(j)" 
+                [ngClass]="shelf.expanded ? 'expanded-shelf' : ''"
+              >
+                {{ shelf.shelfName }}
+              </button></td><td>{{ shelf.shelfSize }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="shelf.occupied"></div></div>
+              {{ shelf.occupied }}%
+            </td><td>{{ 100 - shelf.occupied }}%</td></tr><tr *ngFor="let bin of shelf.bins" [hidden]="!shelf.expanded"><td class="indent">➤ {{ bin.binName }}</td><td>{{ bin.binSize }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="bin.occupied"></div></div>
+              {{ bin.occupied }}%
+            </td><td>{{ 100 - bin.occupied }}%</td></tr></ng-container></tbody></table></div></div><div *ngIf="hasZoneType('BulkStorage') && bulkZone" class="bulk-storage"><h3>Bulk Storage</h3><table><thead><tr><th>Zone Type</th><th>Zone</th><th>Size (sqmt.)</th><th>Occupied</th><th>Vacant</th></tr></thead><tbody><tr><td>{{ bulkZone.zoneType }}</td><td>{{ bulkZone.zone }}</td><td>{{ bulkZone.zone_size }}</td><td><div class="bar"><div class="occupied-bar" [style.width.%]="bulkZone.occupied"></div></div>
+          {{ bulkZone.occupied }}%
+        </td><td>{{ bulkZone.vacant }}%</td></tr></tbody></table><ul class="bulk-details"><li>▪ BRSS Capacity: {{ bulkZone.attributes.brssCapacity }}</li><li>▪ Fragility Factor: {{ bulkZone.attributes.fragilityFactor }}</li><li>▪ Temperature Control: {{ bulkZone.attributes.temperatureControl }}</li><li>▪ Barcode: {{ bulkZone.attributes.barcode }}</li><li>▪ Stacking Rules: {{ bulkZone.attributes.stackingRules }}</li><li>▪ Product Category Compatibility: {{ bulkZone.attributes.productCategoryCompatibility }}</li></ul></div> -->
+<!-- end -->

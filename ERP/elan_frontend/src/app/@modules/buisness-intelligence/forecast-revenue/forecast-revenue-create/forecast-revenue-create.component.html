@@ -1,0 +1,130 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Buisness Intelligence</h1>
+      <p>Forecast Revenue <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span *ngIf="!mode">  {{this.id?'Update':'Add'}} Forecast  </span>
+        <span *ngIf="mode">  View Forecast  </span>
+    </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+    </div> 
+</div>
+
+
+<section class="right_data_all">
+    <div class="heading_neo">
+        <h3>Forecast Revenue</h3>
+    </div>
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="forecastForm">
+                <div class="row">
+                    <div *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group mb-4">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Month</mat-label>
+                                <mat-select formControlName="forcast_month">
+                                    <mat-select-filter [array]="monthList" (filteredReturn)="monthsFilter($event)"></mat-select-filter>
+                                    <mat-option *ngFor="let data of months"
+                                        [value]="data.name">{{data.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="forecastForm.get('forcast_month')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div  *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group mb-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Month</mat-label>
+                                <input matInput type="text"  [readonly]="mode" [value]="res[0].forcast_month"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group mb-4">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Total Amount</mat-label>
+                                <input matInput type="text"  readonly formControlName="total_amount"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div formArrayName="seal_type">
+                    <div class="row" *ngFor="let roleFieled of monthsFormArray['controls']; let i = index"
+                        [formGroupName]="i">
+                        <div  *ngIf="!mode"  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                            <div class="form-group mb-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Seal Type</mat-label>
+                                    <mat-select formControlName="sealType_id" >
+                                        <mat-option *ngFor="let seal of sealList;"
+                                            [value]="seal.id">{{seal.seal_type}}</mat-option>
+                                    </mat-select>
+                                   
+                                    <mat-error  *ngIf="forecastForm.get('seal_type')?.get(i.toString())?.get('sealType_id')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div  *ngIf="mode" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                            <div class="form-group mb-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Seal Type</mat-label>
+                                    <input matInput type="text"  [readonly]="mode" formControlName="sealType_name"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                            <div class="form-group mb-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Volume</mat-label>
+                                    <input matInput type="number"  [readonly]="mode" formControlName="seal_volume"/>
+                                    <mat-error  *ngIf="forecastForm.get('seal_type')?.get(i.toString())?.get('seal_volume')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                            <div class="form-group mb-4">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Amount</mat-label>
+                                    <input matInput type="number" [readonly]="mode" (input)="updateAmount($event,i)" formControlName="seal_amount"/>
+                                    <mat-error  *ngIf="forecastForm.get('seal_type')?.get(i.toString())?.get('seal_amount')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="!mode" class=" col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                            <div class="add_delete">
+                                <span class="edd-del" >
+                                    <mat-icon matTooltip="Add Item" (click)="addItem()">add_circle</mat-icon>
+                                </span>
+                              
+                                <span class="edd-del" *ngIf="i+1!==1">
+                                    <mat-icon matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!mode" class="common_button_sub" align="end">
+                    <button (click)="onSubmit(this.forecastForm.value)">
+                        {{this.id?'Update':'Submit'}}
+                    </button>
+                    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

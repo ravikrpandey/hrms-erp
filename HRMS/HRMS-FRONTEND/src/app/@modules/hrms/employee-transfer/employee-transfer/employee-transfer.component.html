@@ -1,0 +1,129 @@
+<div class="container mt-4">
+    <div class="dash">
+        <div>
+            <h1>Employee Transfer</h1>
+            <p> HRMS <i class="fa fa-angle-right" aria-hidden="true"></i> <span>Employee Transfer</span></p>
+        </div>
+        <div>
+            <button class="btn btn-primary" (click)="Backtolist()" style="background-color: #0c85c0;">Back</button>
+        </div>
+    </div>
+</div>
+<div>
+    <form [formGroup]="EmployeeTransferForm">
+        <div class="transfer-section">
+            <h2 class="section-title">FROM</h2>
+            <mat-card class="custom-card">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Entity Id</mat-label>
+                                <mat-select formControlName="fromEntityId"
+                                    (selectionChange)="onEntityChange($event.value)">
+                                    <app-search-filter [array]="entity" [placeholder]="'Search by entity name'"
+                                        [searchFields]="['company_branch']"
+                                        (filteredReturn)="fromEntity = $event.data"></app-search-filter>
+                                    <mat-option *ngFor="let Entity of fromEntity" [value]="Entity.entity_id">
+                                        {{ Entity.company_branch }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>*Required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Employee Name</mat-label>
+                                <mat-select formControlName="fromEmpId">
+                                    <app-search-filter [array]="filteredEmployees"
+                                        [placeholder]="'Search by employee name'"
+                                        [searchFields]="['first_name','last_name']"
+                                        (filteredReturn)="filteremployees = $event.data"></app-search-filter>
+                                    <mat-option *ngFor="let employee of filteremployees" [value]="employee.employee_id">
+                                        {{ employee.first_name }} {{ employee.middle_name }} {{ employee.last_name }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>*Required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="transfer-section">
+            <h2 class="section-title">TO</h2>
+            <mat-card class="custom-card">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Entity</mat-label>
+                                <mat-select formControlName="toEntityId">
+                                    <app-search-filter [array]="fromEntity" [placeholder]="'Search by entity name'"
+                                        [searchFields]="['company_branch']"
+                                        (filteredReturn)="filtertoentity = $event.data"></app-search-filter>
+                                    <mat-option *ngFor="let Entity of filtertoentity" [value]="Entity.entity_id">
+                                        {{ Entity.company_branch }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>*Required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field class="example-full-width">
+                                <input matInput placeholder="Enter The Remark" formControlName="toRemark">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <div class="transfer-section">
+            <h2 class="section-title">APPROVAL</h2>
+            <mat-card class="custom-card">
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Entity</mat-label>
+                                <mat-select formControlName="approvalEntityId"
+                                    (selectionChange)="selectApprovalEntityId($event.value)">
+                                    <app-search-filter [array]="filterApprovalentity_iddata"
+                                        [placeholder]="'Search by city name'" [searchFields]="['company_branch']"
+                                        (filteredReturn)="filterApprovalentity_id = $event.data"></app-search-filter>
+                                    <mat-option *ngFor="let Entity of filterApprovalentity_id"
+                                        [value]="Entity.entity_id">
+                                        {{ Entity.company_branch }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>*Required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Employee Name</mat-label>
+                                <mat-select formControlName="approvalEmpId">
+                                    <app-search-filter [array]="filteredEmployees"
+                                        [placeholder]="'Search by employee name'"
+                                        [searchFields]="['first_name','last_name']"
+                                        (filteredReturn)="filterApprovalemployeesdata = $event.data"></app-search-filter>
+                                    <mat-option *ngFor="let employee of filterApprovalemployeesdata"
+                                        [value]="employee.employee_id">
+                                        {{ employee.first_name }} {{ employee.middle_name }} {{ employee.last_name }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>*Required!</mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </form>
+    <div>
+        <button *ngIf="mode !== 'view'" class="btn btn-primary" style="background-color: #0c85c0; margin-left: 80%;"
+            (click)="mode === 'edit' ? OnUpdate() : Onsubmit()">
+            {{ mode === 'edit' ? 'Update' : 'Submit' }}
+        </button>
+    </div>
+</div>

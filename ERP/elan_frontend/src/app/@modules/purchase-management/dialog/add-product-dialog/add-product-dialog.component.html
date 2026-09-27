@@ -1,0 +1,83 @@
+<h3 mat-dialog-title class="popHead">Add {{ data.indentype }}s</h3>
+
+<mat-dialog-content class="mat-typography pt-4">
+  <form [formGroup]="form">
+    <div class="row mb-3">
+      <div class="col-md-4 col-12" *ngIf="data.indentype !== 'Service'">
+        <app-mat-form-select-filter
+          [key]="'id'"
+          [items]="itemTypes"
+          [displayKey]="'itemType'"
+          placeholder="Item Type"
+          formControlName="item_type_id"
+        ></app-mat-form-select-filter>
+      </div>
+      <div class="col-md-4 col-12">
+        <app-mat-form-select-filter
+          [key]="'id'"
+          [items]="categories"
+          [displayKey]="'asset_category_name'"
+          placeholder="Item Category"
+          formControlName="asset_category_id"
+        ></app-mat-form-select-filter>
+      </div>
+      <div class="col-md-4 col-12">
+        <app-mat-form-select-filter
+          [key]="'id'"
+          [items]="subCategoryList"
+          [displayKey]="'sub_category_name'"
+          placeholder="Sub Category Name"
+          formControlName="sub_category_id"
+        ></app-mat-form-select-filter>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">{{ data.indentype }} Name</th>
+            <!-- <th scope="col">MVP</th> -->
+            <th scope="col">Quantity</th>
+            <th scope="col">Select</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="itemList.length != 0">
+          <tr *ngFor="let data of itemList; let i = index">
+            <td>{{ data.item_name }}</td>
+            <!-- <td>{{data.MVP}}</td> -->
+            <td>
+              <input
+                type="number"
+                min="1"
+                placeholder="Quantity"
+                [name]="'quantity' + i"
+                [id]="'quantity' + i"
+                [(ngModel)]="data.quantity"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </td>
+            <td>
+              <mat-checkbox
+                (change)="checkboxClicked($event, data)"
+              ></mat-checkbox>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="itemList.length == 0">
+          <tr>
+            <td colspan="5">
+              <div style="text-align: center; color: #8e8e8e; font-size: 12px">
+                <span>No Record Found</span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button (click)="closeDialog()">Add {{ data.indentype }}s</button>
+  <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>

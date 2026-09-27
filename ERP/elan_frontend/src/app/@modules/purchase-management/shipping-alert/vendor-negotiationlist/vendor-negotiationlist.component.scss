@@ -1,0 +1,518 @@
+// ── Google Font ────────────────────────────────────────────────────────────
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
+
+// ── Theme tokens ───────────────────────────────────────────────────────────
+:host {
+  --primary:    #1a3c6e;
+  --primary-lt: #2a5298;
+  --accent:     #e8a020;
+  --bg:         #f4f6fb;
+  --border:     #dde3ef;
+  --text:       #1a2540;
+  --muted:      #7a88a3;
+  --section-bg: #eef1f9;
+  --danger:     #e53935;
+  --success:    #2e7d32;
+
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+// ── Page wrapper ───────────────────────────────────────────────────────────
+.page-wrapper {
+  background: var(--bg);
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+.main {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+// ── Page headings ──────────────────────────────────────────────────────────
+.main-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.85rem;
+  color:#00644d;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, #00644d, transparent);
+    border-radius: 2px;
+  }
+}
+
+.main-sub {
+  font-size: 0.83rem;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+// ── mat-card overrides ─────────────────────────────────────────────────────
+.form-card {
+  border-radius: 14px !important;
+  box-shadow: 0 4px 24px rgba(26,60,110,0.09) !important;
+  margin-bottom: 20px;
+  animation: fadeUp 0.35s ease forwards;
+  opacity: 0;
+  transform: translateY(10px);
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) { animation-delay: #{$i * 0.06}s; }
+  }
+
+  mat-card-header {
+    padding: 20px 24px 0;
+
+    mat-card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem !important;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #00644d;
+      background: var(--section-bg);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 5px;
+      border-left: 3px solid var(--accent);
+    }
+  }
+
+  mat-card-content {
+    padding: 20px 24px 24px !important;
+  }
+
+  .card-icon {
+    font-size: 1rem;
+    height: 1rem;
+    width: 1rem;
+    vertical-align: middle;
+    color: var(--accent);
+  }
+}
+
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// ── Sub-title ──────────────────────────────────────────────────────────────
+.sub-title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 20px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .sub-icon {
+    font-size: 0.95rem;
+    height: 0.95rem;
+    width: 0.95rem;
+    color: var(--accent);
+  }
+}
+
+// ── Grid rows ──────────────────────────────────────────────────────────────
+.row {
+  display: grid;
+  gap: 12px 16px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+
+  &.two-col   { grid-template-columns: 1fr 1fr; }
+  &.three-col { grid-template-columns: repeat(3, 1fr); }
+}
+
+.w-full { width: 100%; }
+
+// ── Field label (for toggles) ──────────────────────────────────────────────
+.field { display: flex; flex-direction: column; gap: 8px; }
+
+.field-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+}
+
+// ── Button toggle: Shipment Type ───────────────────────────────────────────
+.type-toggle {
+  &.mat-button-toggle-group {
+    border-radius: 9px !important;
+    border: 1.5px solid var(--border) !important;
+    overflow: hidden;
+
+    .mat-button-toggle {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+
+      mat-icon { font-size: 1rem; vertical-align: middle; margin-right: 4px; }
+
+      &.mat-button-toggle-checked {
+        background-color: #00644d !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+// ── Button toggle: Transport Mode ──────────────────────────────────────────
+.mode-toggle {
+  &.mat-button-toggle-group {
+    border-radius: 9px !important;
+    border: 1.5px solid var(--border) !important;
+    flex-wrap: wrap;
+
+    .mat-button-toggle {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+
+      .mode-emoji { margin-right: 4px; font-size: 1rem; }
+
+      &.mat-button-toggle-checked {
+        background-color: #00644d !important;
+        color: #fff !important;
+      }
+    }
+  }
+}
+
+// ── mat-form-field theming ─────────────────────────────────────────────────
+.mat-mdc-form-field {
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.87rem;
+
+  // Outline border colour
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--border) !important;
+  }
+
+  &:hover .mdc-notched-outline__leading,
+  &:hover .mdc-notched-outline__notch,
+  &:hover .mdc-notched-outline__trailing {
+    border-color: #b0bed5 !important;
+  }
+
+  &.mat-focused .mdc-notched-outline__leading,
+  &.mat-focused .mdc-notched-outline__notch,
+  &.mat-focused .mdc-notched-outline__trailing {
+    border-color: var(--primary-lt) !important;
+  }
+
+  // Label colour
+  .mat-mdc-floating-label { color: var(--muted) !important; font-family: 'Outfit', sans-serif; }
+  &.mat-focused .mat-mdc-floating-label { color: var(--primary-lt) !important; }
+
+  // Suffix icon colour
+  .mat-mdc-form-field-icon-suffix mat-icon { color: var(--muted); font-size: 1.1rem; }
+}
+
+// ── mat-table ──────────────────────────────────────────────────────────────
+.table-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.items-table {
+  width: 100%;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+
+  .mat-mdc-header-row {
+    background: #00644d !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: #fff !important;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .mat-mdc-row:hover { background: #f7f9ff; }
+
+  .mat-mdc-cell {
+    padding: 8px 16px;
+    border-bottom-color: var(--border);
+  }
+}
+
+.table-input {
+  width: 120px;
+
+  // Remove underline / bottom padding in table cells
+  .mat-mdc-form-field-subscript-wrapper { display: none; }
+}
+
+// ── Qty / status badges ────────────────────────────────────────────────────
+.qty-badge {
+  display: inline-block;
+  background: var(--section-bg);
+  border-radius: 5px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #00644d;
+}
+
+.remaining-ok   { color: var(--success); font-weight: 600; }
+.remaining-zero { color: var(--danger);  font-weight: 600; }
+
+// ── Document upload cards ──────────────────────────────────────────────────
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.doc-upload-card {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: 20px 14px;
+  text-align: center;
+  background: #f9fafd;
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    border-color: var(--primary-lt);
+    background: #f0f4ff;
+  }
+
+  .doc-mat-icon {
+    font-size: 2.4rem;
+    height: 2.4rem;
+    width: 2.4rem;
+    color: var(--primary-lt);
+    opacity: 0.7;
+  }
+
+  .doc-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+  }
+
+  .doc-hint {
+    font-size: 0.68rem;
+    color: #b0bed5;
+    margin-bottom: 6px;
+  }
+
+  .doc-filename {
+    font-size: 0.72rem;
+    color: var(--success);
+    word-break: break-all;
+    text-align: center;
+  }
+
+  button[mat-stroked-button] {
+    font-size: 0.75rem;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    margin-top: 4px;
+  }
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  gap: 14px;
+  justify-content: flex-end;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+
+  button {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0 24px;
+    height: 44px;
+
+    mat-icon { margin-right: 6px; }
+  }
+
+  button[mat-raised-button][color="primary"] {
+    background-color: #00644d !important;
+    box-shadow: 0 4px 14px rgba(26,60,110,0.3) !important;
+    transition: transform 0.15s, box-shadow 0.15s;
+
+    &:hover {
+      background-color: var(--primary-lt) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(26,60,110,0.35) !important;
+    }
+  }
+}
+══════════════════════════════════════════════════════════════════════════
+//  TERMS & CONDITIONS CARD
+// ══════════════════════════════════════════════════════════════════════════
+.tnc-card {
+  border: 1.5px solid #d0daf0 !important;
+  background: linear-gradient(135deg, #fff 70%, #f5f8ff 100%) !important;
+}
+ 
+.tnc-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  scroll-behavior: smooth;
+ 
+  &::-webkit-scrollbar        { width: 5px; }
+  &::-webkit-scrollbar-track  { background: var(--bg); border-radius: 4px; }
+  &::-webkit-scrollbar-thumb  { background: var(--border); border-radius: 4px;
+                                  &:hover { background: #b0bed5; } }
+}
+ 
+.tnc-list {
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+ 
+  li {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+}
+ 
+.tnc-divider { margin: 16px 0 !important; border-color: var(--border) !important; }
+ 
+.tnc-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+ 
+.tnc-check-row {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+ 
+  mat-checkbox {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.5;
+ 
+    strong { color: #00644d; font-weight: 600; }
+ 
+    // Override default label colour
+    .mdc-form-field > label { color: var(--text) !important; font-family: 'Outfit', sans-serif; }
+ 
+    // Checked state accent
+    &.mat-mdc-checkbox-checked .mdc-checkbox__background {
+      background-color: #00644d !important;
+      border-color: #00644d !important;
+    }
+  }
+}
+ 
+.tnc-error {
+  font-size: 0.72rem;
+  color: var(--danger);
+  padding-left: 32px;
+  display: block;
+}
+ 
+.tnc-link {
+  color: var(--primary-lt);
+  font-weight: 600;
+  text-decoration: underline;
+  &:hover { color: var(--accent); }
+}
+ 
+// Submit button disabled state
+button[mat-raised-button][disabled] {
+  background-color: #b0bed5 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+}
+ 
+// ── Responsive ─────────────────────────────────────────────────────────────
+
+// ── Global snackbar panel classes (put in styles.scss) ─────────────────────
+// Add these to your global styles.scss:
+// .snack-success .mdc-snackbar__surface { background: #2e7d32 !important; }
+// .snack-error   .mdc-snackbar__surface { background: #e53935 !important; }
+
+// ── Responsive ─────────────────────────────────────────────────────────────
+@media (max-width: 640px) {
+  .topbar { padding: 0 16px; }
+  .container { padding: 0 12px; }
+
+  .form-card {
+    mat-card-header { padding: 14px 16px 0; }
+    mat-card-content { padding: 14px 16px 16px !important; }
+  }
+
+  .row, .row.two-col, .row.three-col {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    button { width: 100%; justify-content: center; }
+  }
+
+  .mode-toggle .mat-button-toggle-group { gap: 4px; }
+}
+
+.ag-grid-action-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.create-btn {
+    background: #2563eb;
+}
+
+.track-btn {
+    background: #059669;
+}

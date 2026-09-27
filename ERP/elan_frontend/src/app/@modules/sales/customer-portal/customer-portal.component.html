@@ -1,0 +1,386 @@
+<div class="page-wrapper">
+
+    <app-customer-header 
+        [login_id]="login_id_header" 
+        (customerDetails)="onCustomerDetails($event)"
+        (creditLimitDetails)="onCreditLimitDetails($event)">
+    </app-customer-header>
+
+    <div class="page-heading-wrapper">
+        <h1 class="main-heading">Your Dashboard</h1>
+        <p class="main-sub">Overview of your orders, credit and payments.</p>
+    </div>
+
+
+    <!-- ================= SUMMARY CARDS ================= -->
+
+    <div class="dashboard-summary">
+
+        <!-- TOTAL ORDERS -->
+        <div class="summary-card">
+            <div class="card-icon order-icon">
+                <mat-icon>shopping_bag</mat-icon>
+            </div>
+
+            <div class="summary-content">
+                <div class="summary-label">Total Orders</div>
+                <div class="summary-value">{{ orderCount.total_order }}</div>
+                <div class="summary-info">All orders placed</div>
+            </div>
+        </div>
+
+
+        <!-- PENDING ORDERS -->
+        <div class="summary-card">
+            <div class="card-icon pending-icon">
+                <mat-icon>pending_actions</mat-icon>
+            </div>
+
+            <div class="summary-content">
+                <div class="summary-label">Pending Orders</div>
+                <div class="summary-value">{{ orderCount.pending_order }}</div>
+                <div class="summary-info">Orders in progress</div>
+            </div>
+        </div>
+
+
+        <!-- COMPLETED ORDERS -->
+        <div class="summary-card">
+            <div class="card-icon completed-icon">
+                <mat-icon>task_alt</mat-icon>
+            </div>
+
+            <div class="summary-content">
+                <div class="summary-label">Completed Orders</div>
+                <div class="summary-value">{{ orderCount.complete_order }}</div>
+                <div class="summary-info">Successfully completed</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================= MAIN DASHBOARD ================= -->
+
+    <div class="dashboard-content">
+
+
+        <!-- ================= RECENT SALES ORDERS ================= -->
+
+        <div class="dashboard-card recent-orders">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <h3>Recent Sales Orders</h3>
+                    <p>Latest sales order activity</p>
+                </div>
+
+                <div class="view-all" (click)="viewAll()">
+                    View All
+                    <mat-icon>arrow_forward</mat-icon>
+                </div>
+
+            </div>
+
+
+            <!-- ORDER HEADER -->
+
+            <div class="order-table-header">
+
+                <div>Sales Order</div>
+                <div>SO Date</div>
+                <div>Delivery Date</div>
+                <div>Order Amount</div>
+                <div>Status</div>
+
+            </div>
+
+
+            <!-- ORDER 1 -->
+
+            <div class="recent-order">
+
+                <div class="order-number">
+
+                    <div class="order-icon-small">
+                        <mat-icon>receipt_long</mat-icon>
+                    </div>
+
+                    <div>
+                        <strong>SO-2026-0128</strong>
+                        <small>Sales Order</small>
+                    </div>
+
+                </div>
+
+                <div class="order-date">
+                    28 Aug 2026
+                </div>
+
+                <div class="order-date">
+                    05 Sep 2026
+                </div>
+
+                <div class="order-amount">
+                    ₹ 1,45,000
+                </div>
+
+                <span class="order-status completed">
+                    Completed
+                </span>
+
+            </div>
+
+
+            <!-- ORDER 2 -->
+
+            <div class="recent-order">
+
+                <div class="order-number">
+
+                    <div class="order-icon-small">
+                        <mat-icon>receipt_long</mat-icon>
+                    </div>
+
+                    <div>
+                        <strong>SO-2026-0127</strong>
+                        <small>Sales Order</small>
+                    </div>
+
+                </div>
+
+                <div class="order-date">
+                    26 Aug 2026
+                </div>
+
+                <div class="order-date">
+                    04 Sep 2026
+                </div>
+
+                <div class="order-amount">
+                    ₹ 86,500
+                </div>
+
+                <span class="order-status progress">
+                    In Progress
+                </span>
+
+            </div>
+
+
+            <!-- ORDER 3 -->
+
+            <div class="recent-order">
+
+                <div class="order-number">
+
+                    <div class="order-icon-small">
+                        <mat-icon>receipt_long</mat-icon>
+                    </div>
+
+                    <div>
+                        <strong>SO-2026-0126</strong>
+                        <small>Sales Order</small>
+                    </div>
+
+                </div>
+
+                <div class="order-date">
+                    24 Aug 2026
+                </div>
+
+                <div class="order-date">
+                    01 Sep 2026
+                </div>
+
+                <div class="order-amount">
+                    ₹ 2,18,750
+                </div>
+
+                <span class="order-status completed">
+                    Completed
+                </span>
+
+            </div>
+
+
+            <!-- ORDER 4 -->
+
+            <div class="recent-order">
+
+                <div class="order-number">
+
+                    <div class="order-icon-small">
+                        <mat-icon>receipt_long</mat-icon>
+                    </div>
+
+                    <div>
+                        <strong>SO-2026-0125</strong>
+                        <small>Sales Order</small>
+                    </div>
+
+                </div>
+
+                <div class="order-date">
+                    22 Aug 2026
+                </div>
+
+                <div class="order-date">
+                    03 Sep 2026
+                </div>
+
+                <div class="order-amount">
+                    ₹ 64,200
+                </div>
+
+                <span class="order-status pending">
+                    Processing
+                </span>
+
+            </div>
+
+
+            <!-- ORDER 5 -->
+
+            <div class="recent-order">
+
+                <div class="order-number">
+
+                    <div class="order-icon-small">
+                        <mat-icon>receipt_long</mat-icon>
+                    </div>
+
+                    <div>
+                        <strong>SO-2026-0124</strong>
+                        <small>Sales Order</small>
+                    </div>
+
+                </div>
+
+                <div class="order-date">
+                    20 Aug 2026
+                </div>
+
+                <div class="order-date">
+                    30 Aug 2026
+                </div>
+
+                <div class="order-amount">
+                    ₹ 1,12,400
+                </div>
+
+                <span class="order-status completed">
+                    Completed
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================= CREDIT & ADVANCE ================= -->
+
+        <div class="dashboard-card financial-overview">
+
+            <div class="dashboard-card-header">
+
+                <div>
+                    <h3>Credit & Advance</h3>
+                    <p>Your account balance summary</p>
+                </div>
+
+                <mat-icon>account_balance</mat-icon>
+
+            </div>
+
+
+            <!-- AVAILABLE CREDIT -->
+
+            <div class="financial-item">
+
+                <div class="financial-icon credit-small">
+                    <mat-icon>credit_score</mat-icon>
+                </div>
+
+                <div class="financial-details">
+
+                    <span>Available Credit Limit</span>
+
+                    <strong>
+                        ₹{{ creditLimitData.available_credit_limit | number:'1.2-2' }}
+                    </strong>
+
+                    <small>
+                        Available for new orders
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- ADVANCE BALANCE -->
+
+            <div class="financial-item">
+
+                <div class="financial-icon advance-small">
+                    <mat-icon>payments</mat-icon>
+                </div>
+
+                <div class="financial-details">
+
+                    <span>Advance Balance</span>
+
+                    <strong>
+                        ₹{{ profileData.advance_amount | number:'1.2-2' }}
+                    </strong>
+
+                    <small>
+                        Available advance amount
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCOUNT STATUS -->
+
+            <div class="account-status">
+
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>Account in Good Standing</strong>
+
+                    <span>
+                        Credit facility is available for new orders.
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- QUICK INFO -->
+
+            <div class="financial-footer">
+
+                <div>
+                    <span>Credit Status</span>
+                    <strong>Active</strong>
+                </div>
+
+                <div>
+                    <span>Payment Status</span>
+                    <strong>Up to Date</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

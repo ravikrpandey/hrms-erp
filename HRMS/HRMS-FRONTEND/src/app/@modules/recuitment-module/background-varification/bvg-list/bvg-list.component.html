@@ -1,0 +1,147 @@
+<div class="section">
+    <div class="head">
+        <p>HRMS</p>
+    </div>
+
+    <div class="employ_sube">
+        <div class="employee_top">Recruitment Module
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+                </i>BVG List</span>
+        </div>
+
+    </div>
+    <div class="mt-4">
+    <mat-card>
+        <div class="form_head">
+            <h3>Background Verification List</h3>
+        </div>
+
+    <div class="service-container">
+        <div class="service-box">
+            <div class="img">
+                <img src="assets//icons/icon_zyno/employee.png" alt="">
+            </div>
+        </div>
+
+        <div class="content">
+            <form class="form_set" [formGroup]="backgroundForm">
+                <div class="center">
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-3 name">Candidate</div>
+                        <div class="col-md-3">
+                            <mat-form-field appearance="outline" readonly>
+                                <mat-label>Candidate Name</mat-label>
+                                <mat-select formControlName="candidate">
+                                 <mat-select-filter [array]="candidateSearch" (filteredReturn)="productFilter($event)"  ></mat-select-filter>
+
+                                    <mat-option *ngFor="let item of candidateArray" [value]="item.condidate_name"
+                                        (click)="candidateClick(item.candidate_id)">{{item.condidate_name}}</mat-option>
+                                </mat-select>
+                                <span class="errMsg" *ngIf="candidateArray?.length==0">Candidate not found</span>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-4"></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-3 name">Email</div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="email" class="form-control" formControlName="email"
+                                    placeholder="Enter email" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-3 alineBtn">
+                            <button class="verify" (click)="Verify_Email(true)" [disabled]="emailBtn"
+                                [ngStyle]="{'background-color':verifyEmail ?'gray':'#016c01'}">Verifiy</button>
+                            <button class="verify" (click)="NotVerify_Email(false)" [disabled]="emailBtn"
+                                [ngStyle]="{'background-color':notVerifyEmail ? 'gray':'#db0000'}">Not Verifiy</button>
+                        </div>
+                        <!-- [ngStyle]="{'background-color':control.isSend ? '#207806':'#858586'}" -->
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-3 name">Mobile Number</div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input type="text" class="form-control" formControlName="mobile_no"
+                                    placeholder="Enter number" readonly>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 alineBtn">
+                            <button class="verify" (click)="Verify_Mobile(true)" [disabled]="mobileBtn"
+                                [ngStyle]="{'background-color':verifyMobile ?'gray':'#016c01'}">Verifiy</button>
+                            <button class="verify" (click)="NotVerify_Mobile(false)" [disabled]="mobileBtn"
+                                [ngStyle]="{'background-color':notVerifyMobile ? 'gray':'#db0000'}">Not
+                                Verifiy</button>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                    <ng-container formArrayName="previousJobRow"
+                        *ngFor="let control of CF_1.previousJobRow['controls']; index as i">
+                        <div class="row" [formGroup]="control">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-3 name">Previous Job Status</div>
+
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" formControlName="precious_job_status"
+                                        placeholder="Enter job detail">
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 alineBtn">
+                                <button class="verify" [disabled]="control.preJobBtn"
+                                    (click)="Verify_preJob(true,control,i)"
+                                    [ngStyle]="{'background-color':control.verifyPreJob ?'gray':'#016c01'}">Verifiy</button>
+                                <button class="verify" [disabled]="control.preJobBtn"
+                                    (click)="NotVerify_preJobf(false,control,i)"
+                                    [ngStyle]="{'background-color':control.notVerifyPreJob ? 'gray':'#db0000'}">
+                                    Not Verify</button>
+                            </div>
+                            <div class="col-md-1 alineBtn" style="align-items: center;">
+                                <div  style="align-items: center;">
+                                    <span (click)="addRow(i)" *ngIf="!control.showAddBtn" style="cursor: pointer;"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
+                                    <span (click)="deletePreviousJobRow(i)" *ngIf="control.showAddBtn"   style="cursor: pointer;"><i class="material-icons" style="margin-left: 20px;" >delete</i></span>
+                                
+                                  </div>
+                        
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-3 name">Other Documents</div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <input class="custom-file-input" type="file" (change)="fileInputChange($event)"
+                                    formControlName="others_documents" accept=".pdf,.doc,.png">
+                                <div *ngIf="errorMsg !== ''" class="text-danger errorMsg">{{errorMsg}}</div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                        
+                            <button mat-raised-button class="name" [class.spinner]="loading"  [disabled]="loading" style="width: 100%;"
+                                (click)="saveDetails()">Save</button>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+
+    </div>
+</mat-card></div>
+</div>

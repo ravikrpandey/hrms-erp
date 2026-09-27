@@ -1,0 +1,95 @@
+<div class="right_data_all">
+    <div class="row">
+
+        <div class="page-title">
+            <h1>Employees' State Insurance</h1>
+        </div>
+    </div>
+
+
+    <Section>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="esiForm">
+                <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <mat-label>ESI Number</mat-label>
+                              <input matInput placeholder="00-00-000000-000-0000" formControlName="esi_number" />
+                              <mat-error *ngIf="esiForm.controls['esi_number'].hasError('required')">
+                                ESI Number is required
+                              </mat-error>
+                              <mat-error *ngIf="esiForm.controls['esi_number'].hasError('pattern')">
+                                Invalid ESI Number format. Expected format: 00-00-000000-000-0000
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" >
+                              <mat-label>Deduction Cycle</mat-label>
+                              <mat-select formControlName="deduction_cycle">
+                                <mat-option value="monthly">Monthly</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline" >
+                                      <mat-label>Employees' Contribution</mat-label>
+                                      <input matInput type="text" placeholder="0.75" formControlName="employee_contribution" />
+                                    </mat-form-field>
+                                  </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="margin-top: 11px;">% of Gross Pay</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <mat-form-field appearance="outline" >
+                                      <mat-label>Employer's Contribution</mat-label>
+                                      <input matInput type="text" value="3.25" formControlName="employer_contribution"  />
+                                    </mat-form-field>
+                                  </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p style="margin-top: 11px;">% of Gross Pay</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class=" col-12 mt-3">
+                        <div class="form-group">
+                            <mat-checkbox formControlName="employee_contribution_in_ctc">Include employer's contribution in the CTC</mat-checkbox>
+                          </div>
+                    </div>
+
+                    <div class="alert  mt-4 alert-warning fw-bold" role="alert">
+                        Note: ESI deductions will be made only if the employee's monthly salary is less than or equal to ₹21,000.
+                        If the employee gets a salary revision which increases their monthly salary above ₹21,000, they would have
+                        to continue making ESI contributions until the end of the contribution period in which the salary was revised
+                        (April-September or October-March).
+                    </div>
+
+                   
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <button class="btn btn-danger" (click)="back()">Cancel</button>
+                    <button class="btn btn-primary" (click)="submitForm()">{{esiId ? 'Update':'Save'}}</button>
+                </div>
+            </form>
+        </div>
+    </Section>
+
+</div>

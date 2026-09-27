@@ -1,0 +1,215 @@
+
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span> Grievance Form </span></p>
+  </div>
+  <div class="add_button">
+    <!-- <button routerLink="../achievement" type="button">List</button> -->
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="achieveFormArea">
+ 
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="grievanceForm">
+        <div class="row ">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Action Manager</mat-label>
+                <mat-select formControlName="action_manager">
+                  <mat-option *ngFor="let val of firstLastName" [value]="val">{{
+                    val
+                  }}</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="grievanceForm.controls['action_manager'].hasError('required')"
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Subject</mat-label>
+                <input matInput type="text"
+                formControlName="subject"/>
+                <!-- [formControl]="grievanceForm.controls['subject']" -->
+                <mat-error
+                *ngIf="grievanceForm.controls['subject'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Reporting Manager</mat-label>
+                <mat-select formControlName="reporting_manager">
+                  <mat-option
+                    *ngFor="let val of propertyManager"
+                    [value]="val"
+                    >{{ val }}</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                *ngIf="grievanceForm.controls['reporting_manager'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Grievane Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="dp"
+                  (click)="dp.open()"
+                  formControlName="grievance_date"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    grievanceForm.controls['grievance_date'].hasError(
+                      'required'
+                    )
+                  "
+                >
+                  This field is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Note</mat-label>
+                <input matInput type="text" formControlName="note" />
+                <mat-error
+                *ngIf="grievanceForm.controls['note'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Comments</mat-label>
+                <input matInput type="text" formControlName="comment" />
+                <mat-error
+                *ngIf="grievanceForm.controls['comment'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Grievance Type</mat-label>
+                <mat-select formControlName="grievance_type" name="grievance_type">
+                  <mat-option
+                    value="Cleanliness on the office floors or in the kitchen"
+                    >Cleanliness on the office floors or in the
+                    kitchen.</mat-option
+                  >
+                  <mat-option value="Desk etiquette"
+                    >Desk etiquette.</mat-option
+                  >
+                  <mat-option value="Bathroom conditions"
+                    >Bathroom Conditions.</mat-option
+                  >
+                  <mat-option value="Health and safety hazards"
+                    >Health and Safety Hazards.</mat-option
+                  >
+                  <mat-option value="Temperatures in the workplace"
+                    >Temperatures in the Workplace.</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                *ngIf="grievanceForm.controls['grievance_type'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Record Added On</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="ab"
+                  (click)="ab.open()"
+                  formControlName="record_added_on"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="ab"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #ab></mat-datepicker>
+                <mat-error
+                *ngIf="grievanceForm.controls['record_added_on'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="common_button_sub">
+          <button
+            *ngIf="!employeId"
+            (click)="onSubmitForm()"
+            class="mx-3"
+          >
+            Submit
+          </button>
+
+          <button
+            *ngIf="employeId"
+            (click)="updateForm()"
+            class="mx-3"
+          >
+            Update
+          </button>
+
+          <button  class="cancel_button_y" (click)="reLoad()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    </div>
+
+

@@ -1,0 +1,22 @@
+<div class="edd-del">
+  <mat-icon
+    (click)="viewProposalVersion()"
+    *ngIf="singleData?.actionStatus !== 'draft'"
+    >visibility</mat-icon
+  >
+  <mat-icon
+    (click)="editProposal()"
+    *ngIf="
+      (singleData?.pi_status !== 'APPROVED' &&
+        singleData?.actionStatus === 'approved') ||
+      singleData?.actionStatus === 'draft' ||
+      singleData?.pending_list === 'pending'
+    "
+    >edit</mat-icon
+  >
+  <ng-container *ngIf="assignAction?.Read">
+    <mat-icon matTooltip="Download PDF" (click)="downloadPDF($event)"
+      >download</mat-icon
+    >
+  </ng-container>
+</div>

@@ -1,0 +1,74 @@
+<ng-container *ngIf="visibility=='visible'">
+    <h3 mat-dialog-title class="popHead">Designation Record</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <div class="emp_key">
+                <p>Designation Name : </p>
+                <p>Status :</p>
+            </div>
+            <div class="emp_value">
+                <p>{{singleCountryData?.designation_name}}</p>
+                <p> {{singleCountryData?.status}}</p>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+    </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="editDesignation=='Designation'">
+    <h3 mat-dialog-title class="popHead"> Update Designation</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <form [formGroup]="designationForm">
+                <div class="form-group mt-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Designation Name</mat-label>
+                        <input matInput type="text" formControlName="designation_name" />
+                        <mat-error *ngIf="designationForm.controls['designation_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="designationForm.controls['designation_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-raised-button color="primary"
+            (click)="ngSubmitDesignation(designationForm)">Update</button>
+        <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+    </mat-dialog-actions>
+
+</ng-container>
+
+<ng-container *ngIf="addDesignation=='Add_Designation'">
+    <h3 mat-dialog-title class="popHead"> Add Designation</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <form [formGroup]="designationForm">
+                <div class="form-group mt-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Designation Name </mat-label>
+                        <input matInput type="text" formControlName="designation_name" placeholder="Enter Designation " />
+                        <mat-error *ngIf="designationForm.controls['designation_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="designationForm.controls['designation_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-raised-button color="primary"
+            (click)="ngSubmitDesignation(designationForm)">Submit</button>
+        <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+    </mat-dialog-actions>
+
+</ng-container>

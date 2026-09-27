@@ -1,0 +1,147 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Work Flow</h1>
+        <p>Work Flow For Job <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+            </i><span> {{this.workflowId?'Update':'Add'}} Work Flow </span></p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+    </div>
+</div>
+
+
+<section class="right_data_all">
+    <mat-card>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="form">
+                <div class="row mt-2">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label>Workflow for</mat-label>
+                            <mat-form-field *ngIf="this.workflowId" appearance="outline">
+                                <input matInput type="text" readonly formControlName="job_request_id" />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="!this.workflowId" appearance="outline" class="mt-1">
+                                <mat-label>Type</mat-label>
+                                <mat-select (selectionChange)="onSelectedType($event)" formControlName="job_request_id">
+                                    <app-search-filter [array]="typeData" [placeholder]="'Search by job type'" [searchFields]="['type']"
+                                    (filteredReturn)="filterByjobrequeset($event)"></app-search-filter>
+                                    <mat-option *ngFor="let data of filterTypeofdata"
+                                        [value]="data.type">{{data.type}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('job_request_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="!showAddButton" class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label>Type</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Budget Type</mat-label>
+                                <mat-select formControlName="budget_planning_type">
+                                    <mat-option value="Capex">
+                                        Capex
+                                    </mat-option>
+                                    <mat-option value="Opex">
+                                        Opex
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('budget_planning_type')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label>Department</mat-label>
+                            <mat-form-field *ngIf="this.workflowId" appearance="outline">
+                                <input matInput type="text" readonly formControlName="department_id" />
+                            </mat-form-field>
+                            <mat-form-field *ngIf="!this.workflowId" appearance="outline" class="mt-1">
+                                <mat-label>Select department</mat-label>
+                                <mat-select formControlName="department_id">
+                                    <app-search-filter [array]="department" [placeholder]="'Search by job department'" [searchFields]="['department_name']"
+                                    (filteredReturn)="filterBydepartment($event)"></app-search-filter>
+                                    <mat-option *ngFor="let data of filterdepartmentdata"
+                                        [value]="data.dept_id">{{data.department_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('department_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+
+                </div>
+                <div formArrayName="roleFiled">
+                    <div class="row mt-3" *ngFor="let roleFieled of itemsFormArray['controls']; let i = index"
+                        [formGroupName]="i">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select Designation</mat-label>
+                                    <mat-select formControlName="role_id" (selectionChange)="roleIdData($event,i)">
+                                        <app-search-filter [array]="roleGet" [placeholder]="'Search by job Role'" [searchFields]="['role_master_name']"
+                                        (filteredReturn)="filterByRole($event)"></app-search-filter>
+                                        <mat-option *ngFor="let role of filterByroledata;"
+                                            [value]="role.role_master_id">{{role.role_master_name}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('roleId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select EMP</mat-label>
+                                    <mat-select formControlName="employee_id" (selectionChange)="selectemp($event,i)">
+                                        <app-search-filter *ngIf="!loading[i]" [array]="roleGetByemployee[i]" [placeholder]="'Search by job employee'" [searchFields]="['first_name', 'last_name', 'employee_code']"
+                                        (filteredReturn)="filterByemployeement($event , i)"></app-search-filter>
+                                        <mat-option *ngFor="let data of filterroledata[i]" [value]="data.employee_id"
+                                            (change)="selectemp(data.employee_id,i)">{{data.first_name}} {{data.last_name}} ({{data.employee_code}})</mat-option>
+
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('employeeId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="showAddButton" class=" col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <div class="add_delete" style="padding: 10px 0;">
+                                <span class="edd-del">
+                                    <mat-icon matTooltip="Add Item" (click)="addItem()">add_circle</mat-icon>
+                                </span>
+
+                                <span class="delete_del" *ngIf="i+1!==1" style="padding: 0 12px;">
+                                    <mat-icon style="position: absolute;
+                                    margin-top: -24px; margin-left:20px" matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                </span>
+                            </div>
+                        </div>
+                        <!-- <div class=" col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                            <div class="add_delete">
+                               
+                            </div>
+                            </div> -->
+
+                    </div>
+                </div>
+                <div>
+                    <button style="width: 97px;height: 35px !important;" mat-raised-button color="primary" class="mx-3" (click)="onSubmit(this.form.value)">
+                        {{this.workflowId?'Update':'Submit'}}
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

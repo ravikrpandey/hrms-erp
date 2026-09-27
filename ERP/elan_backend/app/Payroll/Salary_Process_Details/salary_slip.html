@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payslip (INDIA)</title>
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    /* A4 Page Styling */
+    @media print {
+
+      body,
+      .payslip {
+        width: 210mm;
+        height: 314mm;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .payslip {
+        page-break-after: avoid;
+        padding: 20mm;
+        border: none;
+        box-shadow: none;
+      }
+    }
+
+    /* Main Payslip Container */
+    .payslip {
+      width: 100%;
+      margin: auto;
+      background-color: #fff;
+      border: 1px solid #000;
+      padding: 20px 40px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 1px;
+    }
+
+    .logo img {
+      height: 50px;
+      width: 220px;
+    }
+
+    .header,
+    .footer {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .header h2 {
+      margin: 5px 2px;
+      color: hsl(0, 100%, 1%);
+    }
+
+    .header p {
+      padding: 2px 2px;
+      font-size: 0.9em;
+      line-height: 5px;
+    }
+
+    /* Employee Details Table */
+    .employee-details {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+      margin: 0;
+      /* Remove extra margin */
+    }
+
+    .employee-details th,
+    .employee-details td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .employee-details th {
+      background-color: hsl(0, 17%, 95%);
+    }
+
+    /* Allowances and Deductions Table */
+    .table-container {
+      margin: 0;
+      /* No margin between sections */
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid #000;
+      padding: 8px;
+    }
+
+    .table th {
+      background-color: hwb(0 91% 8%);
+    }
+
+    .total-row {
+      font-weight: bold;
+      text-align: right;
+      background-color: hwb(0 91% 8%);
+    }
+
+    /* Net Pay and Signature Container */
+    .net-pay-container {
+      max-width: 100%;
+      border: 1px solid #000;
+      padding: 10px;
+      margin: 0;
+      /* Align with tables */
+      /* display: flex; */
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .net-pay-container>div {
+      flex: 1;
+      margin-bottom: 10px;
+    }
+
+    .net-pay {
+      width: 100%;
+      font-size: 15px;
+      font-weight: bold;
+      text-align: left;
+      margin-top: 5px;
+    }
+
+    .signature {
+      width: 98%;
+      text-align: right;
+      font-size: 1.1em;
+      font-weight: bold;
+      padding-right: 15px;
+    }
+
+    .note {
+      text-align: center;
+      font-size: 0.8em;
+      color: #555;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="payslip">
+    <!-- Logo Section -->
+    <div class="logo">
+      <img src="https://eliteerpapi.elitetraveltech.in/{{logo}}" alt="Logo" />
+    </div>
+
+    <!-- Payslip Header -->
+    <div class="header">
+      <h2>{{company_branch}}</h2>
+      <p>
+        {{company_address}}
+      </p>
+      <p>Pay Slip for the month of <span>{{sal_month}}</span> / <span>{{sal_year}}</span></p>
+    </div>
+
+    <!-- Employee Details Section -->
+    <table class="employee-details">
+      <thead>
+      <tbody>
+        <tr>
+
+          <td><b>Employee Name</b></td>
+          <td>{{employee_name}}</td>
+          <td><b>PF. No.</b></td>
+          <td>{{pf_account_number}}</td>
+        </tr>
+        <tr>
+          <td><b>Emp ID</b></td>
+          <td>{{employee_code}}</td>
+          <td><b>ESI No.</b></td>
+          <td>{{esi_number}}</td>
+        </tr>
+        <tr>
+          <td><b>Father Name</b></td>
+          <td>{{father_name}}</td>
+          <td><b>A/c No</b></td>
+          <td>{{account_number}}</td>
+        </tr>
+        <tr>
+          <td><b>DOB</b></td>
+          <td>{{dob}}</td>
+          <td><b>IFSC</b></td>
+          <td>{{ifsc_code}}</td>
+
+        </tr>
+        <tr>
+          <td><b>Working Days</b></td>
+          <td>{{working_days}}</td>
+          <td><b>PAN</b></td>
+          <td>{{pan_number}}</td>
+
+        </tr>
+        <tr>
+          <td><b>Days Paid</b></td>
+          <td>{{days_paid}}</td>
+          <td><b>Emirates ID Number:</b></td>
+          <td>{{emirates_id_number}}</td>
+
+
+        </tr>
+        <tr>
+          <td><b>UAN</b></td>
+          <td>{{uan_number}}</td>
+          <td><b>Aadhar No</b></td>
+          <td>{{aadhar_nuber}}</td>
+        </tr>
+      </tbody>
+      </thead>
+    </table>
+
+    <div class="salary-details-container"
+      style="display: flex; justify-content: space-between; align-items: flex-start;">
+      <!-- Allowance Table -->
+      <div class="allowances-table" style="width: 70%;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 50%;">Allowances</th>
+              <th style="width: 25%;">Gross Salary</th>
+              <th style="width: 25%;">Earning</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{allowance_details}}
+            <tr>
+              <th style="width: 50%;">Total</th>
+              <th style="text-align: right; width: 25%;">{{total_gross_salary}}</th>
+              <th style="text-align: right; width: 25%;">{{total_earning}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Deductions Table -->
+      <div class="deductions-table" style="width: 30%;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 65%;">Deductions</th>
+              <th style="width: 35%;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{deduction_details}}
+            <tr>
+              <th style="width: 65%;">Total</th>
+              <th style="text-align: right; width: 35%;">{{total_deduction}}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+    <!-- Net Pay and Signature Container with Full Width -->
+    <div class="net-pay-container">
+      <div class="net-pay">
+        Net Pay (Round Off): {{net_pay}} {{currency_name}}
+      </div>
+      <div class="net-pay">
+        In Words: {{net_pay_in_words}}
+      </div>
+
+      <div class="signature">Signature</div>
+    </div>
+
+    <!-- Note Section -->
+    <div class="note">
+      This is a system generated Salary Slip, no signature/stamp is required.
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,237 @@
+$zone-color: #3f51b5;
+$bay-color: #2e7d32;
+$rack-color: #0288d1;
+$bin-color: #f57c00;
+$bg-light: #f8f9fa;
+$border-radius: 12px;
+$shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+$shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+
+.summary-card {
+  background: white;
+  border-radius: $border-radius;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: $shadow-md;
+  border-left: 5px solid $zone-color;
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0; // Essential for text-truncate to work in flex/grid
+
+    // > div {
+    //   min-width: 0;
+    //   flex: 1;
+    // }
+
+    .icon-wrapper {
+      flex-shrink: 0; // Prevent icon from shrinking
+      background: rgba($zone-color, 0.1);
+      color: $zone-color;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .label {
+      font-size: 0.8rem;
+      color: #666;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    // .value {
+    //   font-weight: 600;
+    //   color: #222;
+    //   font-size: 1.05rem;
+    //   display: block;
+    //   overflow: hidden;
+    //   text-overflow: ellipsis;
+    //   white-space: nowrap;
+    // }
+  }
+}
+
+.hierarchy-section {
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #333;
+    }
+  }
+}
+
+.zone-panel {
+  margin-bottom: 1.5rem !important;
+  border-radius: $border-radius !important;
+  overflow: hidden;
+  box-shadow: $shadow-sm !important;
+  border: 1px solid #eee !important;
+
+  &.mat-expanded {
+    box-shadow: $shadow-md !important;
+  }
+
+  .mat-expansion-panel-header {
+    height: 64px !important;
+    background: #fcfcfc;
+    border-bottom: 1px solid #f0f0f0;
+    
+    .mat-content {
+      align-items: center;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      color: $zone-color;
+      mat-icon {
+        color: $zone-color;
+      }
+    }
+  }
+
+  .panel-body {
+    padding: 1.5rem 0;
+  }
+}
+
+.nested-container {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: $border-radius;
+  position: relative;
+  border-left: 4px solid transparent;
+  background: white;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.02);
+
+  .nested-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #eee;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+  }
+
+  &.bay-level {
+    border-color: $bay-color;
+    background: rgba($bay-color, 0.02);
+    .title { color: $bay-color; }
+  }
+
+  &.rack-level {
+    border-color: $rack-color;
+    background: rgba($rack-color, 0.02);
+    margin-left: 1rem;
+    .title { color: $rack-color; }
+  }
+
+  &.bin-level {
+    border-color: $bin-color;
+    background: rgba($bin-color, 0.02);
+    margin-left: 2rem;
+    .title { color: $bin-color; }
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  
+  .col-item {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.add-btn {
+  background-color: #f0f4ff;
+  color: $zone-color;
+  border: 1px solid rgba($zone-color, 0.2);
+  &:hover {
+    background-color: $zone-color;
+    color: white;
+  }
+}
+
+.delete-btn {
+  color: #d32f2f;
+  &:hover {
+    background-color: rgba(#d32f2f, 0.1);
+  }
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 2rem 0;
+  border-top: 1px solid #eee;
+  margin-top: 2rem;
+  
+  .save-btn {
+    padding: 0.8rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba($zone-color, 0.3);
+    transition: transform 0.2s;
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none; // Reduce spacing if no errors, but we want errors
+  }
+  .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+  }
+}

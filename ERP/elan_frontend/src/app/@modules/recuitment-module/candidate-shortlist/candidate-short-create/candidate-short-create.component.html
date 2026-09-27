@@ -1,0 +1,249 @@
+<div class="section">
+ 
+    <div class="heading_top">
+        <div class="page-title">
+        <h1>Recruitment</h1>
+        <p>Recruitment Module  <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span> Update Interview Status </span></p>
+      </div>
+        <div class="add_button">
+            <button  routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+      </div>
+
+
+
+      <div class="right_white_bg">
+        <div class="page_heading">
+            <h3>Job Description Details</h3>
+        </div>
+ 
+        <div class="right_data_bg_white form_mar_top">
+
+        <div class="form_basic">
+            <form  [formGroup]="updateCandidateForm">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Candidate Name <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                                <mat-select formControlName="candidateName" (selectionChange)="selectCandidate($event)">
+                      <mat-select-filter [array]="condidateList1" (filteredReturn)="productFilter($event)"  ></mat-select-filter>
+                                    
+                                    <mat-option *ngFor="let canditate of candiateList"
+                                        [value]="canditate.candidate_id">{{canditate.condidate_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="candiateList?.length === 0 ">Not a single candidate is shortlisted</mat-error>
+                            </mat-form-field>
+                            
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Job Role <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="jobRole" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Application Date <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="applicationDate" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Department <span>*</span></mat-label>
+                            <mat-form-field appearance="outline" readonly>
+                               
+                                <input matInput type="text" formControlName="department" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Job Type <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="jobType" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Job Title <span>*</span></mat-label>
+                            <mat-form-field appearance="outline" readonly>
+                                
+                                <input matInput type="text" formControlName="jobTitle" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">E-mail <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="email" formControlName="email" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Mobile Number <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="mobileNumber" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Experience <span>*</span></mat-label>
+                            <mat-form-field appearance="outline" readonly>
+                               
+                                <input matInput type="text" formControlName="experience" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Requisition Status <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <mat-select formControlName="requisitionStatus">
+                                    <mat-option value="Pending">Pending</mat-option>
+                                    <mat-option value="Approve">Approve</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Address <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="address" />
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+      
+        <ng-container *ngIf="showRemarksBar">
+            <div class="row form_head">
+                <h3>Update Schedule Interviews Status & Remarks</h3>
+            </div>
+            <div class="candidate_reg form_basic">
+                <form class="form_interview" [formGroup]="candidateForm">
+                    <ng-container formArrayName="candidateRow"
+                        *ngFor="let control of CF_1.candidateRow['controls']; index as i" ?>
+
+                        <div class="row" [formGroup]="control">
+                            <div class="col-lg-2">
+                                <p class="mode_interview">Interview round - {{i+1}}</p>
+                                <div class="icon_mat">
+                                    <mat-icon *ngIf="!control.value.final_shortlisted">arrow_downward</mat-icon>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <div class="row ">
+                                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                                        <p class="mode_interview">Mode Of Interview</p>
+                                        <div class="form-group form-new">
+                                            <input matInput type="text" formControlName="mode_of_interview"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                                        <p class="mode_interview">Interviewer Name</p>
+                                        <div class="form-group form-new">
+                                            <input matInput type="text" formControlName="interviewer_name"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                                        <p class="mode_interview">Interview Data</p>
+                                        <div class="form-group form-new">
+                                            <input matInput type="date" formControlName="interview_date"
+                                                class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                                        <p class="mode_interview">Remarks</p>
+                                        <div class="form-group form-new">
+                                            <input matInput type="text" formControlName="remark" class="form-control" />
+      
+                                       
+                                            <mat-error *ngIf="control.get('remark').hasError('maxlength')">
+                                                Maximum character limit (150) exceeded.
+                                              </mat-error>
+                                            <span class="error-message" *ngIf="candidateForm.get('candidateRow.' + i + '.remark').hasError('required') && candidateForm.get('candidateRow.' + i + '.remark').touched">
+                                                Please enter a remark.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2">
+                                <p class="mode_interview">Action</p>
+
+                                <div class="row">
+                                    <div class="col-md-6 action_bnt1" *ngIf="!control.value.isRejected"
+                                        [ngStyle]="{'width':control.value.isShortListed ? '100%':''}">
+                                        <button type="button" class="button" [disabled]="control.value.isShortListed"
+                                            (click)="shortSubmit(control.value,i)">{{!control.value.isShortListed ?
+                                            'Shortlist':'Shortlisted'}}</button>
+                                    </div>
+                                    <div class="col-md-6 action_bnt2" *ngIf="!control.value.isShortListed"
+                                        [ngStyle]="{'width':control.value.isRejected ? '100%':''}">
+                                        <button type="button" class="button" [disabled]="control.value.isRejected"
+                                            (click)="rejected(control.value,i)">{{!control.value.isRejected ?
+                                            'Reject':'Rejected'}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <div class="finishedMsg_2" *ngIf="wantToFinalShortlist" (click)="finalShortList()">Do you want to final shortlit & finished the interview processe of this candidate</div>
+                </form>
+            </div>
+        </ng-container>
+        <div class="row">
+            <div class="col">
+                <div class="finishedMsg" *ngIf="showFinishedMsg">Finished Interview Process</div>
+            </div>
+        </div>
+        <!-- <div class="row">
+            <div class="col">
+                <div class="finishedMsg" *ngIf="wantToFinalShortlist">Do you want to final shortlit & finished the interview of this candidate</div>
+            </div>
+        </div> -->
+   
+    </div>
+</div>

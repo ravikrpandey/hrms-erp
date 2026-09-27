@@ -1,0 +1,164 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Financial Transactions Integrations </h1>
+      <p>Transactions <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+        </i><span> Add Financial Transactions Integrations </span></p>
+    </div>
+    <div class="add_button">
+      <button type="button" (click)="back()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+  </div>
+  
+  
+  <div class="right_data_all mt-4">
+    
+    <mat-card>
+      <div class="form_head ">
+        <h3>Financial Transactions Integrations </h3>
+      </div>
+    
+      <form class="form_set" [formGroup]="financialTransaction">
+      <div class="form_basic mb-0">
+       
+          <div class="row details  mt-3">
+     
+
+            <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline"   >
+                    <mat-label>Modules</mat-label>
+                    <mat-select formControlName="menu_master_id" (selectionChange)="getAllModule($event)">
+                       <mat-option value = '8'>Purchase Management</mat-option>
+                       <mat-option value = '32'>Sales CRM</mat-option>
+                       <!-- <mat-option value = '5'>Fianance & Accounting</mat-option> -->
+                    </mat-select>
+                   
+                  </mat-form-field>
+              </div>
+              </div>
+
+             
+              <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline"   >
+                    <mat-label>Sub Module</mat-label>
+                    <mat-select formControlName="sub_module_id">
+                      <mat-option  [value]="item.menu_master_id"  *ngFor="let item of getModule; index as i" (click)="getSubmodulesData(item,i)">{{item.menu_master_name}}</mat-option>
+  
+                    </mat-select>
+                   
+                  </mat-form-field>
+                </div>
+              </div>
+
+            
+          </div>
+      
+      </div>
+
+      <div class="form_head">
+        <h3>Account Details</h3>
+      </div>
+      <div class="form_basic mb-0">
+       
+          <div formArrayName="Account_details">
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">S.No.</th>
+                    <th scope="col">Mapping Component</th>
+                    <th scope="col">Account</th>
+                    <th scope="col">Debit/Credit</th>
+                    <!-- <th scope="col">Credit</th> -->
+                    
+                    <th scope="col" [hidden]="paramsType == 'view'">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of Account_details.controls; let i = index" [formGroupName]="i">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Mapping</mat-label>
+                            <input matInput type="text" formControlName="mapping_account"  />
+                          </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                        <mat-label>Account</mat-label>
+                        <mat-select #select2 formControlName="chart_account_id"  >
+  
+                          <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                            (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                          <ng-container>
+                            <mat-option [value]="data.id" *ngFor="let data of chartedAccount" [hidden]="data.hidden"
+                              [disabled]="paramsType == 'view'">
+                              {{data.account_name}}
+                            </mat-option>
+                          </ng-container>
+  
+                        </mat-select>
+                        <button mat-icon-button *ngIf="this.Account_details.controls[i].get('chart_account_id')?.value"
+                          matSuffix (click)="clearDropdown('chart_account_id',i)" [hidden]="paramsType == 'view'">
+                          <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                        </button>
+                        <mat-error
+                          *ngIf="this.Account_details.controls[i].get('chart_account_id')?.touched && this.Account_details.controls[i].get('chart_account_id')?.errors?.['required']">
+                          * Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <div class="form-group mb-6">
+                        <mat-form-field appearance="outline"  [ngClass]="isDisable?'inp_disable':''" >
+                          <mat-label>Debit/Credit</mat-label>
+                          <mat-select formControlName="debit_credit" (selectionChange)="DebitCedit($event)">
+                             <mat-option value = "debit"  >Debit</mat-option>
+                             <mat-option value = 'credit'  >Credit</mat-option>
+                          </mat-select>
+                         
+                        </mat-form-field>
+                    </div>
+                    </td>
+                   <td  >
+                      <div class="edit_del flexRow">
+                        <div (click)="AddRow()">
+                          <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                        </div>
+                        <div *ngIf="i !== 0">
+                          <mat-icon matTooltip="Delete Item" (click)="removeRow(i)">delete_circle</mat-icon>
+                        </div>
+                      </div>
+                    </td>
+  
+                   
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+       
+      </div>
+
+      <div class="form_basic mb-0">
+        <div class="form_set totalTable">
+          
+          <div class="mt-4">
+          
+            <div class="common_button_sub" align="end">
+              
+              <button (click)="submitPublic('APPROVED')" [disabled]="loading" [hidden]="paramsType == 'view'">
+                Submit 
+              </button>
+              <button class="cancel_button_y" routerLink="/master/configurational-master/financial-transactions-integrations/financial-transactions-integrations-list">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+      <!-- </div> -->
+    <!-- </mat-card> -->
+  <!-- </div> -->

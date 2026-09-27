@@ -1,0 +1,545 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>
+      Vehicle Vendor Master
+      <span>
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        {{ typeStatus === 'update'?'Update':typeStatus === 'view'?'View':'Create' }}
+      </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" type="button" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card>
+    <div class="form_head">
+      <h3>Vehicle Vendor Master</h3>
+    </div>
+
+    <div class="form_basic mb-0">
+      <form
+        class="form_set"
+        [formGroup]="vehicleVendorForm"(ngSubmit)="onSubmitForm()">
+        <fieldset [disabled]="readable">
+          <div class="row">
+            <!-- Vendor ID -->
+            <div
+              class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12"
+              *ngIf="this.vendor_id"
+            >
+              <div class="form-group">
+                <mat-label
+                  >Vendor ID  <span class="alertspan">*</span></mat-label
+                >
+
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input matInput  value="{{vendor_id}}" readonly />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- vendor name  -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Vendor Name<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input matInput formControlName="vendor_name" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Oranization Name  -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Oranization Name<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input matInput formControlName="organization_name" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Vendor Type  -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Vendor Type<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input matInput formControlName="vendor_type" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Contact Person Name  -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Contact Person Name<span class="alertspan"
+                    >*</span
+                  ></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input matInput formControlName="contact_person_name" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Contact Number -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Contact Number<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="contact_number"
+                    maxlength="10"
+                    pattern="[0-9]*"
+                    type="tel"
+                    placeholder="Enter contact number"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Email Address<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="email_address"
+                    type="email"
+                    placeholder="Enter email address"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Address -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>Address<span class="alertspan">*</span></mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="address"
+                    placeholder="Enter address"
+                    rows="3"
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Country -->
+           <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-label>Country<span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                  <mat-label>Country</mat-label>
+                  <mat-select formControlName="country_id" (selectionChange)="onChangeCountry($event)">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterCountryControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!countryList?.length" disabled>
+                      <p>Country Not Found</p>
+                    </mat-option>
+                    <mat-option *ngFor="let country of countryList"
+                        [value]="country?.countryss_id">{{ country?.countryss_name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="vehicleVendorForm.get('country_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+              </div>
+          </div>
+
+          <!-- State -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+               <mat-label>State<span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                  <mat-label>State</mat-label>
+                  <mat-select formControlName="state_id" (selectionChange)="onChangeState($event)">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterStateControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!AllStateList?.length" disabled>
+                      <p>State Not Found</p>
+                    </mat-option>
+                      <mat-option *ngFor="let state of AllStateList"
+                          [value]="state?.states_id">{{ state?.states_name }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="vehicleVendorForm.get('state_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+              </div>
+          </div>
+
+          <!-- city -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+               <mat-label>City<span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="city_id" (selectionChange)="onChangeCity($event)">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterCityControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!allCityList?.length" disabled>
+                      <p>City Not Found</p>
+                    </mat-option>
+                    <mat-option *ngFor="let city of allCityList"
+                        [value]="city?.city_id">{{ city?.city_name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="vehicleVendorForm.get('city_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+            <!-- Pincode -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>Pincode<span class="alertspan">*</span></mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="pincode"
+                    [readonly]="typeStatus === 'view'"
+                    maxlength="10"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- GST Number -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>GST Number</mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="gst_number"
+                    [readonly]="typeStatus === 'view'"
+                    maxlength="15"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- PAN Number -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>PAN Number</mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="pan_number"
+                    [readonly]="typeStatus === 'view'"
+                    maxlength="10"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Bank Name -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>Bank Name<span class="alertspan">*</span></mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="bank_name"
+                    [readonly]="typeStatus === 'view'"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Account Number -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Account Number<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="account_number"
+                    [readonly]="typeStatus === 'view'"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- IFSC Code -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>IFSC Code<span class="alertspan">*</span></mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="ifsc_code"
+                    [readonly]="typeStatus === 'view'"
+                    maxlength="11"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Preferred Routes/Regions -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Preferred Routes/Regions<span class="alertspan"
+                    >*</span
+                  ></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="preferred_routes_regions"
+                    [readonly]="typeStatus === 'view'"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Payment Terms -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Payment Terms<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="payment_terms"
+                    [readonly]="typeStatus === 'view'"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Agreement Signed -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Agreement Signed<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <mat-select
+                    formControlName="agreement_signed"
+                    [disabled]="typeStatus === 'view'"
+                  >
+                    <mat-option value="YES">Yes</mat-option>
+                    <mat-option value="NO">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Blacklist Status -->
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Blacklist Status<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <mat-select
+                    formControlName="blacklist_status"
+                    [disabled]="typeStatus === 'view'"
+                  >
+                    <mat-option value="YES">Yes</mat-option>
+                    <mat-option value="NO">No</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- Created Date -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Created Date<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    [matDatepicker]="createdDatePicker"
+                    formControlName="created_Date"
+                    [readonly]="typeStatus === 'view'"
+                    [disabled]="typeStatus === 'view'"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="createdDatePicker"
+                    *ngIf="typeStatus !== 'view'"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #createdDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- Updated Date -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label
+                  >Updated Date<span class="alertspan">*</span></mat-label
+                >
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    [matDatepicker]="updatedDatePicker"
+                    formControlName="updated_Date"
+                    [readonly]="typeStatus === 'view'"
+                    [disabled]="typeStatus === 'view'"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="updatedDatePicker"
+                    *ngIf="typeStatus !== 'view'"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #updatedDatePicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div> -->
+
+              <!-- Remarks/Notes -->
+            <div class="col-xxl-8 col-lg-8 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <mat-label>Remarks/Notes</mat-label>
+                <mat-form-field
+                  appearance="outline"
+                  class="w-100"
+                  [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                >
+                  <input
+                    matInput
+                    formControlName="remarks"
+                    rows="4"
+                    [readonly]="typeStatus === 'view'"
+                  >
+                </mat-form-field>
+              </div>
+            </div>
+
+
+          </div>
+        </fieldset>
+
+        <div class="common_button_sub" align="end">
+          <span  *ngIf="typeStatus!='view'">
+            <button type="submit"  >
+              {{ typeStatus === 'update'?'Update':'Create'  }}
+            </button>
+          </span>
+          <button type="button" class="cancel_button_y" (click)="back()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

@@ -1,0 +1,115 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Attendance <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Attendance Calendar</span></p>
+  </div>
+
+</div>
+
+<div class="right_data_all pt-3">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Month Selector -->
+        <div class="col-12 col-sm-4 col-md-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Month</mat-label>
+              <!-- <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()"> -->
+              <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="get_attendanceBYmonth()">
+                <mat-option *ngFor="let month of months" [value]="month">
+                  {{ month }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="!selectedMonth">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Year Selector -->
+        <div class="col-12 col-sm-4 col-md-4 col-12">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear" (ngModelChange)="get_attendanceBYmonth()">
+              <mat-option *ngFor="let year of financialYearList" [value]="year?.financial_year">
+                {{ year?.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear">
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Container for Calendar and Legend -->
+      <div class="calendar-legend-container">
+        <!-- Attendance Calendar Table -->
+        <div class="calendar-container">
+          <div *ngIf="calendarDays.length">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th *ngFor="let day of daysOfWeek" scope="col">{{ day }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let week of calendarDays">
+                  <td *ngFor="let day of week" (click)="showFullDetail(day)">
+                    <div class="day-cell">
+                      {{ day?.date !== '' ? day?.date : '' }}
+                      <div class="border-stick" [ngStyle]="{'background-color': day?.color || 'default-color'}"></div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>              
+            </table>
+          </div>
+        </div>
+
+        <!-- Color Legend -->
+        <div class="color-legend">
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#28a745'}"></div>
+            <span>Present</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#dc3545'}"></div>
+            <span>Absent</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#007bff'}"></div>
+            <span>Paid Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#fd7e14'}"></div>
+            <span>Unpaid Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#6c757d'}"></div>
+            <span>Default Absent</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#d4edda'}"></div>
+            <span>Default Present</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#ffc107'}"></div>
+            <span>Half Day</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#cce5ff'}"></div>
+            <span>Paid HalfDay Leave</span>
+          </div>
+          <div class="legend-item">
+            <div class="color-box" [ngStyle]="{'background-color': '#ffe5b4'}"></div>
+            <span>Unpaid HalfDay Leave</span>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

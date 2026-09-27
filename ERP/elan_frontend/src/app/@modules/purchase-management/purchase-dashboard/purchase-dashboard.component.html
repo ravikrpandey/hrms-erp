@@ -1,0 +1,274 @@
+<div class="dashboard-wrapper">
+  <!-- Header and Filter Panel -->
+  <div class="dashboard-header">
+    <h2>Purchase Management Dashboard</h2>
+
+    <div class="date-selector">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>From</mat-label>
+        <mat-select [(ngModel)]="fromMonth" (ngModelChange)="applyFilters()">
+          <mat-option *ngFor="let month of months" [value]="month.id">
+            {{ month.month_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>To</mat-label>
+        <mat-select
+          [(ngModel)]="toMonth"
+          (ngModelChange)="onToMonthChange($event)"
+        >
+          <mat-option *ngFor="let month of months" [value]="month.id">
+            {{ month.month_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Metrics Grid -->
+  <div class="metrics-grid">
+    <div class="dashboard-card total-spend">
+      <div class="card-content">
+        <h3>Total Spend</h3>
+        <p>{{ totalSpend || 0 }}</p>
+      </div>
+      <div class="icon">
+        <img
+          src="../../../../../assets/invoice-count.png"
+          alt="Total Spend Icon"
+        />
+      </div>
+    </div>
+
+    <div
+      class="dashboard-card"
+      *ngFor="let metric of metrics"
+      [ngClass]="getMetricClass(metric.title)"
+    >
+      <div class="card-content">
+        <h3>{{ metric.title }}</h3>
+        <p>{{ metric.value }}</p>
+      </div>
+      <div class="icon">
+        <img src="../../../../../assets/invoice-count.png" alt="Metric Icon" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <!-- <div class="charts-section">
+    <div class="charts-row">
+      <div class="box">
+        <h4>Spend Forecast Analysis</h4>
+        <app-category-tree-map-chart></app-category-tree-map-chart>
+      </div>
+      <div class="box">
+        <h4>Spend Trends</h4>
+        <div id="chart2" style="width: 100%; height: 100%;">
+          <app-spend-trend-chart></app-spend-trend-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="box">
+        <h4>Category Spend</h4>
+        <div style="width: 100%; margin: 10px 0;">
+          <app-category-spend-chart
+            [fromMonth]="fromMonth"
+            [toMonth]="toMonth"
+          ></app-category-spend-chart>
+        </div>
+      </div>
+      <div class="box">
+        <h4>Spend by Category</h4>
+        <app-region-spend-chart
+          [fromMonth]="fromMonth"
+          [toMonth]="toMonth"
+        ></app-region-spend-chart>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="box">
+        <h4>Spend by Supplier</h4>
+        <app-supplier-spend-chart
+          [fromMonth]="fromMonth"
+          [toMonth]="toMonth"
+        ></app-supplier-spend-chart>
+      </div>
+      <div class="box">
+        <h4>Department Spend</h4>
+        <app-department-spend-chart
+          [fromMonth]="fromMonth"
+          [toMonth]="toMonth"
+        ></app-department-spend-chart>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Quantity Ledger Section -->
+  <div class="ledger-section">
+    <div class="box">
+      <div class="ledger-header">
+        <div class="header-title-area">
+          <h4>PR Item Quantity Ledger & Stage Tracker</h4>
+          <p class="subtitle">Real-time status progression and item quantity reconciliation from Requisition to Delivery</p>
+        </div>
+        <div class="search-container">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search PR, Item, or Stage</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchTerm"
+              (ngModelChange)="applySearchFilter()"
+              placeholder="Search..."
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="ledger-table-container">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Document Ref</th>
+              <th>Item Details</th>
+              <th>Stage Progression & Quantities</th>
+              <th>Reconciliation</th>
+              <th>Current Stage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of filteredLedger" class="ledger-row">
+              <td class="pr-num-cell">
+                <div class="doc-badge-container">
+                  <ng-container *ngIf="item.pr_number.indexOf('Direct PO:') === 0; else regularPR">
+                    <span class="type-badge direct-po">Direct PO</span>
+                    <span class="doc-num po-num" [title]="item.pr_number.split(': ')[1]">{{ item.pr_number.split(': ')[1] }}</span>
+                  </ng-container>
+                  <ng-template #regularPR>
+                    <span class="type-badge pr-type">PR</span>
+                    <span class="doc-num" [title]="item.pr_number">{{ item.pr_number }}</span>
+                  </ng-template>
+                </div>
+              </td>
+              <td class="item-name-cell">
+                <span class="item-name">{{ item.item_name }}</span>
+                <span class="item-code">{{ item.item_code }}</span>
+              </td>
+              <td class="progression-cell">
+                <div class="stage-pipeline">
+                  <!-- PR -->
+                  <div
+                    class="stage-step pr-step"
+                    [class.step-active]="item.total_pr_qty > 0"
+                  >
+                    <span class="step-label">PR</span>
+                    <span class="step-qty">{{ item.total_pr_qty }}</span>
+                  </div>
+                  <div
+                    class="step-connector"
+                    [class.active-rfp]="item.rfp_qty > 0"
+                  ></div>
+
+                  <!-- RFP -->
+                  <div class="stage-step rfp-step" [class.step-active]="item.rfp_qty > 0">
+                    <span class="step-label">RFP</span>
+                    <span class="step-qty">{{ item.rfp_qty }}</span>
+                    <span class="step-ref" *ngIf="item.rfp_numbers" [title]="item.rfp_numbers">{{ item.rfp_numbers }}</span>
+                  </div>
+                  <div
+                    class="step-connector"
+                    [class.active-nego]="item.nego_qty > 0"
+                  ></div>
+
+                  <!-- Negotiation -->
+                  <div class="stage-step nego-step" [class.step-active]="item.nego_qty > 0">
+                    <span class="step-label">Nego</span>
+                    <span class="step-qty">{{ item.nego_qty }}</span>
+                    <span class="step-ref" *ngIf="item.nego_numbers" [title]="item.nego_numbers">{{ item.nego_numbers }}</span>
+                  </div>
+                  <div
+                    class="step-connector"
+                    [class.active-po]="item.po_qty > 0"
+                  ></div>
+
+                  <!-- PO -->
+                  <div class="stage-step po-step" [class.step-active]="item.po_qty > 0">
+                    <span class="step-label">PO</span>
+                    <span class="step-qty">{{ item.po_qty }}</span>
+                    <span class="step-ref" *ngIf="item.po_numbers" [title]="item.po_numbers">{{ item.po_numbers }}</span>
+                  </div>
+                  <div
+                    class="step-connector"
+                    [class.active-ship]="item.ship_qty > 0"
+                  ></div>
+
+                  <!-- Shipping Alert -->
+                  <div class="stage-step ship-step" [class.step-active]="item.ship_qty > 0">
+                    <span class="step-label">Shipped</span>
+                    <span class="step-qty">{{ item.ship_qty }}</span>
+                    <span class="step-ref" *ngIf="item.ship_numbers" [title]="item.ship_numbers">{{ item.ship_numbers }}</span>
+                  </div>
+                  <div
+                    class="step-connector"
+                    [class.active-grn]="item.grn_qty > 0"
+                  ></div>
+
+                  <!-- GRN -->
+                  <div class="stage-step grn-step" [class.step-active]="item.grn_qty > 0">
+                    <span class="step-label">GRN</span>
+                    <span class="step-qty">{{ item.grn_qty }}</span>
+                    <span class="step-ref" *ngIf="item.grn_numbers" [title]="item.grn_numbers">{{ item.grn_numbers }}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="progress-bar-cell">
+                <div class="progress-container-outer">
+                  <div class="progress-text-row">
+                    <span class="progress-val">{{ item.grn_qty }} of {{ item.total_pr_qty }}</span>
+                    <span class="progress-pct">{{ ((item.grn_qty / item.total_pr_qty) * 100) | number: "1.0-0" }}%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div
+                      class="progress-bar-fill"
+                      [style.width.%]="(item.grn_qty / item.total_pr_qty) * 100"
+                      [class.completed]="item.grn_qty >= item.total_pr_qty"
+                    ></div>
+                  </div>
+                </div>
+              </td>
+              <td class="badge-cell">
+                <span
+                  class="stage-badge"
+                  [ngClass]="item.current_stage | lowercase"
+                >
+                  <span class="dot"></span>
+                  {{ item.current_stage }}
+                </span>
+              </td>
+              <td class="badge-cell">
+                <span
+                  class="status-badge"
+                  [ngClass]="item.pr_status | lowercase"
+                >
+                  {{ item.pr_status }}
+                </span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredLedger.length === 0">
+              <td colspan="6" class="no-records-cell">
+                No matching records found.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

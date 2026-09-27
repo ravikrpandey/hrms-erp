@@ -1,0 +1,88 @@
+<div class="row align-items-center mt-3 mx-1 my-1">
+    <div class="col-12 text-end mb-2">
+        <button class="reset-filters-btn" (click)="resetFilters()">
+            Reset Filters
+        </button>
+    </div>
+
+    <!-- Month Filter -->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('month')">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Month</mat-label>
+            <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let month of months" [value]="month.id">
+                    {{ month.month_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- Year Filter -->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('year')">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let year of years" [value]="year.financial_year">
+                    {{ year.financial_year }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- Year By ID Filter  -->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('yearID')">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Year</mat-label>
+            <mat-select [(ngModel)]="selectedYearID" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let year of years" [value]="year.id">
+                    {{ year.financial_year }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!-- Employee Filter -->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('employee')">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Select Employee</mat-label>
+            <mat-select [(ngModel)]="selectedEmployee" (ngModelChange)="onSelectionChange()">
+                <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                <mat-option *ngFor="let employee of employeesList" [value]="employee.employee_id">
+                    {{ employee.first_name }} {{employee.last_name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- Department Filter -->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('department')">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Select Department</mat-label>
+            <mat-select [(ngModel)]="selectedDepartment" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let department of departments" [value]="department.dept_id">
+                    {{ department.department_name }} 
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!---Expense Category Filter-->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('expenseCategory')">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Select Expense Category</mat-label>
+            <mat-select [(ngModel)]="selectedCategory" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let category of expenseCategories" [value]="category.id">
+                    {{ category.expense_type }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <!---Status Filter-->
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3" *ngIf="filtersToShow.includes('status')">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Select Status</mat-label>
+            <mat-select [(ngModel)]="selectedStatus" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let status of statuses" [value]="status.status_name">
+                    {{ status.status_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>

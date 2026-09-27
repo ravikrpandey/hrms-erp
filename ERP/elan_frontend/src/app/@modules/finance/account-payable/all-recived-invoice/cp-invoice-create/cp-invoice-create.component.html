@@ -1,0 +1,241 @@
+<mat-card>
+    <div class="section">
+      <div class="main">
+        <div class="employee">
+        </div>
+        <div class="msater-nav">
+          <a>Channel Partner<mat-icon>keyboard_arrow_right</mat-icon></a>
+          <a routerLink="../"> CP- Provision Details</a>
+        </div>
+        <div class="updatetitle"> CP Details</div>
+        <form class="form_set" [formGroup]="provisionForm">
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>CP Details</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Associated Company</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput type="text" formControlName="associated_company" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>CP Name</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput type="text" formControlName="cp_name" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Certificate Type</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="certificate_type">
+                            <mat-option value="Cert">Cert</mat-option>
+                            <mat-option value="Non Cert">Non Cert</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>S1 WO</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="s1_wo" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>S2 WO</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput type="number" min="1" formControlName="s2_wo" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Stage / Service Type</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput type="text" formControlName="service_type" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Product</p>
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="text" formControlName="product" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Address</p>
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="text" formControlName="address" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>GST Number</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput maxlength="15" type="text" formControlName="GST_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>MSME Number</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="MSME_number"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Assessment Fee</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="assessment_fee" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Delivered Month</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput [matDatepicker]="dp_1" (click)="dp_1.open()" formControlName="delivered_month"
+                            [max]="maxDate" [min]="minDate" (dateChange)="fromDate($event)" />
+                          <mat-datepicker-toggle matSuffix [for]="dp_1"></mat-datepicker-toggle>
+                          <mat-datepicker #dp_1></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>SP Name&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="SP_name" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Requested Incentive %</p>
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="number" min="1" formControlName="requested_incentive" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Special Incentive Amount</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="special_incentive_amount" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Agreed % Incentive&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="agreed_incentive" readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Invoice Number</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" min="1" formControlName="invoice_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Invoice Date</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="invoice_date"
+                            [max]="maxDate" [min]="minDate" (dateChange)="fromDate($event)" />
+                          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                          <mat-datepicker #dp></mat-datepicker>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Invoice Submitted by CP</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="invoice_submitted_by_CP">
+                            <mat-option value="Yes">Yes</mat-option>
+                            <mat-option value="No">No</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                      <div class="form-group">
+                        <p class="">Remarks</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="remarks" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Comments</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="comments" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="upload-btn">
+                    <button class="cancel-btn" (click)="cancel()">
+                      Cancel
+                    </button>
+                    <!-- <button class="aprove" style="background-color: #af2711;" (click)="OnAction('RBH REJECTED')">
+                      Reject
+                    </button> -->
+                    <button class="favorite styled" (click)="OnAction()">Send</button>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+        </form>
+      </div>
+    </div>
+  </mat-card>

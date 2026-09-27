@@ -1,0 +1,34 @@
+<div class="page-container" style="margin-left: 15px;margin-right: 15px;">
+  <!-- Heading -->
+  <div class="heading_top" style="margin-bottom: 10px;">
+    <div class="page-title">
+      <h1>Sales CRM</h1>
+      <p>Dispatch Pick List</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="row d-flex mb-2 justify-content-between align-items-center">
+    <div class="col-auto">
+      <select class="form-select" style="width: auto;" (change)="onPageSizeChanged($event)">
+        <option value="10" selected>10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Search..." (input)="onFilterTextBoxChanged($event)" />
+    </div>
+  </div>
+
+  <!-- AG Grid -->
+  <ag-grid-angular
+    class="ag-theme-alpine"
+    style="width: 100%; height: 465px"
+    [rowData]="filteredRowData"
+    [columnDefs]="columnDefs"
+    [frameworkComponents]="frameworkComponents"
+    [pagination]="true"
+    [paginationPageSize]="paginationPageSize">
+  </ag-grid-angular>
+</div>

@@ -1,0 +1,63 @@
+<mat-accordion class="w-100">
+  <mat-expansion-panel
+    [expanded]="false"
+    [disabled]="!menu.children?.length"
+    class="mb-2 force-normal-style"
+  >
+    <!-- PANEL HEADER -->
+    <mat-expansion-panel-header>
+      <div class="d-flex justify-content-between w-100 align-items-center">
+        <!-- LEFT: ICON + NAME -->
+        <div class="d-flex align-items-center gap-2">
+          <mat-icon>{{ menu.icon }}</mat-icon>
+          <span class="fw-bold name">{{ menu.name }}</span>
+        </div>
+
+        <!-- RIGHT SIDE CONTROLS -->
+        <div class="d-flex align-items-center gap-3">
+          <!-- Order Badge -->
+          <span class="badge bg-primary">#{{ menu.order }}</span>
+
+          <!-- Toggle Status -->
+           <mat-slide-toggle
+            [checked]="menu.status"
+            (change)="onStatusChange(menu, $event)"
+            (click)="$event.stopPropagation()"
+            color="primary"
+          ></mat-slide-toggle>
+
+          <!-- Edit Menu -->
+          <button
+            mat-icon-button
+            (click)="onEdit(menu); $event.stopPropagation()"
+            matTooltip="Edit Menu"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <!-- Add Child -->
+          <button
+            class="me-4"
+            mat-stroked-button
+            color="primary"
+            *ngIf="createButton"
+            (click)="onCreate(menu); $event.stopPropagation()"
+          >
+            + Child
+          </button>
+        </div>
+      </div>
+    </mat-expansion-panel-header>
+
+    <!-- CHILD LEVEL -->
+    <div class="mt-2 ms-3">
+      <div *ngFor="let child of menu.children" class="mb-2">
+        <!-- Recursive call -->
+        <app-menu-list-card
+          [menu]="child"
+          [createButton]="createButton"
+        ></app-menu-list-card>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

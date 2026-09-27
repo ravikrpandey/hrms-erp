@@ -1,0 +1,35 @@
+<div *ngIf="!status">
+    <h3 mat-dialog-title class="popHead">Extend Date</h3>
+    <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <div class="row">
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <form class="" [formGroup]="extendDateForm">
+                        <div class="form-group mt-3">
+                            <mat-form-field appearance="outline" readonly>
+                                <mat-label>Extend Date</mat-label>
+                                <input matInput [matDatepicker]="dp4" [min]="this.startDate" (click)="dp4.open()"
+                                    formControlName="end_date" />
+                                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                <mat-datepicker #dp4></mat-datepicker>
+                                <mat-error *ngIf="extendDateForm.controls['end_date'].hasError('required')">
+                                    Please Select The Date!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub mb-3">
+        <button mat-dialog-close class="cancel_button_y">
+            Cancel
+        </button>
+        <button mat-dialog-close (click)="updateDate()">
+            Submit
+        </button>
+    </mat-dialog-actions>
+</div>

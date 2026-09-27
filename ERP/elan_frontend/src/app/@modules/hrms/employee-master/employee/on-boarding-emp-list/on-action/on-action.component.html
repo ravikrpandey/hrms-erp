@@ -1,0 +1,11 @@
+<div class="edd-del">
+    <!-- <mat-icon matTooltip="Delete" (click)="deletes($event)">launch</mat-icon> -->
+    <mat-icon matTooltip="Send Link" (click)="sendLinkForCreateEmployeeDetail()"
+        *ngIf="singleData?.onboarding_status =='PENDING' && singleData?.onboarding_status !='COMPLETED'">send</mat-icon>
+        <mat-icon matTooltip="Copy Link" (click)="copyLink()"
+        *ngIf="singleData?.onboarding_status =='PENDING' && singleData?.onboarding_status !='COMPLETED'">filter_none</mat-icon>
+    <mat-icon matTooltip="Approve Onboarding"
+        *ngIf="singleData?.onboarding_status =='ONBOARDED' && singleData?.onboarding_status !='COMPLETED'"
+        (click)="approveOnboardingEmployee($event)">check_circle</mat-icon>
+    <P *ngIf="singleData?.onboarding_status =='COMPLETED'">ONBOARDED</P>
+</div>

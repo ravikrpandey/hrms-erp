@@ -1,0 +1,166 @@
+<div class="right_data_all">
+  <div class="row">
+
+    <div class="page-title">
+      <h1>{{earningId ? 'Edit Earning': 'New Earning'}}</h1>
+    </div>
+  </div>
+  <hr>
+
+
+  <div class="container">
+    <form [formGroup]="earningForm">
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-5 border-end border-danger">
+          <div class="col-md-8 mb-2">
+            <div class="form-group">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-label>Earning Type</mat-label>
+                <mat-select formControlName="earning_type_code" (selectionChange)="earningTypeChange($event, 'change')">
+                  <mat-option *ngFor="let earningType of earningCompList"
+                    [value]="earningType.earning_type_code">{{earningType.earning_type_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-label>Earning Name</mat-label>
+                <input matInput formControlName="earning_name" placeholder="Earning Name" required />
+              </mat-form-field>
+            </div>
+          </div>
+
+
+          <div class="col-md-8">
+            <div class="form-group">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-label>Name in Payslip</mat-label>
+                <input matInput formControlName="name_in_payslip" placeholder="Name in Payslip" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <p class="mandatory custom-label">Calculation Type</p>
+              <div class="form-group">
+                <mat-radio-group formControlName="calculation_type" class="vertical-radio-group"
+                  (change)="onCalculationTypeChange($event)" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                  <mat-radio-button value="Not Applicable" [disabled]="earningObj?.earning_type_code == 'BASIC1'">N/A</mat-radio-button>
+                  <mat-radio-button value="Flat Amount" [disabled]="earningObj?.earning_type_code == 'BASIC1'">Flat
+                    Amount</mat-radio-button>
+                  <mat-radio-button value="Percentage of">Percentage of </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <ng-container *ngIf="earningForm.get('calculation_type')?.value === 'Percentage of'">
+              <div class="col-md-4" style="align-content:end !important">
+                <select class="form-select form-select-sm" formControlName="earning_type"
+                  aria-label=".form-select-sm example" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                  <option disabled selected>Select Component</option>
+                  <option *ngFor="let comp of compList" [value]="comp.earning_name"
+                   >{{comp.earning_name}}</option>
+                </select>
+              </div>
+            </ng-container>
+          </div>
+
+          <!-- Conditionally Show Enter Percentage or Enter Amount -->
+          <div class="row mt-2 " style="width: 60% !important;"
+            *ngIf="earningForm.get('calculation_type')?.value === 'Percentage of'">
+            <div class="mb-4 custom-input-group">
+              <label for="bonusPercentage" class="custom-label mandatory">Enter Percentage</label>
+              <div class="custom-input-container" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <input matInput formControlName="calculation_percentage" type="number" class="custom-input-field"
+                  id="bonusPercentage" aria-label="Bonus Percentage">
+                <div class="custom-addon">%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2" style="width: 60% !important;"
+            *ngIf="earningForm.get('calculation_type')?.value === 'Flat Amount'">
+            <div class="mb-4 custom-input-group">
+              <label for="bonusAmount" class="custom-label mandatory">Enter Amount</label>
+              <div class="custom-input-container" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <input matInput formControlName="calculation_amount" type="number" class="custom-input-field"
+                  id="bonusAmount" aria-label="Bonus Amount">
+                <div class="custom-addon">₹</div>
+              </div>
+            </div>
+          </div>
+
+          <mat-checkbox formControlName="mark_as_active" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Mark
+            this as Active</mat-checkbox>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+          <h3 class="fw-bold text-primary">Other Configurations</h3>
+
+          <div class="row">
+            <mat-checkbox formControlName="is_part_of_salary_structure"
+              [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Make this earning a part of the employee’s salary
+              structure</mat-checkbox>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="is_taxable" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">This is a
+              taxable earning</mat-checkbox>
+            <p style="margin-left: 42px;">The income tax amount will be divided equally and deducted every month across
+              the financial year.</p>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="is_pro_rata" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Calculate
+              on pro-rata basis</mat-checkbox>
+            <p style="margin-left: 42px;">Pay will be adjusted based on employee working days.</p>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="consider_for_epf"
+              [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Consider for EPF Contribution</mat-checkbox>
+            <div class="epf-options">
+              <mat-radio-group formControlName="epf_condition" class="vertical-radio-group" style="margin-left: 42px;"
+                [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-radio-button value="always">Always</mat-radio-button>
+                <mat-radio-button value="less-than-15000">Only when PF Wage is less than ₹ 15,000</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="consider_for_esi"
+              [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Consider for ESI Contribution</mat-checkbox>
+          </div>
+
+          <div class="row">
+            <mat-checkbox formControlName="show_in_payslip" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Show
+              this component in payslip</mat-checkbox>
+          </div>
+        </div>
+      </div>
+
+      <!-- Note Section -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert mt-4 alert-warning fw-bold" role="alert">
+            <p>Note: Once you associate this component with an employee, you will only be able to edit the Name and
+              Amount/Percentage. The changes you make to Amount/Percentage will apply only to new employees.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4 d-flex justify-content-between">
+        <button class="btn btn-danger" (click)="back()">Cancel</button>
+        <button *ngIf="typeCheck !=='View'" class="btn btn-primary" (click)="submitForm()">{{earningId && typeCheck ===
+          'Edit' ? 'Update':'Save'}}</button>
+      </div>
+    </form>
+  </div>
+
+
+
+</div>

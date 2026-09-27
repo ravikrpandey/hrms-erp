@@ -1,0 +1,254 @@
+/* General Hierarchy Block */
+.module, .menu, .submenu {
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 1px;
+}
+
+/* Expand/Collapse Lists with Animation */
+.menu-list,
+.submenu-list {
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  max-height: 0;
+  opacity: 0;
+  margin-left: 20px;
+  padding-bottom: 8px; /* space after last item */
+}
+
+.menu-list.expanded,
+.submenu-list.expanded {
+  max-height: 10000px;
+  opacity: 1;
+}
+
+.menu-list.collapsed,
+.submenu-list.collapsed {
+  max-height: 0;
+  opacity: 0;
+}
+
+/* Header Style */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  border: 1px solid #ccc;
+  min-height: 42px;
+  height: 42px;
+  box-sizing: border-box;
+}
+
+/* Left section: icon + name */
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Right section: buttons + badge + arrow */
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Arrow – back to its original place (last in right) */
+.arrow {
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  margin-left: 4px;
+  flex-shrink: 0;
+}
+
+/* Status Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  width: 75px;
+  height: 26px;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 1;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.badge.active {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.badge.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Buttons */
+button {
+  // background-color: #858586;
+  // color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  height: 24px;
+  cursor: pointer;
+}
+
+// button:hover {
+//   background-color: #0056b3;
+// }
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Popup Card */
+.popup-card {
+  background: white;
+  padding: 18px;
+  width: 300px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Popup Header */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* Form Fields */
+.form-group {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.form-group label span {
+  color: red;
+}
+
+.form-group input {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Popup Buttons */
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.popup-actions button:first-child {
+  background-color: #1976d2;
+  color: white;
+}
+
+.popup-actions button:last-child {
+  background-color: #ccc;
+  color: #333;
+}
+
+.order-badge {
+  background-color: #e0e0e0;
+  color: #333;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+  cursor: default;
+}
+
+mat-icon{
+  color: #00644d ;
+}
+
+.toggle-icon{
+  font-size: 35px;
+}
+
+.edit-icon{
+  font-size: 20px;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
+  padding: 6px 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.refresh-button mat-icon {
+  font-size: 20px;
+}
+
+:host ::ng-deep .mat-mdc-slide-toggle .mdc-switch {
+  width: 35px !important;
+}
+
+/* Add this to your component CSS */
+.sticky-toolbar {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  background-color: #fff;
+  z-index: 1000;
+  padding: 10px 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;  /* left align */
+  align-items: center;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}

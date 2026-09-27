@@ -1,0 +1,172 @@
+
+        <ng-container>
+                <h3 class="popHead">Allocate Asset</h3>
+            <mat-dialog-content class="mat-typography">
+                <form class="" [formGroup]="allocateAssetForm">
+                    <div class=" row">
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" >
+                            <div class="table-scroll">
+  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%;">S.No </th>
+                        <th style="width: 40%;">Asset Name</th>
+                        <th style="width: 20%;">Branch</th>
+                        <th scope="col" style="width: 20%;">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let name of selectedNames; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{name.item_name + ' ('+name.asset_tagId+')'}}</td>
+                            <td>{{name.branch_name}}</td>
+                             <td>
+                                    <div class="edit_del flexRow">
+                                        <div>
+                                            <mat-icon matTooltip="Delete Item"
+                                                (click)="removeName(i)">delete_circle</mat-icon>
+                                        </div>
+                                    </div>
+                                </td>
+                        </tr>
+                    </tbody>
+                    </table>
+                            </div>
+                          
+                    </div>
+                      
+                      <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="data-content">
+                        <h4>Branch Name</h4>
+                        <p>{{ data?.branch_name || 'NA' }}</p>
+                    </div>
+                      </div>
+                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="data-content">
+                        <h4>Asset Category</h4>
+                        <p>{{ data.asset_category_name || 'NA'}}</p>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="data-content">
+                        <h4>Item Name</h4>
+                        <p>{{ data.Item_name || 'NA'}}</p>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="data.manage_by =='S.No. Only'">
+                        <div class="data-content">
+                        <h4>Serial Number</h4>
+                        <p>{{ data.itemSerialNo || 'NA'}}</p>
+                        </div>
+                      </div>
+                      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="data.manage_by =='Batch Only'">
+                        <div class="data-content">
+                        <h4>Batch Number</h4>
+                        <p>{{ data.batchNo || 'NA'}}</p>
+                        </div>
+                      </div> -->
+                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+
+                    
+                    <div class="row">
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <mat-radio-group
+                              formControlName="allocation_type"
+                            >
+                              <mat-radio-button value="allocated to employee" (change)="onRadio($event.value)">
+                                Allocated To Employee
+
+                              </mat-radio-button
+                              >
+                              <mat-radio-button [value]="'transfer to other location'" (change)="onRadio($event.value)">
+                                Transfer To Other Location
+                              </mat-radio-button>
+                              <mat-error *ngIf="allocateAssetForm.get('allocation_type')?.errors?.['serverError']">
+                                {{allocateAssetForm.get('allocation_type')?.errors?.['serverError']}}
+                                    </mat-error>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="allocationType == 'allocated to employee'">
+                            <div class="form-group mb-3">
+                                <mat-label>Department</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Department</mat-label>
+                                    <mat-select formControlName="department_id" (ngModelChange)="Ondepartment($event)">
+                                        <mat-form-field>
+                                            <input matInput [formControl]="filterdepartControl" type="text" placeholder="Search" />
+                                        </mat-form-field>
+                                        <mat-option *ngFor="let data of allDepartment" [value]="data.dept_id">
+                                            {{ data?.department_name }}
+                                            </mat-option>
+                                    </mat-select>
+                                     <mat-error *ngIf="this.allocateAssetForm.get('department_id')?.touched && this.allocateAssetForm.get('department_id')?.errors?.['required']">
+                                        * Required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+    
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="allocationType == 'allocated to employee'">
+                                <div class="form-group mb-3">
+                                    <mat-label>Employee</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Employee</mat-label>
+                                        <mat-select formControlName="employee_id">
+                                            <mat-form-field>
+                                                <input matInput [formControl]="filterEmpControl" type="text" placeholder="Search" />
+                                            </mat-form-field>
+                                            <mat-option *ngFor=" let employee of employeeList" [value]="employee?.employee_id">
+                                                {{employee?.first_name + ' ' + employee?.last_name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="this.allocateAssetForm.get('employee_id')?.touched && this.allocateAssetForm.get('employee_id')?.errors?.['required']">
+                                        * Required!
+                                    </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                       
+                            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="allocationType == 'transfer to other location'">
+                                <div class="form-group mb-3">
+                                    <mat-label>Branch</mat-label>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Branch</mat-label>
+                                        <mat-select formControlName="branch_id">
+                                            <mat-form-field>
+                                                <input matInput [formControl]="filterBranchControl" type="text" placeholder="Search" />
+                                            </mat-form-field>
+                                            <mat-option *ngFor="let branch of branchList" [value]="branch.id">{{branch.branch_name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="this.allocateAssetForm.get('branch_id')?.touched && this.allocateAssetForm.get('branch_id')?.errors?.['required']">
+                                        * Required!
+                                    </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group  text-area">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Remarks</mat-label>
+                                    <textarea matInput formControlName="remarks"></textarea>
+                                    <mat-error *ngIf="this.allocateAssetForm.get('remarks')?.touched && this.allocateAssetForm.get('remarks')?.errors?.['required']">
+                                        * Required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                      </div>    
+                    </div>
+                <!-- </div> -->
+                </form>
+            </mat-dialog-content>
+            <mat-dialog-actions align="end" class="common_button_sub mb-3">
+                    <button (click)="onSubmitForm()">Allocate</button>
+                    <button class="cancel_button_y" (click)="close()">Discard</button>
+            </mat-dialog-actions>
+          </ng-container>
+

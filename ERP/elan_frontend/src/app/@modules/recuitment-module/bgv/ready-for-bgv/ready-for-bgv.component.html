@@ -1,0 +1,81 @@
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Recruitment</h1>
+      <p>Recruitment BGV List <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>BGV List </span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+    <div class="right_data_all pt-4">
+      <div class="heading_neo">
+        <h3>Basic Details</h3>
+      </div>
+      <mat-card class="mb-4">
+        <div class="basic_details mb-0">
+          <div class="row p-2">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Location</h3>
+              <p>{{basicDetails?.location}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Job title</h3>
+              <p>{{basicDetails?.job_title}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Job Position</h3>
+              <p>{{basicDetails?.designation_name}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Expected End Date</h3>
+              <p>{{basicDetails?.end_date}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Department</h3>
+              <p>{{basicDetails?.department_name}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Area</h3>
+              <p>{{basicDetails?.area_name}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Experience</h3>
+              <p>{{basicDetails?.experience}}</p>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <h3>Level of Interview</h3>
+              <p>{{basicDetails?.level_of_interview}}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+
+      <div class="mt-4">
+        <div class="employ_sube py-2">
+     
+            <div class="example-header">
+              <select (change)="onPageSizeChanged()" id="page-size">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+              </select>
+            </div>
+          
+          <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+              (input)="onFilterTextBoxChanged()">
+          </div>
+        </div>
+      </div>
+      <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+          [rowData]="dataList" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      </div>
+    </div>
+   

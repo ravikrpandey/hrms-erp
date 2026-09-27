@@ -1,0 +1,44 @@
+<div>
+    <h3 mat-dialog-title class="popHead"> {{actionType =='add' ? 'Add Row Item':'Update Row Item'}}</h3>
+    <!-- [disabled]="view == 'view'" -->
+    <fieldset>
+        <div class="m-3" [formGroup]="AddRowForm">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Row Name</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="row_name" />
+                        <mat-error *ngIf="AddRowForm.controls['row_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="AddRowForm.controls['row_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-2">
+                    <mat-label>Row Capacity</mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="number" formControlName="capacity" />
+                        <mat-error *ngIf="AddRowForm.controls['capacity']?.hasError('required')">
+                            *Required!
+                        </mat-error>
+                         
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button (click)="onSubmitForm()">
+                {{actionType =='add' ? 'Submit':'Update'}}
+            </button>
+            <button mat-dialog-close class="cancel_button_y">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

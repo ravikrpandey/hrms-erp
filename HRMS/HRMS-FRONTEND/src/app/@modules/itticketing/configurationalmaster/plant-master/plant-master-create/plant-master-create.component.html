@@ -1,0 +1,212 @@
+<section class="section">
+
+  <div class="row">
+    <div class="employee_top my-1">
+      Admin
+      <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"></i>
+        Plant Master</span>
+    </div>
+  </div>
+
+  <mat-card>
+    <div class="form_head">
+      <h3>Plant Master</h3>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="plantMasterForm">
+        <div class="row">
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant Name</mat-label>
+                <input matInput type="text" formControlName="plant_name" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_name'].hasError('required')">
+                  Plant Name is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_name'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Country</mat-label>
+                <mat-select #productselect formControlName="country_id" (selectionChange)="optionEaCode($event)">
+                  <mat-select-filter [array]="variables" (filteredReturn)="countryFilter($event)"></mat-select-filter>
+                  <mat-option *ngFor="let country of checkData"
+                    [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="plantMasterForm.controls['country_id'].hasError('required')">
+                  Country Name is Required.
+                </mat-error>
+              </mat-form-field>
+
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select formControlName="state_id">
+                  <mat-select-filter [array]="stateVar" (filteredReturn)="stateFilter($event)"></mat-select-filter>
+                  <mat-option *ngFor="let state of stateList"
+                    [value]="state.states_id">{{state.states_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="plantMasterForm.controls['state_id'].hasError('required')">
+                  State Name is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Location</mat-label>
+                <input matInput type="text" formControlName="plant_location" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_location'].hasError('required')">
+                  Location is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_location'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_location'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Pin Code</mat-label>
+                <input matInput type="text" maxlength="6" formControlName="plant_pincode" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_pincode'].hasError('required')">
+                  Pin Code is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_pincode'].hasError('pattern')">
+                  *Should contain 6 digit number
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <input matInput type="text" formControlName="plant_address" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_address'].hasError('required')">
+                  Address is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_address'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_address'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant Contact No.</mat-label>
+                <input matInput type="text" formControlName="plant_contactno" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_contactno'].hasError('required')">
+                  Plant Contact No. is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_contactno'].hasError('pattern')">
+                  Enter a Valid Plant Contact No.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant Alt Contact No.</mat-label>
+                <input matInput type="text" formControlName="plant_altcontactno" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_altcontactno'].hasError('required')">
+                  Plant Alt Contact No. is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_altcontactno'].hasError('pattern')">
+                  Enter a Valid Plant Alt Contact No..
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Email Id</mat-label>
+                <input matInput type="text" formControlName="plant_emailid" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_emailid'].hasError('required')">
+                  *Required!
+                </mat-error>
+
+                <mat-error *ngIf="plantMasterForm.controls['plant_emailid'].errors?.['email']"> *Please
+                  enter a valid email</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant Head Name</mat-label>
+                <input matInput type="text" formControlName="plant_headname" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_headname'].hasError('required')">
+                  Plant Head Name is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_headname'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_headname'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant Head Contact No.</mat-label>
+                <input matInput type="text" formControlName="plant_headcontactno" />
+                <mat-error *ngIf="plantMasterForm.controls['plant_headcontactno'].hasError('required')">
+                  Plant Head Contact No. is Required.
+                </mat-error>
+                <mat-error *ngIf="plantMasterForm.controls['plant_headcontactno'].hasError('pattern')">
+                  Enter a Valid Plant Head Contact No.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="!plantMasterId" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button
+            color="primary">
+            Submit
+          </button>
+
+          <button *ngIf="plantMasterId" (click)="updateForm($event)" mat-raised-button color="primary">
+            Update
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+        </div>
+      </form>
+
+    </div>
+  </mat-card>
+</section>

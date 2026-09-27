@@ -1,0 +1,88 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Workflow</h1>
+    <p>{{ viewMode === 'view' ? 'View' : viewMode === 'edit' ? 'Update' : 'Create' }} Quotation Approval Workflow</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="quotationForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Sub Categories</mat-label>
+              <mat-select formControlName="sub_category_ids" multiple [disabled]="viewMode === 'view'">
+                <ngx-mat-select-search [formControl]="subCategoryFilterCtrl" placeholderLabel="Search sub categories..."
+                  noEntriesFoundLabel="No results" *ngIf="viewMode !== 'view'">
+                </ngx-mat-select-search>
+                <mat-option *ngFor="let sub of filteredSubCategories | async" [value]="sub.id"
+                  [disabled]="viewMode === 'view' || !quotationForm.get('sub_category_ids')?.value?.includes(sub.id) && sub.disabled">
+                  {{ sub.sub_category_name }}
+                </mat-option>
+
+              </mat-select>
+
+              <mat-error *ngIf="quotationForm.get('sub_category_ids')?.hasError('required') && submitted">
+                Please select at least one sub category
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Level Rows -->
+      <div class="row" formArrayName="levels" *ngFor="let row of levels.controls; let i = index">
+        <div [formGroupName]="i" class="d-flex align-items-center mb-2">
+
+        
+          <mat-form-field appearance="outline" class="me-3 w-25">
+            <mat-label>Level</mat-label>
+            <mat-select formControlName="level" *ngIf="viewMode !== 'view'">
+              <mat-option *ngFor="let lvl of availableLevels(i)" [value]="lvl.id">
+                {{ lvl.level_type }}
+              </mat-option>
+            </mat-select>
+            <input matInput [value]="row.get('level')?.value" readonly *ngIf="viewMode === 'view'" />
+          </mat-form-field>
+
+          
+          <mat-form-field appearance="outline" class="me-3 w-25">
+            <mat-label>Discount %</mat-label>
+            <input matInput formControlName="discount" type="number" min="0" max="100" step="1"   (keydown)="preventDecimal($event)"
+              [readonly]="viewMode === 'view'" />
+            <mat-error *ngIf="row.get('discount')?.hasError('min') || row.get('discount')?.hasError('max')">
+              Value must be between 0 and 100
+            </mat-error>
+          </mat-form-field>
+
+  
+          <button mat-icon-button color="primary" type="button" (click)="addLevelRow()"
+            *ngIf="i === levels.length - 1 && viewMode !== 'view'">
+            <mat-icon>add</mat-icon>
+          </button>
+
+        
+          <button mat-icon-button color="warn" type="button" (click)="removeLevelRow(i)"
+            *ngIf="levels.length > 1 && viewMode !== 'view'">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
+     
+      <div class="mt-3 common_button_sub">
+        <button type="submit" *ngIf="viewMode !== 'view'">{{ mode === 'edit' ? 'Update' : 'Save' }}</button>
+        <!-- <button class="cancel_button_y" type="button" (click)="goBack()">Cancel</button> -->
+      </div>
+
+    </form>
+  </div>
+</section>

@@ -1,0 +1,113 @@
+<section *ngIf="actionType == 'dealClose'">
+  <div class="form_head">
+    <h3> Make Payment </h3>
+  </div>
+  <mat-card>
+    <form [formGroup]="paymentForm">
+      <div class="row mt-2">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Mode</mat-label>
+            <mat-select formControlName="payment_mode">
+              <mat-option *ngFor="let item of paymentModeList" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Reference Number</mat-label>
+              <input matInput type="text" formControlName="reference_number" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="from-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Bank Name</mat-label>
+              <input matInput type="text" formControlName="bank_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Amount</mat-label>
+              <input matInput type="text" formControlName="amount" (keypress)="keyPress($event)" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Remark</mat-label>
+              <input matInput type="text" formControlName="remark" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="common_button_sub" align="end">
+          <button type="button"  (click)="savePayment()">Submit</button>
+          <button type="button" class="cancel_button_y" (click)="resetPyament()">Reset</button>
+        </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="handleTable table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Mode</th>
+            <th>Reference Number</th>
+            <th>Bank Name</th>
+            <th>Amount</th>
+            <th>Remark</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of paymentList; let i = index">
+            <td>{{data?.payment_mode}}</td>
+            <td>{{data?.reference_number}}</td>
+            <td>{{data?.bank_name}}</td>
+            <td>{{data?.amount}}</td>
+            <td>{{data?.remark}}</td>
+            <td class="edd-del">
+              <mat-icon (click)="editPayment(data)">edit</mat-icon>
+              <mat-icon (click)="deletePayment(data)">delete</mat-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card>
+  <div class="form_head mt-4">
+    <h3> Invoice History </h3>
+  </div>
+  <mat-card>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Invoice Number</th>
+            <th>Invoice Date</th>
+            <th>Invoice amount</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of invoiceList">
+            <td>{{data?.id}}</td>
+            <td>{{data?.createdAt}}</td>
+            <td>{{data?.grant_total}}</td>
+            <td>
+              <mat-icon class="mr_10">download</mat-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </mat-card>
+</section>

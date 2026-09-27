@@ -1,0 +1,46 @@
+const mastersController = require("../controller/masterscontroller");
+const {dynamicUploader}= require('../../../app/middleware/uploadFiles');
+
+module.exports = app => {
+  app.post("/api/v1/uploadDoc",dynamicUploader(),mastersController.uploadDoc);
+  app.post("/api/v1/cu_fueltype",mastersController.cu_fueltype);
+  app.get("/api/v1/getAll_fuelType",mastersController.getAll_fuelType);
+  app.get("/api/v1/getAll_vehicleType",mastersController.getAll_vehicleType);
+  app.post("/api/v1/createUpdate_vehicleType",mastersController.createUpdate_vehicleType);
+  app.get("/api/v1/getVehicleTypebyId",mastersController.getVehicleTypebyId);
+  app.delete("/api/v1/deleteVehicleType/:id",mastersController.deleteVehicleType);
+  app.get("/api/v1/getAllVehicleMaster",mastersController.getAllVehicleMaster);
+  app.post("/api/v1/createUpdate_vehicleMaster",mastersController.createUpdate_vehicleMaster);
+  app.delete("/api/v1/deleteVehicleMaster/:id",mastersController.deleteVehicleMaster);
+  app.get("/api/v1/getAllDriverMaster",mastersController.getAllDriverMaster);
+  app.post("/api/v1/createUpdate_driverMaster",mastersController.createUpdate_driverMaster);
+  app.delete("/api/v1/deleteDriverMaster/:id",mastersController.deleteDriverMaster);
+  app.post("/api/v1/createUpdate_transporterType",mastersController.createUpdate_transporterType);
+  app.get("/api/v1/getAll_transporterType",mastersController.getAll_transporterType);
+  app.post("/api/v1/createUpdate_transportType",mastersController.createUpdate_transportType);
+  app.get("/api/v1/getAll_transportType",mastersController.getAll_transportType);
+  app.get("/api/v1/getAllTransporterMaster",mastersController.getAllTransporterMaster);
+  app.post("/api/v1/createUpdate_transporterMaster",mastersController.createUpdate_transporterMaster);
+  app.get("/api/v1/getTransporterMasterById",mastersController.getTransporterMasterById);
+  app.delete("/api/v1/deleteTransporterMaster/:id",mastersController.deleteTransporterMaster);
+  app.get("/api/v1/getTransporterMasterListByTransporterTypeId",mastersController.getTransporterMasterListByTransporterTypeId);
+  app.post("/api/v1/createDriverVehicleMapping",mastersController.createDriverVehicleMapping);
+  app.get("/api/v1/getAllDriverVehicleMapping",mastersController.getAllDriverVehicleMapping);
+  app.get("/api/v1/getAllDriverVehicleMappingList",mastersController.getAllDriverVehicleMappingList);
+  app.get("/api/v1/getAllDriverListUnlinked",mastersController.getAllDriverListUnlinked);
+  app.get("/api/v1/getAllVehicleListUnlinked",mastersController.getAllVehicleListUnlinked);
+  app.post("/api/v1/delinkDriverVehicleMapping",mastersController.delinkDriverVehicleMapping);
+  app.post("/api/v1/createUpdate_rateAgreementMaster",mastersController.createUpdate_rateAgreementMaster);
+  app.get("/api/v1/getAllRateAgreementList",mastersController.getAllRateAgreementList);
+  app.get("/api/v1/getRateAgreementById",mastersController.getRateAgreementById);
+  app.delete("/api/v1/deleteRateAgreement/:id",mastersController.deleteRateAgreement);
+  app.post("/api/v1/createUpdate_rateAgreementdetails",mastersController.createUpdate_rateAgreementdetails);
+  app.get("/api/v1/getRateAgreementDetailsById",mastersController.getRateAgreementDetailsById);
+  app.delete("/api/v1/deleteRateAgreementDetails/:id",mastersController.deleteRateAgreementDetails);
+  app.get("/api/v1/getAllRFQList",mastersController.getAllRFQList);
+  app.get("/api/v1/getAllVehicleDispatchPlannigList",mastersController.getAllVehicleDispatchPlannigList);
+  app.get("/api/v1/getVehicleListForDispatch",mastersController.getVehicleListForDispatch);
+  app.get("/api/v1/getDriverListForDispatch",mastersController.getDriverListForDispatch);
+  app.post("/api/v1/assignDriverVehicleForDispatch",mastersController.assignDriverVehicleForDispatch);
+  app.get("/api/v1/getRateAgreementLevelType",mastersController.getRateAgreementLevelType);
+}

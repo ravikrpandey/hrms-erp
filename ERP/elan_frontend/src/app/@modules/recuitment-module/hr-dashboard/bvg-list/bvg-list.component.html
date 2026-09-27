@@ -1,0 +1,52 @@
+<div class="container">
+  <span class="heading">Schedule Interview</span>
+  <table class="table" style="font-weight: unset;">
+    <thead class="table_head" style="font-weight: unset;">
+      <tr>
+        <th scope="col">Interviewer Name</th>
+        <th scope="col">Round Level</th>
+        <th scope="col">Interview Date</th>
+        <th scope="col">Interview Time</th>
+        <th scope="col">Remark</th>
+        <th scope="col">Candidate Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of recData?.schedule_fixed_interviews">
+        <td>{{data.interviewer_name}}</td>
+        <td>{{data.round_level}}</td>
+        <td>{{data.schedule_interview_date}}</td>
+        <td>{{data.schedule_interview_time}}</td>
+        <td>{{data.remark}}</td>
+        <td><span *ngIf="data.action == 'Shortlisted'" style="color: green;">{{data.action}}</span> 
+          <span
+            *ngIf="data.action == 'Rejected'" style="color: red;">{{data.action}}</span> 
+            <span
+            *ngIf="data.action == 'Pending'">{{data.action}}</span> 
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="recortNotFound" *ngIf="!recData?.round_level && !showLoader">Record not found</div>
+  <div class="recortNotFound" *ngIf="showLoader">
+    <mat-spinner style="width: 44px; height:44px;"></mat-spinner>
+  </div>
+  <div class="d-flex" style="justify-content: space-between;">
+    <div class="mr-auto p-2" *ngIf="recData">
+      <span>
+        <label>Candidate Name - </label> <span class="name"> {{recData?.condidate_name}}</span>
+      </span>
+      <br>
+      <span>
+        <label>Applied On - </label> <span class="name"> {{recData?.createdAt | date: 'dd-MM-yyyy'}}</span>
+      </span>
+      <br>
+      <span *ngIf="recData.schedule_fixed_interviews?.length !== 0">
+        <label>Final <Script></Script>Shortlisted - </label> <span class="name"> {{lastInterview?.final_shortlisted?'Yes':'No'}}</span>
+      </span>
+    </div>
+    <div class="common_button_sub" align="end">
+      <button  mat-dialog-close class="cancel_button_y">Close</button>
+    </div>
+  </div>
+</div>

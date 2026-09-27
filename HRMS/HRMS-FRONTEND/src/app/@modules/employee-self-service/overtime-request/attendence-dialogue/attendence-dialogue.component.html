@@ -1,0 +1,35 @@
+<ng-container>
+  <h3 class="popHead">Attendance Details</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain table-responsive">
+      <table class="table table-bordered" *ngIf="dataList && dataList.length > 0; else noData">
+        <thead>
+          <tr>
+            <th>S.No.</th>
+            <th>Time</th>
+            <!-- <th>Day</th> -->
+            <th>IN/OUT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataList; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ data?.att_checktime }}</td>
+            <!-- <td>{{ data?.att_day }}</td> -->
+            <td>{{ data?.entry_type }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Template to show when no data -->
+      <ng-template #noData>
+        <div class="text-center p-3">
+          No record found.
+        </div>
+      </ng-template>
+    </div>
+  </mat-dialog-content>
+    <mat-dialog-actions align="end">
+    <button mat-raised-button color="primary" (click)="onClose()">Back</button>
+  </mat-dialog-actions>
+</ng-container>

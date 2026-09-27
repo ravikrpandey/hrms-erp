@@ -1,0 +1,19 @@
+<div class="edd-del">
+    <mat-icon matTooltip="Proceed" *ngIf="singleData?.process_status !== 'salary_approved' && singleData?.pay_slip_status !== 'PROCESSED' && singleData?.checkStatus !== 'rejectData'"  (click)="view()">arrow_forward</mat-icon>
+    <mat-icon matTooltip="View" *ngIf="singleData?.process_status === 'salary_approved' && singleData?.checkStatus !== 'rejectData'"  (click)="viewApproved()">arrow_forward</mat-icon>
+
+    <mat-icon matTooltip="View"
+      (click)="viewDetail()" *ngIf="singleData?.payroll_status !== 'PROCESSED'">visibility</mat-icon>
+  
+      <!-- <mat-icon matTooltip="Download"
+      (click)="viewDetail()" *ngIf="singleData?.approved_salary === true">download</mat-icon> -->
+
+      <a *ngIf="singleData?.approved_salary === true"
+      href="{{baseUrl}}/api/v1/download_SalarySlip?pay_slip_month={{singleData?.pay_slip_month}}&employee_id={{singleData?.employee_id}}&financial_year_id={{this.financial_id}}&domain={{this.domain}}"
+      download target="_blank">
+      <mat-icon matTooltip="Download" style="color: black;" (click)="check($event)">download</mat-icon>
+    </a>
+  
+    <mat-icon matTooltip="View" *ngIf="singleData?.checkStatus === 'rejectData'"  (click)="goEmployee()">arrow_forward</mat-icon>
+
+  </div>

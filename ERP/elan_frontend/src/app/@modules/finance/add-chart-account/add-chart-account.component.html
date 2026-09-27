@@ -1,0 +1,509 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p>Chart Of Account<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span> {{chartId?'Update':'Add'}} Chart Account</span></p>
+  </div>
+  <div class="add_button">
+    <button (click)="backToChartAccountList()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+  </div>
+
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_head">
+            <h3>Chart Account</h3>
+        </div>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="form">
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Account Name</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Account Name</mat-label>
+                                <input matInput type="text" formControlName="account_name" />
+                                <mat-error *ngIf="form.get('account_name')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('account_name')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Parent Account</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select parent account</mat-label>
+                                <mat-select #select2 formControlName="parent_account_id">
+
+                                    <mat-select-filter *ngIf="select2.focused" [array]="parentList1" (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                                    <mat-option [value]="null">None</mat-option> <!-- 'None' option -->
+                                    <ng-container>
+                                        <mat-option (click)="onParentAccountSelect(data)" *ngFor="let data of parentAccountList"
+                                            [value]="data.id">{{data.account_name}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('parent_account_id')?.value" matSuffix (click)="clearType()">close</mat-icon>
+
+                                <!-- <mat-error *ngIf="form.get('parent_account_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                  
+                   <div *ngIf="form.get('parent_account_id')?.value == 5" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Bank</mat-label>
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Select Bank Name</mat-label>
+                <mat-select #select3 formControlName="bank_id">
+                  <mat-select-filter *ngIf="select3.focused" [array]="bankList1"
+                    (filteredReturn)="bankFilter($event)"></mat-select-filter>
+                    <mat-option [value]="null">None</mat-option> <!-- 'None' option -->
+                  <ng-container>
+                    <mat-option *ngFor="let data of bankList" [value]="data.id">{{data.bank_name}}</mat-option>
+                  </ng-container>
+
+                </mat-select>
+              
+                <!-- <mat-error *ngIf="form.get('bank_id')?.hasError('required')">
+                  This field is required!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+
+
+
+
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>City</mat-label>
+                            <mat-select formControlName="city_id">
+                              <mat-select-filter [array]="cityVar" (filteredReturn)="cityFilter($event)"></mat-select-filter>
+                              <mat-option *ngFor="let city of cityList" [value]="city.city_id">{{city.city_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="branchSetupForm.controls['city_id'].hasError('required')">
+                              *Required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div> -->
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Is Group</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select an option</mat-label>
+                                <mat-select formControlName="is_group" (selectionChange)="onGroupSelect($event)">
+                                  <!-- <mat-option>None</mat-option> -->
+                                  <mat-option value="yes">Yes</mat-option>
+                                  <mat-option value="no">No</mat-option>
+                                </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('is_group')?.value" matSuffix (click)="clearGroup()">close</mat-icon>
+
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12  mt-3">
+                        <div class="form-group">
+                            <mat-label>Account Code</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Account Code</mat-label>
+                                <input matInput type="text" formControlName="account_no" readonly/>
+                                <mat-error *ngIf="form.get('account_no')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('account_no')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+<!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Currency</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select currency</mat-label>
+                                <mat-select formControlName="currency_id">
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of currencyList"
+
+                                            [value]="data.id">{{data.currency}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('currency_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12  mt-3">
+                        <div class="form-group">
+                            <mat-label>Root Type</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Root Type</mat-label>
+                                <input matInput type="text" formControlName="root_name" readonly />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                          <mat-label>Account Type</mat-label>
+                          <mat-form-field [ngClass]="{ 'NewClass': isDisabled() }" appearance="outline" class="mt-1">
+                            <mat-label>Select A/C Type</mat-label>
+                            <mat-select formControlName="account_type_id">
+                              <ng-container>
+                                <mat-option
+                                  [disabled]="form.get('parent_account_id')?.value != null && form.get('parent_account_id')?.value != undefined && form.get('parent_account_id')?.value != ''"
+                                  *ngFor="let data of accountTypeList"
+                                  (click)="onAccountTypeClick(data)"
+                                  [value]="data.id">
+                                  {{data.account_type_name}}
+                                </mat-option>
+                              </ng-container>
+                            </mat-select>
+                            <mat-error *ngIf="form.get('account_type_id')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div> -->
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Account Group</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select A/C Group</mat-label>
+                                <mat-select formControlName="account_group">
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of accountGroupList"
+
+                                            [value]="data.id">{{data.account_group}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('account_group')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" style="display: flex; align-items: center;">
+                          <mat-form-field appearance="outline" class="mt-1" style="flex: 2; margin-right: 10px;">
+                            <mat-label>Account Code</mat-label>
+                            <input matInput type="number" formControlName="account_no" />
+                            <mat-error *ngIf="form.get('account_no')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="form.get('account_no')?.hasError('leadingSpaces')">
+                              *No leading spaces!
+                            </mat-error>
+                          </mat-form-field>
+
+                          <button class="mb-3" mat-raised-button color="primary" (click)="generateAccountNumber()">
+                            Generate
+                          </button>
+                        </div>
+                      </div> -->
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Report Type</mat-label>
+                            <mat-form-field appearance="outline"  class="mt-1">
+                                <!-- <mat-label>Report Type</mat-label> -->
+                                <input matInput type="text" formControlName="report_type" readonly/>
+
+                                <!-- <mat-error *ngIf="form.get('account_name')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Balanace must be</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select an option</mat-label>
+                                <mat-select formControlName="balance_must_be">
+                                  <!-- <mat-option>None</mat-option> -->
+                                  <mat-option [value]="null">None</mat-option>
+                                  <mat-option value="debit">Debit</mat-option>
+                                  <mat-option value="credit">Credit</mat-option>
+                                </mat-select>
+                                <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('balance_must_be')?.value" matSuffix (click)="clearBalanceType()">close</mat-icon>
+
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Status</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select an option</mat-label>
+                                <mat-select formControlName="status">
+                                  <!-- <mat-option>None</mat-option> -->
+                                  <mat-option value="ACTIVE">Active</mat-option>
+                                  <mat-option value="INACTIVE">InActive</mat-option>
+                                </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('status')?.value" matSuffix (click)="clearStatus()">close</mat-icon>
+
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Profit Center / Cost Center</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                
+                                <mat-select formControlName="status_type">
+                                  <!-- <mat-option>None</mat-option> -->
+                                  <mat-option [value]="null">None</mat-option>
+                                  <mat-option value="cost_center">Cost Center</mat-option>
+                                  <mat-option value="profit_center">Profit Center</mat-option>
+                                </mat-select>
+
+                              </mat-form-field>
+                        </div>
+                        </div>
+ 
+
+                    <div class="col-xxl-8 col-lg-12 col-md-8 col-sm-8 col-12 mt-3">
+                        <div class="form-group">
+                            <mat-label>Remarks</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Remarks</mat-label>
+                                <input matInput type="text" formControlName="account_remarks" />
+                                <!-- <mat-error *ngIf="form.get('account_description')?.hasError('required')">
+                                    This field is required!
+                                </mat-error> -->
+                                <mat-error *ngIf="form.get('account_remarks')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-3">
+                      <div class="form-group">
+                          <mat-label>Mark As</mat-label>
+                          <mat-form-field appearance="outline" class="mt-1">
+                              <mat-label>Select an option</mat-label>
+                              <mat-select formControlName="marks_cash_account">
+                                <mat-option value="Cash">Cash</mat-option>
+                                <mat-option value="Bank">Bank</mat-option>
+                              </mat-select>
+            <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('marks_cash_account')?.value" matSuffix (click)="clearStatus()">close</mat-icon>
+
+                            </mat-form-field>
+                      </div>
+                  </div>
+                </div>
+                <!-- <div class="row form_head mt-3">
+                    <h3>TDS Section</h3>
+                  </div>
+                <div class="table-responsive col-12 mt-2">
+                    <table class="table table-bordered" formArrayName="tdsList">
+                      <thead>
+                        <tr>
+                          <th>TDS Section</th>
+                          <th>Nature</th>
+                          <th>Nature Of Transaction</th>
+                          <th>TDS Threshold Limit</th>
+                          <th>TDS Rate (%)</th>
+                        
+                          <th  >Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let group of tdsList.controls; let i = index" [formGroupName]="i">
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>TDS Section</mat-label>
+                               
+                              <mat-select formControlName="tds_id">
+                                  <mat-option *ngFor="let value of tdsData"
+                                      [value]="value.id"  (click)="getTdsById(value,i)" >{{value?.section}}</mat-option>
+                              </mat-select>
+                               
+                          </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Nature</mat-label>
+                              
+                               <input matInput value="" formControlName="nature" readonly>
+                               
+                          </mat-form-field>
+                            </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Nature Of Transaction</mat-label>
+                             
+                              <mat-select formControlName="nature_id">
+                                  <mat-option *ngFor="let value of natureData[i]"
+                                      [value]="value.id"  (click)="getNatureData(value,i)" >{{value?.nature_of_transaction}}</mat-option>
+                              </mat-select>
+                               
+                          </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>TDS Threshold Limit</mat-label>
+                              
+                               <input matInput value="" formControlName="threshold_limit" readonly>
+                               
+                          </mat-form-field>
+                            </td>
+                            <td>
+                              <mat-form-field appearance="outline">
+                                <mat-label>TDS Rate (%)</mat-label>
+                                 
+                                <input matInput value="" formControlName="tds_rate" readonly>
+                                 
+                            </mat-form-field>
+                            </td>
+                          <td  >
+                           
+                            <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="tdsList.length>1">delete</mat-icon>
+                            <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  
+                  </div> -->
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Opening Balance</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Opening Balance</mat-label>
+                                <input matInput type="text" formControlName="opening_balance" [disabled]="form.get('is_group')?.value == 'yes'" />
+
+                                <mat-error *ngIf="form.get('opening_balance')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+
+                    <div *ngIf="form.get('is_group')?.value == 'no'" class="row mt-2">
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Opening Balance</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Opening Balance</mat-label>
+                                <input
+                                    matInput
+                                    type="text"
+                                    formControlName="opening_balance"
+                                    (input)="restrictToAmount($event)"
+                                />
+
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <!-- <div class="section-title mt-3">
+                        <div class="section-name">Maintain Opening Balance</div>
+                      </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Debit Balance</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                              <mat-icon matPrefix class="my-icon"></mat-icon>
+                                <mat-label>Debit Balance</mat-label>
+                                <input matInput type="text" (input)="restrictToAmount($event)" formControlName="debit_balance" />
+
+
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Credit Balance</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                              <mat-icon matPrefix class="my-icon"></mat-icon>
+                                <mat-label>Credit Balance</mat-label>
+                                <input matInput type="text" (input)="restrictToAmount($event)" formControlName="credit_balance" />
+
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+
+
+ <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Balance</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1" >
+                              <mat-icon matPrefix class="my-icon"></mat-icon>
+                                <mat-label>Balance</mat-label>
+                                <input matInput type="text" (input)="restrictToAmount($event)" formControlName="balance" readonly />
+
+
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+                </div>
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Account Code</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Account Code</mat-label>
+                                <input matInput type="text" formControlName="account_code" />
+                                <mat-error *ngIf="form.get('account_code')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <!-- <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                        <div class="form-group">
+                            <mat-label>Description</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Description</mat-label>
+                                <input matInput type="text" formControlName="account_description" />
+                                <mat-error *ngIf="form.get('account_description')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('account_description')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+                <div class="common_button_sub mt-3" align="end">
+                    <button  (click)="onSubmit(this.form.value)">
+                        {{this.chartId?'Update':'Submit'}}
+                    </button>
+                    <button  class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

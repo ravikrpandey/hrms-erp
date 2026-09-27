@@ -1,0 +1,46 @@
+<ng-container *ngIf="visibility=='visible'">
+  <h3 mat-dialog-title class="popHead">Issue Type Record</h3>
+  <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+          <div class="emp_key">
+              <p>Issue Type Name : </p>
+              <!-- <p>Product Code : </p> -->
+          </div>
+          <div class="emp_value">
+              <p>{{singleProductData?.issue_type}}</p>
+              <!-- <p> {{singleProductData?.category_code}}</p> -->
+          </div>
+      </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+  </mat-dialog-actions>
+</ng-container>
+
+
+<ng-container *ngIf="visibility!=='visible'">
+  <h3 mat-dialog-title class="popHead"> Issue Type</h3>
+  <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+          <form [formGroup]="IssueForm">
+              <div class="form-group mt-3">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Issue Type Name</mat-label>
+                      <input matInput type="text" formControlName="issue_Type" />
+                      <mat-error *ngIf="IssueForm.controls['issue_Type'].hasError('required')">
+                          *Required!
+                      </mat-error>
+
+                  </mat-form-field>
+
+              </div>
+          </form>
+      </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+      <button mat-button mat-raised-button color="primary"
+          (click)="SubmitProductCategory(IssueForm)">Submit</button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>

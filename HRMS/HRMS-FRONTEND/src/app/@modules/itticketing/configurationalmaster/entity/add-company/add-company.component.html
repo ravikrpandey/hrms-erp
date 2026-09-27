@@ -1,0 +1,188 @@
+<section class="section">
+    <div class="row head">
+        <p>Admin</p>
+    </div>
+    <div class="row py-1">
+        <div class="employee_top">Add Company Master
+            <span class="employee_2" *ngIf="!companyID"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color:#5d6c7c">
+                </i>
+                Create </span>
+            <span class="employee_2" *ngIf="companyID"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color:#5d6c7c">
+                </i>
+                Update </span>
+        </div>
+    </div>
+
+    <mat-card>
+        <div class="form_head">
+            <h3>Company Master</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <!-- shiftMasterForm -->
+            <form class="form_set" [formGroup]="CompanyMasterform">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Company Name</mat-label>
+                                <input matInput type="text" formControlName="company_name" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_name'].hasError('required')">
+                                    Company Name is Required.
+                                </mat-error>
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny Contact</mat-label>
+                                <input matInput type="number" formControlName="company_contact" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_contact'].hasError('required')">
+                                    Company Contact is Required.
+                                </mat-error>
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny Alt No</mat-label>
+                                <input matInput type="number" formControlName="company_alt_contact_no" />
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny Email:</mat-label>
+                                <input matInput type="email" formControlName="company_email" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_email'].hasError('required')">
+                                    Comapny Email is Required.
+                                </mat-error>
+                                
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" >
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Comapany Country</mat-label>
+                                <mat-select formControlName="company_country" (selectionChange)="getStateId($event)">
+                                    <mat-option *ngFor="let country of getAllCountryData"
+                                        [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="CompanyMasterform.get('company_country').hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" >
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Comapany State</mat-label>
+                                <mat-select formControlName="company_state" (selectionChange)="getByCity($event)">
+                                    <mat-option *ngFor="let state of getAllStateData" 
+                                    [value]="state.states_id">{{state.states_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="CompanyMasterform.get('company_state').hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> 
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" >
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Comapany City</mat-label>
+                                <mat-select formControlName="company_city">
+                                    <mat-option *ngFor="let city of getCityData"
+                                    [value]="city.city_id"
+                                         >{{city.city_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="CompanyMasterform.get('company_city').hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Pin Code:</mat-label>
+                                <input matInput type="number" formControlName="company_pincode" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_pincode'].hasError('required')">
+                                    this field is Required.
+                                </mat-error>
+                                
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny Address:</mat-label>
+                                <input matInput type="text" formControlName="company_address" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_address'].hasError('required')">
+                                    this field is Required.
+                                </mat-error>
+                                
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny Website:</mat-label>
+                                <input matInput type="text" formControlName="company_website" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_website'].hasError('required')">
+                                    this field is Required.
+                                </mat-error>
+                                
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comapny GST No:</mat-label>
+                                <input matInput type="text" formControlName="company_gst" />
+                                <mat-error *ngIf="CompanyMasterform.controls['company_gst'].hasError('required')">
+                                    this field is Required.
+                                </mat-error>
+                                
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="parm!=='view'">
+                    <button *ngIf="!companyID" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button
+                        color="primary">
+                        Submit
+                    </button>
+
+                    <button *ngIf="companyID" (click)="updateForm($event)" mat-raised-button color="primary">
+                        Update
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </mat-card>
+</section>

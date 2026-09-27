@@ -1,0 +1,378 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Add Project</span></p>
+    </div>
+    <div class="add_button">  
+      <button class="backBtn" (click)="backBtn()" ><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+  
+  <div class="right_data_all">
+    <div>
+      <mat-card>
+        <div class="row form_head">
+          <h3>Add Project</h3>
+        </div>
+        <div class="form_basic mb-0" >
+          <fieldset >
+          <form class="form_set" [formGroup]="addProjectForm">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="readonly-wrapper">
+                    <mat-label>Project Code</mat-label>
+                    <input matInput formControlName="project_code"  />
+                    <mat-error *ngIf="addProjectForm.controls['project_code']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>Client Name</mat-label>
+                    <input matInput type="text" formControlName="client_name" [readonly]="type === 'view'" />
+                    <mat-error *ngIf="addProjectForm.controls['client_name']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>Project Name</mat-label>
+                    <input matInput type="text" formControlName="project_name" [readonly]="type === 'view'" />
+                    <mat-error *ngIf="addProjectForm.controls['project_name']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startPicker" formControlName="start_date" [readonly]="type === 'view'" />
+                    <mat-datepicker-toggle matSuffix [for]="startPicker" [ngClass]="{'readonly-wrapper': type === 'view'}"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                    <mat-error *ngIf="addProjectForm.controls['start_date']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endPicker" formControlName="end_date" [readonly]="type === 'view'" />
+                    <mat-datepicker-toggle matSuffix [for]="endPicker" [ngClass]="{'readonly-wrapper': type === 'view'}"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                    <mat-error *ngIf="addProjectForm.controls['end_date']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="form-group ckEditor mb-4">
+                <div class="form-group attach_file">
+                  <ckeditor #editer id="ckediter" formControlName = "description" ></ckeditor>
+                  <!-- <mat-error *ngIf="addProjectForm.controls['description']?.hasError('required')">
+                    This field is required!
+                  </mat-error> -->
+                </div>
+              </div>
+
+              <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Project Head</mat-label>
+                    <mat-select formControlName="project_head" [disabled]="type === 'view'">
+                      <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                      <mat-option *ngFor="let employee of employeesList" [value]="employee.employee_id" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                        {{ employee.title }}
+                    {{employee.first_name}} {{employee.last_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="addProjectForm.controls['project_head']?.hasError('required')">
+                      Project Head is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <!-- Project Manager Selection -->
+              <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Project Manager</mat-label>
+                    <mat-select formControlName="project_manager" [disabled]="type === 'view'">
+                      <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                      <mat-option *ngFor="let manager of employeesList" [value]="manager.employee_id" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                        {{ manager.title }}
+                        {{manager.first_name}} {{manager.last_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="addProjectForm.controls['project_manager']?.hasError('required')">
+                      Project Manager is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Milestone table -->
+              <div class="table-responsive">
+                <h3>Milestones</h3>
+                <form [formGroup]="addMilestoneTable">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%;">S.No</th>
+                        <th style="width: 65%;">Milestones</th>
+                        <th style="width: 20%;">End Date</th>
+                        <th *ngIf="type !== 'view'" style="width: 10%;">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of arrayData; index as i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{item.milestone}}</td>
+                        <td>{{item.end_date | date: 'dd/MM/yyyy' }}</td>
+                        <td *ngIf="type !== 'view'" style="color: #858586; cursor: pointer;">
+                          <i class="material-icons" style="color: #00644d;" (click)="deleteData(i)" matTooltip="Delete" matTooltipPosition="above">delete</i>
+                          <i class="material-icons" style="color: #00644d;" (click)="editData(item, i)" matTooltip="Edit" matTooltipPosition="above">edit</i>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr *ngIf="type !== 'view'">
+                        <td>
+                          {{ arrayData.length + 1 }}
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                            <mat-label>Milestone</mat-label>
+                            <input matInput type="text" formControlName="milestone_name" />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': type === 'view'}">
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="endPicker" formControlName="end_date" [readonly]="type === 'view'" />
+                            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #endPicker></mat-datepicker>
+                            <mat-error *ngIf="addMilestoneTable.get('end_date')?.hasError('milestoneEndDateInvalid')">
+                              Milestone end date must be on or before the project end date.
+                            </mat-error>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <button [disabled]="type === 'view'" style="border: none; background: none;" class="favorite saveStyle saveCss"  matTooltip="Add Milestone" matTooltipPosition="above" (click)="addRow()">
+                            <i class="material-icons" style="color: #00644d; font-weight: bold;">done</i>
+                          </button>
+                          <!-- <button [disabled]="type === 'view'" style="border: none; background: none;" class="favorite saveStyle saveCss" (click)="addNewRow()">
+                            <i class="material-icons" style="color: #00a1b1;">add</i>
+                          </button> -->
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+              <!-- Team Member Table -->
+
+              <div class="table-responsive">
+                <h3>Team Member</h3>
+                <form [formGroup]="teamMemberDataForm">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%;">S.No</th>
+                        <th style="width: 65%;">Employee Name</th>
+                        <th style="width: 20%;">Employee Code</th>
+                        <th *ngIf="type !== 'view'" style="width: 10%;">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of teamMembers; index as i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.code }}</td>
+                        <td *ngIf="type !== 'view'" style="color: #858586; cursor: pointer;">
+                          <i class="material-icons" style="color: #00644d;" (click)="deleteRow(i)" matTooltip="Delete" matTooltipPosition="above">delete</i>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody *ngIf="type !== 'view'">
+                      <tr>
+                        <td>{{ teamMembers.length + 1 }}</td>
+                        <td>
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Employee Name</mat-label>
+                            <mat-select
+                              formControlName="employee_name"
+                              (selectionChange)="onEmployeeSelect($event)"
+                            >
+                            <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                              <mat-option *ngFor="let employee of employeesList" [value]="employee.employee_id">
+                                {{ employee.title }}
+                    {{employee.first_name}} {{employee.last_name}}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Employee Code</mat-label>
+                            <input
+                              matInput
+                              formControlName="employee_code"
+                              [value]="selectedEmployee?.employee_code || ''"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <button [disabled]="type === 'view'" style="border: none; background: none;" class="favorite saveStyle saveCss" matTooltip="Add Team Member" matTooltipPosition="above">
+                            <i class="material-icons" style="color: #00644d;font-weight: bold;" (click)="addTeamMemberRow()">done</i>
+                          </button>                          
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+              
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <!-- <div class="form-group" *ngIf="type === 'view'">
+                  <button 
+                    class="favorite saveStyle saveCss" 
+                    >Download
+                    <i class="material-icons">download</i>
+                  </button>
+                </div> -->
+                <!-- <div class="form-group fileWithViewImg" *ngIf="type !== 'view'">
+                
+                  <div *ngFor="let fileInput of fileInputs; let i = index" >
+                    <input 
+                      class="form-control" 
+                      type="file" 
+                      style="padding-right: 19%" 
+                      title="Document Upload"
+                      (change)="uploadDoc($event, i)" 
+                      formControlName="file" 
+                      multiple
+                    />
+                  </div>
+                  <ul style="list-style: none;">
+                    <li *ngFor="let doc of uploadedDocuments">
+            
+                      <div >
+                        < <button style="background-color: #00a1b1;"  class="btn btn-primary ml-2">Download <i  class="material-icons" >download</i></button>
+                        <span>{{ doc.file }}</span> 
+                      </div>
+                    </li>
+                  </ul>
+                  
+                  <div style="cursor: pointer;">
+                    <i  class="material-icons" (click)="addFile()">add</i>
+                  </div>
+                </div> -->
+                <div class="form-group fileWithViewImg" *ngIf="type !== 'view'">
+                  <div *ngFor="let fileInput of fileInputs; let i = index" class="file-input-container">
+                    <!-- <label class="file-label">
+                      <input
+                        class="form-control file-input"
+                        type="file"
+                        title="Document Upload"
+                        accept=".jpg,.jpeg,.png,.pdf" (change)="onChange($event, i)"
+                        formControlName="file"
+                        multiple
+                      />
+                      <span class="file-label-text">Upload Document</span>
+                    </label> -->
+                    <input class="form-control" type="file" title="Upload Document"
+                    accept=".jpg,.jpeg,.png,.pdf" (change)="onChange($event, i)" style="width: 100%; padding-right: 10px; height:42px; padding-top:10px; font-size:14px;" />
+                    <div class="add-file-button" style="cursor: pointer;">
+                      <i class="material-icons" style="color: #00644d;" (click)="addFile()">add</i>
+                    </div>
+                    <div *ngIf="fileInputs.length > 1" class="remove-file-button" style="cursor: pointer;" (click)="removeFile(i)">
+                      <i class="material-icons" style="color: #00644d;">remove_circle</i>
+                    </div>
+                    <!-- <span *ngIf="uploadedDocuments[i]">{{ uploadedDocuments[i]?.file }}</span>
+                    <span *ngIf="!uploadedDocuments[i]">Choose File</span> -->
+                  </div>
+                
+                  <ul style="list-style: none;">
+                    <li *ngFor="let doc of uploadedDocuments">
+                      <div>
+                        <span>{{ doc.file }}</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                
+              </div>
+            </div>
+          </form>
+          </fieldset>
+          <!-- <div class="form-group attach_file mt-4" *ngIf="type === 'view'">
+            <mat-label class="mx-2">Attachments</mat-label>
+           
+            <div *ngIf="uploadedDocuments?.length" >
+              <ul style="list-style: none;">
+                <li *ngFor="let doc of uploadedDocuments">
+                  <div >
+                    <button style="background-color: #00644d;"  class="btn btn-primary ml-2">Download <i  class="material-icons" (click)="downloadFiles()">download</i></button>
+                    <span>{{ doc.file || 'No Documents'}} </span> 
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div> -->
+          <div class="form-group attach_file mt-4" *ngIf="type === 'view'">
+            <mat-label class="mx-2">Attachments</mat-label>
+            <div *ngIf="uploadedDocuments?.length">
+              <ul style="list-style: none;">
+                <li *ngFor="let doc of uploadedDocuments">
+                  <div>
+                    <button
+                      style="background-color: #00644d;"
+                      class="btn btn-primary ml-2"
+                      (click)="downloadFile(doc.id)"
+                    >
+                      Download <i class="material-icons">download</i>
+                    </button>
+                    <span>{{ doc.file || 'No Documents' }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Submit Buttons -->
+        <div class="mt-3 common_button_sub" *ngIf="type !== 'view'">
+          <button *ngIf="type !== 'edit' && view !== 'view'" (click)="onSubmit()">Submit</button>
+          <button *ngIf="type== 'edit'" (click)="onUpdate()">Update</button>
+          <button style="cursor: pointer;" (click)="backBtn()" class="cancel_button_y">Cancel</button>
+        </div>
+        </div>
+        
+        
+        
+      </mat-card>
+    </div>
+  </div>
+  
+
+
+

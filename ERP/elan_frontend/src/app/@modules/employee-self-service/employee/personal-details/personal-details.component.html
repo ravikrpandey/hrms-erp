@@ -1,0 +1,160 @@
+<div class="right_data_all">
+  <div class="heading_neo">
+    <h3>Present Address Details</h3>
+  </div>
+  <mat-card>
+    
+    <div class="row form_set">
+      <div class="col-md-4">
+        <p>Country</p>
+        <h3>{{dataObj?.present_country_name ? dataObj?.present_country_name : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>State</p>
+        <h3>{{dataObj?.present_states_name ? dataObj?.present_states_name :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>City</p>
+        <h3>{{dataObj?.present_city_name? dataObj?.present_city_name :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Address</p>
+        <h3>{{dataObj?.present_address? dataObj?.present_address :"-"}}</h3>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="heading_neo">
+    <h3>Present Address Details</h3>
+  </div>
+  <mat-card>
+  <div class="row form_set">
+    <div class="col-md-4">
+      <p>Country</p>
+      <h3>{{dataObj?.permanent_country_name ? dataObj?.permanent_country_name : '-'}}</h3>
+    </div>
+    <div class="col-md-4">
+      <p>State</p>
+      <h3>{{dataObj?.permanent_states_name ? dataObj?.permanent_states_name :"-"}}</h3>
+    </div>
+    <div class="col-md-4">
+      <p>City</p>
+      <h3>{{dataObj?.permanent_city_name? dataObj?.permanent_city_name :"-"}}</h3>
+    </div>
+    <div class="col-md-4">
+      <p>Address</p>
+      <h3>{{dataObj?.parmanent_address? dataObj?.parmanent_address :"-"}}</h3>
+    </div>
+  </div>
+</mat-card>
+
+<div class="heading_neo">
+  <h3>Personal Details</h3>
+</div>
+  <mat-card >
+     
+    <div class="row form_set">
+      <div class="col-md-4">
+        <p>Nationality</p>
+        <h3>{{dataObj?.permanent_country_name? dataObj?.permanent_country_name :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>State</p>
+        <h3>{{dataObj?.permanent_states_name? dataObj?.permanent_states_name :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>City</p>
+        <h3>{{dataObj?.permanent_city_name? dataObj?.permanent_city_name :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>DIRE Number</p>
+        <h3>{{dataObj?.DIRE_number?dataObj?.DIRE_number : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Driving License Number</p>
+        <h3>{{dataObj?.driving_license_number?dataObj?.driving_license_number : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Blood Group</p>
+        <h3>{{dataObj?.blood_group?dataObj?.blood_group : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>ID Number</p>
+        <h3>{{dataObj?.id_number?dataObj?.id_number : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Issued Date</p>
+        <h3>{{ dataObj?.issued_date ? (dataObj?.issued_date | date:'yyyy-MM-dd') : '-' }}</h3>
+      </div>      
+      <div class="col-md-4">
+        <p>Exp Date</p>
+        <h3>{{ dataObj?.exp_date ? (dataObj?.exp_date | date:'yyyy-MM-dd') : '-' }}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Tax Number (NUIT)</p>
+        <h3>{{dataObj?.tax_number?dataObj?.tax_number : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Passport Number</p>
+        <h3>{{dataObj?.passport_number?dataObj?.passport_number : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Marital Status</p>
+        <h3>{{dataObj?.marital_status?dataObj?.marital_status : '-'}}</h3>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="heading_neo">
+    <h3>Family Details</h3>
+  </div>
+<mat-card>
+  <table class="table table-bordered form_set">
+    <thead>
+      <tr>
+        <th>Family Member's Name</th>
+        <th>Date Of Birth</th>
+        <th>Relation With Employee</th>
+        <th>Contact Number</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataObj?.family_details">
+        <td>{{data?.member_name}}</td>
+        <td>{{data?.date_of_birth}}</td>
+        <td>{{data?.relation}}</td>
+        <td>{{data?.contact_number}}</td>
+        <td>{{data?.remarks}}</td>
+      </tr>
+    </tbody>
+  </table>
+</mat-card>
+
+<div class="heading_neo">
+  <h3>Previous Employer Details </h3>
+</div>
+  <mat-card>
+    <table class="table table-bordered form_set">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Form Date</th>
+          <th>To Date</th>
+          <th>Last Drawn Salary (k)</th>
+          <th>Reason Of Leaving</th>
+          <th>Location</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of dataObj?.prev_employer_details">
+          <td>{{data?.company_name}}</td>
+          <td>{{ data?.from_date ? (data?.from_date | date:'yyyy-MM-dd') : '-' }}</td>
+          <td>{{ data?.to_date ? (data?.to_date | date:'yyyy-MM-dd') : '-' }}</td>
+          <td>{{data?.last_salary}}</td>
+          <td>{{data?.reason_of_leaving}}</td>
+          <td>{{data?.location}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>

@@ -1,0 +1,48 @@
+<div class="header">
+  <div>
+    <label>Assessment Name</label>
+    <input type="text" [value]="assessmentData?.assessment_name" disabled>
+  </div>
+  <div>
+    <label>Attempt Left</label>
+    <input type="text" [value]="left_attempts" disabled>
+  </div>
+  <div>
+    <label>No of Attempt</label>
+    <input type="text" [value]="assessmentData?.max_attempts" disabled>
+  </div>
+  <div>
+    <label>Passing %</label>
+    <input type="text" [value]="assessmentData?.pass_percentage + '%'" disabled>
+  </div>
+  <div>
+    <label>Maximum Mark</label>
+    <input type="text" [value]="assessmentData?.total_marks" disabled>
+  </div>
+  <div>
+    <label>Time Left</label>
+    <div class="timer">{{ timeLeft }}</div>
+  </div>
+</div>
+
+<form [formGroup]="assessmentForm" (ngSubmit)="submitAssessment()">
+  <div class="question" formArrayName="answers" *ngFor="let attempt of answers.controls; let i = index">
+    <div [formGroupName]="i">
+      <p>Q{{ i + 1 }}: {{ assessmentData?.questions[i]?.question_text }}</p>
+      <div class="options" *ngFor="let option of assessmentData?.questions[i]?.options">
+        <label>
+          <input
+            type="radio"
+            [value]="option.option_text"
+            formControlName="selected_option"
+          />
+          {{ option.option_text }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-button">
+    <button type="submit" [disabled]="assessmentForm.invalid">Submit Assessment</button>
+  </div>
+</form>

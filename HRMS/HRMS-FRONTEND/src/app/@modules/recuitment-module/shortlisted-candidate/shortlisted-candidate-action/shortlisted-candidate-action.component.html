@@ -1,0 +1,45 @@
+<!-- <div class="edd-del">
+  <mat-icon matTooltip="Download"
+    (click)="download_offer_letter()">download</mat-icon>
+  <mat-icon matTooltip="User Link"
+    (click)="sendLink()">send</mat-icon>
+  <mat-icon matTooltip="Generate Offer Letter"
+    (click)="generatePdf()">touch_app</mat-icon>
+  <mat-icon matTooltip="Create candidate offer letter" (click)="offerLetterOpen()"
+    >refresh</mat-icon>
+</div> -->
+
+
+<div class="edd-del">
+  <mat-icon matTooltip="Download" *ngIf="paramsVal?.approval_status == 'GENERATED'"
+    (click)="download_offer_letter()">download</mat-icon>
+  <!-- <mat-icon matTooltip="Send Mail" *ngIf="paramsVal?.approval_status == 'GENERATED'"
+    (click)="sendLink()">send</mat-icon>
+  <mat-icon matTooltip="Generate Offer Letter" *ngIf="paramsVal?.approval_status == 'APPROVED'"
+    (click)="generatePdf()">touch_app</mat-icon>
+  <mat-icon matTooltip="Create candidate offer letter" (click)="offerLetterOpen()"
+    *ngIf="paramsVal?.bgv_status == 'COMPLETED'">refresh</mat-icon> -->
+  <ng-container *ngIf="paramsVal?.onboarding_status === 'PENDING'">
+    <!-- <mat-icon matTooltip="Send Mail" *ngIf="paramsVal?.approval_status === 'GENERATED'"
+        (click)="sendLink()">send</mat-icon>
+      <mat-icon matTooltip="Generate Offer Letter" *ngIf="paramsVal?.approval_status === 'APPROVED'"
+        (click)="generatePdf()">touch_app</mat-icon>
+      <mat-icon matTooltip="Create candidate offer letter" *ngIf="paramsVal?.bgv_status === 'COMPLETED'"
+        (click)="offerLetterOpen()">refresh</mat-icon> -->
+    <mat-icon matTooltip="Send Mail"
+      *ngIf="paramsVal?.approval_status === 'GENERATED' && (paramsVal?.candidate_offer_status === 'PENDING' || paramsVal?.candidate_offer_status === 'NEGOTIATE')"
+      (click)="sendLink()">send</mat-icon>
+
+    <mat-icon matTooltip="Generate Offer Letter"
+      *ngIf="paramsVal?.approval_status === 'APPROVED' && (paramsVal?.candidate_offer_status === 'PENDING' || paramsVal?.candidate_offer_status === 'NEGOTIATE')"
+      (click)="generatePdf()">touch_app</mat-icon>
+
+    <mat-icon matTooltip="Create candidate offer letter"
+      *ngIf="paramsVal?.bgv_status === 'COMPLETED' && (paramsVal?.candidate_offer_status === 'PENDING' || paramsVal?.candidate_offer_status === 'NEGOTIATE' || paramsVal.candidate_offer_status === null)"
+      (click)="offerLetterOpen()">refresh</mat-icon>
+
+    <mat-icon matTooltip="View the Offer" *ngIf="paramsVal?.approval_status === 'APPROVED' || paramsVal?.approval_status === 'GENERATED'"
+      (click)="viewJD($event)">visibility</mat-icon>
+  </ng-container>
+
+</div>

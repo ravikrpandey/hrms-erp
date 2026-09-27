@@ -1,0 +1,58 @@
+<div class="deparment-dialoge">
+    <h3 *ngIf="action!=='view'" mat-dialog-title class="popHead">{{btnValue}}</h3>
+    <h3 *ngIf="action =='view'" mat-dialog-title class="popHead"> Financial Year record</h3>
+    
+    <ng-container *ngIf="action == 'view'">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Finance Year :</p>
+                    <p>Status :</p>
+                </div>
+                <div class="emp_value">
+                    <p>{{financeYearData?.data.financial_year}}</p>
+                    <p> {{financeYearData?.data.status }}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub mb-3">
+            <button  mat-dialog-close class="cancel_button_y">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+</div>
+<!-- currect code  -->
+<ng-container *ngIf="action!=='view'">
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <form [formGroup]="FinancialYear">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Financial Year </mat-label>
+                        <select matNativeControl formControlName="financial_year" placeholder="Enter Financial Year">
+                            <option *ngFor="let data of financeYear" [value]="data">{{data}}</option>
+                        </select>
+                        <mat-error *ngIf="FinancialYear.controls['financial_year'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="FinancialYear.controls['financial_year'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="common_button_sub" align="end">
+        <button    *ngIf="!action"  (click)="ngSubmitFinancialYear()" >
+            Submit
+        </button>
+        <button *ngIf="action" (click)="onUpdateFinanceYear()" >
+            Update
+        </button>
+        <button  mat-dialog-close class="cancel_button_y" style="float: right">
+            Close
+        </button>
+    </mat-dialog-actions>
+
+</ng-container>

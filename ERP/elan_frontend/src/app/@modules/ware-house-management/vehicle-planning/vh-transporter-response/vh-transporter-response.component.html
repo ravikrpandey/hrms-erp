@@ -1,0 +1,16 @@
+<div class="success-page" *ngIf="!inActive">
+  <div class="success-card" [ngClass]="{ reject: status === 'Rejected' }">
+    <div class="icon-wrapper" [ngClass]="{ reject: status === 'Rejected' }">
+      {{ status === 'Accepted' ? '✓' : '✖' }}
+    </div>
+    <h2>Transporter Request {{ status }}!</h2>
+    <p>Your response has been successfully submitted.</p>
+  </div>
+</div>
+
+<div class="success-page" *ngIf="inActive">
+  <div class="success-card cancelled">
+    <h2>Planning {{type}}</h2>
+    <p>{{status}}</p>
+  </div>
+</div>

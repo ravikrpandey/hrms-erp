@@ -1,0 +1,115 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Workflow</h1>
+    <p>Credit Limit Details </p>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="levelForm" (ngSubmit)="onSubmit()">
+      <div formArrayName="rows">
+        <div
+          *ngFor="let row of rows.controls; let i = index"
+          [formGroupName]="i"
+          class="row align-items-center"
+        >
+          <div class="col-md-3">
+            <!-- When already selected -->
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              *ngIf="row.value.level_id"
+            >
+              <mat-label>Level</mat-label>
+              <mat-select formControlName="level_id">
+                <mat-option
+                  *ngFor="let lvl of levels"
+                  [value]="lvl.id"
+                  [disabled]="selectedLevels.includes(lvl.id)"
+                >
+                  {{ lvl.level_type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <!-- When not selected -->
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              *ngIf="!row.value.level_id"
+            >
+              <mat-label>Select Level</mat-label>
+              <mat-select formControlName="level_id">
+                <mat-option
+                  *ngFor="let lvl of levels"
+                  [value]="lvl.id"
+                  [disabled]="selectedLevels.includes(lvl.id)"
+                >
+                  {{ lvl.level_type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Over Due (days)</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="over_due_days"
+                (keypress)="allowNumbersOnly($event)"
+                maxlength="5"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Credit Limit %</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="credit_limit"
+                min="0"
+                max="100"
+              />
+              <span matSuffix>%</span>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-3 d-flex align-items-center">
+            <button
+              *ngIf="i === rows.length - 1"
+              mat-icon-button
+              color="primary"
+              type="button"
+              (click)="addRow(i)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+            <!-- <button *ngIf="!row.value.isSaved && rows.length > 1" mat-icon-button color="warn" type="button"
+              (click)="removeRow(i)">
+              <mat-icon>remove</mat-icon>
+            </button> -->
+            <button
+              *ngIf="rows.length > 1"
+              mat-icon-button
+              color="warn"
+              type="button"
+              (click)="removeRow(i)"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 common_button_sub">
+        <button type="submit">{{ mode === "edit" ? "Update" : "Save" }}</button>
+        <!-- <button class="cancel_button_y" type="button" (click)="goBack()">
+          Cancel
+        </button> -->
+      </div>
+    </form>
+  </div>
+</section>

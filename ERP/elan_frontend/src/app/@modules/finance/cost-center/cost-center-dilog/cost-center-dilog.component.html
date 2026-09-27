@@ -1,0 +1,84 @@
+
+<div class="main" *ngIf="!status">
+    <h3 mat-dialog-title class="popHead">Cost Center Record</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="right_data_all mt-3">
+        <div class="cotain">
+            <div class="emp_key">
+                <p>Item Id : </p>
+                <p>Item Name : </p>
+                <p>Item Code :</p>
+                <p>Specification :</p>
+                <p>Mvp :</p>
+                <p>Status :</p>
+            </div>
+            <div class="emp_value">
+               <p>{{itemData?.item_id}}</p>
+               <p>{{itemData?.item_name}}</p>
+               <p>{{itemData?.item_code}}</p>
+               <p>{{itemData?.specification}}</p>
+               <p>{{itemData?.mvp}}</p>
+               <p>{{itemData?.status}}</p>
+            </div>
+        </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub">
+        <button  mat-dialog-close  class="cancel_button_y">Close</button>
+    </mat-dialog-actions>
+</div>
+
+
+
+<div *ngIf="status">
+    <h3 mat-dialog-title class="popHead">Add Amount</h3>
+    <!-- <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Department</h3> -->
+    <!-- <fieldset [disabled]="view == 'view'"> -->
+        <div class="right_data_all mt-3" [formGroup]="budgetExtendForm">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                    <div class="form-group mb-3">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>type</mat-label>
+                            <mat-select formControlName="extend_type" >
+                            <mat-option value="Increase">Increase</mat-option>
+                            <mat-option value="Decrease">Decrease</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="budgetExtendForm.controls['extend_type'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group mb-3">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Amount)</mat-label>
+                            <input matInput type="text" formControlName="amount" />
+                            <mat-error *ngIf="budgetExtendForm.controls['amount'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="budgetExtendForm.controls['amount'].hasError('pattern')">
+                                *Only Numerics Allowed!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" class="common_button_sub mb-3">
+            <button (click)="onSubmitForm()">
+                Submit
+            </button>
+            <!-- <button *ngIf="budgetId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button> -->
+            <button mat-dialog-close class="cancel_button_y">
+                Close
+            </button>
+        </mat-dialog-actions>
+    <!-- </fieldset> -->
+</div>

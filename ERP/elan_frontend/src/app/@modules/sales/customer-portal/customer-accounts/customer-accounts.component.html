@@ -1,0 +1,245 @@
+<div class="page-wrapper">
+    <app-customer-header [login_id]="login_id_header" (customerDetails)="onCustomerDetails($event)" (creditLimitDetails)="onCreditLimitDetails($event)"></app-customer-header>
+
+    <div class="page-heading-wrapper">
+        <h1 class="main-heading">Your Accounts</h1>
+        <p class="main-sub">View your profile, addresses, credit limit and advance payment history.</p>
+    </div>
+
+    <div class="account-tabs">
+        <mat-tab-group (selectedTabChange)="onTabChange($event)" animationDuration="0ms">
+            <mat-tab label="Profile">
+                <div class="tab-content">
+                    <div *ngIf="profileLoading" class="loading">Loading profile...</div>
+                    <div *ngIf="!profileLoading && profileData" class="profile-container">
+                        <div class="profile-grid">
+
+                            <div class="profile-field">
+                                <label>Customer Name</label>
+                                <div class="field-value">
+                                {{ profileData.company_name || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="profile-field">
+                                <label>Customer Code</label>
+                                <div class="field-value">
+                                {{ profileData.customer_code || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="profile-field">
+                                <label>Customer Type</label>
+                                <div class="field-value">
+                                {{ profileData.customer_type_name || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="profile-field">
+                                <label>Customer Category</label>
+                                <div class="field-value">
+                                {{ profileData.customer_category_name || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="profile-field">
+                                <label>PAN Number</label>
+                                <div class="field-value">
+                                {{ profileData.pan_number || '-' }}
+                                </div>
+                            </div>
+
+                            <div class="profile-field">
+                                <label>Identification</label>
+                                <div class="field-value">
+                                {{ profileData.identification || '-' }}
+                                </div>
+                            </div>
+
+                            </div>
+
+                            <div class="contact-section">
+                            <h3 class="section-title">Contact Person Details</h3>
+
+                            <div class="contact-table-wrapper">
+                                <table class="contact-table">
+                                <thead>
+                                    <tr>
+                                    <th>S. No.</th>
+                                    <th>Title</th>
+                                    <th>Contact Person Name</th>
+                                    <th>Contact Number</th>
+                                    <th>Email ID (Login ID)</th>
+                                    <th>Designation</th>
+                                    <th>Department</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let contact of contactPersons; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ contact.title }}</td>
+                                    <td>{{ contact.contact_person_name }}</td>
+                                    <td>{{ contact.mobile }}</td>
+                                    <td>{{ contact.email_id }}</td>
+                                    <td>{{ contact.designation }}</td>
+                                    <td>{{ contact.department }}</td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Addresses">
+                <div class="tab-content">
+                    <div *ngIf="addressesLoading" class="loading">Loading addresses...</div>
+                    <div *ngIf="!addressesLoading" class="address-columns">
+                        <div class="address-column">
+                            <div class="column-title">Billing Addresses</div>
+                            <div class="address-card" *ngFor="let address of addresses?.billingAaddress; let i = index">
+                                <div class="address-header">
+                                    <span class="address-type">
+                                    Billing Address {{ i + 1 }}
+                                    </span>
+                                </div>
+
+                                <div class="address-body">
+                                    <div class="address-line">
+                                    {{ address.address || '-' }}
+                                    </div>
+
+                                    <div class="address-line" *ngIf="address.postal_address">
+                                    {{ address.postal_address }}
+                                    </div>
+
+                                    <div class="address-line">
+                                    {{ address.city_name || '-' }},
+                                    {{ address.state_name || '-' }}
+                                    </div>
+
+                                    <div class="address-line">
+                                    {{ address.country_name || '-' }} -
+                                    {{ address.pincode || '-' }}
+                                    </div>
+
+                                    <div class="gst-row">
+                                    <span>GSTIN:</span>
+                                    <strong>{{ address.gstIn || '-' }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!addresses?.billingAaddress?.length" class="no-data">No billing address found.</div>
+                        </div>
+
+                        <div class="address-column">
+                            <div class="column-title">Shipping Addresses</div>
+                            <div class="address-card" *ngFor="let address of addresses?.shippingAddress; let i = index">
+                                <div class="address-header">
+                                    <span class="address-type">
+                                    Shipping Address {{ i + 1 }}
+                                    </span>
+                                </div>
+
+                                <div class="address-body">
+                                    <div class="address-line">
+                                    {{ address.address || '-' }}
+                                    </div>
+
+                                    <div class="address-line" *ngIf="address.postal_address">
+                                    {{ address.postal_address }}
+                                    </div>
+
+                                    <div class="address-line">
+                                    {{ address.city_name || '-' }},
+                                    {{ address.state_name || '-' }}
+                                    </div>
+
+                                    <div class="address-line">
+                                    {{ address.country_name || '-' }} -
+                                    {{ address.pincode || '-' }}
+                                    </div>
+
+                                    <div class="gst-row">
+                                    <span>GSTIN:</span>
+                                    <strong>{{ address.gstIn || '-' }}</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="!addresses?.shippingAddress?.length" class="no-data">No shipping address found.</div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Credit Limit History">
+                <div class="tab-content">
+                    <div *ngIf="creditLimitLoading" class="loading">Loading credit limit...</div>
+
+                    <div *ngIf="!creditLimitLoading && creditLimitData" class="credit-card">
+                        <div class="credit-box">
+                            <span>Credit Limit</span>
+                            <h2> ₹{{ creditLimitData.sactioned_credit_limit | number:'1.0-0' }}</h2>
+                        </div>
+
+                        <div class="credit-box">
+                            <span>Available Credit</span>
+                            <h2> ₹{{ creditLimitData.available_credit_limit | number:'1.2-2' }}</h2>
+                        </div>
+
+                        <div class="credit-box">
+                            <span>Used Credit</span>
+                            <h2>₹{{ creditLimitData.utilized_credit_limit | number:'1.2-2' }}</h2>
+                        </div>
+                    </div>
+
+                    <mat-card-content class="table-margin">
+                        <div class="mat-elevation-z1 table-wrap">
+                            <div class="ag_grid">
+                                <ag-grid-angular class="ag-theme-alpine" id="invoiceGrid" style="width: 100%; height: 500px"
+                                    [columnDefs]="invoiceColumnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="invoiceList"
+                                    (gridReady)="onInvoiceGridReady($event)">
+                                </ag-grid-angular>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </div>
+            </mat-tab>
+
+            <mat-tab label="Advance Payment History">
+                <div class="tab-content">
+                    <div *ngIf="advanceLoading" class="loading">Loading advance payment history...</div>
+                    <div>
+                        <div class="credit-card">
+                            <div class="credit-box">
+                                <span>Total Remaining Advance</span>
+                                <h2> ₹{{ profileData.advance_amount | number:'1.2-2' }}</h2>
+                            </div>
+
+                            <div class="credit-box">
+                                <span>Total Cash Advance</span>
+                                <h2> ₹{{ totalCashAmount | number:'1.2-2' }}</h2>
+                            </div>
+
+                            <div class="credit-box">
+                                <span>Total Bank Advance</span>
+                                <h2>₹{{ chequeTotalAmount | number:'1.2-2' }}</h2>
+                            </div>
+                        </div>
+                        <mat-card-content class="table-margin">
+                            <div class="mat-elevation-z1 table-wrap">
+                                <div class="ag_grid">
+                                    <ag-grid-angular class="ag-theme-alpine" id="advanceGrid" style="width: 100%; height: 500px"
+                                        [columnDefs]="advanceColumnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="advancePaymentData"
+                                        (gridReady)="onAdvanceGridReady($event)">
+                                    </ag-grid-angular>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

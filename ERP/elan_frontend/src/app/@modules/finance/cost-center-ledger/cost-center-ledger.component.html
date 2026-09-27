@@ -1,0 +1,312 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Cost Center Ledger</h1>
+    <p> Cost Center Ledger <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>List</span></p>
+  </div>
+  <div class="add_button">
+    <!-- <button type="button" routerLink="employee-create" (click)='openAddModal()' >Add New Field</button> -->
+    <!-- <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+  </div>
+</div>
+
+<div class="right_data_all">
+  <form [formGroup]="JournalForm" class="mt-2">
+    <div class="row">
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Company</mat-label>
+              <input matInput type="text" formControlName="company" readonly/>
+            </mat-form-field>
+          </div>
+      </div> -->
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>From Date </mat-label>
+          <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" [max]="maxDate"
+            (dateChange)="fromDate($event)" />
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp></mat-datepicker>
+          <mat-error *ngIf="JournalForm.controls['from_date'].hasError('required')">
+            This field is required!
+          </mat-error>
+          <button mat-icon-button *ngIf="JournalForm.get('from_date')?.value" matSuffix
+            (click)="clearDate('from_date')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>To Date</mat-label>
+          <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="to_date" [max]="maxDate"
+            [min]="FromDate || minDate" (dateChange)="ToDate($event)">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="JournalForm.controls['to_date'].hasError('required')">
+            This field is required!
+          </mat-error>
+          <button mat-icon-button *ngIf="JournalForm.get('to_date')?.value" matSuffix (click)="clearDate('to_date')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Account</mat-label>
+            <mat-select formControlName="chart_of_account" (selectionChange)="onAccountChange()">
+              <mat-form-field>
+                <input matInput [formControl]="filterControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option [value]="data.id" *ngFor="let data of chartedAccount">
+                {{data.account_name}}
+              </mat-option>
+              <mat-option *ngIf="!chartedAccount?.length" disabled>
+                <p>Chart Accout Not Found</p>
+              </mat-option>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('chart_of_account')?.value" matSuffix (click)="clearDate('chart_of_account')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+      </div> -->
+
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12 NewClass">
+        <mat-form-field appearance="outline" >
+          <mat-label>Party Type</mat-label>
+          <mat-select formControlName="party_type" (selectionChange)="onPartyTypeChange($event)" >
+            <mat-option value="EMPLOYEE">Employee</mat-option>
+            <mat-option value="VENDOR">Vendor</mat-option>
+            <mat-option value="CUSTOMER">Customer</mat-option>
+          </mat-select>
+          
+        </mat-form-field>
+    </div> -->
+
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+      <mat-form-field appearance="outline">
+        <mat-label>Bank Account</mat-label>
+        <mat-select #select2 formControlName="chart_account_id" (selectionChange)="onPartyTypeNameSelect()">
+          <mat-select-filter *ngIf="select2.focused" [array]="partyList1" (filteredReturn)="partyFilter($event)"></mat-select-filter>
+
+          <mat-option [value]="data.id" *ngFor="let data of partyNameList">
+            {{data.account_names}}
+          </mat-option>
+        </mat-select>
+        <button mat-icon-button *ngIf="JournalForm.get('chart_account_id')?.value" matSuffix (click)="clearDate('chart_account_id')">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+  </div> -->
+
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Department</mat-label>
+            <mat-select #select2 formControlName="department_id" multiple>
+              <mat-option [value]="null">None</mat-option>
+              <mat-select-filter *ngIf="select2.focused" [array]="departmentList1"
+                (filteredReturn)="departmentFilter($event)"></mat-select-filter>
+              <ng-container>
+
+                <mat-option *ngFor="let val of departmentList" [value]="val?.dept_id" (click)="onDepartmentSelect(val)">
+                  {{val?.department_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('department_id')?.value?.length" matSuffix
+              (click)="clearDate('department_id')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div> -->
+
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Cost Center</mat-label>
+            <mat-select #select3 formControlName="cost_center_id" (selectionChange)="onPartyTypeNameSelect()">
+         
+              <mat-select-filter *ngIf="select3.focused" [array]="costCentre1"
+                (filteredReturn)="costCenterFilter($event)"></mat-select-filter>
+              <ng-container>
+
+                <mat-option *ngFor="let val of costCentreList" [value]="val?.cost_center_id">
+                  {{val?.cost_center_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('cost_center_id')?.value" matSuffix
+              (click)="clearDate('cost_center_id')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12 mt-2">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Warehouse</mat-label>
+          
+            <mat-select
+              #select4
+              formControlName="warehouse_id"
+              (selectionChange)="onPartyTypeNameSelect()">
+          
+              <mat-select-filter
+                *ngIf="select4.focused"
+                [array]="warehouse1"
+                (filteredReturn)="warehouseFilter($event)">
+              </mat-select-filter>
+          
+              <mat-option *ngFor="let val of warehouseList" [value]="val.id">
+                {{ val.name }}
+              </mat-option>
+          
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('warehouse_id')?.value" matSuffix
+            (click)="clearDate('warehouse_id')">
+            <mat-icon>close</mat-icon>
+          </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12 mt-2">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Branch</mat-label>
+            <mat-select #select5 formControlName="branch_id" (selectionChange)="onPartyTypeNameSelect()">
+              <mat-select-filter *ngIf="select5.focused" [array]="branchListData1"
+                (filteredReturn)="branchFilter($event)"></mat-select-filter>
+              <ng-container>
+
+                <mat-option *ngFor="let val of branchListData" [value]="val?.id">
+                  {{val?.branch_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('branch_id')?.value" matSuffix
+              (click)="clearDate('branch_id')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12 mt-2">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Vendor</mat-label>
+            <mat-select #select6 formControlName="vendor_id" (selectionChange)="onPartyTypeNameSelect()">
+              <mat-select-filter *ngIf="select6.focused" [array]="vendorListData1"
+                (filteredReturn)="vendorFilter($event)"></mat-select-filter>
+              <ng-container>
+
+                <mat-option *ngFor="let val of vendorListData" [value]="val?.id">
+                  {{val?.vendor_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('vendor_id')?.value" matSuffix
+              (click)="clearDate('vendor_id')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12 mt-2">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Customer</mat-label>
+            <mat-select #select7 formControlName="customer_id" (selectionChange)="onPartyTypeNameSelect()">
+              <mat-select-filter *ngIf="select7.focused" [array]="customerListData1"
+                (filteredReturn)="customerFilter($event)"></mat-select-filter>
+              <ng-container>
+
+                <mat-option *ngFor="let val of customerListData" [value]="val?.id">
+                  {{val?.company_name}}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+            <button mat-icon-button *ngIf="JournalForm.get('customer_id')?.value" matSuffix
+              (click)="clearDate('customer_id')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- <div class="employ_sube download_file_icon">
+    <div class="icon_add" align="end">
+
+
+      <span class="icon_img" (click)="onBtnExportDataAsExcel()"><mat-icon matTooltip="Download Excel"
+          class="print">download</mat-icon></span>
+      <span class="icon_img" (click)="onDownloadPdf()"
+        ><mat-icon matTooltip="Download Pdf" class="print">download</mat-icon></span
+      >
+
+    </div>
+  </div> -->
+
+
+  <div class="employ_sube py-2">
+    <div class="">
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+    </div>
+    <div class="">
+      <div class="employee_2" align="end">
+        <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+          (input)="onFilterTextBoxChanged()">
+      </div>
+    </div>
+  </div>
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10"
+      (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+    </ag-grid-angular>
+  </div>
+  <div class="d-flex justify-content-between mb-3">
+    <div class="mt-2">
+    <strong>Total Balance: </strong>
+    </div>
+    <div class="d-flex mt-2" style="padding-right:53px">
+      <div class="px-5">
+        <strong>{{currencySymbol}} {{ totalDebit | number:'1.2-2' }}</strong>
+      </div>
+    
+      <div class="px-5">
+        <strong>{{currencySymbol}} {{ totalCredit | number:'1.2-2' }}</strong>
+      </div>
+    
+      <div class="px-5">
+        <strong>{{currencySymbol}} {{ totalBudget | number:'1.2-2' }}</strong>
+      </div>
+    
+      <div class="px-5">
+        <strong>{{currencySymbol}} {{ totalUtilized | number:'1.2-2' }}</strong>
+      </div>
+    
+      <div class="px-5">
+        <strong>{{currencySymbol}} {{ totalRemaining | number:'1.2-2' }}</strong>
+      </div>
+    </div>
+  </div>
+</div>
+<div>
+</div>

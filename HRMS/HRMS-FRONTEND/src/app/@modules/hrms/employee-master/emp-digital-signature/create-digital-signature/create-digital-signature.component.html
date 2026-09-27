@@ -1,0 +1,156 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>
+      Employee Digital Signature
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #063178">
+      </i
+      ><span>
+        {{
+          !mainData
+            ? "Add Employee Digital Signature"
+            : "Edit Employee Digital Signature"
+        }}
+      </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button
+      class="backBtn"
+      [routerLink]="['/master/hrms/employee-master/employee-digital-signature']"
+    >
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="container mt-3 mb-3">
+    <form [formGroup]="digitalform">
+      <div class="row align-items-end g-3">
+        <!-- Select Department -->
+        <div class="col-md-6 col-lg-5 mt-1">
+          <label class="form-label"
+            >Select Department <span class="alertspan">*</span></label
+          >
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="form-label">Department</mat-label>
+            <mat-select
+              formControlName="department"
+              [disabled]="mainData"
+              (selectionChange)="onDepartmentChange($event.value)"
+            >
+              <mat-option
+                *ngFor="let dept of departments"
+                [value]="dept.dept_id"
+              >
+                {{ dept.department_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="digitalform.get('department')?.hasError('required')"
+            >
+              Department is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- Select Employee -->
+        <div class="col-md-6 col-lg-5 mt-1">
+          <label class="form-label"
+            >Select Employee <span class="alertspan">*</span></label
+          >
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label class="form-label">Employee</mat-label>
+            <mat-select
+              formControlName="employee"
+              [disabled]="mainData || !digitalform.get('department')?.value"
+            >
+              <ngx-mat-select-search
+                placeholderLabel="Search employee..."
+                [formControl]="employeeFilterCtrl"
+                [disabled]="mainData"
+              >
+              </ngx-mat-select-search>
+              <mat-option
+                *ngFor="let emp of filteredEmployees | async"
+                [value]="emp"
+              >
+                {{ emp.full_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="digitalform.get('employee')?.hasError('required')"
+            >
+              Employee is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6 col-lg-5 mb-3">
+          <div class="d-flex flex-column">
+            <label class="form-label"
+              >Signature Upload <span class="alertspan">*</span>
+            </label>
+            <input
+              type="file"
+              accept=".png,.jpg,.jpeg"
+              (change)="fileInputChange($event)"
+              class="form-control"
+            />
+          </div>
+          <div class="text-danger" *ngIf="signatureError">
+            {{ signatureError }}
+          </div>
+          <div
+            class="text-danger"
+            *ngIf="
+              digitalform.get('digital_signature')?.hasError('required') &&
+              digitalform.get('digital_signature')?.touched
+            "
+          >
+            Signature is required
+          </div>
+        </div>
+
+        <div *ngIf="signaturePreview && showOldSignaturePreview" class="mt-2">
+          <label class="form-label">Old Signature Preview:</label>
+          <img
+            [src]="signaturePreview"
+            alt="Signature Preview"
+            class="img-thumbnail"
+            style="max-height: 100px"
+          />
+        </div>
+      </div>
+      <div class="common_button_sub mt-3 text-end">
+        <div class="col-lg-12" *ngIf="!mainData">
+          <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+            Save
+          </button>
+        </div>
+        <!-- <div class="col-lg-12" *ngIf="mainData">
+        <button type="submit" class="btn btn-primary" (click)="updateSignature()">Update </button>
+        </div> -->
+        <div class="col-lg-12" *ngIf="mainData">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            *ngIf="status !== 'Rejected'"
+            (click)="updateSignature()"
+          >
+            Update
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary"
+            *ngIf="status === 'Rejected'"
+            (click)="resubmitSignature()"
+          >
+            Resubmit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

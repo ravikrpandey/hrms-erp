@@ -1,0 +1,60 @@
+<h3 class="popHead" *ngIf="pageMode == 'viewMode'" style="padding:10px 15px; font-weight:500; font-size:18px;">View Leave</h3>
+<h3 class="popHead"  *ngIf="pageMode !== 'viewMode'" style="padding:10px 15px; font-weight:500; font-size:18px;">Edit Leave</h3>
+<form [formGroup]="editLeave" class="m-4">
+  <div class="row">
+  <div class="col-md-6 col-lg-6" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+    <mat-label>Leave Name<span class="alertspan">*</span></mat-label>
+    <mat-form-field appearance="outline">
+      <input type="text" [readonly]="pageMode == 'viewMode'" [disabled]="pageMode == 'viewMode'" matInput formControlName="leaveName" placeholder="Leave name" />
+
+      <mat-error *ngIf="getFormControl('leaveName')?.invalid && getFormControl('leaveName')?.touched">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <!-- onkeypress="return event.charCode >= 48" -->
+  <div class="col-md-6 col-lg-6" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+    <mat-label>Leave Code<span class="alertspan">*</span></mat-label>
+    <mat-form-field appearance="outline">
+      <input type="text" matInput formControlName="leaveCode"
+        placeholder="Leave name" readonly />
+    </mat-form-field>
+  </div>
+</div>
+  <div class="row mt-4">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group-name-cat borrder" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+        <mat-checkbox color="primary" formControlName="toggleLeaveTotal">Total</mat-checkbox>
+      </div>
+    </div>
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group-name-cat borrder" *ngIf="editLeave.get('toggleLeaveTotal')?.value" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+        <mat-label>Total leave<span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline">
+          <input type="text" matInput onkeypress="return event.charCode >= 48" min="1" formControlName="leaveTotal"
+            placeholder="Total leaves" />
+
+          <mat-error *ngIf="getFormControl('leaveTotal')?.invalid && getFormControl('leaveTotal')?.touched">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    
+  </div>
+
+
+  
+  <div class="col-12 mt-3 common_button_sub" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+    <button type="button" (click)="editLeaveForm()" *ngIf="showButton" 
+      [disabled]="!editLeave.valid || !editLeave.dirty || (editLeave.get('toggleLeaveTotal')?.value && !editLeave.get('leaveTotal')?.value)">Update</button>
+    <button type="button" class="cancel_button_y" *ngIf="showButton" (click)="closeDialog()">Cancel</button>
+  </div>
+</form>
+<mat-dialog-actions class="common_button_sub mb-3" align="end" *ngIf="pageMode == 'viewMode'">
+  
+  <button mat-dialog-close class="cancel_button_y">
+      Close
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,83 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>CRM</h1>
+  <p>Assign User <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+  </i><span> Create Assign User </span></p>
+</div>
+  <div class="add_button">
+    <!-- <button type="button" [routerLink]="['../assign-user-create']" >Submit</button> -->
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+  </div>
+
+  <div class="right_data_all">
+  <form [formGroup]="assignUserForm" (ngSubmit)="saveForm()">
+    <div class="row mt-2">
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="d-flex mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Branch Name</mat-label>
+            <mat-select formControlName="branch_id" (selectionChange)="changeBranch(true)">
+              <mat-option [disabled]="isDisabled" *ngFor=" let item of branchList" [value]="item?.id">
+                {{item?.branch_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="d-flex mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Role</mat-label>
+            <mat-select formControlName="role_id" (selectionChange)="getEmployee(true)">
+              <mat-option [disabled]="isDisabled" *ngFor=" let item of roleList" [value]="item?.role_master_id">
+                {{item?.role_master_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="d-flex mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Employee</mat-label>
+            <mat-select formControlName="employee_id" (selectionChange)="selectEmployee()">
+              <mat-option [disabled]="isDisabled" *ngFor=" let item of employeeList" [value]="item?.employee_id">
+                {{item?.first_name + ' ' + item?.last_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <div class="d-flex mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Assign Employee</mat-label>
+            <mat-select [formControl]="selectedEmployeeList" multiple (selectionChange)="selectedEmployee()">
+              <mat-option [disabled]="isDisabled" *ngFor="let item of allEmployeeList" [value]="item?.employee_id">
+                {{ item?.first_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 col-sm-4 common_button_sub">
+        <button *ngIf="action_type != 'View'"  [class.spinner]="loading"
+        [disabled]="loading">
+        {{assignedUserId ? 'Update' : 'Submit'}}
+      </button>
+      </div>
+    </div>
+  </form>
+
+
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+<div>
+</div>

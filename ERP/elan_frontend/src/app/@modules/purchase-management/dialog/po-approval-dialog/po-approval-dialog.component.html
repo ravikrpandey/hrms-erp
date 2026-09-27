@@ -1,0 +1,44 @@
+<h3 mat-dialog-title class="popHead">Remark</h3>
+<mat-dialog-content class="mat-typography mt-3">
+    <form [formGroup]="form">
+        <div class="row">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Status</mat-label>
+                        <mat-select formControlName="approvel_status" readonly>
+                            <mat-option [value]="'APPROVED'">Approved</mat-option>
+                            <mat-option [value]="'REJECTED'">Rejected</mat-option>
+                            <!-- <mat-option [value]="'PUSH BACK'">Push Back</mat-option> -->
+
+                        </mat-select>
+                        <mat-error *ngIf="form.controls['approvel_status'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group mb-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Remark</mat-label>
+                        <input matInput type="text" formControlName="remark" required />
+                        <mat-error *ngIf="form.controls['remark'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button mat-button mat-raised-button (click)="onApprove()">
+        Submit
+    </button>
+
+    <button mat-dialog-close class="cancel_button_y">
+        Close
+    </button>
+</mat-dialog-actions>

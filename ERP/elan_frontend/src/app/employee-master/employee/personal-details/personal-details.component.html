@@ -1,0 +1,556 @@
+<section class="form_basic">
+
+  <form [formGroup]="personalForm" class="pDetails">
+    <mat-card>
+      <div class="personalDetails">
+        <div class="form_basic main_form mb-0">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h3 class="mb-0">Present Address Details</h3>
+            <!-- <div class="add_button">
+              <button class="backBtn" (click)="prevTab()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Country</mat-label>
+                  <mat-select formControlName="present_country_id" (selectionChange)="presentCountryChange($event)">
+                    <mat-option *ngFor="let country of countryList"
+                      [value]="country?.countryss_id">{{country?.countryss_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                      personalForm.controls['present_country_id'].hasError('required')
+                    ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="present_state_id" (selectionChange)="presentStateChange($event)">
+                    <mat-option *ngFor="let state of presentSteteData"
+                      [value]="state?.states_id">{{state?.states_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                    personalForm.controls['present_state_id'].hasError('required')
+                  ">
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="present_city_id">
+                    <mat-option *ngFor="let city of presentCityList"
+                      [value]="city?.city_id">{{city?.city_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Address</mat-label>
+                <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d;" rows="3" maxlength="200"
+                  formControlName="present_address"
+                  [ngModel]="personalForm.controls['present_address'].value | titlecase">
+                            </textarea>
+                <mat-error *ngIf="
+                      personalForm.controls['present_address'].hasError('required')
+                    ">
+                  This field is Required!
+                </mat-error>
+                <mat-error *ngIf="
+                      personalForm.controls['present_address'].hasError('leadingSpaces')
+                    ">
+                  No leading spaces!
+                </mat-error>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="form-group check_set">
+                <mat-checkbox color="primary" [checked]="address_check_value" (change)="showPermanent($event)">
+                  <span>Permanent Address Same as Present Address </span></mat-checkbox>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- open permanent address details  -->
+          <div class="row mt-4">
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Country</mat-label>
+                  <mat-select formControlName="permanent_country_id" (selectionChange)="permanentCountryChange($event)"
+                    [disabled]="readonlyp">
+                    <mat-option *ngFor="let country of countryList"
+                      [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                    personalForm.controls['permanent_country_id'].hasError('required')
+                  ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="permanent_state_id" (selectionChange)="permanentState($event)"
+                    [disabled]="readonlyp">
+                    <mat-option *ngFor="let state of permanentStateData"
+                      [value]="state.states_id">{{state.states_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="personalForm.controls['permanent_state_id'].hasError('required')">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="permanent_city_id" [disabled]="readonlyp">
+                    <mat-option *ngFor="let city of permanentCityList"
+                      [value]="city.city_id">{{city.city_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="personalForm.controls['permanent_city_id'].hasError('required')">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Address</mat-label>
+                <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d;" rows="3" maxlength="200"
+                  formControlName="parmanent_address"
+                  [ngModel]="personalForm.controls['parmanent_address'].value | titlecase">
+                            </textarea>
+                <mat-error *ngIf="
+                      personalForm.controls['parmanent_address'].hasError('required')
+                    ">
+                  This field is Required!
+                </mat-error>
+                <mat-error *ngIf="
+                      personalForm.controls['parmanent_address'].hasError('leadingSpaces')
+                    ">
+                  No leading spaces!
+                </mat-error>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </mat-card>
+
+    <!-- personal details  -->
+    <div class="personalDetails pt-5">
+      <mat-card>
+
+        <div class="form_basic mb-0">
+          <h3>Personal Details</h3>
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Nationality</mat-label>
+                  <mat-select formControlName="personal_country_id" (selectionChange)="presentCountryChange($event)">
+                    <mat-option *ngFor="let country of countryList"
+                      [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                        personalForm.controls['personal_country_id'].hasError('required')
+                      ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="personal_state_id" (selectionChange)="presentStateChange($event)">
+                    <mat-option *ngFor="let state of presentSteteData"
+                      [value]="state.states_id">{{state.states_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                      personalForm.controls['personal_state_id'].hasError('required')
+                    ">
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="personal_city_id">
+                    <mat-option *ngFor="let city of presentCityList"
+                      [value]="city.city_id">{{city.city_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>DIRE Number</mat-label>
+                  <input matInput maxlength="30" type="text" formControlName="DIRE_number" />
+                  <mat-error *ngIf="personalForm.controls['DIRE_number'].hasError('required' )">
+                    This field is Required!
+                  </mat-error>
+                  <mat-error *ngIf="personalForm.controls['DIRE_number'].hasError('pattern' )">
+                    It is not a valid DIRE Number.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Driving License Number</mat-label>
+                  <input matInput maxlength="30" type="text" formControlName="driving_license_number" />
+                  <mat-error *ngIf="personalForm.controls['driving_license_number'].hasError('required' )">
+                    This field is Required!
+                  </mat-error>
+                  <mat-error *ngIf="personalForm.controls['driving_license_number'].hasError('pattern' )">
+                    It is not a valid Driving License Number.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Blood Group</mat-label>
+                  <mat-select formControlName="blood_group">
+                    <mat-option *ngFor="let item of bloodGrupList" [value]="item">{{item}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                    personalForm.controls['blood_group'].hasError('required')
+                  ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>ID Number</mat-label>
+                  <input matInput type="text" maxlength="30" formControlName="id_number" [value]="
+                        personalForm.controls['id_number'].value
+                      " />
+                  <mat-error *ngIf="
+                        personalForm.controls['id_number'].hasError(
+                          'required'
+                        )
+                      ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Issued Date</mat-label>
+                  <input matInput [matDatepicker]="dp" [max]="getTodayDate()" (dateChange)="onIssuedDateChange($event)"
+                    (click)="dp.open()" formControlName="issued_date" readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                  <mat-error *ngIf="
+                          personalForm.controls['issued_date'].hasError('required')
+                        ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Exp Date</mat-label>
+                  <input matInput [matDatepicker]="dpEX" (click)="dpEX.open()" [min]="minExpDateValue"
+                    formControlName="exp_date" readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dpEX"></mat-datepicker-toggle>
+                  <mat-datepicker #dpEX></mat-datepicker>
+                  <mat-error *ngIf="
+                          personalForm.controls['exp_date'].hasError('required')
+                        ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Tax Number (NUIT)</mat-label>
+                  <input matInput type="text" maxlength="30" formControlName="tax_number" [value]="
+                        personalForm.controls['tax_number'].value | titlecase
+                      " />
+                  <mat-error *ngIf="
+                        personalForm.controls['tax_number'].hasError(
+                          'required'
+                        )
+                      ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Passport Number</mat-label>
+                  <input matInput type="text" maxlength="30" formControlName="passport_number" [value]="
+                        personalForm.controls['passport_number'].value | titlecase
+                      " />
+                  <mat-error *ngIf="
+                        personalForm.controls['passport_number'].hasError(
+                          'required'
+                        )
+                      ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Marital Status</mat-label>
+                  <mat-select formControlName="marital_status">
+                    <mat-option value="Married">Married</mat-option>
+                    <mat-option value="Unmarried">Unmarried</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                        personalForm.controls['marital_status'].hasError(
+                          'required'
+                        )
+                      ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="personalForm.controls['marital_status'].value !== 'Unmarried'"
+              class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Spouse Name</mat-label>
+                  <input matInput type="text" maxlength="30" formControlName="spouse_name" />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- family details -->
+
+    <div class="personalDetails pt-5">
+      <mat-card>
+        <div class="form_basic mb-0">
+          <h3>Family Details</h3>
+          <div class="table" style="width: 100%;">
+            <thead>
+              <tr class="row">
+                <th maxlength="50" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                  Family Member's Name
+                </th>
+                <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                  Date Of Birth
+                </th>
+                <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                  Relation With Employee
+                </th>
+                <th class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                  Contact Number
+                </th>
+
+                <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                  Remarks
+                </th>
+                <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 py-2">
+                  <button mat-raised-button color="warn" (click)="addRow()">
+                    Add
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="family_details"
+                *ngFor="let control of CF_1.family_details['controls']; index as i">
+                <tr class="row" [formGroup]="control">
+                  <td class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <input type="text" formControlName="member_name" class="form-control" />
+                    <mat-error
+                      *ngIf="personalForm.get('family_details')?.get(i.toString())?.get('name')?.hasError('required')">
+                      Invalid!
+                    </mat-error>
+                  </td>
+                  <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <input type="date" formControlName="date_of_birth" class="form-control" />
+                  </td>
+                  <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <input type="text" maxlength="20" formControlName="relation" class="form-control" />
+                  </td>
+                  <td class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <!-- <input matInput type="number" formControlName="contact_number" class="form-control"
+                        [class.contactInvalid]="control.controls['contact_number'].invalid" />
+                      <span *ngIf="control.controls['contact_number'].hasError('pattern')" style="color:red;">invalid
+                        contact number</span> -->
+
+
+                    <div class="codeArea">
+                      <div class="form-group addCoding">
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="country_code">
+                            <mat-option *ngFor="let countryCode of countryCodeList"
+                              [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <input matInput type="number" formControlName="contact_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                    <input type="text" maxlength="30" formControlName="remarks" class="form-control" />
+                  </td>
+                  <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="
+                        text-align: center;
+                        color: #858586;
+                        cursor: pointer;
+                      ">
+                    <mat-checkbox title="Save for emergency contact" class="example-margin"
+                      formControlName="emergency_contact"></mat-checkbox>
+                    <i class="material-icons" (click)="deletefamily_details(i, control)">delete</i>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- PRIVIOUS EMPLOYER DETAILS -->
+    <div class="personalDetails pt-5">
+      <mat-card>
+        <div class="form_basic mb-0">
+          <h3>Previous Employer Details</h3>
+          <div class="table" style="width: 100%;">
+            <thead>
+              <tr class="row">
+                <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                  Company Name
+                </th>
+                <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                  Form Date
+                </th>
+                <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                  To Date
+                </th>
+                <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                  Last Drawn Salary (k)
+                </th>
+                <th class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                  Reason Of Leaving
+                </th>
+                <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                  Location
+                </th>
+                <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 py-2">
+                  <button mat-raised-button color="warn" (click)="addRowEmploy()">
+                    Add
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="prev_employer_details" *ngFor="
+                    let control_2 of CF_1.prev_employer_details['controls'];
+                    let i = index
+                  ">
+                <tr class="row" [formGroup]="control_2">
+                  <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <input type="text" maxlength="50" formControlName="company_name" class="form-control" />
+                  </td>
+                  <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <!-- <input type="date" formControlName="from_date" class="form-control" /> -->
+
+                    <mat-form-field appearance="outline">
+                      <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date"
+                        (dateChange)="fromDate($event,i)" />
+                      <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                      <mat-datepicker #dp></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <!-- <input type="date" formControlName="to_date" class="form-control" /> -->
+                    <mat-form-field appearance="outline">
+                      <input matInput [matDatepicker]="picker2" (click)="picker2.open()" formControlName="to_date"
+                        (dateChange)="ToDate($event)" />
+                      <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                  </td>
+                  <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1">
+                    <input matInput type="number" min="0" maxlength="5" formControlName="last_salary"
+                      class="form-control" />
+                  </td>
+                  <td class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                    <input type="text" maxlength="50" formControlName="reason_of_leaving" class="form-control" />
+                  </td>
+                  <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                    <input type="text" maxlength="20" formControlName="location" class="form-control" />
+                  </td>
+                  <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="
+                        text-align: center;
+                        color: #858586;
+                        cursor: pointer;
+                      ">
+                    <i class="material-icons" (click)="deleteEmployerRow(i, control_2)">delete</i>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="mt-3" *ngIf="!action_type">
+      <button mat-raised-button color="primary" class="mx-3" (click)="onSubmitPersonal()">
+        Save & Next
+      </button>
+      <button mat-raised-button color="warn" (click)="Skip()">Skip</button>
+    </div>
+  </form>
+
+</section>

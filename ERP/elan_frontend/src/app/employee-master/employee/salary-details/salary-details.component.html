@@ -1,0 +1,179 @@
+<section>
+  <div class="conatiner">
+    <mat-card>
+      <div class="form_head">
+        <h3>Salary Details</h3>
+        <button class="backBtn" (click)="prevTab()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div>
+
+      <div class="form_basic">
+        <form class="form_set pDetails" [formGroup]="salaryForm">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <mat-label>Base Salary</mat-label>
+              <p>{{monthly_salary}}</p>
+            </div>
+          </div>
+
+          <!-- Allowance Details -->
+
+          <div class="personalDetails pt-5">
+            <div class="row form_head">
+              <h3>Allowance Details</h3>
+            </div>
+            <div class="form_basic">
+              <div class="table-wrapper" style="width: 100%;">
+                <table class="table" style="width: 100%;">
+                  <thead>
+                    <tr class="row" style="display: flex; width: 100%;">
+                      <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" style="flex: 2;">
+                        S.No.
+                      </th>
+                      <th class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="flex: 4;">
+                        Allowance Name
+                      </th>
+                      <th class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="flex: 4;">
+                        Amount
+                      </th>
+                      <!-- <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 py-2" style="flex: 2;">
+                        <button mat-raised-button color="warn" (click)="addRow()">
+                          Add
+                        </button>
+                      </th> -->
+                    </tr>
+                  </thead>
+                  <tbody formArrayName="allowanace_details">
+                    <tr class="row" *ngFor="let control of allowanaceFormArray.controls; index as i" [formGroupName]="i"
+                      style="display: flex; width: 100%;">
+                      <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" style="flex: 2;">
+                        {{ i + 1 }}
+                      </td>
+                      <td class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="flex: 4;">
+                        <mat-form-field appearance="outline">
+                          <input type="text" matInput formControlName="allowance_name" class="form-control"
+                            style="width: 100%;" readonly="true" />
+                        </mat-form-field>
+                      </td>
+
+                      <td class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="flex: 4;">
+                        <input matInput type="number" matInput formControlName="allowance_amount" class="form-control"
+                          style="width: 100%;" readonly="true" />
+                      </td>
+                      <!-- <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12"
+                        style="flex: 2; text-align: center; color: #858586; cursor: pointer;">
+                        <i class="material-icons" (click)="deleteallowanace_details(i, control)">delete</i>
+                      </td> -->
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- <div class="personalDetails pt-5">
+            <mat-card>
+              <div class="row form_head">
+                <h3>History of salary revision</h3>
+              </div>
+              <div class="form_basic">
+                <div class="table px-3" style="width: 100%;">
+                  <table class="table" style="width: 100%;">
+                    <thead>
+                      <tr class="row">
+                        <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                          S No.
+                        </th>
+                        <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                          Year
+                        </th>
+                        <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                          Month
+                        </th>
+                        <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                          New Salary
+                        </th>
+                        <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                          Old Salary
+                        </th>
+                        <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                          % of increment
+                        </th>
+                        <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                          Remark
+                        </th>
+                        <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 py-2">
+                          <button mat-raised-button color="warn" (click)="addRowEmploy()">
+                            Add
+                          </button>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container formArrayName="history_salary" *ngFor="
+                    let control_2 of CF_1.history_salary['controls'];
+                    index as i
+                  ">
+                        <tr class="row" [formGroup]="control_2">
+                          <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                            {{i+1}}
+                          </td>
+                          <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <input matInput type="number" maxlength="50" formControlName="salary_Year"
+                              class="form-control" />
+                          </td>
+                          <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <input matInput type="text" maxlength="10" formControlName="salary_month"
+                              class="form-control" />
+                          </td>
+                          <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <input matInput type="number" min="0" maxlength="10" formControlName="new_salary"
+                              class="form-control" (input)="calculatePercentIncrement(i)" />
+                          </td>
+                          <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1">
+                            <input matInput type="number" min="0" maxlength="10" formControlName="old_salary"
+                              class="form-control" (input)="calculatePercentIncrement(i)" />
+                          </td>
+
+                          <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <input matInput type="number" maxlength="50" formControlName="percent_increment"
+                              class="form-control" readonly />
+                          </td>
+                          <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                            <input matInput type="text" maxlength="20" formControlName="remarks" class="form-control" />
+                          </td>
+                          <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="
+                        text-align: center;
+                        color: #858586;
+                        cursor: pointer;
+                      ">
+                            <i class="material-icons" (click)="deleteEmployerRow(i, control_2)">delete</i>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </mat-card>
+          </div> -->
+
+
+          <div class="mt-3" *ngIf="!action_type">
+            <button mat-raised-button color="primary" class="mx-3" (click)="onSubmitForm()">
+              Save & Next
+            </button>
+            <button mat-raised-button color="warn" (click)="Skip()">
+              Skip
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+
+    <!-- <div align="start"  class="btn_employ">
+            <button mat-raised-button class="btn1" color="primary" (click)="onSubmitForm()">Save</button>
+            <button mat-raised-button class="btn2 mx-2" color="warn">Cancel</button>
+        </div> -->
+  </div>
+</section>

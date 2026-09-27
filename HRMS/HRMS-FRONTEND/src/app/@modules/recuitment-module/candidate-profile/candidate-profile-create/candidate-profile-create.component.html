@@ -1,0 +1,144 @@
+<div class="section">
+
+    
+    <div class="heading_top">
+        <div class="page-title">
+        <h1>Recruitment</h1>
+        <p>Recruitment Module  <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span routerLink="../"> {{candidate_id?"Update Candidate Profile":"Create Candidate Profile"}}</span></p>
+      </div>
+        <div class="add_button a_at_bg">
+            <button routerLink="../profile-list">List</button>
+        </div>
+      </div>
+
+      <div class="right_white_bg">
+        <div class="page_heading">
+            <h3>Candidate Profile Details</h3>
+          </div>
+          <div class="right_data_bg_white form_mar_top">
+
+                <div class="form_basic">
+                    <form [formGroup]="profileDetailsForm"
+                        (ngSubmit)="saveDetails(profileDetailsForm)">
+                        <div class="row">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Candidate Name <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                      
+                                        <input matInput type="text" formControlName="name" required />
+                    
+                                        <mat-error
+                                        *ngIf="
+                                        profileDetailsForm.controls['name'].hasError(
+                                            'maxlength'
+                                          )
+                                        "
+                                      >
+                                      Candidate name should be limit 150.
+                                      </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Email Id <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                        
+                                        <input matInput type="email" formControlName="email" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['email'].errors?.['required']">Email
+                                            is required</mat-error>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['email'].errors?.['pattern']">Please
+                                            enter valid email</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Mobile Number <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                     
+                                        <input matInput type="text" (keypress)="keyPress($event)"
+                                            formControlName="mobile" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['mobile'].errors?.['required']">Please
+                                            enter mobile number</mat-error>
+                                        <mat-error
+                                            *ngIf="  profileDetailsForm.controls['mobile'].errors?.['pattern']">Mobile
+                                            number is not 10 digit</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Upload Resume <span>*</span></mat-label>
+                                    <!-- {{candidateData?.upload_resume}} -->
+                                  
+                                    <input     (change)="fileInputChange($event)"        class="custom-file-input"  type="file" 
+                                    formControlName="resume" name="resume" accept=".pdf,.doc">
+
+                                        <!-- <img  *ngIf="candidateData?.upload_resume " [src]="candidateData?.upload_resume ? " 
+                                        alt="emp image" class="imgEmp"  /> -->
+                                       <div class="set_ivom">
+                                         <img  (click)="openPfd()" *ngIf="candidateData?.upload_resume || fileDetails " src="../../../../../../assets/icons/pdfimg.png" 
+                                        alt="emp image" class="selctedImg"  /></div>
+            
+                                    <div *ngIf="errorMsg !== ''" class="text-danger errorMsg">{{errorMsg}}</div>
+
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Reporting Manager <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline" readonly>
+                                       
+                                        <mat-select formControlName="manager" required (selectionChange)="changeeManager($event)">
+                                          <mat-select-filter [array]="reportvariables" (filteredReturn)="productFilter($event)"  ></mat-select-filter>
+                                          <mat-option *ngFor="let data of managersList" [value]="data.employee_id" >  
+                                            {{data.first_name}} {{data.last_name}}
+                                         </mat-option>
+                                        </mat-select>
+                      
+                                      </mat-form-field>
+                                    
+                                    </div>
+                      
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                
+                                <div class="form-group">
+                                    <mat-label class="label_o">Job Title <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                         <!--this field was job Applied -->
+                                        <mat-select  formControlName="job_applied" required>
+                                          <mat-select-filter [array]="jobTitleSearchData" (filteredReturn)="productFilterData($event)"  ></mat-select-filter>
+                                            <mat-option *ngFor="let role of jobRole" [value]="role?.job_id" >
+                                                {{role?.job_applied}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="footer_button">
+                            <button  [class.spinner]="loading"
+                                [disabled]="loading">
+                                {{candidate_id?'Update':'Save & Next'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+       </div>
+       </div>
+
+</div>

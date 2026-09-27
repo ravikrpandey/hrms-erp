@@ -1,0 +1,148 @@
+<div class="heading_top py-3">
+  <div class="page-title">
+  <h1>Finance & Accounting </h1>
+  <p><i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+  </i><span>RCM Reports</span> / <span>{{breadcrumbs}}</span></p>
+</div>
+</div>
+
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+      <div class="example-header">
+          <select id="page-size" (change)="onPageSizeChanged()">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+          </select>
+      </div>
+
+          <div class="employee_2" align="end">
+              <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                  placeholder="Search">
+      </div>
+  </div>
+
+
+  <div>
+     <div class="ag_grid">
+
+<ag-grid-angular
+class="ag-theme-alpine"
+style="width: 100%; height: 426px"
+
+[columnDefs]="columnDefs"
+
+[rowData]="getAllProfitCenterData"
+
+[rowClassRules]="rowClassRules"
+
+(rowClicked)="onRowClicked($event)"
+
+(gridReady)="onGridReady($event)">
+</ag-grid-angular>
+
+</div>
+
+<div *ngIf="transactionList?.length > 0" class="transaction-wrapper">
+
+<div class="transaction-header">
+
+  <div class="form_head">
+    SAC Transactions - {{ selectedSacCode }}
+  </div>
+
+  <div class="count">
+    Total Records : {{ transactionList.length }}
+  </div>
+
+</div>
+
+<div class="transaction-scroll">
+
+  <table class="transaction-table">
+
+    <thead>
+
+      <tr>
+
+        <th>Invoice No</th>
+
+        <th>Invoice Date</th>
+
+        <th>PO Number</th>
+
+        <th>Vendor</th>
+
+        <th>Item Name</th>
+
+        <th>SAC Code</th>
+
+        <th>Taxable Value ({{currencyCode}})</th>
+
+        <th>GST Rate</th>
+
+        <th>CGST ({{currencyCode}})</th>
+
+        <th>SGST ({{currencyCode}})</th>
+
+        <th>IGST ({{currencyCode}})</th>
+
+        <th>Total RCM ({{currencyCode}})</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+
+      <tr *ngFor="let item of transactionList">
+
+        <td>{{ item.invoiceNo }}</td>
+
+        <td>{{ item.invoiceDate }}</td>
+
+        <td>{{ item.po_number }}</td>
+
+        <td>{{ item.vendor_name }}</td>
+
+        <td>{{ item.item_name }}</td>
+
+        <td>{{ item.sac_code }}</td>
+
+        <td>
+          {{ formatCurrency(item.debit_amount || item.debit_amount || 0) }}
+        </td>
+
+        <td>
+          {{ item.gst_rate }}%
+        </td>
+
+        <td>
+          {{ formatCurrency(item.cgst || 0) }}
+        </td>
+
+        <td>
+          {{ formatCurrency(item.sgst || 0) }}
+        </td>
+
+        <td>
+          {{ formatCurrency(item.igst || 0) }}
+        </td>
+
+        <td>
+          {{ formatCurrency(item.debit_amount || item.totalRcmAmount || item.rcm_amount || 0) }}
+        </td>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+</div>
+
+</div>
+    </div>
+
+</div>

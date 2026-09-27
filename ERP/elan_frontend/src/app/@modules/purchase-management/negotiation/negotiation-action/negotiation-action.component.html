@@ -1,0 +1,17 @@
+<div class="edd-del" *ngIf="assignAction && cellValue">
+    <ng-container *ngIf="assignAction.Write">
+        <button
+            *ngIf="!(cellValue?.data?.nego_status_pvn === 'LIVE NEGO' || cellValue?.data?.nego_status_pvn === 'CLOSE NEGO')"
+            mat-raised-button color="primary" style="margin: 0 0 16px 10px" (click)="startNegotiate($event)">Start
+            Negotiate</button>
+
+        <mat-icon *ngIf="cellValue?.data?.nego_status_pvn === 'LIVE NEGO'" matTooltip="Extend Date"
+            (click)="extendDate($event)">date_range</mat-icon>
+        <mat-icon
+            *ngIf="cellValue?.data?.nego_status_pvn === 'LIVE NEGO' && cellValue?.data?.vendors_responded_count > 0"
+            matTooltip="Stop Negotiation" (click)="stopNegotiate($event)">block</mat-icon>
+        <mat-icon
+            *ngIf="(cellValue?.data?.nego_status_pvn === 'LIVE NEGO' || cellValue?.data?.nego_status_pvn === 'CLOSE NEGO')"
+            matTooltip="Quotations" (click)="navigateToQuotation()">library_books</mat-icon>
+    </ng-container>
+</div>

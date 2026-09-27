@@ -1,0 +1,49 @@
+<ng-container *ngIf="mode=='view'">
+  <h3 mat-dialog-title class="popHead">Seal Type Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Seal Type :</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ getData?.seal_type }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container  *ngIf="mode!='view'">
+  <h3 mat-dialog-title class="popHead" *ngIf="id">Update Seal Type</h3>
+  <h3 mat-dialog-title class="popHead" *ngIf="!id">Add Seal Type</h3>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="sealTypeForm">
+      <div class="form-group row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Seal Type</mat-label>
+            <input matInput type="text" formControlName="seal_type" />
+            <mat-error *ngIf="sealTypeForm.controls['seal_type'].hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error *ngIf="sealTypeForm.controls['seal_type'].hasError('leadingSpaces')">
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"  (click)="submitData(sealTypeForm.value)" >
+      {{ id ? "Update" : "Create"}}
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>

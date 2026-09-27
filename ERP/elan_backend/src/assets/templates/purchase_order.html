@@ -1,0 +1,256 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #000;
+        line-height: 1.3;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .no-border td, .no-border th {
+        border: none;
+        padding: 2px 4px;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      @page {
+        margin: 20px 25px;
+      }
+
+      /* Details grid */
+      .details-table td {
+        padding: 4px;
+        font-size: 11px;
+      }
+
+      /* Main items table */
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 5px;
+      }
+
+      .items-table th {
+        border: 1px solid #000;
+        padding: 4px 6px;
+        background: #f2f2f2;
+        font-weight: bold;
+        font-size: 10px;
+        text-align: center;
+      }
+
+      .items-table td {
+        border: 1px solid #000;
+        padding: 4px 6px;
+        font-size: 10px;
+      }
+
+      .summary-table td {
+        padding: 4px 6px;
+        font-size: 11px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HEADER SECTION -->
+    <table class="no-border" style="margin-bottom: 10px;">
+      <tr>
+        <!-- LEFT: LOGO -->
+        <td style="width: 25%; vertical-align: top;">
+          <img src="{{entityLogo}}" style="max-height: 55px;" alt="Logo" />
+        </td>
+
+        <!-- CENTER: COMPANY DETAILS -->
+        <td style="width: 50%; text-align: center; vertical-align: top;">
+          <div style="font-size: 13px; font-weight: bold; text-decoration: underline; margin-bottom: 4px;">{{heading}}</div>
+          <div style="font-size: 15px; font-weight: bold;">{{entityName}}</div>
+          <div style="font-size: 10px; margin-top: 2px;">{{entityAddress}}</div>
+        </td>
+
+        <!-- RIGHT: VOUCHER BOX -->
+        <td style="width: 25%; text-align: right; vertical-align: top; font-weight: bold; font-size: 10px;">
+          Original For Recipient
+        </td>
+      </tr>
+    </table>
+
+    <!-- METADATA GRID -->
+    <table class="no-border" style="width: 100%; margin-bottom: 8px;">
+      <tr>
+        <td style="width: 18%; font-weight: bold;">GSTIN / UTGSTIN No.</td>
+        <td style="width: 32%;">: {{entity_gst_in}}</td>
+        <td style="width: 18%; font-weight: bold;">RefDocNo.</td>
+        <td style="width: 32%;">: {{RefDocNo}}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Order No</td>
+        <td>: {{po_number}}</td>
+        <td style="font-weight: bold;">Ref. Doc Date</td>
+        <td>: {{RefDocDate}}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold;">Order Date</td>
+        <td>: {{po_date}}</td>
+        <td style="font-weight: bold;">Parent Doc no.</td>
+        <td>: {{ParentDocNo}}</td>
+      </tr>
+    </table>
+
+    <!-- BILLING & SHIPPING DETAILS -->
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
+      <tr style="background-color: #f2f2f2;">
+        <th style="width: 50%; text-align: left; padding: 4px 8px; border: 1px solid #000; font-size: 11px; font-weight: bold;">Billing Details</th>
+        <th style="width: 50%; text-align: left; padding: 4px 8px; border: 1px solid #000; font-size: 11px; font-weight: bold;">Shipping Details</th>
+      </tr>
+      <tr>
+        <!-- Billing Details Content -->
+        <td style="vertical-align: top; border: 1px solid #000; padding: 6px;">
+          <table class="no-border" style="width: 100%;">
+            <tr>
+              <td style="width: 22%; font-weight: bold; vertical-align: top; padding: 1px 0;">Party Name</td>
+              <td style="width: 78%; vertical-align: top; padding: 1px 0;">: {{vendor_name}}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">& Address</td>
+              <td style="vertical-align: top; padding: 1px 0;">: {{vendor_address}}<br>&nbsp;&nbsp;PIN: {{vendor_pincode}}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">State Name</td>
+              <td style="vertical-align: top; padding: 1px 0;">: {{vendor_state}}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">State Code</td>
+              <td style="vertical-align: top; padding: 1px 0;">: {{vendor_state_code}}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; vertical-align: top; padding: 1px 0;">GSTIN</td>
+              <td style="vertical-align: top; padding: 1px 0;">: {{vendor_gstin}}</td>
+            </tr>
+          </table>
+        </td>
+        <!-- Shipping Details Content -->
+        <td style="vertical-align: top; border: 1px solid #000; padding: 6px;">
+          <table class="no-border" style="width: 100%;">
+            <tr>
+              <td style="width: 18%; font-weight: bold; vertical-align: top; padding: 1px 0;">Address</td>
+              <td style="width: 82%; vertical-align: top; padding: 1px 0;">: {{warehouse_address}}<br>&nbsp;&nbsp;PIN: {{warehouse_pin}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS TABLE -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th colspan="8" style="border-bottom: none;"></th>
+          <th style="border-bottom: 1px solid #000;">CGST</th>
+          <th style="border-bottom: 1px solid #000;">SGST</th>
+          <th style="border-bottom: 1px solid #000;">IGST</th>
+        </tr>
+        <tr>
+          <th>SNo</th>
+          <th>Description of Goods</th>
+          <th>HSN Code</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Rate</th>
+          <th>TaxableAmt</th>
+          <th>Rate%</th>
+          <th>Amount</th>
+          <th>Amount</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{itemsTable}}
+      </tbody>
+    </table>
+
+    <!-- NARRATIONS & TOTALS SUMMARY BOX -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: -1px;">
+      <tr>
+        <!-- Left: Words and Narration -->
+        <td style="width: 60%; border: 1px solid #000; vertical-align: top; padding: 8px;">
+          <div style="margin-bottom: 8px;">
+            <b>Amount in Words:</b> {{amount_in_words}}
+          </div>
+          <div>
+            <b>Narration :</b> {{po_remark}}
+          </div>
+        </td>
+        <!-- Right: Subtotal & Tax sums -->
+        <td style="width: 40%; border: 1px solid #000; padding: 0; vertical-align: top;">
+          <table class="no-border summary-table" style="width: 100%; height: 100%;">
+            <tr>
+              <td style="font-weight: bold; border-bottom: 1px solid #ddd;">Sub Total</td>
+              <td style="text-align: center; width: 5%; border-bottom: 1px solid #ddd;">:</td>
+              <td style="text-align: right; border-bottom: 1px solid #ddd;">₹ {{sub_total}}</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; border-bottom: 1px solid #ddd;">GST Tax Amount</td>
+              <td style="text-align: center; border-bottom: 1px solid #ddd;">:</td>
+              <td style="text-align: right; border-bottom: 1px solid #ddd;">₹ {{gst_tax_amount}}</td>
+            </tr>
+            <tr style="font-size: 12px; font-weight: bold;">
+              <td>Bill Amount</td>
+              <td style="text-align: center;">:</td>
+              <td style="text-align: right;">₹ {{bill_amount}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <!-- TERMS & SIGNATURE BLOCK -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+      <tr>
+        <!-- Terms and Conditions -->
+        <td style="width: 60%; border: 1px solid #000; vertical-align: top; padding: 8px;">
+          <div style="font-weight: bold; text-decoration: underline; margin-bottom: 6px; font-size: 11px;">Terms & Conditions</div>
+          <div style="font-size: 10px; line-height: 1.4; min-height: 70px;">
+            1. Delivery Term: {{delivery_term}} {{delivery_term_remark}}<br>
+            2. Payment Term: {{payment_term}} {{payment_term_remark}}<br>
+          </div>
+          <div style="margin-top: 15px; font-weight: bold;">
+            Prepared By : <span style="font-weight: normal;">{{prepared_by}}</span>
+          </div>
+        </td>
+        <!-- Signatory Box -->
+        <td style="width: 40%; border: 1px solid #000; vertical-align: top; padding: 8px; text-align: center;">
+          <div style="font-weight: bold; margin-bottom: 50px;">For {{entityName}}</div>
+          <div style="font-weight: bold; border-top: 1px solid #000; padding-top: 6px;">
+            Authorised Signatory
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- COMPUTER GENERATED FOOTNOTE -->
+    <div style="text-align: center; font-size: 9px; font-weight: bold; margin-top: 10px;">
+      This is a computer generated Order Signature not required.
+    </div>
+  </body>
+</html>

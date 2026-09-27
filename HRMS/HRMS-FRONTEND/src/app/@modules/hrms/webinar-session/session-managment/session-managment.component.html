@@ -1,0 +1,63 @@
+<div class="sessions-container">
+
+  <div class="sessions-header">
+    <h2>Scheduled Sessions</h2>
+
+    <!-- Create button -->
+    <app-button btnClass="fillBlue" (click)="goToCreateSession()" text="Create Session"></app-button>
+
+    <!-- Search Box -->
+    <div class="session-actions">
+      <div class="filter-sec">
+        <div class="search-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <input matInput placeholder="Search by Title" [(ngModel)]="searchText" (input)="onSearch()" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="session-list">
+    <!-- Loop over filteredSessions (not sessions) -->
+    <div class="session-card" *ngFor="let session of filteredSessions">
+      <!-- Thumbnail -->
+         
+
+      <!-- Details -->
+      <div class="session-details">
+        <div>
+    <h3>
+          {{ session.session_title }}
+        <span class="status-badge"
+      [ngClass]="{'past-badge': isPastSession(session.date), 'scheduled-badge': !isPastSession(session.date)}">
+  {{ isPastSession(session.date) ? 'Past' : 'Scheduled' }}
+</span>
+        </h3>
+
+        <p class="session-meta">
+          <span>📅 {{ session.date | date:'mediumDate' }}</span> |
+          <span>⏰  {{ session.start_time }} - {{ session.end_time }}</span> |
+          <span>💻 {{ session.platform }}</span>
+        </p>
+        </div>
+    
+
+        <div class="session-actions-btns">
+          <app-button btnClass="fillBlue" text="View Details" (click)="viewSession(session)"></app-button>
+          <app-button btnClass="borderBlue" text="Edit Details" (click)="editSession(session)"></app-button>
+        </div>
+
+        <!-- Duration -->
+        <!-- <span class="duration">
+          {{ getDuration(session.start_time, session.end_time) }}
+        </span> -->
+      </div>
+    </div>
+
+    <!-- No results found -->
+    <div *ngIf="filteredSessions.length === 0 && !loading" class="no-results">
+      No sessions found
+    </div>
+  </div>
+</div>

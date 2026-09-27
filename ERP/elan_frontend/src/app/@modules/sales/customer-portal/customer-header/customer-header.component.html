@@ -1,0 +1,75 @@
+<header class="topbar">
+    <div class="topbar-brand">
+        <img src="../../../assets/company-logo.png" alt="company-logo"/>
+    </div>
+
+    <div class="portal-title">
+        <mat-icon>person</mat-icon>
+        <span>Customer Portal</span>
+    </div>
+
+    <nav class="topbar-right">
+
+        <a *ngIf="hideMenu"
+        mat-button
+        (click)="navigateTo('/customer-portal')"
+        [class.active-link]="isActive('/customer-portal')"
+        >
+        <mat-icon>space_dashboard</mat-icon>
+        <span class="txt-decoration">Dashboard</span>
+        </a>
+
+        <a *ngIf="hideMenu"
+        mat-button
+        (click)="navigateTo('/customer-sb-list')"
+        [class.active-link]="isActive('/customer-sb-list')"
+        >
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="txt-decoration">Sales Booking List</span>
+        </a>
+
+        <a *ngIf="hideMenu"
+        mat-button
+        (click)="navigateTo('/customer-so-list')"
+        [class.active-link]="isActive('/customer-so-list')"
+        >
+        <mat-icon>receipt_long</mat-icon>
+        <span class="txt-decoration">Sales Order List</span>
+        </a>
+
+        <a *ngIf="hideMenu"
+        mat-button
+        (click)="navigateTo('/customer-accounts')"
+        [class.active-link]="isActive('/customer-accounts')"
+        >
+        <mat-icon>account_balance_wallet</mat-icon>
+        <span class="txt-decoration">Accounts</span>
+        </a>
+
+        <span class="divider"></span>
+
+        <div class="vendor-type">{{details?.customer_category_name}}</div>
+
+        <div class="user-info">
+        <mat-icon class="txt-decoration">account_circle</mat-icon>
+        <span class="txt-decoration">
+            {{details?.company_name}} - {{details?.customer_code}}
+        </span>
+
+        <mat-icon *ngIf="hideMenu"
+            class="logout-icon"
+            title="Logout"
+            (click)="logout('logout')">
+            logout
+        </mat-icon>
+
+        <mat-icon *ngIf="!hideMenu"
+            class="logout-icon"
+            title="Login"
+            (click)="logout('login')">
+            login
+        </mat-icon>
+        </div>
+
+    </nav>
+</header>

@@ -1,0 +1,110 @@
+<div class="btnview">
+  <!-- @if(params?.showtestIcon){
+<span class="icon-group">
+  <span class="icon-item">
+    <i class="fa fa-user"></i> 10
+  </span>
+  <span class="icon-item">
+    <i class="fa fa-eye"></i> 25
+  </span>
+  <span class="icon-item">
+    
+  </span>
+</span>
+  } -->
+  @if(params?.tasktaker){
+  <button (click)="onTaskTaker()" mat-icon-button [matTooltip]="'Test Candidate Info'"
+    matTooltipPosition="below" class="rowBtn tasktakerButton">
+    @if(params?.data?.assignUserCount){
+    <span>{{params?.data?.assignUserCount}}</span>
+    }
+    <i class="fa fa-user"></i>
+  </button>
+  }
+  @if(params?.shareLink){
+  <button (click)="params.data?.hasSection && onShareLink()" mat-icon-button [matTooltip]="'Share test link'"
+    matTooltipPosition="below" [class]="params.data?.hasSection ? 'rowBtn shareLinkButton':'rowBtn shareLinkButton disable'"><i class="fa fa-link"></i></button>
+  }
+  @if(params?.viewshow && !params.data.checkstatus){
+  <button (click)="onView()" class="rowBtn viewButton" mat-icon-button [matTooltip]="'View'"
+    matTooltipPosition="below" ><mat-icon>remove_red_eye</mat-icon></button>
+  }
+  @if(params?.editshow){
+  <button (click)="onEdit()" class="rowBtn editButton" mat-icon-button [matTooltip]="'Edit'"
+    matTooltipPosition="below"><mat-icon>edit</mat-icon></button>
+  }
+  @if(params?.deleteshow){
+  <button (click)="onDelete()" class="rowBtn deleteButton" mat-icon-button [matTooltip]="'Delete'"
+    matTooltipPosition="below"><mat-icon>delete</mat-icon></button>
+  }
+
+  @if(params?.activeStatusBtn){
+  <span (click)="onUpdateStatus()" [class]="params.value ? 'activebtn':'inActivebtn'">{{params.value ?
+    'Active':'InActive'}}</span>
+  }
+
+  @if(params?.initiateshow){
+  <button (click)="onInitiate()" class="rowBtn initiateButton" mat-icon-button [matTooltip]="params?.tooltip"
+    matTooltipPosition="below">
+    <mat-icon>play_circle</mat-icon>
+  </button>
+  }
+  @if(params?.showCountButton){
+  <span (click)="onClickCount()">{{params.value}}</span>
+  }
+  @if(params?.copy){
+    <button class="rowBtn editButton" (click)="onCopy()" mat-icon-button [matTooltip]="'Clone'"
+    matTooltipPosition="below"><mat-icon>content_copy</mat-icon></button>
+    
+  }
+
+  <!-- @if(params?.startCourseShow){
+   <button (click)="onStart()" class="rowBtn startButton" matTooltip="Start Course"><mat-icon>play_circle</mat-icon></button>
+  } -->
+  <!-- @if(params?.resumeCourseShow){
+    <button (click)="onResume()" class="rowBtn resumeButton" matTooltip="Resume Course"><mat-icon>replay</mat-icon></button>
+  } -->
+  <!-- 
+  @if(params?.pauseCourseShow){
+  <button (click)="onPause()" class="rowBtn pauseButton" matTooltip="Pause Course">
+    <mat-icon>pause</mat-icon>
+  </button>
+  } -->
+
+  <!-- Start button (shown if notstarted OR paused) -->
+  <!-- <button *ngIf="params.data.checkstatus && params.data.course_status =='paused' || params.data.checkstatus && params.data.course_status =='notstarted' "
+        (click)="onStart()"
+        class="rowBtn startButton"
+        matTooltip="Start Course">
+  <mat-icon>play_circle</mat-icon>
+</button> -->
+
+  <!-- Pause button (only when inprogress) -->
+  <!-- <button *ngIf="params.data.checkstatus && params.data.course_status =='inprogress'"
+        (click)="onPause()"
+        class="rowBtn pauseButton"
+        matTooltip="Pause Course">
+  <mat-icon>pause</mat-icon>
+</button> -->
+
+
+<!-- Go to Course button -->
+<button class="apple-glass-btn"
+ *ngIf="params.data.checkstatus"
+        mat-button
+        (click)="goTolearningPath(params.data.learningPathId)">
+  Go to Course
+</button>
+
+<button class="apple-glass-btn" *ngIf="params.data.assign_course"
+        mat-button
+        (click)="goToCourse(params.data.contentLibraryId?.id)">
+  Go to Course
+</button>
+
+<button class="apple-glass-btn" *ngIf="params.data.community_name"
+        mat-button
+        (click)="goToCommunity(params.data.id, params.data.course_id)">
+  Go to Community
+</button>
+</div>

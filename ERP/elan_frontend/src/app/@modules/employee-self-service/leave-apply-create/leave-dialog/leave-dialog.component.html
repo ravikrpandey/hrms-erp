@@ -1,0 +1,37 @@
+<h3 class="popHead">Employee Record</h3>
+<mat-dialog-content class="mat-typography">
+        <div class="emp_key">
+
+            <p>Leave Name:</p>
+            <p>Total Days:</p>
+            <p>Leave Date:</p>
+            <p>Leave Status:</p>  
+            <p>Applier Name:</p>  
+            <p>User Name:</p>
+            <p>Status</p>
+        </div>
+        <div class="emp_value" *ngFor="let data of singleEmpData">
+            
+            <p>{{data.leave_type}}</p>
+            <p>{{data.remaning_leave}}</p>
+            
+            <p>{{data.fromDate | date: 'dd-MM-yyyy'}}</p>
+            <P>{{data.status}}</P>
+            <p>{{data?.registered_user?.first_name ? data?.registered_user?.first_name : "-"}}</p>
+            <p>{{data?.registered_user?.first_name ? data?.registered_user?.first_name : "-"}}</p>
+            <mat-form-field appearance="outline">
+                <mat-select (selectionChange)="getStatus($event)"> 
+                  <mat-option   value="APPROVE" >APPROVED</mat-option>
+                  <mat-option  value="REJECT" >Reject</mat-option>    
+              </mat-select>
+              </mat-form-field>
+        </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub">
+    <button (click)="statusGet()">
+        Submit
+      </button>
+    <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>
+

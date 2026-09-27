@@ -1,0 +1,176 @@
+<div class="col-lg-3 personal-right">
+    <div class="photo-card">
+        <div class="photo-preview">
+            <img *ngIf="photoPreview; else noPhoto" [src]="photoPreview">
+            <ng-template #noPhoto>
+                <div class="no-photo-placeholder">
+                    <i class="fa-solid fa-user-large"></i>
+                    <span>No Photo</span>
+                </div>
+            </ng-template>
+        </div>
+
+        <div class="photo-actions">
+            <button type="button" class="btn-photo secondary" (click)="openPhotoModal()">
+                <i class="fa-solid fa-camera"></i> Mark Attendance
+            </button>
+        </div>
+
+        <div *ngIf="photoPreview" class="photo-retake">
+            <button type="button" class="btn-photo-clear" (click)="clearPhoto()">
+                <i class="fa-solid fa-trash-can"></i> Remove Photo
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="photo-modal-backdrop" *ngIf="showPhotoModal" (click)="closePhotoModal()">
+    <div class="photo-modal-box" (click)="$event.stopPropagation()">
+
+        <div class="modal-header-ui">
+            <div class="modal-title-ui">
+                <i class="fa-solid fa-fingerprint"></i> Biometric Face Verification
+            </div>
+            <div class="modal-header-badges" style="display: flex; gap: 8px; align-items: center;">
+                <span class="badge-mode" [style.background]="isInMode ? '#dcfce7' : '#ffedd5'" [style.color]="isInMode ? '#15803d' : '#c2410c'" style="padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 12px;">
+                    {{ isInMode ? 'PUNCH IN' : 'PUNCH OUT' }}
+                </span>
+                <span class="badge-gps" [style.color]="gpsAcquired ? '#16a34a' : '#ea580c'" style="font-size: 12px; font-weight: 500;">
+                    <i class="fa-solid fa-location-dot"></i> {{ gpsStatus }}
+                </span>
+                <button class="modal-close-btn" type="button" (click)="closePhotoModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Webcam Screen -->
+        <div class="modal-body-ui" *ngIf="!capturedImageUrl && !showListing">
+            <p class="modal-subtitle">Look directly into the camera and position your face in the oval</p>
+            <div class="webcam-container">
+                <video id="employeeWebcam" autoplay playsinline class="webcam-video"></video>
+                <canvas id="employeeCanvas" style="display: none;"></canvas>
+                <div class="webcam-overlay-ring"></div>
+                <div class="webcam-hint">
+                    <i class="fa-regular fa-face-smile"></i> Keep face centered &amp; steady
+                </div>
+            </div>
+            <div class="webcam-action-bar">
+                <button class="btn-modal-secondary" type="button" (click)="closePhotoModal()">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+                <button class="btn-capture" type="button" (click)="captureFromWebcam()" [disabled]="!webcamActive || isLoading">
+                    <i class="fa-solid fa-camera"></i> Capture &amp; Verify
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading & Results Screen -->
+        <div class="modal-body-ui" *ngIf="capturedImageUrl || isLoading || searchCompleted">
+            <p class="modal-subtitle" *ngIf="!showListing && isLoading">Verifying your identity &amp; branch location...</p>
+            <p class="modal-subtitle" *ngIf="showListing && matchedEmployees.length > 0">
+                <i class="fa-solid fa-user-check"></i> Employee Attendance Verified
+            </p>
+            
+            <!-- Loading State -->
+            <div *ngIf="isLoading" class="loading-container">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Verifying face and location geofence...</span>
+            </div>
+            
+            <!-- Success/Error Message -->
+            <div *ngIf="!isLoading && searchCompleted && photoModalError" 
+                 [class]="photoModalError.includes('✅') ? 'success-message-ui' : 'error-message-ui'">
+                <i *ngIf="photoModalError.includes('✅')" class="fa-solid fa-check-circle"></i>
+                <i *ngIf="photoModalError.includes('❌')" class="fa-solid fa-triangle-exclamation"></i>
+                {{ photoModalError }}
+            </div>
+
+            <!-- ============ EMPLOYEE LISTING ============ -->
+            <div *ngIf="!isLoading && showListing && matchedEmployees.length > 0" class="employee-listing-container">
+                <!-- Summary Cards -->
+                <div *ngIf="attendanceSummary" class="summary-cards">
+                    <div class="summary-card marked">
+                        <span class="summary-label">Status</span>
+                        <span class="summary-value">✅ Marked</span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">Mode</span>
+                        <span class="summary-value">{{ isInMode ? 'IN' : 'OUT' }}</span>
+                    </div>
+                </div>
+
+                <!-- Date Info -->
+                <div *ngIf="dateInfo" class="date-info">
+                    <i class="fa-regular fa-calendar"></i>
+                    {{ dateInfo.date }} | 
+                    <span class="odd-date">
+                        {{ dateInfo.type }} - {{ dateInfo.entry_type }}
+                    </span>
+                </div>
+
+                <!-- Employee Cards List -->
+                <div class="employee-list">
+                    <div *ngFor="let employee of matchedEmployees" 
+                         class="employee-card" 
+                         [class.selected]="selectedEmployee?.id === employee.id"
+                         (click)="selectEmployee(employee)">
+                        
+                        <div class="employee-card-avatar">
+                            <i class="fa-solid fa-user-check" style="font-size: 24px; color: #16a34a;"></i>
+                        </div>
+                        
+                        <div class="employee-card-info">
+                            <div class="employee-card-name">{{ employee.name }}</div>
+                            <div class="employee-card-code">
+                                <i class="fa-regular fa-id-card"></i> {{ employee.code }}
+                            </div>
+                            <div class="employee-card-designation" *ngIf="employee.designation">
+                                <i class="fa-regular fa-briefcase"></i> {{ employee.designation }}
+                            </div>
+                        </div>
+                        
+                        <div class="employee-card-status">
+                            <span class="status-badge status-marked">
+                                <i class="fa-solid fa-check-circle"></i> Verified
+                            </span>
+                            <span class="entry-type-badge" 
+                                  [class.in]="employee.entry_type === 'IN'" 
+                                  [class.out]="employee.entry_type === 'OUT'">
+                                {{ employee.entry_type }}
+                            </span>
+                        </div>
+                        
+                        <div class="employee-card-time" *ngIf="employee.attendance_time">
+                            <i class="fa-regular fa-clock"></i> {{ employee.attendance_time }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="webcam-action-bar" *ngIf="!isLoading && !showListing">
+                <button class="btn-modal-secondary" type="button" (click)="resetPhotoSelection()" [disabled]="isLoading">
+                    <i class="fa-solid fa-rotate-left"></i> Retake
+                </button>
+                <button class="btn-mark-attendance" type="button" (click)="closePhotoModal()" [disabled]="isLoading">
+                    <i class="fa-solid fa-xmark"></i> Close
+                </button>
+            </div>
+
+            <!-- Close button when listing shown -->
+            <div class="webcam-action-bar" *ngIf="!isLoading && showListing && matchedEmployees.length > 0">
+                <button class="btn-mark-attendance" type="button" (click)="closePhotoModal()">
+                    <i class="fa-solid fa-check"></i> Done
+                </button>
+            </div>
+        </div>
+
+        <!-- Error Message When not capturing -->
+        <div *ngIf="photoModalError && !capturedImageUrl && !isLoading && !showListing" class="error-message-ui">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ photoModalError }}
+        </div>
+
+    </div>
+</div>

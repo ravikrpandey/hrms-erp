@@ -1,0 +1,79 @@
+<body>
+    <!-- <mat-dialog-content class="mat-typography"> -->
+    <div class="certificate" #dashboard id="dashboard">
+        <div class="header">
+            <div *ngIf="this.data.result==100">
+                <img  src="assets/tcer.png" alt="Header Image">
+
+            </div>
+            <div  *ngIf="this.data.current_attempt_count==this.data.Max_attempt_count">
+            <img src="assets/attendance.png" alt="Header Image">
+                
+            </div>
+
+        </div>
+        <div class="content">
+            <div class="name">DQS Academy</div>
+            <div class="course">hereby certifies that</div>
+            <div class="name">Mr.{{loginUserName}} </div>
+            <div class="course">{{certifies}}</div>
+            <div class="name">{{data.course_name}}</div>
+            <!-- <div class="course">hereby certifies that</div> -->
+            <div class="course-topics">
+                <p>course</p>
+                <ul>
+                    <li *ngFor="let d of data.new_contents">
+                        {{d.content_name}}
+                    </li>
+            
+                </ul>
+            </div>
+            <br>
+            <table>
+                <tr>
+                    <td class="right">Course Date: </td>
+                    <td class="left">{{data.start_date}} – {{data.end_date}}</td>
+                </tr>
+                <tr>
+                    <td class="right">Certificate Registration No.</td>
+                    <td class="left">KSC: Q0-0000/00</td>
+                </tr>
+                <tr>
+                    <td class="right">Issued in.</td>
+                    <td class="left">Bangalore, Karnataka, India. </td>
+                </tr>
+                <tr>
+                    <td class="right">Issued by.</td>
+                    <td class="left">Deutsch Quality Systems (India) Private Limited</td>
+                </tr>
+                <br><br>
+                <div>
+                    <img class="a4-sign" src="assets/sign.png" alt="Header Image">
+
+                </div>
+                <div class="course">Dr. Murugan Kandasamy</div>
+                <div class="course">Managing Director & CEO, DQS India.</div>
+
+                <br><br><br>
+                <h6 style="color: gray;">
+                    Ground Floor, South Wing, Vaishnavi Tech Park, Survey.No.16/1 and 17/2, Bellandur Gate, Sarjapur
+                    Main Road www.dqsglobal.com
+                    Sarjapur Main Road, Ambalipura, Bengaluru – 560 102
+                </h6>
+            </table>
+            <!-- <div class="course-dates">
+                    <p>Course Date: 00-00-0000 – 00-00-0000 (00 hours)</p>
+                </div>
+                <div class="registration">
+                    <p>Certificate Registration No. KSC: Q0-0000/00</p>
+                    <p>Issued in Bangalore, Karnataka, India.</p>
+                    <p>Issued by Deutsch Quality Systems (India) Private Limited</p>
+                </div> -->
+        </div>
+    </div>
+    <!-- </mat-dialog-content> -->
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="pdfGenerate()">Print</button>
+    </mat-dialog-actions>
+</body>

@@ -1,0 +1,476 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+            Goods Inventory<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Add New Inventory</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="" [formGroup]="createGoodsInventory">
+                <div class="heading_neo">
+                    <h3>Basic Details</h3>
+                </div>                
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Po Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Po Number</mat-label>
+                                    <input matInput type="text" formControlName="po_number" (keypress)="IsAlphaNumeric($event)"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>PO Date</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>PO Date</mat-label>
+                                    <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="po_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp4></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Grn Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Grn Number</mat-label>
+                                    <input matInput type="text" formControlName="grn_number" readonly/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['grn_number'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Batch Number is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Vendor Name</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Vendor Name</mat-label>
+                                    <mat-select formControlName="po_supplier_vendor_name">
+                                        <mat-option *ngFor="let data of VendorData" [value]="data.id">
+                                          {{ data?.vendor_name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['po_supplier_vendor_name'].hasError(
+                        'required'
+                      )
+                    ">
+                                vendor is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Invoice Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Invoice Number</mat-label>
+                                    <input matInput type="text" formControlName="invoice_number" (keypress)="IsAlphaNumeric($event)" onkeyup="this.value = this.value.toUpperCase()" readonly/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['invoice_number'].hasError(
+                        'required'
+                      )
+                    ">
+                                    Invoice Number Number is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Invoice Date</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Invoice Date</mat-label>
+                                    <input matInput [matDatepicker]="dp1" (click)="dp1.open()" formControlName="invoice_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp1></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['invoice_date'].hasError('required')
+                    ">
+                                        Invoice Date is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>PO Type</mat-label>
+                                <mat-form-field appearance="outline" >
+                                    <mat-label>PO Type</mat-label>
+                                    <mat-select
+                                        formControlName="po_type">
+                                        <mat-option value="Capex">Capex</mat-option>
+                                        <mat-option value="Opex">Opex</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                                createGoodsInventory.controls['po_type'].hasError(
+                                  'required'
+                                )
+                              ">
+                                      Required Filed
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Store</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Store</mat-label>
+                                    <mat-select formControlName="store_id">
+                                        <mat-option *ngFor="let store of storeList" [value]="store.id">
+                                          {{ store?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['store_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                Store is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Usage</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Usage</mat-label>
+                                    <mat-select formControlName="uses_id">
+                                        <mat-option *ngFor="let usage of getAllUses" [value]="usage.id">
+                                          {{ usage?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['uses_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Usage is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <mat-label>Upload Documents</mat-label>
+                            <input class="form-control" type="file" multiple title="Choose File" #fileInput (change)="onChange($event)" formControlName="uploadedFile" />
+                            <mat-error *ngIf="createGoodsInventory.controls['uploadedFile'].hasError('required') && (createGoodsInventory.controls['uploadedFile'].dirty || createGoodsInventory.controls['uploadedFile'].touched)">
+                            File is required
+                            </mat-error>
+                            <mat-error *ngIf="createGoodsInventory.controls['uploadedFile'].hasError('acceptTypes')">
+                            Only Image files are allowed
+                            </mat-error>
+                        </div>
+                    </div>
+                    <!-- add row design -->
+                    <div class="item-table mt-3">
+                      <button
+                        (click)="openNav()"
+                        type="button"
+                        class="add-item-button">Add Item </button>
+                      <div class="table-responsive">
+                        <table class="table half-width-column">
+                          <thead>
+                            <tr>
+                              <th>Category</th>
+                              <th>Item Name</th>
+                              <th>Item Code</th>
+                              <th>Quantity</th>
+                              <th>Invoice Quantity</th>
+                              <th>Price</th>
+                              <th>Discount</th>
+                              <th>Total Discount</th>
+                              <th>Amount</th>
+                              <th>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody formArrayName="item_details">
+                            <tr
+                              *ngFor="let item of item_details.controls; let i = index"
+                              [formGroupName]="i"
+                            >
+                            <td>
+                              <mat-form-field appearance="outline" class="selectOnly">
+                                <mat-label>Category</mat-label>
+                                <mat-select formControlName="asset_id" >
+                                    <mat-option *ngFor="let cat of categoryList" [value]="cat.id">
+                                      {{ cat?.asset_category_name }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                            </td>
+                              <td>
+                                <mat-form-field appearance="outline" class="selectOnly">
+                                  <mat-select
+                                    formControlName="item_id"
+                                  >
+                                    <mat-option
+                                      *ngFor="let item of backupitemList"
+                                      [value]="item?.id"
+                                    >
+                                      {{ item?.item_name }}
+                                    </mat-option>
+                                  </mat-select>
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input readonly matInput formControlName="item_code" />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    matInput
+                                    formControlName="quantity"
+                                    type="number"
+                                    readonly
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    matInput
+                                    formControlName="invoice_quantity"
+                                    type="number"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    matInput
+                                    formControlName="price"
+                                    readonly
+                                    type="number"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    matInput
+                                    formControlName="discount"
+                                    readonly
+                                    type="number"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    readonly
+                                    matInput
+                                    formControlName="total_discount"
+                                    type="number"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-form-field appearance="outline">
+                                  <input
+                                    matInput
+                                    readonly
+                                    formControlName="amount"
+                                    type="number"
+                                  />
+                                </mat-form-field>
+                              </td>
+                              <td>
+                                <mat-icon (click)="removeItem(i)">delete</mat-icon>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                </div>
+                <div class="heading_neo">
+                    <h3>Remarks</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Remarks</mat-label>
+                                    <input matInput type="text" formControlName="remarks" maxlength="150"/>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['remarks'].hasError(
+                        'required'
+                      )
+                    ">
+                                        remarks is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createGoodsInventory.controls['remarks'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="common_button_sub mt-4" align="end">
+                    <button (click)="onSubmitForm()">Add New Stock</button>
+                    <button class="cancel_button_y" (click)="goBack()">Discard</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>
+<!-- //////////////////////Item Description Starts Here -->
+<div id="mySidenav" class="sidenav" [style.width.px]="navWidth">
+    <div align="end">
+      <a href="javascript:void(0)" class="closebtn" (click)="closeNav()"
+        >&times;</a
+      >
+    </div>
+    <div class="container mt-0">
+      <div class="page-title">
+        <h1>Add Item</h1>
+        <p>
+          <span>Select category and set the pricing details</span>
+        </p>
+      </div>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-7 border-end pe-4">
+                <div class="employ_sube py-2">
+                    <div class="example-header">
+                        <select id="page-size" (change)="onPageSizeChanged()">
+                            <option value="10" selected="">10</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                        </select>
+                    </div>
+                
+                    <div class="employee_2">
+                        <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                            placeholder="Search" />
+                            <div class="form-group mt-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Category</mat-label>
+                                    <mat-select formControlName="asset_id" (selectionChange)="getItemsListCatWise($event)">
+                                        <mat-option *ngFor="let cat of categoryList" [value]="cat.id">
+                                          {{ cat?.asset_category_name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                    </div>
+                </div>
+                <div class="ag_grid">
+                    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+                        [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="8" [rowData]="itemsList"
+                        (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+                    </ag-grid-angular>
+                </div>
+              </div>
+              <div class="col-md-5 ps-4">
+                <div class="pricing-details-bar">
+                  <h2>Item Details</h2>
+                </div>
+                <div *ngIf="!selectedItem">
+                  <div colspan="3" style="text-align: center; padding: 16px">
+                    <span style="font-size: 24px">❌ </span>
+                    <strong>No Item Selected</strong>
+                    <div colspan="3" style="text-align: center; padding: 16px">
+                      Please select an item from the table beside to fill in the
+                      pricing details.
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="selectedItem">
+                  <p><strong>Item Name:</strong> {{ selectedItem.item_name }}</p>
+                  <p><strong>Item Code:</strong> {{ selectedItem.item_code }}</p>
+                  <p><strong>MVP:</strong> {{ selectedItem.MVP }}</p>
+                  <!-- <p><strong>VAT:</strong> {{ selectedItem.vat }}</p> -->
+                  <p><strong>UOM:</strong> {{ selectedItem.MASTER_UOM.uom_name }}</p>
+                  <p>
+                    <strong>Item Category:</strong>
+                    {{ selectedItem.MASTER_ASSET.asset_category_name }}
+                  </p>
+                  <!-- <p><strong>Manufacturer:</strong> {{ selectedItem.name }}</p>
+                  <p><strong>Quantity in stock:</strong></p> -->
+                  <div class="pricing-details-bar">
+                    <h2>Pricing Details</h2>
+                  </div>
+                  <div class="mb-3">
+                    <label for="unitPrice" class="form-label"
+                      >Unit Price <span class="alertspan">*</span></label
+                    >
+                    <input
+                      type="number"
+                      id="unitPrice"
+                      class="form-control"
+                      [(ngModel)]="selectedItem.MVP"
+                      readonly
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="discount" class="form-label"
+                      >Discount <span class="alertspan">*</span></label
+                    >
+                    <input
+                      type="number"
+                      id="discount"
+                      [(ngModel)]="discount"
+                      class="form-control"
+                      value="0"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="quantity" class="form-label"
+                      >Quantity <span class="alertspan">*</span></label
+                    >
+                    <input
+                      type="number"
+                      id="quantity"
+                      [(ngModel)]="quantity"
+                      class="form-control"
+                      value="1"
+                    />
+                  </div>
+                  <button class="btn addToCart w-100" (click)="addToCart()">
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

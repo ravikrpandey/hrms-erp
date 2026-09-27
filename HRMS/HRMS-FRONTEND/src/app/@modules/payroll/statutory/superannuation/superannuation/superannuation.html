@@ -1,0 +1,138 @@
+<div class="container">
+    <!-- Page Heading -->
+    <h2 class="page-heading mt-3">Superannuation Scheme</h2>
+    <div class="underline"></div>
+
+    <!-- Form -->
+    <form class="row g-3" [formGroup]="superannuationForm" (ngSubmit)="onSubmitOrUpdate()">
+
+        <!-- Scheme Name -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Scheme Name</mat-label>
+                <input matInput formControlName="schemeName" required />
+            </mat-form-field>
+        </div>
+
+        <!-- Provider Dropdown -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Provider</mat-label>
+                <mat-select formControlName="provider" required>
+                    <mat-option *ngFor="let provider of providers" [value]="provider.id">
+                        {{ provider.provider_name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Account No. -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Account No.</mat-label>
+                <input matInput type="text" formControlName="accountNo" required />
+            </mat-form-field>
+        </div>
+
+        <!-- Employer Contribution -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employer Contribution</mat-label>
+                <input matInput type="number" formControlName="employerContribution" required />
+            </mat-form-field>
+        </div>
+
+        <!-- Employee Contribution -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employee Contribution</mat-label>
+                <input matInput type="number" formControlName="employeeContribution" required />
+            </mat-form-field>
+        </div>
+
+        <!-- Status -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status">
+                    <mat-option value="ACTIVE">ACTIVE</mat-option>
+                    <mat-option value="INACTIVE">INACTIVE</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <!-- Employer Share Vesting Period Dropdown -->
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <h3 class="field-heading">Employer Share Vesting Period</h3>
+            <div class="field-underline"></div>
+        </div>
+
+        <div class="vesting-row">
+            <!-- Vesting Period Dropdown -->
+            <div class="vesting-dropdown">
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Period</mat-label>
+                    <mat-select formControlName="vestingPeriod" [(value)]="selectedVesting" required>
+                        <mat-option value="Immediate vesting">Immediate vesting</mat-option>
+                        <mat-option value="Cliff vesting">Cliff vesting</mat-option>
+                        <mat-option value="Graded/linear vesting">Graded/linear vesting</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Cliff Vesting Input -->
+            <div *ngIf="selectedVesting === 'Cliff vesting'" class="vesting-input d-flex align-items-center ms-3">
+                <span>After</span>
+                <mat-form-field appearance="outline" class="year-field ms-2">
+                    <input matInput type="number" formControlName="cliffYears" />
+                    <mat-error *ngIf="superannuationForm.get('cliffYears')?.hasError('required')">
+                        Cliff Years is required
+                    </mat-error>
+                    <mat-error *ngIf="superannuationForm.get('cliffYears')?.hasError('min')">
+                        Must be at least 1 year
+                    </mat-error>
+                </mat-form-field>
+                <span class="ms-2">years</span>
+            </div>
+
+            <!-- Graded / Linear Vesting -->
+            <div *ngIf="selectedVesting === 'Graded/linear vesting'"
+                class="vesting-input d-flex align-items-center ms-3">
+                <mat-form-field appearance="outline" class="percent-field">
+                    <input matInput type="number" formControlName="gradedPercent" />
+                    <mat-error *ngIf="superannuationForm.get('gradedPercent')?.hasError('required')">
+                        Percentage is required
+                    </mat-error>
+                    <mat-error
+                        *ngIf="superannuationForm.get('gradedPercent')?.hasError('min') || superannuationForm.get('gradedPercent')?.hasError('max')">
+                        Must be between 1% and 100%
+                    </mat-error>
+                </mat-form-field>
+
+                <span class="ms-2">% each year over</span>
+
+                <mat-form-field appearance="outline" class="year-field ms-2">
+                    <input matInput type="number" formControlName="gradedYears" />
+                    <mat-error *ngIf="superannuationForm.get('gradedYears')?.hasError('required')">
+                        Years is required
+                    </mat-error>
+                    <mat-error *ngIf="superannuationForm.get('gradedYears')?.hasError('min')">
+                        Must be at least 1 year
+                    </mat-error>
+                </mat-form-field>
+
+                <span class="ms-2">years</span>
+            </div>
+        </div>
+
+
+
+
+        <!-- Buttons -->
+        <div class="col-12 text-end mt-3">
+            <button mat-raised-button color="primary" type="submit">
+                {{ superannuation?.length ? 'Update' : 'Submit' }}
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,123 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Recruitment</h1>
+    <p> BGV Company Remarks <i class="fa fa-angle-right" aria-hidden="true"
+        style="color:#063178">
+      </i><span>BGV Company Remarks </span></p>
+  </div>
+</div>
+
+<div class="right_data_all pt-4">
+  <div class="heading_neo">
+    <h3>Basic Details</h3>
+  </div>
+  <mat-card class="mb-4 p-2">
+    <div class="basic_details">
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h3>Candidate Name</h3>
+          <p>{{basicDetails?.first_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h3>Contact No</h3>
+          <p> <b
+              *ngIf="basicDetails?.country_code">+</b>{{basicDetails?.country_code}}
+            {{basicDetails?.contact_number}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h3>Email ID</h3>
+          <p>{{basicDetails?.candidate_email}}</p>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-accordion class="companyDetails">
+    <mat-expansion-panel *ngFor="let data of dataList; let i = index">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3>{{data?.company_name}}</h3>
+          <span class="ml100px"><h3>From Date - {{data?.start_date}}</h3></span>
+          <span class="ml100px"><h3>To Date - {{data?.end_date}}</h3></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="handleTwoTable">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Check List</th>
+              <th>Answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let subData of data?.quality_check_list">
+              <td>{{ subData?.quality_type_name }}</td>
+              <td>{{ subData?.rating_value }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><b>Remarks</b></p>
+        <p>{{data?.remarks}}</p>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <mat-accordion class="companyDetails">
+    <mat-expansion-panel >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3>Document Detail </h3>
+          <span class="ml100px"><h3></h3></span>
+          <span class="ml100px"><h3></h3></span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <div class="handleTwoTable">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Document Name</th>
+              <th>Document Number</th>
+              <th>Document View</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of docList; let i = index">
+              <td>{{ data?.document_name }}</td>
+              <td>{{ data?.document_number }}</td>
+              <td><mat-icon matTooltip="Documnet View"
+                (click)="viewImage(data.document_path)">visibility</mat-icon></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="row" *ngIf="actionType !='view'">
+    <div class="col-md-8">
+      <div class="form-group">
+        <label class="mt-3">Remark</label>
+        <textarea class="form-control" rows="2"
+          [(ngModel)]="formObj.bgv_remarks " name="remarks"></textarea>
+      </div>
+    </div>
+    <div class="col-md-4 mt-3">
+      <div class="form-group">
+        <mat-label>Status <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline">
+          <mat-select [(ngModel)]="formObj.bgv_status">
+            <mat-option *ngFor="let status of statusList"
+              [value]="status?.id">{{status?.value}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="submitBtn mt-2" *ngIf="actionType !='view'">
+    <button style="padding: 20px 30px;" mat-raised-button color="primary"
+      class="mx-3" (click)="handleSubmit()">
+      Save
+    </button>
+  </div>
+
+</div>

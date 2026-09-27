@@ -1,0 +1,42 @@
+<div class="question-form-container">
+  <form [formGroup]="questionForm" class="form_set" (ngSubmit)="onSubmit()">
+
+    <div class="row">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Question Text<span class="alertspan">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput formControlName="question_text" placeholder="Enter the question" rows="3" required />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Options<span class="alertspan">*</span></mat-label>
+          <div formArrayName="options" *ngFor="let option of options.controls; let i = index">
+            <div [formGroupName]="i" class="option-group">
+              <mat-form-field appearance="outline" class="option-field">
+                <input matInput formControlName="option_text" placeholder="Option {{ i + 1 }}" required />
+              </mat-form-field>
+              <mat-checkbox formControlName="isCorrect">Correct</mat-checkbox>
+              <!-- <button mat-icon-button type="button" color="warn" (click)="removeOption(i)">
+                <mat-icon>delete</mat-icon>
+              </button> -->
+            </div>
+          </div>
+          <!-- <div class="add-option-container">
+            <button mat-raised-button type="button" color="primary" (click)="addOption()">Add Option</button>
+          </div> -->
+                </div>
+      </div>
+    
+    </div>
+
+    <mat-dialog-actions >
+    <button mat-raised-button type="submit" color="primary" [disabled]="questionForm.invalid">
+      Submit
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">Close</button>
+    </mat-dialog-actions>
+  </form>
+</div>

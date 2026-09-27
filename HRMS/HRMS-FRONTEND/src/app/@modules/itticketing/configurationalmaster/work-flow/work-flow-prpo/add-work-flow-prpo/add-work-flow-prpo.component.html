@@ -1,0 +1,142 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            Work Flow
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"></i>
+                {{this.workflowId?'Update':'Add'}}  Work Flow</span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head">
+            <h3>Work Flow</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="form">
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Workflow for</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Item || Services || BOM || Item PO || Service PO</mat-label>
+                                <mat-select formControlName="workflowType" (selectionChange)="getWorkflowVal($event)">
+                                    <mat-option value="Item PR">Item PR</mat-option>
+                                    <mat-option value="Service PR">Service PR</mat-option>
+                                    <mat-option value="BOM PR">BOM PR</mat-option>
+                                    <mat-option value="Item PO">Item PO</mat-option>
+                                    <mat-option value="Service PO">Service PO</mat-option>
+
+                                </mat-select>
+                                <mat-error *ngIf="form.get('workflowType')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Asset Category || Service Category || BOM Category</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Asset Category || Service Category || BOM Category</mat-label>
+                                <mat-select formControlName="wokflowcategory">
+                                    <ng-container *ngIf="workflowTypeItem=='Service PR'">
+                                        <mat-option *ngFor="let data of getCat_data"
+                                            [value]="data.id">{{data.service_category_name}}</mat-option>
+                                    </ng-container>
+                                    <ng-container *ngIf="workflowTypeItem=='Item PR'">
+                                        <mat-option *ngFor="let data of getCat_data"
+                                            [value]=" data.id">{{data.asset_category_name}}</mat-option>
+                                    </ng-container>
+                                    <ng-container *ngIf="workflowTypeItem=='BOM PR'">
+                                        <mat-option *ngFor="let data of getAllBomData"
+                                            [value]=" data.id">{{data.bomCategory}}</mat-option>
+                                    </ng-container>
+                                    <ng-container *ngIf="workflowTypeItem=='Item PO'">
+                                        <mat-option *ngFor="let data of getCat_data"
+                                            [value]=" data.id">{{data.asset_category_name}}</mat-option>
+                                    </ng-container>
+                                    <ng-container *ngIf="workflowTypeItem=='Service PO'">
+                                        <mat-option *ngFor="let data of getCat_data"
+                                            [value]="data.id">{{data.service_category_name}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('wokflowcategory')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Department</mat-label>
+                            <mat-form-field *ngIf="this.workflowId" appearance="outline">
+                                <input matInput type="text" [value]="dept" readonly/>
+                            </mat-form-field>
+                            <mat-form-field *ngIf="!this.workflowId" appearance="outline" class="mt-1">
+                                <mat-label>Select department</mat-label>
+                                <mat-select formControlName="workflowdepartment">
+                                    <mat-option *ngFor="let data of department"
+                                        [value]="data.dept_id">{{data.department_name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('workflowdepartment')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div formArrayName="roleFiled">
+                    <div class="row mt-3" *ngFor="let roleFieled of itemsFormArray['controls']; let i = index"
+                        [formGroupName]="i">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select role</mat-label>
+                                    <mat-select formControlName="roleId" (selectionChange)="roleIdData($event,i)">
+                                        <mat-option *ngFor="let role of roleGet;"
+                                            [value]="role.role_master_id">{{role.role_master_name}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('roleId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Select EMP</mat-label>
+                                    <mat-select formControlName="employeeId" (selectionChange)="selectemp($event,i)">
+                                        <mat-option *ngFor="let data of roleGetByemployee[i]" [value]="data.employee_id"
+                                            (change)="selectemp(data.employee_id,i)">{{data.first_name}}</mat-option>
+
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('employeeId')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class=" col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <div class="add_delete">
+                                <div class="edd-del">
+                                    <mat-icon matTooltip="Add Item" (click)="addItem()">add_circle</mat-icon>
+                                </div>
+                                <div class="delete_del" *ngIf="i+1!==1">
+                                    <mat-icon matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button mat-raised-button color="primary" (click)="onSubmit(this.form.value)">
+                        {{this.workflowId?'Update':'Submit'}}
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

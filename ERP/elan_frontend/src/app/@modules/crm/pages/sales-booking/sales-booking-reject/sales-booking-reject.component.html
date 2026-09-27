@@ -1,0 +1,89 @@
+
+<div class="right_data_all">
+    <!-- FILTER HEADER -->
+  <div class="filter-header" (click)="toggleFilter()">
+    <mat-icon>{{ showFilter ? 'expand_less' : 'expand_more' }}</mat-icon>
+    <span>Advance Filter</span>
+  </div>
+  <div *ngIf="showFilter" class="filter-body" style="margin-bottom: 5px;">
+    <form [formGroup]="salesBookingForm">
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Quotation Number</mat-label>
+            <mat-select formControlName="orderNumber"  (selectionChange)="onSelectedOrderNo($event)">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let  orderNumber of rowData"
+                [value]="orderNumber.proposal_no">{{orderNumber.proposal_no}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Name</mat-label>
+            <mat-select formControlName="customer"  (selectionChange)="onSelectedOrderNo($event)">
+              <mat-option>None</mat-option>
+              <mat-option *ngFor="let customer of customerList"
+                [value]="customer.company_name">{{customer.company_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>From Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fDate" (dateChange)="onSelectedOrderNo($event)" readonly>
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="tDate" (dateChange)="onSelectedOrderNo($event)" readonly>
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+        <div class="col-md-3">
+          <div class="form-group custom-outline readonly-radio">
+            <label></label>
+            <mat-radio-group aria-label="Select an option" formControlName="in_status"
+            (change)="onSelectedOrderNo($event)">
+              <mat-radio-button value="firstIn">FIFO</mat-radio-button>
+              <mat-radio-button value="lastIn">LIFO</mat-radio-button>
+            </mat-radio-group>
+          </div>
+
+        </div>
+        <div class="col-md-2">
+          <button mat-raised-button class="btn-custome" type="button" (click)="clear()">All Clear</button>
+        </div>
+      </div>
+    </form>
+  </div>
+    <div class="employ_sube">
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+      <div class="employee_2" align="end">
+        <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+          (input)="onFilterTextBoxChanged()">
+      </div>
+    </div>
+    <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+        [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+        (gridReady)="onGridReady($event)">
+      </ag-grid-angular>
+    </div>
+  </div>

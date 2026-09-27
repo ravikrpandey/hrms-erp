@@ -1,0 +1,121 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Finance & Accounting</h1>
+        <p>
+           Reports
+        </p>
+    </div>
+    <!-- Display currency info -->
+    <div class="add_button" *ngIf="currencyCode">
+        <span style="font-size: 14px; color: #666; margin-right: 15px;">
+            Currency: {{ currencyCode }} {{ currencySymbol }} 
+            <span *ngIf="currencyRate && currencyRate !== 1">(Rate: 1 {{ currencyCode }} = {{ currencyRate }})</span>
+        </span>
+    </div>
+</div>
+
+<div class="right_data_all">
+    <div class="heading_neo mt-3">
+        <h3>TDS Register</h3>
+    </div>
+    <div class="form_basic mb-0">
+        <form class="form_set">
+            <div class="row">
+                <!-- Filter fields can be added here -->
+            </div>
+        </form>
+    </div>
+    
+    <div class="right_data_all">
+        <div class="employ_sube">
+            <div class="d-flex align-item-center justify-content-between" style="width: 92%;">
+                <div class="example-header">
+                    <select id="page-size">
+                        <option value="10" selected="">10</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                    </select>
+                </div>
+                <div class="employee_2" align="end">
+                    <input type="text" class="form-control" id="filter-text-box"
+                        placeholder="Search" />
+                </div>
+            </div>
+            <div class="download_file_icon">
+                <div class="icon_add" align="end">
+                    <span class="icon_img" style="margin-left: 8px; background-color: #00644d;">
+                        <mat-icon matTooltip="Download" class="print">download</mat-icon>
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="d-flex justify-content-end mt-1 mx-2">
+            <div>
+                <mat-checkbox class="example-margin">Get All TDS Register Data</mat-checkbox>
+            </div>
+        </div>
+        
+        <div class="d-flex mb-3">
+            <div class="div2">
+                <span class="pt-1">Deductee</span>
+            </div>
+            <div class="div3">
+                <span class="pt-1">TDS</span>
+            </div>
+        </div>
+
+        <div class="table-responsive custom-table" style="height: 400px; overflow: auto;">
+            <table class="table table-bordered">
+                <thead>
+    <tr>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1;">S.No.</th>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1; white-space: nowrap;">Posting Date</th>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1; white-space: nowrap;">Invoice Date</th>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1; white-space: nowrap;">Reference Document</th>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1; white-space: nowrap;">Reference Document Number</th>
+        <th style="position: sticky; top: 0; background-color: gray; z-index: 1;">Ledger</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: gray; z-index: 1;">PAN No</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: gray; z-index: 1;">Party</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">Section</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">Nature Of Transactions</th>
+        <th style="position: sticky; top: 0; background-color: #00644d; z-index: 1;">Rate</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">Net Taxable</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">SGST</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">CGST</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">IGST</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">GST Total</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">Gross Total</th>
+        <th style="position: sticky; top: 0; background-color: #00644d; z-index: 1;text-wrap: nowrap;">Calculated TDS Amount</th>
+        <th style="position: sticky; top: 0; text-wrap: nowrap; background-color: #00644d; z-index: 1;">Net Total</th>
+    </tr>
+</thead>
+<tbody>
+    <tr *ngFor="let data of rowData; let i = index">
+        <td class="grid-cell">{{i+1}}</td>
+        <td class="grid-cell">{{data.createdAt | date:'dd-MM-yyyy'}}</td>
+        <td class="grid-cell">{{data.updatedAt | date:'dd-MM-yyyy'}}</td>
+        <td class="grid-cell">{{data.reference_number}}</td>
+        <td class="grid-cell" style="text-align: left;">{{data.document_type}}</td>
+        <td class="grid-cell" style="text-align: left;">TDS Payables</td>
+        <td class="grid-cell">{{data.pan_number || '--'}}</td>
+        <td class="grid-cell" style="text-align: left;">{{data.vendor_name}}</td>
+        <td class="grid-cell">{{data.section}}</td>
+        <td class="grid-cell">{{data.nature_of_transaction}}</td>
+        <td class="grid-cell">{{data.rate}}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.net_taxable | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.sgst | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.cgst | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.igst | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.gstTotal | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.gross_total | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.tds_rate_amount | number:'1.2-2' }}</td>
+        <td class="grid-cell">{{ currencySymbol }} {{ data.net_total | number:'1.2-2' }}</td>
+        
+    </tr>
+</tbody>
+            </table>
+        </div>
+    </div>
+</div>

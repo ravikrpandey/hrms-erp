@@ -1,0 +1,188 @@
+<div class="form_basic1 main_form">
+
+  <div class="heading_neo">
+    <h3>Contract Details</h3>
+  </div>
+  <form class="" [formGroup]="contractForm">
+    <div class="form_sePo">
+      <div class="row">
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+          <div class="form-group">
+            <mat-label>Contract Type<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline" readonly>
+              <mat-select formControlName="contract_types_id">
+                <mat-option *ngFor="let item of contractList" [value]="item?.id">{{item.contract_type}}</mat-option>
+              </mat-select>
+              <!-- <mat-error *ngIf="
+                  contractForm.controls['contract_types_id'].hasError('required')
+                  ">
+                    This field is Required!
+                  </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+          <div class="form-group">
+            <mat-label>Start Contract Date<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline" readonly>
+
+              <input matInput [matDatepicker]="dp" (click)="dp.open()" (dateChange)="startDate($event)"
+                formControlName="start_working_date" readonly />
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp></mat-datepicker>
+              <!-- <mat-error *ngIf="
+                        contractForm.controls['start_working_date'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+          <div class="form-group">
+            <mat-label>End Contract Date</mat-label>
+            <mat-form-field appearance="outline" readonly>
+
+
+              <input matInput [matDatepicker]="dpEX" (click)="dpEX.open()" [min]="calculateMinToDate()"
+                formControlName="end_date_probation" readonly />
+              <mat-datepicker-toggle matSuffix [for]="dpEX"></mat-datepicker-toggle>
+              <mat-datepicker #dpEX></mat-datepicker>
+              <!-- <mat-error *ngIf="
+                        contractForm.controls['end_date_probation'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12"></div>
+        <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="action_type !='view'">
+          <div class="add_button" style="float: left; margin-top: 25px;">
+            <button type="button" (click)="addDocument()"
+              [disabled]="!contractForm.get('contract_types_id')?.value || isContractTypeAdded()">{{ docIndex !== null ?
+              'Update Contract' : 'Add Contract' }}</button>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- <div class="listHeading">
+            <h3>List</h3>
+          </div> -->
+      <div class="acor_data_y">
+        <div class="table_ip tableDesign table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th class="cen">S. No.</th>
+                <th class="cen">Contract Type</th>
+                <th class="cen">Start Contract Date</th>
+                <th class="cen">End Contract Date</th>
+                <th class="cen" *ngIf="action_type !='view'">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let contract of contract_detail ; let i = index">
+                <td>{{i+1}}</td>
+                <td>{{contract?.contract_types}}</td>
+                <td>{{contract?.start_working_date}}</td>
+                <td>{{contract?.end_date_probation}}</td>
+
+                <td class="common_button_sub" *ngIf="action_type !='view'">
+                  <button (click)="editRecord(i, contract)">Edit</button>
+                  <button class="cancel_button_y" (click)="deleteRecord(i)">Delete</button>
+                </td>
+              </tr>
+              <tr class="text-center">
+                <td colspan="5" *ngIf="!contract_detail?.length">No record found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Allowance Details -->
+
+      <!-- <mat-tab-group class="mt-4">
+        <mat-tab label="Promotion History">
+          <table class="table table-bordered tableHeadingg">
+            <thead>
+              <tr>
+                <th>From Position</th>
+                <th>To Position</th>
+                <th>Date</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Junior Developer</td>
+                <td>Sr. Develope</td>
+                <td>10/06/2024</td>
+                <td>Demo</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+        <mat-tab label="Demotion History">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>From Position</th>
+                <th>To Position</th>
+                <th>Date</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Junior Developer</td>
+                <td>Sr. Develope</td>
+                <td>10/06/2024</td>
+                <td>Demo</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+        <mat-tab label="Transfer History">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>From Position</th>
+                <th>To Position</th>
+                <th>Date</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Junior Developer</td>
+                <td>Sr. Develope</td>
+                <td>10/06/2024</td>
+                <td>Demo</td>
+              </tr>
+            </tbody>
+          </table>
+        </mat-tab>
+      </mat-tab-group> -->
+
+      <div class="row">
+
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="common_button_sub" *ngIf="!action_type">
+            <button (click)="onSubmitForm()">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

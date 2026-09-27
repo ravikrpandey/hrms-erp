@@ -1,0 +1,165 @@
+    <div class="heading_top">
+        <div class="page-title">
+        <h1>CRM</h1>
+         <p>Dashboard<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span> Dashboard </span></p>
+        </div>
+        <div class="add_button">
+            <!-- <button mat-icon-button (click)="clearCount()">
+              <mat-icon class="icon">notifications</mat-icon>
+              <span class="badge" *ngIf="badgeCount > 0">{{badgeCount}}</span>
+            </button> -->
+            <button mat-icon-button class="notification" (click)="openNav();">
+              <mat-icon class="icon text-primary">notifications</mat-icon>
+              <span class="badge">30</span>
+            </button>
+        </div>
+    </div>
+    <hr>
+    <div class="heading_top" style="display: flow;">
+        <div class="page-title">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Duration</mat-label>
+                <mat-select>
+                  <mat-option value="this-week">This Week</mat-option>
+                  <mat-option value="this-month">This Month</mat-option>
+                  <mat-option value="this-year">This Year</mat-option>
+                </mat-select>
+                 <!-- <mat-option *ngFor="let item of statndardData"
+                [value]="item.product_master_name">{{item.product_master_name}}</mat-option> -->
+            </mat-form-field>              
+        </div>
+        <div class="add_button">
+           <button routerLink="/master/crm/create-lead">Create lead</button>
+        </div>
+    </div>
+  
+    <div class="row px-3 py-3">
+      <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #80008036;" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/leader.png" style="height: 50px; width:50px;"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Lead: ({{cardData.leadsCount || 0}})</h3>
+              <!-- <h4>Rs: 200,00,00,00</h4> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #00800042;" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/dash-4.png" class="color-change"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Proposal: ({{cardData.proposalsCount || 0}})</h3>
+              <!-- <h4>Rs: 200,00,00,00</h4> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #c0c0134d;" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/acquisition.png" style="height: 50px; width:50px;"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Contract: ({{cardData.contractCount || 0}})</h3>
+              <!-- <h4>Rs: 200,00,00,00</h4> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #5848e642;" class="panal_text">
+            <div class="panal_icon">
+              <figure>
+                <img src="../../../assets/shopping.png" style="height: 50px; width:50px;">
+              </figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Sales Order: ({{cardData.contractCount || 0}})</h3>
+              <!-- <h4>Rs: 200,00,00,00</h4> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #ffa5004a" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/dash-3.png" style="height: 50px; width:50px;"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Sale: ({{cardData.salesCount || 0}})</h3>
+              <h4>Rs: 200,00,00,00</h4>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: rgb(243 8 138 / 21%);" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/package.png" style="height: 50px; width:50px;"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Order: ({{cardData.totalOrderCount || 0}})</h3>
+              <!-- <h4>Rs: 200,00,00,00</h4> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-4 mt-3">
+        <div class="container_panel">
+          <div style="background-color: #cd5c5c63" class="panal_text">
+            <div class="panal_icon">
+              <figure><img src="../../../assets/dash-3.png"></figure>
+            </div>
+            <div class="panal_data">
+              <h3>Total Sale: (36)</h3>
+              <h4>Rs: 200,00,00,00</h4>
+            </div>
+          </div>
+        </div>
+      </div> -->
+  </div>
+
+  <div id="mySidenav" class="sidenav" [style.width.px]="navWidth">
+    <div align="end">
+        <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+    </div>
+      <div class="right_data_all">
+          <div class="employ_sube py-2">
+            <div class="example-header">
+              <h1>Notification</h1>
+          </div>
+            <div class="employee_2" align="end">
+              <div class="check_blueTick mb-3">
+                  <mat-icon>check_circle</mat-icon>
+                   <!-- <mat-icon class="read-icon" aria-label="Read message">mail</mat-icon> -->
+                <span (click)="openDialog()">
+                 <a>Saling  first is grow up now!</a>
+                </span>
+              </div>
+              <div class="check_redTick mb-3">
+                  <mat-icon>check_circle</mat-icon>
+                  <!-- <mat-icon class="unread-icon" aria-label="Unread message">mail</mat-icon> -->
+                <span>Saling second is grow up now!</span>
+              </div>
+              <div class="check_redTick mb-3">
+                  <mat-icon>check_circle</mat-icon>
+                  <!-- <mat-icon class="unread-icon" aria-label="Unread message">mail</mat-icon> -->
+                <span>Saling thirld is grow up now!</span>
+              </div>
+          </div>
+        </div>
+      </div>
+</div>
+
+<!-- <button class="btn bt-primary" (click)="openDialog()">openDialog</button> -->

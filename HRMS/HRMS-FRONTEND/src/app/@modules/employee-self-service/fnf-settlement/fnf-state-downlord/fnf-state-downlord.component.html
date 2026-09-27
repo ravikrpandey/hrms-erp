@@ -1,0 +1,82 @@
+<div class="container mt-4">
+    <div class="dash">
+        <div>
+            <h1>Employee Transfer</h1>
+            <p> HRMS <i class="fa fa-angle-right" aria-hidden="true"></i> <span>Document Genarate</span></p>
+        </div>
+        <div>
+            <button class="btn btn-primary" routerLink="/master/ess/fnf-settlement" style="background-color: #00a2b2;">Back to list</button>
+        </div>
+    </div>
+</div>
+<div id="pdf-section" *ngIf="fnfData">
+
+    <div class="logo-container">
+    <img src="../../../../../assets/icons/loyz_login_logo.png" alt="Company Logo" class="company-logo" />
+  </div>
+
+  <h2 class="title">FULL AND FINAL (FnF) SETTLEMENT STATEMENT</h2>
+
+
+  <div class="section-title">Employee Details</div>
+  <table>
+    <tr><td>Employee Name</td><td>{{ fnfData.employee_details?.employee_name }}</td></tr>
+    <tr><td>Employee ID</td><td>{{ fnfData.employee_details?.employee_code }}</td></tr>
+    <tr><td>Department</td><td>{{ fnfData.employee_details?.department_name }}</td></tr>
+    <tr><td>Designation</td><td>{{ fnfData.employee_details?.designation_name }}</td></tr>
+    <tr><td>Date of Joining</td><td>{{ fnfData.employee_details?.date_of_joining }}</td></tr>
+    <tr><td>Last Working Day</td><td>{{ fnfData.employee_details?.last_working_day }}</td></tr>
+    <tr><td>Location</td><td>New Delhi</td></tr>
+    <tr><td>Company Name</td><td>Elite Mindz Pvt. Ltd.</td></tr>
+  </table>
+
+  <!-- Earnings -->
+  <div class="section-title">Earnings (Payables)</div>
+  <table>
+    <tr><th>S. No.</th><th>Description</th><th>Amount (NGN)</th></tr>
+    <tr><td>1</td><td>Final Salary</td><td>₹{{ fnfData.earning_details?.final_salary }}</td></tr>
+    <tr><td>2</td><td>Bonus / Incentives</td><td>₹{{ fnfData.earning_details?.bonus_amount }}</td></tr>
+    <tr><td>3</td><td>Gratuity</td><td>₹{{ fnfData.earning_details?.gratuity_amount }}</td></tr>
+    <tr><td>4</td><td>Leave Encashment ({{ fnfData.earning_details?.leave_encashment_days }} days)</td><td>₹{{ fnfData.earning_details?.leave_encashment_amount }}</td></tr>
+    <tr><th colspan="2">Total Earnings</th><th>₹{{ fnfData.summary_details?.total_earnings || 0 }}</th></tr>
+  </table>
+
+  <!-- Deductions -->
+  <div class="section-title">Deductions (Recoverables)</div>
+  <table>
+    <tr><th>S. No.</th><th>Description</th><th>Amount (NGN)</th></tr>
+    <tr><td>1</td><td>Loss of Pay ({{ fnfData.deduction_details?.lop_days }} days)</td><td>₹{{ fnfData.deduction_details?.lop_deduction_amount }}</td></tr>
+    <tr><td>2</td><td>Loan Recovery</td><td>₹{{ fnfData.deduction_details?.loan_recovery_amount }}</td></tr>
+    <tr><td>3</td><td>Assets Recovery</td><td>₹{{ fnfData.deduction_details?.assets_recovery_amount }}</td></tr>
+    <tr><td>4</td><td>Notice Pay Recovery</td><td>₹{{ fnfData.deduction_details?.notice_pay_recovery }}</td></tr>
+    <tr><th colspan="2">Total Deductions</th><th>₹{{ fnfData.summary_details?.total_deductions || 0 }}</th></tr>
+  </table>
+
+  <!-- Page Break Before Net Payable -->
+  <div class="page-break"></div>
+
+  <!-- Net Settlement + Declaration -->
+  <div class="section-keep">
+    <div class="section-title">Net Amount Payable to Employee</div>
+    <table>
+      <tr><td>Total Earnings</td><td class="right-align">₹{{ fnfData.summary_details?.total_earnings || 0 }}</td></tr>
+      <tr><td>Total Deductions</td><td class="right-align">₹{{ fnfData.summary_details?.total_deductions || 0 }}</td></tr>
+      <tr><th>Net Settlement</th><th class="right-align">₹{{ fnfData.summary_details?.net_fnf_payable || 0 }}</th></tr>
+    </table>
+
+    <!-- Declaration -->
+    <div class="section-title">Declaration</div>
+    <p>
+      I, {{ fnfData.employee_details?.employee_name }}, acknowledge that I have received the net settlement mentioned above and have no further financial claims towards the company.
+    </p>
+
+    <p><strong>Employee Signature:</strong> {{ fnfData.employee_details?.employee_name }}</p>
+
+    <div class="signature-section">
+      <p>Date: </p>
+      <p>HR/Admin Signature: ______________________</p>
+      <p>Authorized Signatory: ______________________</p>
+    </div>
+  </div>
+
+</div>

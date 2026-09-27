@@ -1,0 +1,40 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!quotation_currency_id?"Add Quotation Currency":"Update Quotation Currency"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Quotaion Currency</h3>
+    <fieldset [disabled]="view == 'view'">
+        <div class="m-3" [formGroup]="quotationCurrencyForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>Quotation Currency Name</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <!-- <p>Quotation Currency Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Quotation Currency Name</mat-label>
+                            <input matInput type="text" formControlName="quotation_currency_name" />
+                            <mat-error *ngIf="quotationCurrencyForm.controls['quotation_currency_name'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="quotationCurrencyForm.controls['quotation_currency_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!quotation_currency_id" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="quotation_currency_id" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

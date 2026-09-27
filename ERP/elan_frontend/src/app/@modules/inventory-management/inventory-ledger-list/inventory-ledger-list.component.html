@@ -1,0 +1,29 @@
+<app-wrapper [title]="'Inventory Management'" [subTitle]="'Inventory Movement List'">
+
+  <div class="ledger-header" *ngIf="warehouseName">
+
+    <div class="ledger-info">
+      <span><b>Warehouse Name :</b> {{ warehouseName }}</span>
+      <span><b>Item Name :</b> {{ itemName }}</span>
+    </div>
+
+    <div class="ledger-stock">
+      <span class="stock available">Available Stock : {{ available_qty }}</span>
+      <span class="stock hold">Reserved Stock : {{ hold_qty }}</span>
+      <span class="stock delivered">Delivered Stock : {{ delivered_qty }}</span>
+      <span class="stock scrap">Scrap Stock : {{ scrap_qty }}</span>
+    </div>
+
+  </div>
+
+  <ag-grid-angular
+    class="ag-theme-alpine"
+    style="width: 100%; height: 426px"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [pagination]="true"
+    [paginationPageSize]="10"
+    [gridOptions]="gridOptions">
+  </ag-grid-angular>
+
+</app-wrapper>

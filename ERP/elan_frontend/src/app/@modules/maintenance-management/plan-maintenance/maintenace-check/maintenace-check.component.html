@@ -1,0 +1,53 @@
+<div class="section">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px;">Closed Maintenance Schedule</h3>
+
+  <section class="px-2" *ngIf="dataList?.length">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>WorkStation Name</th>
+            <th>Maintenance Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of dataList; let i = index">
+            <tr>
+              <td>{{i+1}}</td>
+              <td>{{data?.name_of_workstation}}</td>
+              <td>{{data?.maintenance}}</td>
+              <td>
+                <input type="checkbox" [(ngModel)]="data.isClosed" (change)="closeProposal(data)" />
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div style="display: flex; justify-content: flex-end; align-items: center;">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        style="margin-right: 10px;"
+        [class.spinner]="loading"
+        [disabled]="loading"
+        (click)="closeLeadCreate()">
+        Submit
+      </button>
+      <mat-dialog-actions>
+        <button
+          mat-button
+          mat-dialog-close
+          mat-raised-button
+          color="warn">
+          Close
+        </button>
+      </mat-dialog-actions>
+    </div>
+
+  </section>
+  <h3 class="text-center" *ngIf="!dataList?.length">Please create at least one maintenance Type</h3>
+</div>

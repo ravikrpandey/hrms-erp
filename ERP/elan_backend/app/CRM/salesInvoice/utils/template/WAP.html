@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>PDF</title>
+      <style>
+         body {
+            font-family: Arial, sans-serif;
+         }
+         .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #000;
+            padding: 10px;
+            margin-bottom: 20px;
+         }
+         .header .logo img {
+            max-width: 150px;
+         }
+         .header .company-info {
+            text-align: right;
+         }
+         .header .company-info h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #000;
+         }
+         .header .company-info p {
+            margin: 2px 0;
+            font-size: 14px;
+            color: #000;
+         }
+      </style>
+   </head>
+   <body>
+      <div class="header" style="box-shadow: 0px 0px 5px #000000; padding: 0px; width: 100%; margin-bottom: 20px; margin-top: 20px;">
+         <div class="logo">
+            <img src="{urlData}/uploaded_files/{logo}" alt="Company Logo" />
+         </div>
+         <div class="company-info">
+            <h1>{entity_name}</h1>
+            <p>Address : {registered_office}</p>
+            <p>Email Id: {smtp_username}</p>
+         </div>
+         </div>
+      </div>
+      <div style="box-shadow: 0px 0px 5px #ccc; padding: 0px; width: 100%; margin-bottom: 20px; margin-top: 20px;">
+         <table cellpadding="0" cellspacing="0" border="1" valign="top" style="background-color:#FFFFFF;color:#000000;font-size:14px;border:0px solid #000; width: 100%; ">
+            <tbody>
+               <tr>
+                  <td>
+                     <table cellpadding="0" cellspacing="0" style="clear:both;width:100%;margin:0;">
+                        <tbody>
+                           <tr style="line-height: 23px;">
+                              <td style="width: 54%; padding: 5px 7px;" align="left" border="0">
+                                 <table cellpadding="0" style="width: 100%;" cellspacing="0" border="0">
+                                    <tbody>
+                                       <tr>
+                                          <td style="padding:0px; width:35%;"><b><span style="color:#000000">Doc. Type</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{docType}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px; width:35%;"><b><span style="color:#000000">Invoice No.</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{sales_invoice_no}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px;"><b><span style="color:#000000">Invoice Date</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{sales_invoice_date}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px; width:35%;"><b><span style="color:#000000">Acknowledge No.</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{AckNo}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px;"><b><span style="color:#000000">Acknowledge Date</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{AckDate}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px;"><b><span style="color:#000000">Delivery Challan No.</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{order_number}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px;"><b><span style="color:#000000">Billing Branch</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{branch_name}</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding:0px;"><b><span style="color:#000000">GSTIN</span></b></td>
+                                          <td style="padding:0px;"> : <span style="color:#000000; margin-left: 40px;">{gstin}</span></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td style="width:46%;vertical-align:middle; padding-top:0pt;" border="0">
+                                 <table cellpadding="5" style="width: 100%;" cellspacing="0" border="0">
+                                    <tbody>
+                                       <tr>
+                                          <td style="text-align: center">
+                                            <span
+                                              style="
+                                                color: #000000;
+                                                font-size: 32px;
+                                                font-weight: 600;
+                                                text-align: center;
+                                              "
+                                            >
+                                              Invoice
+                                            </span>
+                                            <br />
+                                            <img
+                                              src="{qrCodeUrl}"
+                                              alt="QR Code"
+                                              style="
+                                                width: 150px;
+                                                height: 150px;
+                                                display: block;
+                                                margin: 10px auto;
+                                                border: 2px solid #ccc;
+                                                border-radius: 8px;
+                                              "
+                                            />
+                                          </td>
+                                        </tr>
+                                        
+                                       
+                                    </tbody>
+                                 </table>
+                              </td>
+                           </tr>
+                           <tr style="background-color: #f2f3f4" bgcolor="#F2F3F4">
+                              <td colspan="2" style="border-top: 1px solid; padding: 10px 5px; text-align: center;">
+                                <div
+                                  style="
+                                    display: inline-block;
+                                    background-color: #ffffff;
+                                    padding: 10px 15px;
+                                    border: 2px solid #000000;
+                                    font-size: 16px;
+                                    font-weight: 600;
+                                    border-radius: 5px;
+                                  "
+                                >
+                                  IRN No: {irnNo}</span>
+                                </div>
+                              </td>
+                            </tr>
+                           <tr
+                                       style="background-color: #f2f3f4;"
+                                       bgcolor="#F2F3F4">
+                                       <td
+                                          style="width: 50%;
+                                          border-top: 1px solid;
+                                          padding: 8px 5px;"
+                                          border="0"><span
+                                          style="color:#000000; font-size: 15px; font-weight: 600;">Bill
+                                          To</span>
+                                       </td>
+                                       <td
+                                          style="width: 50%;
+                                          border-top: 1px solid;
+                                          padding: 8px 5px;"
+                                          border="0"><span
+                                          style="color:#000000; font-size: 15px; font-weight: 600;">Ship
+                                          To</span>
+                                       </td>
+                                    </tr>
+                                    <tr>
+                                       <td
+                                          style="width: 50%;
+                                          border-top: 1px solid #000;
+                                          padding: 12px 8px;
+                                          line-height: 20px;"
+                                          border="0"> 
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{countryss_name}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{states_name}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{city_name}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{customer_billing_add1}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{customer_billing_add2}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 600;">{customer_billing_pin}</span>
+                                   
+                                       </td>
+                                       <td
+                                          style="width: 50%;
+                                          border-top: 1px solid #000;
+                                          padding: 12px 8px;
+                                          line-height: 20px;vertical-align: baseline;"
+                                          border="0"> <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_country_name}</span> <br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_state_name}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_city_name}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_add1}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_address}</span><br>
+                                          <span style="color:#000000;font-size:15px; font-weight: 500;">{shipping_pin}</span></td></td>
+                                    </tr>
+                        </tbody>
+                     </table>
+
+                     <table cellpadding="10" style="width:100%;margin: 0;border-left:0pt;border-right:0pt; border-color:#1C0808 !important;" cellspacing="0" border="1">
+                        <thead>
+                           {serviceItemTable}
+                        </thead>
+                     </table>
+                     <table cellpadding="10" style="width:100%;margin: 0;border-left:0pt;border-right:0pt; border-color:#1C0808 !important;" cellspacing="0" border="1">
+                        <thead>
+                           {addtionalCharges}
+                        </thead>
+                     </table>
+                     <table style="width:100%; margin:0px;border: 0px;" cellspacing="0" cellpadding="0" border="1">
+                        <tbody>
+                           <tr>
+                              <td aling="top" colspan="9" style="border:0px; padding:0px; border-color:#1C0808 !important; vertical-align: baseline;">
+                                 <table style="width:100%; margin:0px; padding: 5px;" cellspacing="0" cellpadding="5" border="0">
+                                    <tbody>
+                                       <tr>
+                                          <td style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Amount in Words :<br><span style="font-weight: 500;font-size: 14px;">{amountInWords} Only</span></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                                 <table style="width:100%;margin:25px 0 0 0;" cellspacing="0" cellpadding="5" border="0">
+                                    <tbody>
+                                       <tr>
+                                          <td style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Notes <br><span style="font-weight: 500;font-size: 14px;"></span>{notes}</td>
+                                       </tr>
+                                       <tr>
+                                          <td style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Terms &amp; Conditions<br>{terms_and_conditions}<span style="font-weight: 500;font-size: 14px;"></span></td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                              <td colspan="8" style="width:40.5%;padding:0px; border-left:1px solid; border-color:#1C0808 !important;">
+                                 <table border="0" width="100%" cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                       <tr style="line-height: 20px;">
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Sub Total</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{sub_total}&nbsp;</span></td>
+                                       </tr>
+                                       <tr style="line-height: 20px;">
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Total Discount</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{total_discount}&nbsp;</span></td>
+                                       </tr>
+                                       <tr style="line-height: 20px;">
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">Additional Charges</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{additional_charges}&nbsp;</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding: 5px 5px 0px 0px; text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">CGST</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{total_cgst}&nbsp;</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding: 5px 5px 0px 0px; text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">SGST</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{total_sgst}&nbsp;</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding: 5px 5px 0px 0px; text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 15px; font-weight: 600; color:#000; margin-bottom: 5px;">IGST</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{total_igst}&nbsp;</span></td>
+                                       </tr>
+                                       <tr>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top">
+                                             <span style="font-size: 14px; font-weight: 600; color:#000; margin-bottom: 5px;">Grand Total</span>
+                                          </td>
+                                          <td style="padding: 5px 5px 0px 0px;text-align: right;border-color:#1C0808 !important;" valign="top"><span>{grand_total}&nbsp;</span><br><br></td>
+                                       </tr>
+                                       <tr text-align:center;'="">
+                                          <td colspan="2" width="100%" border="1" style="vertical-align:bottom; text-align:center; padding:0px;border-bottom:0px solid #000000;" align="center"></td>
+                                       </tr>
+                                       <tr style="border-top:1px solid #1C0808; text-align:center;">
+                                          <td colspan="2" width="100%" border="0" style="vertical-align:bottom; padding:0px;border-bottom:0px solid #000000; text-align:center;" height="150px" align="center">&nbsp;<br><br><br>&nbsp;<br><span style="font-size: 16px; font-weight: 600;">Authorized Signature&nbsp;</span><br><br>
+                                          </td>
+                                       </tr>
+                                    </tbody>
+                                 </table>
+                              </td>
+                           </tr>
+                        </tbody>
+                     </table>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+      </div>
+   </body>
+</html>

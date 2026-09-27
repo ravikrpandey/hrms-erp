@@ -1,0 +1,21 @@
+<div [ngSwitch]="type">
+  <!-- Submit Button -->
+  <button *ngSwitchCase="'submit'" [class]="btnClass" [type]="type" [disabled]="disabled">
+    {{ text }}
+  </button>
+
+  <!-- Add Button -->
+  <button *ngSwitchCase="'addBtn'" [class]="btnClass" type="button" (click)="onclickbtn()">
+    <span>+</span>{{ text }}
+  </button>
+
+  <!-- Back Button -->
+  <button *ngSwitchCase="'back'" [class]="btnClass" type="button" (click)="onclickbtn()" [disabled]="disabled">
+    <mat-icon>arrow_back</mat-icon>{{ text }}
+  </button>
+
+  <!-- Default -->
+  <button *ngSwitchDefault [class]="btnClass" [type]="type" (click)="onclickbtn()" [disabled]="disabled">
+    {{ text }}
+  </button>
+</div>

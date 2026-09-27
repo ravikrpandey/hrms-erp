@@ -1,0 +1,91 @@
+<app-wrapper
+  [title]="'Configurational Master'"
+  [subTitle]="'Branch'"
+  [subheading]="mode === 'view' ? 'View Branch' : mode === 'edit' ? 'Edit Branch' : 'Create Branch'"
+  [showActions]="true"
+  [isBack]="true"
+>
+  <mat-card class="p-2">
+    <form class="" [formGroup]="form">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Branch Name</mat-label>
+            <input matInput [formControlName]="'branch_name'" />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <app-mat-form-select-filter
+            [items]="['ACTIVE', 'INACTIVE']"
+            [displayKey]="'status'"
+            placeholder="Status"
+            formControlName="status"
+          ></app-mat-form-select-filter>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Address</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Address</mat-label>
+                    <input matInput [formControlName]="'branch_address'" />
+                  </mat-form-field>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <app-mat-form-select-filter
+                    [key]="'countryss_id'"
+                    [items]="countryList"
+                    [displayKey]="'countryss_name'"
+                    placeholder="Country"
+                    formControlName="country_id"
+                  ></app-mat-form-select-filter>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <app-mat-form-select-filter
+                    [key]="'states_id'"
+                    [items]="stateList"
+                    [displayKey]="'states_name'"
+                    placeholder="State"
+                    formControlName="state_id"
+                  ></app-mat-form-select-filter>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <app-mat-form-select-filter
+                    [key]="'city_id'"
+                    [items]="cityList"
+                    [displayKey]="'city_name'"
+                    placeholder="City"
+                    formControlName="city_id"
+                  ></app-mat-form-select-filter>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Pincode</mat-label>
+                    <input matInput [formControlName]="'branch_pin_code'" />
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- save button / update button -->
+      <div class="row" *ngIf="mode !== 'view'">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="d-flex justify-content-end">
+            <button mat-raised-button color="primary" (click)="onSubmit()">
+              {{ mode === 'edit' ? 'Update' : 'Save' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</app-wrapper>

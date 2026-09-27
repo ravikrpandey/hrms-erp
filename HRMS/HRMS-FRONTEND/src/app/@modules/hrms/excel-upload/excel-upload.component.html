@@ -1,0 +1,40 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>Excel Upload<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span> Bulk Data Upload </span></p>
+  </div>
+</div>
+<div class="container mt-4">
+  <div class="card shadow-lg p-4" id="main-card">
+    <div style="display: flex; justify-content: space-between;">
+      <h4 class="mb-3 text-primary">Upload Excel File</h4>
+    </div>
+
+    <label for="model" class="form-label fw-semibold">Select Model:</label>
+    <div class="mb-3 w-25" style="display: flex; gap: 20px;">
+      <select id="model" class="form-select" [(ngModel)]="selectedModel">
+        <option *ngFor="let model of modelNames" [value]="model">
+          {{ model }}
+        </option>
+      </select>
+      <span class="icon_img" (click)="downloadSample()" style="border: 1px solid red" matTooltip="Download"
+        style="cursor: pointer">
+        <img src="assets/icons/top3.png" alt="Export" />
+      </span>
+    </div>
+
+    <div class="mb-3">
+      <label for="file" class="form-label fw-semibold">Upload Excel File:</label>
+      <input #fileInput type="file" class="form-control" (change)="onFileChange($event)" accept=".xlsx, .xls" />
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        <button class="btn btn-primary w-100" (click)="upload()">
+          <i class="bi bi-cloud-upload"></i> Upload
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

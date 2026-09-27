@@ -1,0 +1,217 @@
+<section class="section">
+  <div class="row head">
+    <p>Admin</p>
+  </div>
+  <div class="row py-1">
+    <div class="employee_top">Vehicle Registration
+      <span class="employee_2" *ngIf="!id && !mode"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Create </span>
+      <span class="employee_2" *ngIf="id && !mode"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Update </span>
+        <span class="employee_2" *ngIf="mode"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        View </span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head">
+      <h3>Vehicle Registration</h3>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="vehicleRegistrationForm">
+        <div class="row m-3">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Registration Number</mat-label>
+                <input type="text" matInput formControlName="registration_number" [readonly]="mode"
+                >
+                <mat-error *ngIf="vehicleRegistrationForm.controls['registration_number']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['registration_number'].hasError('required')">
+                  Registration Number is Required.
+                </mat-error>
+          
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Vehicle Name</mat-label>
+                <input type="text" matInput formControlName="vehicle_name" [readonly]="mode"
+                >
+                 <mat-error *ngIf="vehicleRegistrationForm.controls['vehicle_name']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['vehicle_name'].hasError('required')">
+                  Vehicle name is Required.
+                </mat-error>
+           
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Model Year</mat-label>
+                <input matInput type="number" formControlName="model_year" [readonly]="mode"/>
+                 <mat-error *ngIf="vehicleRegistrationForm.controls['model_year']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['model_year'].hasError('required')">
+                  Model Year is Required.
+                </mat-error>
+          
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>TUV Validity</mat-label>
+                <input matInput type="text" formControlName="tuv_validity" [readonly]="mode"/>
+                 <!-- <mat-error *ngIf="vehicleRegistrationForm.controls['tuv_validity']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error> -->
+                <mat-error *ngIf="vehicleRegistrationForm.controls['tuv_validity']?.hasError('required')">
+                  TUV Validity is Required.
+                </mat-error>
+            
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Model</mat-label>
+                <input matInput type="text" formControlName="model" [readonly]="mode"/>
+                 <mat-error *ngIf="vehicleRegistrationForm.controls['model']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['model'].hasError('required')">
+                  Model is Required.
+                </mat-error>
+            
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Purchase Date</mat-label>
+                <input [matDatepicker]="dp" (click)="dp.open()" matInput type="text" formControlName="purchase_date" [readonly]="mode" [max]="maxDate" />
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+                <mat-error *ngIf="vehicleRegistrationForm.get('purchase_date')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+             
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Purchase Date</mat-label>
+                <input  matInput type="text" formControlName="purchase_date" [readonly]="mode"  />
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Registration Date</mat-label>
+                <input [matDatepicker]="dp1" (click)="dp1.open()" matInput type="text" [readonly]="mode" formControlName="registration_date" [max]="maxDate"/>
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1></mat-datepicker>
+                <mat-error *ngIf="vehicleRegistrationForm.get('registration_date')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+           
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Registration Date</mat-label>
+                <input matInput type="text" [readonly]="mode" formControlName="registration_date" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Chassic Number</mat-label>
+                <input matInput type="text" formControlName="chassis_number" [readonly]="mode"/>
+                 <mat-error *ngIf="vehicleRegistrationForm.controls['chassis_number']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['chassis_number'].hasError('required')">
+                  Chassic Number is Required.
+                </mat-error>
+          
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>CS Number</mat-label>
+                <input matInput type="text" formControlName="cs_number" [readonly]="mode"/>
+                 <mat-error *ngIf="vehicleRegistrationForm.controls['cs_number']?.hasError('leadingSpaces')">
+                  *No leading spaces!
+              </mat-error>
+                <mat-error *ngIf="vehicleRegistrationForm.controls['cs_number'].hasError('required')">
+                  CS Number is Required.
+                </mat-error>
+           
+              </mat-form-field>
+            </div>
+          </div>
+          <div  *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Fuel Type</mat-label>
+                <mat-select  formControlName="fuel_type" >
+                  <mat-option
+                    value="Diesel">Diesel</mat-option>
+                    <mat-option
+                    value="Petrol">Petrol</mat-option>
+                    <mat-option
+                    value="Water">Water</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="vehicleRegistrationForm.controls['fuel_type']?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+           
+              </mat-form-field>
+            </div>
+          </div>
+          <div  *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Fuel Type</mat-label>
+                <input matInput type="text" [readonly]="mode" formControlName="fuel_type" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="!id && !mode" (click)="onSubmitForm()" mat-raised-button color="primary">
+            Submit
+          </button>
+          <button *ngIf="id && !mode" (click)="updateForm($event)" mat-raised-button color="primary">
+            Update
+          </button>
+          <button *ngIf="!mode" mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</section>

@@ -1,0 +1,419 @@
+<div class="page-wrapper">
+  <app-vendor-top-header [vendor_id]="vendor_id_header"></app-vendor-top-header>
+
+    <form [formGroup]="form" class="rfp-page">
+
+        <!-- ─── PR Details Card ───────────────────────────────────────────── -->
+        <div class="rfp-card">
+            <div class="row form_head">
+                <h3><mat-icon class="section-icon">description</mat-icon> PR Details</h3>
+            </div>
+            <div class="rfp-card-body">
+                <div class="row details-grid">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">tag</mat-icon> Negotiation Code</span>
+                            <span class="detail-value highlight">{{ this.prData.negotiation_code || "-" }}</span>
+                        </div>
+                        <!-- <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">business</mat-icon> Department</span>
+                            <span class="detail-value">{{ prData?.department_name || "-" }}</span>
+                        </div> -->
+                        <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">local_shipping</mat-icon> Delivery
+                                Date</span>
+                            <span class="detail-value">{{ prData?.rfp_delivery_date | date : "dd-MM-yyyy" }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <!-- <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">category</mat-icon> Budget Type</span>
+                            <span class="detail-value">
+                                <span class="badge-type">{{ prData?.pr_type || "-" }}</span>
+                            </span>
+                        </div> -->
+                        <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">tag</mat-icon> PR No.</span>
+                            <span class="detail-value">{{ prData?.pr_number}}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label"><mat-icon class="detail-icon">calendar_today</mat-icon> Created
+                                Date</span>
+                            <span class="detail-value">{{ prData?.createdAt | date : "dd-MM-yyyy" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Attached Files ────────────────────────────────────────────── -->
+        <div class="rfp-card" *ngIf="fileView.length > 0 && fileView[0].img_name">
+            <div class="row form_head">
+                <h3><mat-icon class="section-icon">attach_file</mat-icon> Attached Documents</h3>
+            </div>
+            <div class="rfp-card-body">
+                <div class="file-list">
+                    <div class="file-item" *ngFor="let file of fileView; index as i">
+                        <div class="file-info">
+                            <mat-icon class="file-icon">insert_drive_file</mat-icon>
+                            <span class="file-serial">{{ i + 1 }}.</span>
+                            <span class="file-name">{{ file?.img_name }}</span>
+                        </div>
+                        <a href="{{ sevralUrl() + file?.uploade_image }}" download target="_blank" class="file-view-btn">
+                            <mat-icon matTooltip="View File">visibility</mat-icon>
+                            <span>View</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── RFP Item Details ──────────────────────────────────────────── -->
+        <div class="rfp-card">
+            <div class="row form_head">
+                <h3>
+                    <mat-icon class="section-icon">shopping_cart</mat-icon>
+                    <ng-container *ngIf="this.type_pr == 'Service'">Negotiation Service Details</ng-container>
+                    <ng-container *ngIf="this.type_pr != 'Service'">Negotiation Item Details</ng-container>
+                </h3>
+                <span class="item-count-badge" *ngIf="itemDetail.controls.length > 0">
+                    {{ itemDetail.controls.length }} {{ itemDetail.controls.length === 1 ? 'item' : 'items' }}
+                </span>
+            </div>
+            <div class="rfp-card-body table-body">
+                <div class="table-responsive">
+                    <table class="rfp-table">
+                        <thead>
+                            <tr>
+                                <th class="th-image">Image</th>
+                                <th *ngIf="this.type_pr == 'Item'">Item Name</th>
+                                <th *ngIf="this.type_pr == 'Service'">Service Name</th>
+                                <th *ngIf="this.type_pr == 'Bom'">Item Name</th>
+                                <th *ngIf="this.type_pr == 'Item'">Item Code</th>
+                                <th *ngIf="this.type_pr == 'Service'">Service Code</th>
+                                <th *ngIf="this.type_pr == 'Bom'">Item Code</th>
+                                <th>Priority</th>
+                                <th>Qty</th>
+                                <th>Target Amount</th>
+                                <th>Price/Unit</th>
+                                <th>Tax (%)</th>
+                                <th>Delivery Charges</th>
+                                <th>Addl. Charges</th>
+                                <!-- <th>Currency</th> -->
+                                <th>Total Amount</th>
+                                <th class="th-action">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody formArrayName="item_detail">
+                            <ng-container *ngFor="let control of itemDetail.controls; index as i">
+                                <tr [formGroupName]="i" class="item-row">
+                                    <td class="td-image">
+                                        <div class="image-wrapper">
+                                            <img *ngIf="control.get('item_document')?.value"
+                                                [src]="control.get('item_document')?.value" alt="Item Image" />
+                                            <mat-icon *ngIf="!control.get('item_document')?.value"
+                                                class="no-image-icon">image</mat-icon>
+                                        </div>
+                                    </td>
+                                    <td class="td-name">{{ control.get("product_name")?.value }}</td>
+                                    <td class="td-code">{{ control.get("item_code")?.value }}</td>
+                                    <td>
+                                        <span class="priority-badge" [ngClass]="{
+                        'priority-high': control.get('priority')?.value === 'HIGH',
+                        'priority-medium': control.get('priority')?.value === 'MEDIUM',
+                        'priority-low': control.get('priority')?.value === 'LOW'
+                        }">
+                                            {{ control.get("priority")?.value }}
+                                        </span>
+                                    </td>
+                                    <td class="td-center">{{ control.get("product_quantity")?.value }}</td>
+                                    <td class="td-center">{{ control.get("target_amount")?.value }}</td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="table-input">
+                                            <input matInput type="number" formControlName="price_amt"
+                                                (keyup)="keyUpPrice(control, i)" min="0" placeholder="0.00" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="table-input">
+                                            <input matInput formControlName="igst" type="number"
+                                                (keyup)="keyUpPrice(control, i)" min="0" placeholder="0" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="table-input">
+                                            <input matInput type="number" formControlName="delivery_charges"
+                                                (keyup)="keyUpPrice(control, i)" min="0" placeholder="0.00" />
+                                        </mat-form-field>
+                                    </td>
+                                    <td>
+                                        <mat-form-field appearance="outline" class="table-input">
+                                            <input matInput type="number" formControlName="additional_charges"
+                                                (keyup)="keyUpPrice(control, i)" min="0" placeholder="0.00" />
+                                        </mat-form-field>
+                                    </td>
+                                    <!-- <td>
+                                        <mat-form-field appearance="outline" class="table-input">
+                                            <mat-select formControlName="currency_id" readonly
+                                                (selectionChange)="currencySele(control, i)">
+                                                <mat-option [value]="currency.Currency_Convert_id"
+                                                    *ngFor="let currency of currencyData">
+                                                    {{ currency.Currency_Type }}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </td> -->
+                                    <td>
+                                        <mat-form-field appearance="outline" class="table-input total-field">
+                                            <input matInput type="number" formControlName="totelAmount" min="0"
+                                                [value]="totelAmount | number : '1.2-10'" readonly />
+                                        </mat-form-field>
+                                    </td>
+                                    <td class="td-action">
+                                        <button mat-icon-button matTooltip="Delete Item" color="warn" (click)="remove(i)"
+                                            class="action-btn">
+                                            <mat-icon>delete_outline</mat-icon>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+
+                            <!-- Empty State -->
+                            <tr *ngIf="itemDetail.controls.length === 0">
+                                <td colspan="13" class="empty-state">
+                                    <mat-icon>inbox</mat-icon>
+                                    <p>No items found</p>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <!-- Grand Total Footer -->
+                        <tfoot *ngIf="itemDetail.controls.length > 0">
+                            <tr class="total-row">
+                                <td [attr.colspan]="type_pr == 'Service' ? 11 : 11"></td>
+                                <td colspan="1" class="grand-total-cell">
+                                    <div class="grand-total">
+                                        <span class="grand-total-label">Grand Total</span>
+                                        <span class="grand-total-value">{{ totalAmountPrice }}</span>
+                                    </div>
+                                </td>
+                                <td colspan="1"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ─── Submit Button ─────────────────────────────────────────────── -->
+        <div class="submit-section">
+            <!-- Input Remarks -->
+            <mat-form-field appearance="outline" class="col-4">
+                <input matInput type="text" formControlName="vendor_remarks" placeholder="Remarks" />
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="submit-btn" (click)="fire()"
+                [disabled]="itemDetail.controls.length === 0">
+                <mat-icon>send</mat-icon>
+                Submit Quotation
+            </button>
+        </div>
+
+    </form>
+
+</div>    
+
+<ng-container>
+    <div class="section p-9" style="padding: 35px;">
+        <!-- <div class="row form_head mb-4">
+            <h3>PR Details</h3>
+        </div>
+
+        <div class="row details mb-6">
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <tr>
+                        <td class="head_task">Negotiation No</td>
+                        <td class="tasklinks">Nego-{{prData?.id}}</td>
+                    </tr>
+                    <tr>
+                        <td class="head_task">Department</td>
+                        <td>{{ prData?.department_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="head_task">Created Date</td>
+                        <td>{{ prData?.createdAt | date: 'dd-MM-yyyy' }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-striped">
+                    <tr>
+                        <td class="head_task">Created By</td>
+                        <td>{{ prData?.employee_name }}</td>
+                    </tr>
+                    <tr>
+                        <td class="head_task">Type/Capex||OPEX</td>
+                        <td>{{ prData?.pr_type }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div> -->
+
+        <!-- File View Section -->
+        <!-- <table class="table table-bordered" *ngIf="fileView.length > 0 && fileView[0].img_name">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>File Name</th>
+                    <th>File View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let file of fileView; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ file?.img_name }}</td>
+                    <td>
+                        <a [href]="sevralUrl() + file?.uploade_image" download target="_blank">
+                            <mat-icon matTooltip="View File">visibility</mat-icon>
+                        </a>
+                    </td>
+                </tr>
+                <tr *ngIf="fileView.length == 0">
+                    <td colspan="3" class="text-center">No Records Found</td>
+                </tr>
+            </tbody>
+        </table> -->
+
+        <!-- Send Negotiation Section -->
+        <!-- <div class="form_head mt-6 mb-4">
+            <h3>Send Negotiation</h3>
+        </div>
+
+        <form [formGroup]="form" class="px-4" *ngIf="this.currencyData && this.currencyData.length > 0">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Item Code</th>
+                            <th>Quantity</th>
+                            <th>Priority</th>
+                            <th>Target Amount</th>
+                            <th>Gst Type</th>
+                            <th>Price /unit</th>
+                            <th>Tax(%)</th>
+                            <th>Delivery Charges</th>
+                            <th>Additional Charges</th>
+                            <th>Currency</th>
+                            <th>Total Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="item_details">
+                        <tr *ngFor="let control of item_details.controls; let i = index" [formGroupName]="i">
+                            <td>{{ control?.get('item_name')?.value }}</td>
+                            <td>{{ control.get('item_code')?.value }}</td>
+                            <td>{{ control.get('product_quantity')?.value }}</td>
+                            <td>{{ control.get('priority')?.value }}</td>
+                            <td>{{ control.get('target_amount')?.value | currency: getCurrentCurrency()?.Currency_Type
+                                || 'INR' }}</td>
+                            <td>{{ control.get('gst_Type')?.value }}</td>
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput type="number" formControlName="price_amt"
+                                        (input)="calculateRow(i)" />
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput type="number" formControlName="igst" (input)="calculateRow(i)" />
+                                </mat-form-field>
+                            </td>
+
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput type="number" formControlName="delivery_charges"
+                                        (input)="calculateRow(i)" />
+                                </mat-form-field>
+                            </td>
+
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput type="number" formControlName="additional_charges"
+                                        (input)="calculateRow(i)" />
+                                </mat-form-field>
+                            </td>
+
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-select formControlName="currency_id" (selectionChange)="calculateRow(i)">
+                                        <mat-option *ngFor="let currency of currencyData"
+                                            [value]="currency.Currency_Convert_id">
+                                            {{ currency.Currency_Type }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput type="number" formControlName="totelAmount" readonly />
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-icon matTooltip="Clear Value" (click)="remove(i)">clear</mat-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+
+        <!-- Total Summary -->
+        <!-- <div class="row justify-content-end pe-4">
+                <div class="col-md-4 text-end">
+                    <p class="fw-bold">Total = {{ totalAmountPrice | currency: getCurrentCurrency()?.Currency_Type ||
+                        'INR' }}</p>
+                </div>
+            </div>
+        </form> -->
+
+        <!-- Submit Button -->
+        <!-- <div class="text-center mt-5">
+            <button mat-raised-button color="primary" (click)="onSubmitNegotiate()">Submit</button>
+        </div> -->
+    </div>
+</ng-container>
+<ng-template #other>
+
+    <div class="expired">
+        <div class="content">
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 464 390.4"
+                style="enable-background:new 0 0 464 390.4;" xml:space="preserve">
+
+                <circle class="st0" cx="126" cy="175.4" r="12" />
+                <circle class="st0" cx="339" cy="175.4" r="12" />
+                <circle class="st1" cx="232.5" cy="170.9" r="106.5" />
+                <path class="st2" d="M126,164.4c0,0,4.5-15.4,10.5-19.6c0,0,31,0,65-26.5c0,0,110,85.9,176-30.8c0,0-33,28.6-116-41.4
+        c0,0-131-16.2-135.5,106V164.4z" />
+                <path class="st2" d="M339,164.4c0,0,6.2-13.3-8.2-32.4l-6.3,3.9C324.5,135.9,333.5,142.9,339,164.4z" />
+                <path class="st2" d="M247.8,45.3c0,0,47.7-5.3,76.7,53.7L247.8,45.3z" />
+                <circle class="st2" cx="192" cy="175.4" r="9" />
+                <circle class="st2" cx="271" cy="175.4" r="9" />
+                <path class="st4" d="M101.4,390.1c22.1-106.8,75.7-114.1,137.1-114.1c61.4,0,104,18.8,130.1,114.1
+        C368.7,390.6,101.3,390.6,101.4,390.1z" />
+
+                <circle id="path" class="st3 uhoh" cx="234.5" cy="230.5" r="20" />
+                <path class="st3 smile" d="M191,214.4c-1.1-1.5,38.6,49.3,83,0" />
+            </svg>
+
+            <div class="message">
+                <h1>Oops, this link is expired</h1>
+                <p>This URL is not valid anymore.</p>
+            </div>
+        </div>
+    </div>
+</ng-template>

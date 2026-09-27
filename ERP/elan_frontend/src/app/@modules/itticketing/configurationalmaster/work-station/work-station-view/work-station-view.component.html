@@ -1,0 +1,117 @@
+<section class="section">
+
+    <div class="row">
+        <div class="employee_top my-1">
+            Admin
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+                Work Station</span>
+        </div>
+    </div>
+    <div class="row py-1">
+        <div class="employee_top">Work-Station
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+                </i>
+                View </span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head">
+            <h3>Work Station</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="workStationForm">
+                <fieldset [disabled]="workStationId">
+                    <div class="row">
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Type Of Workstation</mat-label>
+                                    <input matInput type="text" formControlName="type_of_workstation" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Work Station Names</mat-label>
+                                    <input matInput type="text" formControlName="name_of_workstation" />
+                                    <mat-error
+                                        *ngIf="workStationForm.controls['name_of_workstation'].hasError('required')">
+                                        Work Station Name is Required.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="workStationForm.controls['name_of_workstation'].hasError('minlength')">
+                                        This field accepted minimum 2 length.
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="workStationForm.controls['name_of_workstation'].hasError('maxlength')">
+                                        This field accepted maximum 150 length.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Running Cost Per Hour</mat-label>
+                                    <input matInput type="text" formControlName="running_cost_per_hour" />
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Hourly Efficiency</mat-label>
+                                    <input matInput type="text" formControlName="hourly_effciency" />
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>UOM</mat-label>
+                                    <input matInput type="text" formControlName="uom_id" />
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Description</mat-label>
+                                    <input matInput type="text" formControlName="description" />
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="getData?.UploadDocs && getData?.UploadDocs?.length > 0" class="row">
+                        <div class="col-xxl-12">
+                            <div class="form-group">
+                                <h4>Uploaded Documents</h4>
+                                <div class="d-flex flex-wrap">
+                                    <div *ngFor="let uploadDoc of getData.UploadDocs; let i = index" class="mr-3 mb-3">
+                                        <ng-container *ngIf="isImage(uploadDoc.UploadDoc)">
+                                            <div class="flexCol">
+                                                <img [src]="generateImageUrl(uploadDoc.UploadDoc)" (click)="openImageInNewTab(uploadDoc.UploadDoc)" class="imgEmp" alt="Uploaded Image" style="cursor:pointer">
+                                                <div>click to view</div>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="getFileExtension(uploadDoc.UploadDoc) !== 'png' && getFileExtension(uploadDoc.UploadDoc) !== 'jpg' && getFileExtension(uploadDoc.UploadDoc) !== 'jpeg' && getFileExtension(uploadDoc.UploadDoc) !== 'gif'">
+                                           <a class="viewBtn" [href]="generateFileUrl(uploadDoc.UploadDoc)" target="_blank">View Document{{i+1}}</a>
+                                        </ng-container>
+                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+        </div>
+    </mat-card>
+</section>

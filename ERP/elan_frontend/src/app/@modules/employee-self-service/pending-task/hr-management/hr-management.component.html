@@ -1,0 +1,30 @@
+<div class="row form_head">
+    <h3>HR Management (Recruitment)</h3>
+    <div class="searchContainer">
+        <input type="text" placeholder="Search by Candidate Name" [(ngModel)]="searchVal" class="searchField" #searchBox
+            [disabled]="disabledSearchBox">
+        <mat-icon class="searchIcon" (click)="showSearchBox(searchBox)">search</mat-icon>
+    </div>
+</div>
+<div class="tableContainer">
+    <div class="tableHeader">
+        <!-- <span>Course ID</span> -->
+        <span>Candidate Name</span>
+        <span>Email ID</span>
+        <span>Documents</span>
+        <span>Action</span>
+    </div>
+    <!-- <span class="notFound" *ngIf="rowData?.length === 0 || (rowData | hR:searchVal)?.length === 0">Record not found</span> -->
+    <mat-spinner *ngIf="showLoader" style="width: 50px; height:50px;"></mat-spinner>
+    <div class="bodyContainer">
+        <ng-container *ngFor="let data of rowData; index as i">
+            <div class="tableBody" (click)="getCellValue(data)">
+                <!-- <span>{{i+1}}</span> -->
+                <span>{{data?.condidate_name}}</span>
+                <span>{{data?.email}}</span>
+                <span (click)="documents($event)"><a [href]="data?.upload_resume">{{data.condidate_name}} pdf</a> </span>
+                <button class="btn" (click)="review($event,data.candidate_id)">Review</button>
+            </div>
+        </ng-container>
+    </div>
+</div>

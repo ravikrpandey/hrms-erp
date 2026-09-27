@@ -1,0 +1,247 @@
+<div class="heading_neo mt-3">
+  <h3>Policy Entitlement</h3>
+</div>
+
+
+
+<form [formGroup]="leaveForm" (ngSubmit)="onSubmitForm()">
+  <mat-card>
+
+    <div class="form_sePo">
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+
+            <mat-label>Effective after<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input type="number" class="input_font" matInput formControlName="effective_after"
+                onkeypress="return event.charCode >= 48" min="0" placeholder="Effective after" />
+
+              <mat-error
+                *ngIf="getFormControl('effective_after')?.invalid && getFormControl('effective_after')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Period<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="period">
+                <mat-option class="input_font" value="YEAR">YEAR</mat-option>
+                <mat-option class="input_font" value="MONTHS">MONTHS</mat-option>
+                <mat-option class="input_font" value="DAYS">DAYS</mat-option>
+              </mat-select>
+              <mat-error *ngIf="getFormControl('period')?.invalid && getFormControl('period')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>From<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="fromType">
+                <mat-option value="DOJ">DOJ</mat-option>
+                <!-- <mat-option value="DOC">DOC</mat-option> -->
+                <mat-option value="JAN-DEC">JAN-DEC</mat-option>
+              </mat-select>
+              <mat-error *ngIf="getFormControl('fromType')?.invalid && getFormControl('fromType')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <!-- Carry Forward Unused Leaves -->
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-checkbox color="primary" formControlName="carryForward"></mat-checkbox>
+            <span>Carry Forward Unused Leaves</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carry Forward Unused Leaves Fields -->
+      <div class="row m-3" *ngIf="getFormControl('carryForward')?.value">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter the value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="carryForwardValue" placeholder="Enter value" />
+              <mat-error
+                *ngIf="getFormControl('carryForwardValue')?.invalid && getFormControl('carryForwardValue')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Carry Forward Type Select -->
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Unit || Percent<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="carryForwardType">
+                <mat-option value="UNIT">Unit</mat-option>
+                <mat-option value="PERCENT">Percent</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="getFormControl('carryForwardType')?.invalid && getFormControl('carryForwardType')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Conditional Input Field (Visible only if PERCENT is selected) -->
+        <div *ngIf="getFormControl('carryForwardType')?.value === 'PERCENT'"
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter maximum value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="carryForwardMaxValue" placeholder="Enter maximum value" />
+              <mat-error
+                *ngIf="getFormControl('carryForwardMaxValue')?.invalid && getFormControl('carryForwardMaxValue')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <!-- Carry Forward Unused Leaves -->
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-checkbox color="primary" formControlName="is_encash"></mat-checkbox>
+            <span>Encash</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carry Forward Unused Leaves Fields -->
+      <div class="row m-3" *ngIf="getFormControl('is_encash')?.value">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter the value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="encash_val" placeholder="Enter value" />
+              <mat-error
+                *ngIf="getFormControl('encash_val')?.invalid && getFormControl('encash_val')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Carry Forward Type Select -->
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Unit || Percent<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="encash_type">
+                <mat-option value="UNIT">Unit</mat-option>
+                <mat-option value="PERCENT">Percent</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="getFormControl('encash_type')?.invalid && getFormControl('encash_type')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Conditional Input Field (Visible only if PERCENT is selected) -->
+        <div *ngIf="getFormControl('encash_type')?.value === 'PERCENT'"
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter maximum value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="encash_max_val" placeholder="Enter maximum value" />
+              <mat-error
+                *ngIf="getFormControl('encash_max_val')?.invalid && getFormControl('encash_max_val')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- Encash -->
+      <!-- <div class="row mt-2 mb-3 ">
+        <div class="col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-checkbox color="primary" formControlName="encash"></mat-checkbox>
+            <span>Encash</span>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Encash Fields -->
+      <!-- <div class="row m-3" *ngIf="getFormControl('encash')?.value">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter the value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="encashValue" placeholder="Enter value" />
+
+              <mat-error *ngIf="getFormControl('encashValue')?.invalid && getFormControl('encashValue')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Unit || Percent<span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="encashType">
+                <mat-option value="UNIT">Unit</mat-option>
+                <mat-option value="PERCENT">Percent</mat-option>
+              </mat-select>
+              <mat-error *ngIf="getFormControl('encashType')?.invalid && getFormControl('encashType')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Enter maximum value <span class="alertspan">*</span></mat-label>
+            <mat-form-field appearance="outline">
+              <input matInput type="number" onkeypress="return event.charCode >= 48" min="0"
+                formControlName="encashMaxValue" placeholder="Enter maximum value" />
+
+
+              <mat-error *ngIf="getFormControl('encashMaxValue')?.invalid && getFormControl('encashMaxValue')?.touched">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+
+        </div>
+      </div> -->
+    </div>
+  </mat-card>
+
+  <div class="col-12 common_button_sub mt-2" style="display: flex; justify-content: flex-end;">
+    <button type="submit" *ngIf="!showUpdate  && this.pageMode !== 'viewMode'"
+      [disabled]="leaveForm.invalid">Add</button>
+    <button type="submit" *ngIf="showUpdate  && this.pageMode !== 'viewMode'"
+      [disabled]="leaveForm.invalid">Update</button>
+    <!-- <button mat-raised-button color="warn" style="margin-right: 2rem;" type="button" class="mx-3">CANCEL</button>     -->
+  </div>
+</form>

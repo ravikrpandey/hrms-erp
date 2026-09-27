@@ -1,0 +1,17 @@
+<div class="edd-del">
+    <mat-icon matTooltip="Schedule" *ngIf="paramsVal?.selection_status =='APPROVED'"
+        (click)="openScheduleDialog($event)">watch</mat-icon>
+        <a href="{{baseUrl}}/api/WL/download_resume/{{paramsVal?.id}}" class="downloadBtn" download target="_blank">
+    <mat-icon matTooltip="Download"  *ngIf="assignAction?.Write">download</mat-icon></a>
+    <mat-icon matTooltip="Background Verification"
+        *ngIf="(paramsVal?.selection_status =='APPROVED' || paramsVal?.selection_status =='HOLD')"
+        (click)="viewInterviewDetails()">visibility</mat-icon>
+    <mat-icon matTooltip="View Status" *ngIf="paramsVal?.selection_status =='APPROVED'"
+        (click)="viewStatus($event)">check_circle</mat-icon>
+    <mat-icon matTooltip="Approve"
+        *ngIf="paramsVal?.selection_status !='APPROVED' && paramsVal?.selection_status !='REJECTED'"
+        (click)="changeStatus($event, 'APPROVED')">check_circle</mat-icon>
+
+    <mat-icon disabled (click)="changeStatus($event, 'REJECTED')" matTooltip="Reject"
+        *ngIf="paramsVal?.selection_status !='APPROVED' && paramsVal?.selection_status !='REJECTED'">close</mat-icon>
+</div>

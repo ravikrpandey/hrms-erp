@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Cash Receipt Voucher</title>
+
+  <style>
+
+    /* ======================================================
+       GLOBAL
+    ====================================================== */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11px;
+      background: #ffffff;
+      color: #000000;
+      padding: 15px;
+    }
+
+    .invoice-box {
+      width: 100%;
+      max-width: 800px;
+      margin: auto;
+      padding: 10px;
+      border: 1px solid #000;
+    }
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid #000;
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .header img {
+      max-height: 55px;
+      max-width: 180px;
+      margin-bottom: 3px;
+    }
+
+    .header h2 {
+      font-size: 16px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .header .sub-text {
+      font-size: 10px;
+      color: #222;
+      line-height: 1.4;
+    }
+
+    /* ======================================================
+       VOUCHER DETAILS
+    ====================================================== */
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      padding: 6px 0;
+
+      border-bottom: 1px solid #000;
+
+      margin-bottom: 8px;
+    }
+
+    .top-row .left {
+      font-weight: bold;
+    }
+
+    /* ======================================================
+       CASH DETAILS
+    ====================================================== */
+
+    .bank-details {
+      display: flex;
+      justify-content: space-between;
+
+      padding: 5px 0;
+
+      margin-bottom: 8px;
+    }
+
+    .bank-details .label {
+      font-weight: bold;
+    }
+
+    /* ======================================================
+       CUSTOMER
+    ====================================================== */
+
+    .customer-details {
+      margin-bottom: 8px;
+      padding: 5px 0;
+
+      border-bottom: 1px dashed #777;
+    }
+
+    .company-name {
+      font-weight: bold;
+      font-size: 11px;
+    }
+
+    /* ======================================================
+       TABLE
+    ====================================================== */
+
+    .table-container {
+      width: 100%;
+
+      margin: 5px 0;
+
+      border-collapse: collapse;
+
+      table-layout: fixed;
+    }
+
+    .table-container thead {
+      display: table-header-group;
+    }
+
+    .table-container th {
+      background: #d3d3d3;
+
+      border: 1px solid #000;
+
+      padding: 5px;
+
+      text-align: center;
+
+      font-weight: bold;
+
+      font-size: 10px;
+    }
+
+    .table-container td {
+      border: 1px solid #000;
+
+      padding: 5px;
+
+      vertical-align: top;
+
+      font-size: 10px;
+    }
+
+    /* ======================================================
+       TABLE COLUMNS
+    ====================================================== */
+
+    .serial-cell {
+      width: 5%;
+      text-align: center;
+      vertical-align: top !important;
+    }
+
+    .particular-cell {
+      width: 50%;
+      padding: 6px !important;
+    }
+
+    .dc-cell {
+      width: 10%;
+      text-align: center;
+      vertical-align: top !important;
+    }
+
+    .amount-cell {
+      width: 35%;
+      text-align: right;
+      vertical-align: top !important;
+    }
+
+    /* ======================================================
+       ACCOUNT
+    ====================================================== */
+
+    .account-name {
+      font-weight: bold;
+      font-size: 10px;
+
+      margin-bottom: 3px;
+    }
+
+    .account-code {
+      font-size: 9px;
+      color: #555;
+
+      margin-bottom: 4px;
+    }
+
+    /* ======================================================
+       CHEQUE
+    ====================================================== */
+
+    .cheque-details {
+      font-size: 9px;
+
+      margin-top: 5px;
+
+      line-height: 1.5;
+    }
+
+    .cheque-date {
+      margin-left: 35px;
+    }
+
+    /* ======================================================
+       TRANSACTION
+    ====================================================== */
+
+    .transaction-details {
+      font-size: 9px;
+
+      margin-top: 4px;
+
+      line-height: 1.4;
+
+      word-break: break-word;
+    }
+
+    /* ======================================================
+       BILL
+    ====================================================== */
+
+    .bill-section {
+      margin-top: 12px;
+
+      font-size: 9px;
+
+      width: 100%;
+    }
+
+    .bill-heading {
+      display: grid;
+
+      grid-template-columns:
+        1.2fr
+        1fr
+        1fr
+        1.3fr;
+
+      column-gap: 8px;
+
+      font-weight: bold;
+
+      margin-bottom: 4px;
+    }
+
+    .bill-values {
+      display: grid;
+
+      grid-template-columns:
+        1.2fr
+        1fr
+        1fr
+        1.3fr;
+
+      column-gap: 8px;
+
+      line-height: 1.4;
+    }
+
+    .bill-values span {
+      word-break: break-word;
+    }
+
+    /* ======================================================
+       TOTAL
+    ====================================================== */
+
+    .total-row td {
+      font-weight: bold;
+
+      border-top: 2px solid #000;
+
+      padding: 6px;
+    }
+
+    /* ======================================================
+       AMOUNT IN WORDS
+    ====================================================== */
+
+    .amount-words {
+      margin-top: 8px;
+
+      padding: 7px;
+
+      border: 1px solid #999;
+
+      font-size: 10px;
+    }
+
+    /* ======================================================
+       REMARKS
+    ====================================================== */
+
+    .remarks {
+      margin-top: 8px;
+
+      padding: 7px;
+
+      border: 1px dashed #999;
+
+      font-size: 10px;
+
+      line-height: 1.4;
+    }
+
+    .remarks .label {
+      font-weight: bold;
+    }
+
+    /* ======================================================
+       SIGNATURE
+    ====================================================== */
+
+    .signature-section {
+      display: flex;
+
+      justify-content: space-between;
+
+      margin-top: 35px;
+
+      page-break-inside: avoid;
+    }
+
+    .signature-section .sig {
+      text-align: center;
+
+      width: 30%;
+    }
+
+    .signature-section .sig .line {
+      width: 130px;
+
+      border-top: 1px solid #000;
+
+      margin: 25px auto 4px auto;
+    }
+
+    /* ======================================================
+       PAGE BREAK
+    ====================================================== */
+
+    .main-row {
+      page-break-inside: avoid;
+    }
+
+    .amount-words,
+    .remarks {
+      page-break-inside: avoid;
+    }
+
+    /* ======================================================
+       PRINT
+    ====================================================== */
+
+    @media print {
+
+      body {
+        padding: 0;
+      }
+
+      .invoice-box {
+        border: 1px solid #000;
+      }
+
+      .table-container {
+        page-break-inside: auto;
+      }
+
+      .table-container tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+      .table-container thead {
+        display: table-header-group;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="invoice-box">
+
+    <!-- ====================================================
+         HEADER
+    ===================================================== -->
+
+    <div class="header">
+
+      <img
+        src="{{entityLogo}}"
+        alt="Company Logo"
+      />
+
+      <h2>
+        {{entityName}}
+      </h2>
+
+      <div class="sub-text">
+        {{mainAddress}}
+      </div>
+
+      <div class="sub-text">
+        {{entity_gst_in}}
+      </div>
+
+      <h2 style="margin-top:8px;">
+        {{heading}}
+      </h2>
+
+    </div>
+
+
+    <!-- ====================================================
+         VOUCHER DETAILS
+    ===================================================== -->
+
+    <div class="top-row">
+
+      <span class="left">
+        Voucher No.
+      </span>
+
+      <span>
+        {{voucher_no}}
+      </span>
+
+      <span class="left">
+        Voucher Date:
+      </span>
+
+      <span>
+        {{voucher_date}}
+      </span>
+
+    </div>
+
+
+    <!-- ====================================================
+         CASH DETAILS
+    ===================================================== -->
+
+    <div class="bank-details">
+
+      <div>
+        <span class="label">
+          Cash A/c
+        </span>
+
+        {{bank_name}}
+      </div>
+
+
+      <div>
+        <span class="label">
+          Sub Ledger
+        </span>
+
+        {{sub_ledger}}
+      </div>
+
+
+      <div>
+
+        <span class="label">
+          Amount:
+        </span>
+
+        {{currency}}
+        {{amount}}
+
+      </div>
+
+    </div>
+
+
+    <!-- ====================================================
+         CUSTOMER
+    ===================================================== -->
+
+    <div class="customer-details">
+
+      <span class="company-name">
+        {{company_name}}
+      </span>
+
+    </div>
+
+
+    <!-- ====================================================
+         ACCOUNT TABLE
+    ===================================================== -->
+
+    <table class="table-container">
+
+      <thead>
+
+        <tr>
+
+          <th width="5%">
+            S.No.
+          </th>
+
+          <th width="50%">
+            Particulars
+          </th>
+
+          <th width="10%">
+            D/C
+          </th>
+
+          <th width="35%">
+            Amount
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        {{{accountRows}}}
+
+
+        <!-- TOTAL -->
+
+        <tr class="total-row">
+
+          <td
+            colspan="3"
+            class="right"
+          >
+            Total
+          </td>
+
+          <td class="right">
+
+            {{currency}}
+            {{totalAmount}}
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+
+    <!-- ====================================================
+         AMOUNT IN WORDS
+    ===================================================== -->
+
+    <div class="amount-words">
+
+      <strong>
+        ({{amount_in_words}})
+      </strong>
+
+    </div>
+
+
+    <!-- ====================================================
+         REMARKS
+    ===================================================== -->
+
+    <div class="remarks">
+
+      <span class="label">
+        Remarks:
+      </span>
+
+      <span>
+        {{remarks}}
+      </span>
+
+    </div>
+
+
+    <!-- ====================================================
+         SIGNATURE
+    ===================================================== -->
+
+    <div class="signature-section">
+
+      <div class="sig">
+
+        <div>
+          Prepared By:
+        </div>
+
+        <div class="line"></div>
+
+        <div>
+          {{prepared_by}}
+        </div>
+
+      </div>
+
+
+      <div class="sig">
+
+        <div>
+          Received By:
+        </div>
+
+        <div class="line"></div>
+
+        <div>
+          {{received_by}}
+        </div>
+
+      </div>
+
+
+      <div class="sig">
+
+        <div>
+          Authorize By:
+        </div>
+
+        <div class="line"></div>
+
+        <div>
+          {{authorize_by}}
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

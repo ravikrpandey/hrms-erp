@@ -1,0 +1,95 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>Announcement<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Add Announcement</span></p>
+  </div>
+
+</div>
+<div class="right_data_all">
+  <form [formGroup]="announcementForm">
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Department Name</mat-label>
+            <mat-select multiple formControlName="department_id" (selectionChange)="onSelectAll($event)">
+              <!-- Filter -->
+              <mat-select-filter [array]="departments" (filteredReturn)="departmentSearch($event)">
+              </mat-select-filter>
+
+              <!-- ✅ Select All option -->
+              <mat-option [value]="'all'" (click)="toggleAllSelection()" [disabled]="getAllDepartment?.length === 0">
+                <strong>{{ isAllSelected ? 'Deselect All' : 'Select All' }}</strong>
+              </mat-option>
+
+              <!-- Normal department list -->
+              <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                {{ department?.department_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Notice Title</mat-label>
+            <input matInput type="text" formControlName="notice_title" />
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+
+          <mat-form-field readonly appearance="outline">
+            <mat-label>From Date </mat-label>
+            <input matInput [matDatepicker]="dp" (click)="dp.open()" [min]="min" readonly formControlName="from_date" />
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+
+          <mat-form-field readonly appearance="outline">
+            <mat-label>To Date </mat-label>
+            <input matInput [matDatepicker]="dp1" (click)="dp.open()" [min]="min" readonly formControlName="to_date" />
+            <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+            <mat-datepicker #dp1></mat-datepicker>
+
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <ckeditor [editor]="Editor" formControlName="description" (ready)="onReady($event)" class="custom-editor">
+          </ckeditor>
+
+
+
+          <!-- <ckeditor [editor]="Editor"(ready)="onReady($event)" class="custom-editor"></ckeditor> -->
+
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="common_button_sub">
+      <button (click)="onSubmitForm()" *ngIf="viewData!='view' && !id">
+        Submit
+      </button>
+      <button (click)="onSubmitForm()" *ngIf="viewData!='view' && id">
+        Update
+      </button>
+      <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+
+    </div>
+  </form>
+
+</div>

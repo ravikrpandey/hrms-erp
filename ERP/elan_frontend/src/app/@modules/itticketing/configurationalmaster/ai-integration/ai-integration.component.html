@@ -1,0 +1,30 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Configurational Master </h1>
+  <p>AI Integration<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+  </i><span>AI Engines Available</span></p>
+  </div>
+</div>
+<div class="flexRow">
+  <div class="aiDiv" *ngFor="let engine of aiEngines">
+    <div [ngClass]="{
+      'activeEngine': engine.name === activeEngine, 
+      'inactiveEngine': engine.name !== activeEngine
+    }">{{engine.name === activeEngine ? "Enabled" : "Disabled"}}
+    </div>
+    <div *ngIf="engine.name == activeEngine">
+      <div>Enabled</div>
+    </div>
+
+    <div *ngIf="engine.name != activeEngine">
+      <div>Disabled</div>
+    </div>
+    <div>
+      <img class="img" [src]="engine.imageSrc" />
+    </div>
+    <div>
+      <h1 style="color:black">{{engine.name}}</h1>
+    </div>
+      <button class="btn btn-primary btn" [disabled]="engine.name === activeEngine"  (click)="enable(engine.id)">{{engine.name === activeEngine ? "Enable" : "Enable"}}</button>
+  </div>
+</div>

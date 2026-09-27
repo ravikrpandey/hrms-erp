@@ -1,0 +1,50 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>HRMS</h1>
+        <p>Leave<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+            </i><span>Leave Cancellation</span></p>
+    </div>
+    <div class="add_button">
+        <button type="button" class="btn_add" (click)="cancelRequest()">Proceed To Cancel</button>
+    </div>
+</div>
+
+<div class="right_data_all" >
+        <div class="col-md-3">
+            <mat-form-field appearance="outline">
+  <mat-label>Select Employee</mat-label>
+  <mat-select (selectionChange)="onEmployeeSelected($event)" placeholder="Select Employee">
+    <app-search-filter
+      [array]="employeedata"
+      [placeholder]="'Search by department name'"
+      [searchFields]="['first_name', 'last_name']"
+      (filteredReturn)="filterEmployeedata = $event.data">
+    </app-search-filter>
+
+    <mat-option *ngFor="let item of filterEmployeedata" [value]="item">
+      {{ item.first_name }} {{ item.last_name }} ({{ item.employee_code }})
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+        </div>
+    <div class="ag_grid">
+        <!-- <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:426px;"
+            [rowData]="rowData" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+            (gridReady)="onGridReady($event)" [rowClass]="rowClass">
+        </ag-grid-angular> -->
+
+
+        <ag-grid-angular
+  class="ag-theme-alpine"
+  style="width: 100%; height: 500px;"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [rowSelection]="'multiple'"
+  [enableBrowserTooltips]="true"
+  [suppressPaginationPanel]="true"
+  [domLayout]="'normal'"
+  (gridReady)="onGridReady($event)">
+</ag-grid-angular>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+
+<mat-card-content>
+    <div class="row">
+      <div class="col-12 col-sm-4 col-md-4 col-12">
+        <mat-form-field  appearance="outline" class="mt-1">
+            <mat-label>Select department</mat-label>
+            <mat-select [(ngModel)]="workflowdepartment">
+                <mat-option *ngFor="let data of department"
+                    [value]="data.dept_id">{{data.department_name}}</mat-option>
+            </mat-select>
+            
+        </mat-form-field>
+      </div>
+      <!-- <div class="col-12 col-sm-4 col-md-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Select Month</mat-label>
+            <mat-select [(ngModel)]="selectedMonth">
+              <mat-select-filter [array]="months" (filteredReturn)="monthSearch($event)"></mat-select-filter>
+              <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                {{ data?.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedMonth">
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div> -->
+
+      <!-- <div class="col-12 col-sm-4 col-md-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Branch</mat-label>
+            <mat-select  [(ngModel)]="branch" (ngModelChange)="changeBranch()">
+              <mat-option *ngFor="let branch of branchList" [value]="branch.id"> {{branch?.branch_name}} </mat-option>
+            </mat-select>
+            </mat-form-field>
+        </div>
+      </div> -->
+
+    </div>
+  </mat-card-content>
+  <div class="right_data_all">
+  
+    <div>
+      <div class="mt-4">
+        <div class="employ_sube py-2">
+          <div class="example-header">
+            <select (change)="onPageSizeChanged()" id="page-size">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+            <!-- <span class="pag_size">Per Page</span> -->
+          </div>
+          <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+              (input)="onFilterTextBoxChanged()">
+          </div>
+          <!-- <button  style="cursor:pointer; height: 35px;" mat-raised-button color="primary" (click)="onSubmit()">
+          Appraisal
+          </button> -->
+  
+        </div>
+      </div>
+      <div class="ag_grid ">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+          [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]=10 [rowData]="rowData"
+          (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"  (cellClicked)="statusCellClicked($event)">
+        </ag-grid-angular>
+      </div>
+    </div>
+  
+  </div>

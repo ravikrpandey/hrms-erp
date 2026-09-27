@@ -1,0 +1,153 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!shiftid?"Add Shift":"Update Shift"}}
+    </h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px"> Shift Record</h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Shift Name :</p>
+                    <p>Shift Time : </p>
+                    <p>Shift Duration :</p>
+                    <p>Grace Period :</p>
+                    <p>Status :</p>
+                </div>
+                <div class="emp_value">
+                    <p>{{shiftData?.shift_name}}</p>
+                    <p> {{shiftData?.shift_time }}</p>
+                    <p> {{shiftData?.shift_duration}}</p>
+                    <p> {{shiftData?.grace_peroid}}</p>
+                    <p> {{shiftData?.status}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button mat-dialog-close>Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+    <fieldset *ngIf="!view">
+        <div class="m-3" [formGroup]="shiftForm">
+            <div class="row">
+                <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+                    <mat-label> Shift name </mat-label>
+                </div> -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Shift name</mat-label>
+                            <input matInput type="text" formControlName="shift_name" />
+                            <mat-error *ngIf="shiftForm.controls['shift_name'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="shiftForm.controls['shift_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+                    <mat-label> Start Time </mat-label>
+                </div> -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label> Enter Start Time <span>*</span></mat-label>
+                            <input matInput name="selected_time_S" [format]=24 formControlName="Start_Time"
+                                [ngxMatTimepicker]="pickerB" readonly />
+                            <mat-icon matSuffix (click)="pickerB.open()"> watch_later </mat-icon>
+                            <mat-error *ngIf="shiftForm.controls['Start_Time'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="shiftForm.controls['Start_Time'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerB></ngx-mat-timepicker>
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+                    <mat-label> End Time </mat-label>
+                </div> -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <div class="form-group">
+
+                        <mat-form-field appearance="outline">
+                            <mat-label class="label_o"> Enter End Time <span>*</span></mat-label>
+                            <input matInput name="selected_time_E" [format]=24 formControlName="end_Time"
+                                [ngxMatTimepicker]="pickerE" readonly />
+                            <mat-icon matSuffix (click)="pickerE.open()"> watch_later </mat-icon>
+                            <mat-error *ngIf="shiftForm.controls['end_Time'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="shiftForm.controls['end_Time'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerE></ngx-mat-timepicker>
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+                    <mat-label> Shift Duration </mat-label>
+                </div> -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Shift Duration (HRS) </mat-label>
+                            <input matInput type="text" formControlName="shift_Duration" />
+                            <mat-error *ngIf="shiftForm.controls['shift_Duration'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="shiftForm.controls['shift_Duration'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+                    <mat-label> Grace Period </mat-label>
+                </div> -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Grace Period (MINS)</mat-label>
+                            <input matInput type="text" formControlName="Grace_Period" />
+                            <mat-error *ngIf="shiftForm.controls['Grace_Period'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="shiftForm.controls['Grace_Period'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <!-- <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-3">
+                    <mat-checkbox formControlName="isOvertimeApplicable">
+                        Is overtime applicable?
+                    </mat-checkbox>
+                </div> -->
+
+            </div>
+
+        </div>
+        <div class="common_button_sub">
+            <mat-dialog-actions *ngIf="!view">
+                <button *ngIf="!shiftid" (click)="onSubmitForm()">
+                    Submit
+                </button>
+                <button *ngIf="shiftid" (click)="onUpdateForm()">
+                    Update
+                </button>
+                <button mat-dialog-close class="cancel_button_y">
+                    Close
+                </button>
+            </mat-dialog-actions>
+        </div>
+    </fieldset>
+</div>

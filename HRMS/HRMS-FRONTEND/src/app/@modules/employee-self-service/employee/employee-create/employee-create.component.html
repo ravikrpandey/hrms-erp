@@ -1,0 +1,88 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span> Employee </span></p>
+  </div>
+  <!-- <div class="add_button">
+    <button routerLink="../" type="button">List</button>
+    <button class="backBtn" routerLink="../" *ngIf="(title !='BASIC-DETAILS')"><i class="fa fa-arrow-circle-left"></i>
+      Back</button>z
+  </div> -->
+</div>
+
+<div fxflex="100%">
+  <div class="row">
+    <div class="tab_menu">
+      <div class="profileArea">
+        <div class="profileText">
+          
+          <div class="iconText profile-img-wrapper">
+            <img
+            [src]="thumbnail_photo || (loginUserDetails?.employee_photo ? (baseUrl + '/' + loginUserDetails.employee_photo) : imagePath)"
+
+              alt="" matTooltip="Profile Photo" class="profileImg"
+              (click)="viewImage(thumbnail_photo || loginUserDetails?.employee_photo)" />
+
+
+            <label  class="file-upload-icon" [ngClass]="{ 'upload-fade': uploadSuccess }">
+              <i class="material-icons">photo_camera</i>
+              <input autocomplete="off" type="file" style="display: none" accept=".png, .jpg, .jpeg"
+                (change)="uploadImage($event)" />
+            </label>
+          </div>
+
+          <div class="paraText">
+            <p>{{ loginUserDetails?.first_name + ' ' + loginUserDetails?.last_name }}</p>
+            <p>Status : <span>Active</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-item">
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['basic-details']"
+            routerLinkActive="active_button" (click)="goToBasicDetails('BASIC-DETAILS')">
+            <i class="fas fa-address-card"></i>
+          </button>
+          <p>Basic Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['personal-details']"
+            routerLinkActive="active_button" (click)="goToPersonalDetails('PERSONAL DETAILS')">
+            <i class="far fa-file-alt"></i>
+          </button>
+          <p>Personal Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['salary-details']"
+            routerLinkActive="active_button" (click)="goToSalaryDetails('SALARY DETAILS')">
+            <i class="far fa-money-bill-alt"></i>
+          </button>
+          <p>Salary Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['payment-details']"
+            routerLinkActive="active_button" (click)="goToPaymentDetails('PAYMENT DETAILS')">
+            <i class="far fa-credit-card"></i></button>
+          <p>Payment Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['document-details']"
+            routerLinkActive="active_button" (click)="goToDocumentDetails('DOCUMENT DETAILS')">
+            <i class="fas fa-id-card-alt"></i>
+          </button>
+          <p>Document Details</p>
+        </div>
+        <div class="mainTabs">
+          <button class="main-button" [disabled]="!active" [routerLink]="['contract-details']"
+            routerLinkActive="active_button" (click)="goToContractDetails('CONTRACT DETAILS')">
+            <i class="fas fa-id-card-alt"></i>
+          </button>
+          <p>Contract Details</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

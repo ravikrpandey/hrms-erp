@@ -1,0 +1,62 @@
+<!-- Loader overlay -->
+<div class="loader-overlay" *ngIf="loading">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <p>Please wait...</p>
+    </div>
+</div>
+
+<div class="section">
+    <h3 class="popHead">Upload Documents Details</h3>
+    <button class="close-btn" (click)="closeDialog()">×</button>
+
+    <div mat-dialog-content>
+        <div style="margin-bottom: 25px;" *ngIf="data.pageMode!='view'">
+            <div>
+                <input #fileInput type="file" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx"
+                    (change)="onFileSelected($event)" />
+            </div>
+            <div class="button-container">
+                <button class="save-btn" (click)="getSaveFiles()"><mat-icon class="mat_Icon">cloud_upload</mat-icon>
+                    Upload</button>
+                <button class="reset-btn" (click)="resetFiles()"><mat-icon class="mat_Icon">restart_alt</mat-icon>
+                    Reset</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>S.No.</th>
+                <th>Document Name</th>
+                <th>Action</th>
+                <th *ngIf="data.pageMode!='view'"></th>
+            </tr>
+
+            <!-- NO DATA -->
+            <tr *ngIf="!uploadedFiles || uploadedFiles.length === 0">
+                <td colspan="3" style="text-align: center; padding: 10px;">No data found</td>
+            </tr>
+
+            <!-- DATA -->
+            <ng-container *ngIf="uploadedFiles && uploadedFiles.length > 0">
+                <tr *ngFor="let f of uploadedFiles; index as i">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ f.name }}
+                        <span *ngIf="f.isNew" style="background: #28a745; color:white; 
+                             padding: 2px 6px; font-size: 11px;
+                             border-radius: 10px; margin-left: 6px;">
+                            New
+                        </span>
+                    </td>
+                    <td>
+                        <mat-icon class="mat-Icon" (click)="viewFile(i)">visibility</mat-icon>
+                        <mat-icon class="mat-Icon" (click)="downloadFile(i)">download</mat-icon>
+
+                    </td>
+                    <td *ngIf="data.pageMode!='view'"><mat-icon class="mat-Icon" color="warn" (click)="deleteFile(i,f)"
+                            style="width: 45% !important;">delete</mat-icon></td>
+                </tr>
+            </ng-container>
+        </table>
+    </div>
+</div>

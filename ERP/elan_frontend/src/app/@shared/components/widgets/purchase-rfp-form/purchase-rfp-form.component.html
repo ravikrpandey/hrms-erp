@@ -1,0 +1,730 @@
+<app-wrapper
+  [title]="title"
+  [subTitle]="subTitle"
+  [subheading]="subheading"
+  [showActions]="showActions"
+  [isBack]="isBack"
+  [actions]="actions"
+>
+  <mat-card class="p-2">
+    <form class="" [formGroup]="form">
+      <div class="heading_neo">
+        <h3>PR Details</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <table id="customers">
+            <tr>
+              <td class="head_task">PR No.</td>
+              <td class="tasklinks" class="tasklink">
+                {{ prData?.pr_number }}
+              </td>
+            </tr>
+            <tr>
+              <td class="head_task">Department</td>
+              <td class="tasklinks">
+                {{ form.get("department_name")?.value || "-" }}
+              </td>
+            </tr>
+            <tr>
+              <td class="head_task">Created Date</td>
+              <td class="tasklinks">
+                {{ prData?.createdAt | date: "dd-MM-yyyy" }}
+              </td>
+            </tr>
+            <tr>
+              <td class="head_task">Start Date</td>
+              <td class="tasklinks">
+                <div class="form-group" *ngIf="formType === 'RFP'">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="picker1"
+                      (click)="picker1.open()"
+                      formControlName="start_date_pr"
+                      [max]="maxDate"
+                      [min]="minDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker1"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'">
+                  {{ prData?.rfp_start_date | date: "dd-MM-yyyy" }}
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <table id="customers">
+            <tr>
+              <td class="head_task">Created By</td>
+              <td class="tasklinks">
+                {{ form.get("createdBy")?.value || "-" }}
+              </td>
+            </tr>
+            <tr>
+              <td class="head_task">Budget Type</td>
+              <td class="tasklinks">{{ form.get("type")?.value || "-" }}</td>
+            </tr>
+            <!-- <tr>
+                            <td class="head_task">Warehouse Name</td>
+                            <td class="tasklinks">{{ prData?.WAREHOUSE_MASTER?.name || "-" }}</td>
+                        </tr> -->
+
+            <!-- <tr>
+              <td class="head_task">Delivery Date</td>
+              <td class="tasklinks">
+                <div class="form-group" *ngIf="formType === 'RFP'">
+                  <mat-form-field appearance="outline">
+                    <input
+                      matInput
+                      [matDatepicker]="picker3"
+                      (click)="picker3.open()"
+                      formControlName="delivery_date"
+                      [max]="maxDate"
+                      [min]="minDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker3"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'">
+                  {{ prData?.rfp_delivery_date | date: "dd-MM-yyyy" }}
+                </div>
+              </td>
+            </tr> -->
+            <tr>
+              <td class="head_task">End Date</td>
+              <td class="tasklinks">
+                <div class="form-group" *ngIf="formType === 'RFP'">
+                  <mat-form-field appearance="outline" readonly>
+                    <input
+                      matInput
+                      [matDatepicker]="picker2"
+                      (click)="picker2.open()"
+                      formControlName="end_date_pr"
+                      [min]="minEndDate"
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="picker2"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error
+                      *ngIf="form.controls['end_date_pr'].hasError('required')"
+                    >
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'">
+                  {{ prData?.rfp_end_date | date: "dd-MM-yyyy" }}
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="prData?.rfp_stop_date !== null">
+              <td class="head_task">Close RFP Date</td>
+              <td class="tasklinks">
+                <div *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'">
+                  {{ prData?.rfp_stop_date | date: "dd-MM-yyyy" }}
+                </div>
+              </td>
+            </tr>
+            <tr
+              *ngIf="
+                formType === 'CLOSE_RFP' || formType === 'VQA' || rfp_number
+              "
+            >
+              <td class="head_task">RFP No.</td>
+              <td class="tasklinks">
+                {{ rfp_number || prData?.rfp_number || "-" }}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="heading_neo">
+        <h3>Item Details</h3>
+      </div>
+      <!-- item type -->
+      <div class="row" *ngIf="form.get('prCategory')?.value === 'Item'">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form_basic">
+            <div class="table-responsive">
+              <table class="table table-bordered" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th
+                      scope="col"
+                      *ngIf="formType === 'RFP' && mode !== 'View'"
+                    >
+                      Select
+                    </th>
+                    <th scope="col">Item Image</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item Code</th>
+                    <th scope="col" *ngIf="formType === 'RFP'">Priority</th>
+                    <th scope="col" *ngIf="formType === 'RFP'">MVP</th>
+                    <th scope="col">Ex. Delivery Date</th>
+                    <th scope="col" *ngIf="formType === 'RFP'">
+                      Vendor's Name
+                    </th>
+                    <th *ngIf="!id && formType === 'RFP'" scope="col">
+                      Action
+                    </th>
+                    <th scope="col" *ngIf="formType === 'RFP'">Add Question</th>
+                    <th scope="col" *ngIf="formType === 'CLOSE_RFP'">
+                      Quantity
+                    </th>
+                    <th scope="col" *ngIf="formType === 'CLOSE_RFP'">
+                      Total Price
+                    </th>
+                  </tr>
+                </thead>
+                <tbody
+                  formArrayName="item_detail"
+                  *ngFor="let control of itemDetail.controls; index as i"
+                >
+                  <tr
+                    *ngIf="itemDetail.length != 0"
+                    style="text-align: center"
+                    [formGroupName]="i"
+                  >
+                    <td *ngIf="formType === 'RFP' && mode !== 'View'">
+                      <div class="form-group" style="padding-top: 10px">
+                        <input
+                          *ngIf="!control.get('already_initiated')?.value"
+                          type="checkbox"
+                          formControlName="selected"
+                          style="width: 20px; height: 20px; cursor: pointer"
+                        />
+                        <span
+                          *ngIf="control.get('already_initiated')?.value"
+                          class="badge bg-success"
+                          style="font-size: 11px"
+                          >Initiated</span
+                        >
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <img
+                          [src]="
+                            generateImageUrl(control.get('item_image')?.value)
+                          "
+                          style="cursor: pointer"
+                          width="80"
+                          height="60"
+                          (click)="
+                            seePreviewTable(
+                              generateImageUrl(control.get('item_image')?.value)
+                            )
+                          "
+                        />
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 10vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            matInput
+                            formControlName="item_name"
+                            readonly
+                          />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 5vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            matInput
+                            formControlName="item_code"
+                            readonly
+                          />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td *ngIf="formType === 'RFP'">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 5vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <mat-select formControlName="priority">
+                            <mat-option value="HIGH">HIGH</mat-option>
+                            <mat-option value="MEDIUM">MEDIUM</mat-option>
+                            <mat-option value="LOW">LOW</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td *ngIf="formType === 'RFP'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 5vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input matInput formControlName="total_mvp" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 10vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          matInput
+                          [matDatepicker]="picker3"
+                          (click)="picker3.open()"
+                          formControlName="expected_delivery_date"
+                          [max]="maxDate"
+                          [min]="minDate"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="picker3"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #picker3></mat-datepicker>
+                      </mat-form-field>
+                    </td>
+                    <td *ngIf="formType === 'RFP'">
+                      <app-mat-form-select-filter
+                        [key]="'id'"
+                        [items]="vendorList"
+                        [displayKey]="'vendor_name'"
+                        placeholder="Vendor Name"
+                        formControlName="vendor_ids"
+                        [multiple]="true"
+                      ></app-mat-form-select-filter>
+                      <mat-error
+                        *ngIf="control.get('vendor_ids')?.hasError('required')"
+                      >
+                        Vendor is required
+                      </mat-error>
+                    </td>
+                    <td *ngIf="formType === 'RFP'">
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        (click)="openItemQuestionDialog(control, i)"
+                      >
+                        Add Questions
+                      </button>
+                    </td>
+                    <td *ngIf="formType === 'CLOSE_RFP'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 5vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input matInput formControlName="quantity" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td *ngIf="formType === 'CLOSE_RFP'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 5vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input matInput formControlName="total_mvp" readonly />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="itemDetail.controls.length == 0">
+                  <tr>
+                    <td colspan="9" style="text-align: center; color: #8e8e8e">
+                      Item Not Selcted
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row" *ngIf="itemDetail.controls.length !== 0">
+            <div class="col-10">
+              <p style="text-align: end; font-size: 16px; font-weight: 500">
+                Total =
+              </p>
+            </div>
+            <div class="col-1">
+              <p style="font-size: 16px; font-weight: 500">
+                {{ totalPurchaseAmount.toFixed(2) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'"
+        class="form_set"
+      >
+        <div class="heading_neo">
+          <h3>Quotations</h3>
+        </div>
+
+        <table class="table table-bordered tbl_design">
+          <thead>
+            <tr>
+              <th>Products</th>
+              <th>Vendors</th>
+              <th>Delivery Charges</th>
+              <th>Additional Charges</th>
+              <th>Tax</th>
+              <th>Currency Type</th>
+              <th>Price/Unit</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container>
+              <tr *ngIf="levelsOne?.length > 0">
+                <td
+                  [attr.colspan]="8"
+                  style="
+                    font-weight: 600;
+                    background: #d0d6db;
+                    font-size: 16px;
+                    text-align: left;
+                  "
+                >
+                  L1
+                </td>
+              </tr>
+              <tr *ngFor="let lev of levelsOne; let i = index">
+                <td>
+                  {{ lev?.itemName || lev?.serviceName || lev?.bomName || "-" }}
+                </td>
+                <td>{{ lev?.vendor_name || "-" }}</td>
+                <td>{{ lev?.delivery_charges || "-" }}</td>
+                <td>{{ lev?.additional_charges || "-" }}</td>
+
+                <td>{{ lev?.igst || "-" }} %</td>
+                <td>{{ lev?.currency_type || "-" }}</td>
+                <td>{{ lev?.price_amt || "-" }}</td>
+                <td>
+                  <mat-icon
+                    (click)="viewAnswer(lev?.itemName, lev?.questionForm)"
+                    >visibility</mat-icon
+                  >
+                </td>
+              </tr>
+              <tr *ngIf="levelsTwo?.length > 0">
+                <td
+                  [attr.colspan]="8"
+                  style="
+                    font-weight: 600;
+                    background: #d0d6db;
+                    font-size: 16px;
+                    text-align: left;
+                  "
+                >
+                  L2
+                </td>
+              </tr>
+              <tr *ngFor="let lev of levelsTwo; let i = index">
+                <td>
+                  {{ lev?.itemName || lev?.serviceName || lev?.bomName || "-" }}
+                </td>
+                <td>{{ lev?.vendor_name || "-" }}</td>
+                <td>{{ lev?.delivery_charges || "-" }}</td>
+                <td>{{ lev?.additional_charges || "-" }}</td>
+                <td>{{ lev?.igst || "-" }} %</td>
+                <td>{{ lev?.currency_type || "-" }}</td>
+                <td>{{ lev?.price_amt || "-" }}</td>
+                <td>
+                  <mat-icon
+                    (click)="viewAnswer(lev?.itemName, lev?.questionForm)"
+                    >visibility</mat-icon
+                  >
+                </td>
+              </tr>
+
+              <tr *ngIf="levelsThree?.length > 0">
+                <td
+                  [attr.colspan]="8"
+                  style="
+                    font-weight: 600;
+                    background: #d0d6db;
+                    font-size: 16px;
+                    text-align: left;
+                  "
+                >
+                  L3
+                </td>
+              </tr>
+              <tr *ngFor="let lev of levelsThree">
+                <td>
+                  {{ lev?.itemName || lev?.serviceName || lev?.bomName || "-" }}
+                </td>
+                <td>{{ lev?.vendor_name || "-" }}</td>
+                <td>{{ lev?.delivery_charges || "-" }}</td>
+                <td>{{ lev?.additional_charges || "-" }}</td>
+                <td>{{ lev?.igst || "-" }} %</td>
+                <td>{{ lev?.currency_type || "-" }}</td>
+                <td>{{ lev?.price_amt || "-" }}</td>
+                <td>
+                  <mat-icon
+                    (click)="viewAnswer(lev?.itemName, lev?.questionForm)"
+                    >visibility</mat-icon
+                  >
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- start Approvel -->
+      <div
+        *ngIf="formType === 'CLOSE_RFP' || formType === 'VQA'"
+        class="form_set"
+      >
+        <div class="heading_neo">
+          <h3>Quotations Approval Details</h3>
+        </div>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <table class="table table-bordered tbl_css">
+              <thead>
+                <tr>
+                  <th>S. No.</th>
+                  <th>Vendor Name</th>
+                  <th>Item Name/ Delivery Date</th>
+                  <th>Price/Unit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container
+                  *ngFor="let vendor of approvalQuoteTable; index as i"
+                >
+                  <!-- Loop through each product for the current vendor -->
+                  <tr
+                    *ngFor="
+                      let prodName of vendor?.items;
+                      let prodIndex = index
+                    "
+                  >
+                    <!-- Display "Sr No" and "Vendor Name" only for the first product of each vendor -->
+                    <td
+                      *ngIf="prodIndex === 0"
+                      [attr.rowspan]="vendor?.items.length"
+                    >
+                      {{ i + 1 }}
+                    </td>
+                    <td
+                      *ngIf="prodIndex === 0"
+                      [attr.rowspan]="vendor?.items.length"
+                    >
+                      {{ vendor?.vendor_name }}
+                    </td>
+
+                    <!-- Display product details -->
+                    <td>
+                      <mat-checkbox
+                        *ngIf="formType === 'CLOSE_RFP'"
+                        class="custom-checkbox"
+                        [(ngModel)]="prodName.checked"
+                        [ngModelOptions]="{ standalone: true }"
+                        (change)="checkboxSele(prodName, vendor.vendor_id)"
+                        [disabled]="
+                          selectedItemMap[prodName.item_id] &&
+                          selectedItemMap[prodName.item_id] !== vendor.vendor_id
+                        "
+                      >
+                        {{ prodName?.item_name || prodName?.service_name }}
+                      </mat-checkbox>
+                      <span *ngIf="formType === 'VQA'">
+                        {{ prodName?.item_name || prodName?.service_name }}
+                      </span>
+                      <strong>
+                        {{ prodName?.confirm_date | date: "dd-MM-YYYY" }}
+                      </strong>
+                    </td>
+                    <td>{{ prodName?.price_amt || 0 }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <p>Remark</p>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="remarks_approvel"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-weight: 500; font-size: 18px">Billing Branch Address :</p>
+      <div class="row" *ngIf="prData && prData.MASTER_BRANCH">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <strong>Branch Name: </strong>
+            <span>{{ prData.MASTER_BRANCH.branch_name }}</span>
+          </div>
+        </div>
+
+        <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-9 col-12">
+          <div class="form-group mb-3">
+            <strong>Branch Address: </strong>
+            <span>{{ prData.MASTER_BRANCH.branch_address }}</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-weight: 500; font-size: 18px">Delivery Address :</p>
+      <div class="row" *ngIf="prData && prData.WAREHOUSE_MASTER">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="readonly-wrapper">
+              <mat-label>Warehouse Name</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="prData.WAREHOUSE_MASTER.name"
+                [ngModelOptions]="{ standalone: true }"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="readonly-wrapper">
+              <mat-label>State</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="prData.WAREHOUSE_MASTER.postal_address.State"
+                [ngModelOptions]="{ standalone: true }"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="readonly-wrapper">
+              <mat-label readonly>Delivery Address</mat-label>
+              <input
+                matInput
+                type="text"
+                [(ngModel)]="prData.WAREHOUSE_MASTER.address"
+                [ngModelOptions]="{ standalone: true }"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div
+          class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12"
+          *ngIf="formType === 'RFP'"
+        >
+          <div class="form-group mb-3">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+            >
+              <mat-label>Justification</mat-label>
+              <input
+                [readonly]="mode === 'View'"
+                matInput
+                type="text"
+                formControlName="remark"
+              />
+              <mat-error *ngIf="form.controls['remark'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <table
+            class="table table-bordered"
+            *ngIf="mode === 'View' || mode === 'Edit'"
+          >
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>File Name</th>
+                <th>File Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <!-- end approvel -->
+      <div class="mt-3 common_button_sub" align="end">
+        <button *ngIf="id && formType === 'RFP'" (click)="onSubmit()">
+          Send RFP Link
+        </button>
+        <button
+          *ngIf="mode === 'Approval' && formType === 'RFP'"
+          (click)="onApproval()"
+        >
+          Approval
+        </button>
+        <button
+          *ngIf="
+            mode === 'Approval' && !approval_status && formType === 'CLOSE_RFP'
+          "
+          (click)="onApproval()"
+        >
+          Send Approval
+        </button>
+        <button
+          *ngIf="mode === 'Approval' && formType === 'VQA'"
+          (click)="onApproval()"
+        >
+          Approved
+        </button>
+        <button
+          class="cancel_button_y"
+          *ngIf="mode === 'Approval' && formType === 'VQA'"
+          (click)="onRejected()"
+        >
+          Rejected
+        </button>
+      </div>
+    </form>
+  </mat-card>
+</app-wrapper>
+
+<!-- <pre>
+    {{form.value | json}}
+</pre> -->

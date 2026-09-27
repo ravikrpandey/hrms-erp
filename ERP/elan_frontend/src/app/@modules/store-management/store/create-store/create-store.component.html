@@ -1,0 +1,213 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Store Management</h1>
+      <p>Create Store</p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+  </div>
+  
+    <div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Store Details</h3>
+    </div>
+      <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="createStoreForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Store Name</mat-label>
+                <input matInput type="text" formControlName="store_name" maxlength="30"/>
+                <mat-error *ngIf="createStoreForm.controls['store_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Plant</mat-label>
+                <mat-select formControlName="plant_id">
+                  <mat-form-field>
+                    <input matInput [formControl]="filterPlantControl" type="text" placeholder="Search" />
+                  </mat-form-field>
+                  <mat-option *ngIf="!countryList?.length" disabled>
+                    <p>Plant Not Found</p>
+                  </mat-option>
+                  <mat-option *ngFor="let data of plant"
+                    [value]="data?.id">
+                    {{data?.plant_name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="createStoreForm.controls['plant_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Store Code</mat-label>
+                <input matInput type="text" formControlName="store_code" readonly/>
+                <mat-error *ngIf="createStoreForm.controls['store_code'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="heading_neo mb-3">
+            <h3>Store Address</h3>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <input matInput type="text" formControlName="address" maxlength="30"/>
+                <mat-error *ngIf="createStoreForm.controls['address'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                  <mat-label>Country</mat-label>
+                  <mat-select formControlName="country_id" (selectionChange)="onChangeCountry($event)">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterCountryControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!countryList?.length" disabled>
+                      <p>Country Not Found</p>
+                    </mat-option>
+                    <mat-option *ngFor="let country of countryList"
+                        [value]="country?.countryss_id">{{ country?.countryss_name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="createStoreForm.get('country_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+              </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                  <mat-label>State</mat-label>
+                  <mat-select formControlName="State_id" (selectionChange)="onChangeState($event)">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterStateControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!AllStateList?.length" disabled>
+                      <p>State Not Found</p>
+                    </mat-option>
+                      <mat-option *ngFor="let state of AllStateList"
+                          [value]="state?.states_id">{{ state?.states_name }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="createStoreForm.get('State_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+              </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="city_id">
+                    <mat-form-field>
+                      <input matInput [formControl]="filterCityControl" type="text" placeholder="Search" />
+                    </mat-form-field>
+                    <mat-option *ngIf="!allCityList?.length" disabled>
+                      <p>City Not Found</p>
+                    </mat-option>
+                    <mat-option *ngFor="let city of allCityList"
+                        [value]="city?.city_id">{{ city?.city_name }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="createStoreForm.get('city_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+  
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Pin</mat-label>
+                <input matInput type="text" formControlName="pin" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0"/>
+                <mat-error *ngIf="createStoreForm.controls['pin'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" [hidden]="true">
+            <div class="Supply-btn">
+                <a>Mark as default</a>
+                <mat-slide-toggle [(ngModel)]="isChecked" [ngModelOptions]="{standalone: true}" (change)="toggle($event, isChecked)"></mat-slide-toggle>
+            </div>
+        </div>
+
+          <!-- Additional information -->
+          <div class="heading_neo mb-3">
+            <h3>Additional Information</h3>
+          </div>
+          
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Employee Name</mat-label>
+                <mat-select formControlName="employee_id" (selectionChange)="getEmployeeContact($event)">
+                  <mat-form-field>
+                    <input matInput [formControl]="filterEmpControl" type="text" placeholder="Search" />
+                  </mat-form-field>
+                  <mat-option *ngIf="!employeeList?.length" disabled>
+                    <p>Employee Not Found</p>
+                  </mat-option>
+                  <mat-option *ngFor=" let item of employeeList" [value]="item?.employee_id">
+                    {{item?.first_name + ' ' + item?.last_name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="createStoreForm.get('employee_id')?.hasError('required')">
+                  This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Contact Information</mat-label>
+                <input matInput type="text" formControlName="contact_info" maxlength="50"/>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+     
+        <div class="common_button_sub">
+          <button (click)="onSubmitForm()" *ngIf="!action_type">
+            Create Store
+          </button>
+          <button (click)="editWarehouse()" *ngIf="action_type==='edit'">
+            Edit Store
+          </button>
+          <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>

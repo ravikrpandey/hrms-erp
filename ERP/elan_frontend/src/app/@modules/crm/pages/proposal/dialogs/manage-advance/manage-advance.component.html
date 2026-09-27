@@ -1,0 +1,310 @@
+<div class="section">
+
+    <div class="d-flex justify-content-between align-items-center mb-3 popHead">
+        <h3 class="">Receive Customer Advance</h3>
+
+        <button mat-icon-button color="warn" (click)="closeModal()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <form [formGroup]="advanceForm" class="p-3" (ngSubmit)="saveAdvance()">
+        <div class="row">
+            <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label> Suspense Account</mat-label>
+                    <mat-select  formControlName="suspense_account" multiple (selectionChange)="selectedSuspenseAcc($event.value)">
+                        <mat-option *ngFor="let acc of suspenseAccount" [value]="acc">
+                            {{acc.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-md-2">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Transaction Date</mat-label>
+
+                    <input matInput [matDatepicker]="picker" formControlName="transaction_date">
+
+                    <mat-datepicker-toggle matSuffix [for]="picker">
+                    </mat-datepicker-toggle>
+
+                    <mat-datepicker #picker></mat-datepicker>
+
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-6">
+
+                <mat-form-field appearance="outline" class="w-100">
+
+                    <mat-label>Remarks</mat-label>
+
+                    <textarea matInput rows="2" formControlName="remarks">
+                </textarea>
+
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h4 class="mb-0">Payment Details</h4>
+
+            <div class="d-flex align-items-center gap-2">
+
+                <mat-form-field appearance="outline" class="mb-0 mt-2" style="width: 200px;">
+                    <mat-label>Advance Adjustment (%)</mat-label>
+
+                    <input matInput type="number" formControlName="advance_adjustment_percentage" placeholder="Enter %"
+                        min="0" max="100">
+
+                    <span matTextSuffix>%</span>
+
+                    <mat-error *ngIf="advanceForm.get('advance_adjustment_percentage')?.hasError('min')">
+                        Percentage cannot be less than 0.
+                    </mat-error>
+
+                    <mat-error *ngIf="advanceForm.get('advance_adjustment_percentage')?.hasError('max')">
+                        Percentage cannot be greater than 100.
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-stroked-button color="primary" type="button" (click)="addPaymentRow()">
+                    <mat-icon>add</mat-icon>
+                    Add Payment
+                </button>
+
+            </div>
+
+        </div>
+        <div class="payment-table-wrapper">
+
+            <table class="table table-bordered align-middle">
+
+                <thead>
+                    <tr>
+                        <th width="15%">Payment Mode</th>
+                        <th width="15%">Bank</th>
+                        <th width="15%">Bank Account</th>
+                        <th width="20%">Cheque No.</th>
+                        <!-- <th>Currency</th>
+<th>Rate</th> -->
+
+                        <th width="15%">Amount(INR)</th>
+                        <th>Amount(Selected Currency)</th>
+                        <th width="10%">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody formArrayName="paymentDetails">
+
+                    <tr *ngFor="let item of paymentDetails.controls; let i=index" [formGroupName]="i">
+
+                        <!-- Payment Mode -->
+                        <td>
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Payment Mode</mat-label>
+                                <mat-select formControlName="payment_mode" (selectionChange)="onPaymentModeChange(i)">
+                                    <mat-option value="Cash">Cash</mat-option>
+                                    <mat-option value="Bank">Bank</mat-option>
+                                    <mat-option value="Suspense">Suspense</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </td>
+
+                        <!-- Bank -->
+                        <td>
+                            <ng-container *ngIf="item.get('payment_mode')?.value == 'Bank'">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <mat-label>Bank</mat-label>
+                                    <mat-select formControlName="bank_id">
+                                        <mat-option *ngFor="let bank of bankList" [value]="bank.id"
+                                            (click)="selectedBank(bank,i)">
+                                            {{bank.bank_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
+                        </td>
+
+                        <!-- Bank Account -->
+                        <td>
+                            <ng-container *ngIf="item.get('payment_mode')?.value == 'Bank'">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput placeholder="Bank Account Name" formControlName="bank_account_name">
+                                </mat-form-field>
+                            </ng-container>
+                        </td>
+
+                        <td>
+                            <ng-container *ngIf="item.get('payment_mode')?.value == 'Bank'">
+                                <mat-form-field appearance="outline" class="w-100">
+                                    <input matInput placeholder="Cheque No." formControlName="cheque_no">
+                                </mat-form-field>
+                            </ng-container>
+                        </td>
+
+                        <!-- Amount -->
+                        <!-- <td>
+    {{ item.get('payment_currency')?.value }}
+</td>
+
+<td>
+    {{ item.get('exchange_rate')?.value }}
+</td> -->
+                        <td>
+
+                            <mat-form-field appearance="outline" class="w-100">
+
+                                <input matInput type="number" placeholder="Amount" formControlName="amount"
+                                    (input)="calculateAmount(i)">
+
+                            </mat-form-field>
+
+                        </td>
+                        <td>
+                            <mat-form-field appearance="outline" class="w-100">
+                                <input matInput formControlName="base_amount" readonly>
+                            </mat-form-field>
+                        </td>
+
+                        <!-- Document -->
+                        <!-- <td *ngIf="isBankSelected">
+
+                        <div *ngIf="item.get('payment_mode')?.value=='Bank'">
+
+                            <input type="file" class="form-control" (change)="onFileChange($event,i)">
+
+                            <div class="selected-file mt-2" *ngIf="item.get('document')?.value">
+
+                                <mat-icon>description</mat-icon>
+
+                                {{item.get('document')?.value.name}}
+
+                                <button mat-icon-button color="primary" type="button" (click)="viewDocument(i)">
+
+                                    <mat-icon>visibility</mat-icon>
+
+                                </button>
+
+                                <button mat-icon-button color="warn" type="button" (click)="removeDocument(i)">
+
+                                    <mat-icon>close</mat-icon>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </td> -->
+
+                        <!-- Action -->
+                        <td class="text-center">
+
+                            <button mat-icon-button color="warn" type="button" (click)="removePayment(i)">
+
+                                <mat-icon>delete</mat-icon>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+
+        <div class="mt-4 text-end">
+
+            <div class="row g-2 mb-3">
+
+                <div class="col-md-4 col-sm-4">
+                    <mat-card class="summary-card advance-card">
+                        <mat-card-content>
+
+                            <div class="card-header">
+                                <span class="title">Advance Amount</span>
+                                <mat-icon>account_balance_wallet</mat-icon>
+                            </div>
+
+                            <h3 class="amount">
+                                {{currencySign}} {{ totalAdvanceAmount | number:'1.0-0' }}
+                            </h3>
+
+                            <small>Existing Advance</small>
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md-4 col-sm-4">
+                    <mat-card class="summary-card received-card">
+                        <mat-card-content>
+
+                            <div class="card-header">
+                                <span class="title">Received</span>
+                                <mat-icon>payments</mat-icon>
+                            </div>
+
+                            <h3 class="amount">
+                                {{currencySign}} {{ getTotalAmt }}
+                            </h3>
+
+                            <small>Current Entry</small>
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+                <div class="col-md-4 col-sm-4">
+                    <mat-card class="summary-card total-card">
+                        <mat-card-content>
+
+                            <div class="card-header">
+                                <span class="title">Total Advance</span>
+                                <mat-icon>account_balance</mat-icon>
+                            </div>
+
+                            <h3 class="amount">
+                                {{currencySign}} {{grandTotalAmt }}
+                            </h3>
+
+                            <small>After Save</small>
+
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+
+            </div>
+
+
+            <!-- <h3>
+
+                Total Advance :
+                ₹ {{getTotalAmount()}}
+
+            </h3> -->
+
+        </div>
+
+        <div class="text-end mt-3">
+
+            <button mat-raised-button color="primary">
+
+                Save Advance
+
+            </button>
+
+        </div>
+    </form>
+
+
+
+</div>

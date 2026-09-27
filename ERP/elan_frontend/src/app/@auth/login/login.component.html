@@ -1,0 +1,149 @@
+<div class="loginpage">
+  <div class="row" style="height: 100%">
+    <div class="col-xxl-7 col-lg-7 col-md-7 col-sm-12 col-12" style="height: 100%">
+      <div class="left-sec">
+        <div class="login-bg-section3">
+          <div class="login-bg-section2">
+            <div class="login-bg-section1">
+              <img src="../../../assets/login-page.png" alt="Logo"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-5 col-lg-5 col-md-5 col-sm-12 col-12 login-page">
+      <div class="loginDetails">
+        <div class="loginbody">
+          <div class="container">
+            <div class="row">
+              <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="userloginForm">
+                  <div class="login-icon-sec">
+                    <img src="../../../assets/company-logo.png" alt="company-logo"/>
+                  </div>
+                  <div class="form-main">
+                    <h3>Sign Into Your Account</h3>
+                  </div>
+                  <form [formGroup]="loginForm" (submit)="loginFormSubmit()">
+                    <div class="form-main">
+                      <div class="form-group">
+                        <div class="iconAdd">
+                          <span class="userbtn" matPrefix><mat-icon>person</mat-icon></span>
+                        </div>
+                        <input
+                          type="email"
+                          class="form-control"
+                          placeholder="Employee Code, Contact No. or Email ID"
+                          formControlName="employee_official_email"
+                          autocomplete="off"
+                          noCapitalize
+                        />
+                        <mat-error *ngIf="loginForm.get('employee_official_email')?.hasError('required')"></mat-error>
+                      </div>
+
+                      <div class="form-group handlePassword">
+                        <div class="iconAdd">
+                          <span class="passBtn" matPrefix><mat-icon>lock</mat-icon></span>
+                        </div>
+                        <input
+                          appShowHidePassword
+                          type="password"
+                          class="form-control"
+                          placeholder="Enter your password"
+                          formControlName="password"
+                          autocomplete="off"
+                          noCapitalize
+                          maxlength="15"
+                        />
+                        <mat-error *ngIf="loginForm.get('password')?.hasError('required')"></mat-error>
+                      </div>
+                      <div class="form-group">
+                        <div class="row">
+                          <!-- <div class="col-md-6">
+                            <div
+                              class="captcha-container {{ config.cssClass }}"
+                            >
+                              <div
+                                class="d-flex flex-wrap align-items-center gap-3"
+                              >
+                                <canvas
+                                  id="captcahCanvas"
+                                  width="280"
+                                  height="70"
+                                  class="canclass"
+                                ></canvas>
+                                <a
+                                  class="cpt-btn"
+                                  style="font-size: 25px; cursor: pointer"
+                                  (click)="reloadCaptcha()"
+                                  >&#x21bb;</a
+                                >
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="captcha_form">
+                              <input
+                                type="text"
+                                class="form-control"
+                                maxlength="20"
+                                placeholder="Enter Captcha"
+                                formControlName="captcha"
+                                autocomplete="off"
+                                noCapitalize
+                              />
+                            </div>
+                          </div> -->
+                        </div>
+                      </div>
+
+                      <div class="loginIn">
+                        <button
+                          mat-raised-button
+                          type="submit"
+                          class="submitBtn"
+                          [disabled]="showLoader"
+                          (click)="loginFormSubmit()"
+                        >
+                          <mat-spinner
+                            *ngIf="showLoader"
+                            style="width: 22px; height: 22px"
+                          ></mat-spinner>
+                          <span *ngIf="!showLoader">Login</span>
+                        </button>
+                      </div>
+
+                      <div class="loginIn d-flex gap-2 mt-3">
+                        <!-- <button style="font-weight: 500 !important;"
+                          mat-raised-button
+                          type="button"
+                          class="submitBtn"
+                          (click)="openLoginPopup('CUSTOMER')"
+                        >
+                          Customer Login
+                        </button> -->
+
+                        <button style="font-weight: 500 !important;"
+                          mat-raised-button
+                          type="button"
+                          class="submitBtn"
+                          (click)="openLoginPopup('VENDOR')"
+                        >
+                          Vendor Login
+                        </button>
+                      </div>
+                     
+                      <div class="sign_ip">
+                        <p style="text-decoration: underline; cursor: pointer" (click)="openForgotPopup()">Forgot Password?</p>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

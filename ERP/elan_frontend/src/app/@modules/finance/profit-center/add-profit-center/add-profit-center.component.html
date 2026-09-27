@@ -1,0 +1,278 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance and Accounting </h1>
+    <p>Profit Center<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span>Add Profit Center</span></p>
+  </div>
+  <div class="add_button">
+    <button  type="button" class=""  routerLink="../"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+  </div>
+
+  <section class="right_data_all mt-3">
+    <!-- <div class="row py-1">
+      <div class="employee_top">Cost Center Master
+        <span *ngIf="mode!='view' && !id" class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+          </i>
+          Update </span>
+      </div>
+    </div>
+    <div class="form_head">
+      <h3 *ngIf="mode!='view'"> Update Cost Center</h3>
+      <h3 *ngIf="mode=='view'"> View Cost Center</h3>
+
+    </div> -->
+
+    <form [formGroup]="profitCenterForm" (submit)="onSubmit()">
+      <div class="form_basic mb-0">
+        <div class="heading_neo">
+          <h3>Profit Center</h3>
+        </div>
+        <div class="row p-3 mt-2">
+
+
+          <div   class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': false}">
+                <mat-label>Profit Center ID</mat-label>
+                <input matInput type="text" readonly formControlName="profit_center_id" />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Example with input field -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Profit Center Name</mat-label>
+                <input   matInput type="text" formControlName="profit_center_name"
+                   />
+                <mat-error *ngIf="profitCenterForm.get('cost_center_name')?.hasError('required')" class="error-message">
+                  * Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group  "  >
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Created On</mat-label>
+                <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="createdOn"  />
+
+                <mat-datepicker-toggle matSuffix [for]="picker"
+                   ></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type" (valueChange)="selectedType($event)">
+                  <mat-option value="department">Department</mat-option>
+                  <mat-option value="employee">Employee</mat-option>
+                  <mat-option   [value]="data.id" *ngFor="let data of rowData" >{{data.name}}</mat-option>
+                  <!-- <mat-option>
+                    <div class="add_button"   >
+                      <button type="button"  >
+                       Add New
+                      </button>
+                    </div></mat-option><mat-option>
+                    <div class="add_button"   >
+                      <button type="button"  >
+                       Add New
+                      </button>
+                    </div></mat-option> -->
+                </mat-select>
+                <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="typeCloseIcon" matSuffix (click)="clearType()">close</mat-icon>
+
+                <mat-error *ngIf="profitCenterForm.get('type')?.hasError('required')" class="error-message">
+                  * Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+<!--
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="itemType">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>{{itemType}}</mat-label>
+                <input   matInput type="text" formControlName="type"
+                   />
+
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <div *ngIf="mode !== 'view' && typeName== 'department'"  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                <mat-label>Department</mat-label>
+                <mat-select #select2 formControlName="department_id" name="department_id"  >
+                  <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+
+                  <mat-option *ngFor="let data of departments"
+                    [value]="data.dept_id">{{data?.department_name}}</mat-option>
+                    <div class="add_button">
+                      <!-- <button type="button" (click)="openDeptDialog()">
+                        + Create New
+                      </button> -->
+                    </div>
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div>
+
+         <div *ngIf="mode !== 'view' && typeName == 'employee'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                <mat-label>Employee</mat-label>
+                <mat-select #select2 formControlName="employee_id" name="employee_id"  >
+                  <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+
+                  <mat-option *ngFor="let data of reportingManagerList"
+                    [value]="data.employee_id">{{data?.first_name}} {{data?.last_name}}</mat-option>
+                </mat-select>
+                <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="deptCloseIcon" matSuffix (click)="clearDept()">close</mat-icon>
+
+                <mat-error *ngIf="profitCenterForm.get('employee_id')?.hasError('required')" class="error-message">
+                  * Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+<ng-container *ngIf="isCostCenterActive">
+  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+    <div class="form-group mb-4">
+  <mat-form-field appearance="outline">
+    <mat-label>Cost Center Type</mat-label>
+    <input matInput type="text" formControlName="cost_profit_center_name" />
+
+  </mat-form-field>
+  </div>
+    </div>
+</ng-container>
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Manager</mat-label>
+                <mat-select formControlName="manager_id" >
+                  <mat-option *ngFor="let item of employeeList" [value]="item.employee_id"  >{{item.first_name}} {{item.last_name}}</mat-option>
+
+
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Currency</mat-label>
+                <mat-select formControlName="currency_id" >
+                  <mat-option *ngFor="let item of getAllCurrencyData" [value]="item.Currency_Convert_id"  >{{item.Currency_Type}}</mat-option>
+
+
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group  "  >
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Valid From</mat-label>
+                <input matInput [matDatepicker]="picker1" format="DD-MM-YY" formControlName="fromDate"   />
+
+                <mat-datepicker-toggle matSuffix [for]="picker1"
+                   ></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group  "  >
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Valid To</mat-label>
+                <input matInput [matDatepicker]="picker2" format="DD-MM-YY" formControlName="toDate"   />
+
+                <mat-datepicker-toggle matSuffix [for]="picker2"
+                   ></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" >
+                  <mat-option  value="active" >Active</mat-option>
+                  <mat-option  value="inactive" >Inactive</mat-option>
+
+
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Is Group</mat-label>
+                <mat-select formControlName="isGroup" (selectionChange)="getIsgroup($event)">
+                  <mat-option  value="yes" >Yes</mat-option>
+                  <mat-option  value="no" >No</mat-option>
+
+
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Parent Profit Center</mat-label>
+                <mat-select formControlName="parent_profit_center" >
+                  <mat-option *ngFor="let item of getAllIsGroupData" [value]="item.id"  >{{item.profit_center_name}}</mat-option>
+
+
+                </mat-select>
+
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div  class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" >
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline"   >
+                <mat-label>Remarks</mat-label>
+                <input   matInput type="text" formControlName="remarks"
+                   />
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end" *ngIf="mode!='view'">
+            <div  class="common_button_sub"  >
+              <button  type="submit">
+                {{ !id ? 'Submit' : 'Update' }}
+              </button>
+              <button   >
+                Back
+               </button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+
+    </form>
+
+  </section>

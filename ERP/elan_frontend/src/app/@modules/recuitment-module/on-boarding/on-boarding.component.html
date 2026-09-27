@@ -1,0 +1,95 @@
+<div class="main section">
+    <div class="employee">
+      <p>HRMS</p>
+    </div>
+    <div class="msater-nav">
+      <a href="">Recruitment Module<mat-icon>keyboard_arrow_right</mat-icon></a>
+      <a routerLink="../">On-Boarding Employee</a>
+    </div>
+  
+    <div class="row">
+      <!-- <div class="col-md-2">
+        <a routerLink="../job-create">On-Boarding Employee</a>
+      </div> -->
+  
+  
+      <!-- <mat-form-field appearance="outline">
+        <mat-label>Date Of Birth</mat-label>
+        <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date_of_birth"
+          [max]="max" />
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+        <mat-error *ngIf="
+        basicForm.controls['date_of_birth'].hasError('required')
+      ">
+          This field is required!
+        </mat-error>
+      </mat-form-field> -->
+      <form [formGroup]="filterForm" class="formCon">
+        <div class="row">
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>From </mat-label>
+                <!-- <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="start_date" /> -->
+                <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="startDate" 
+                [max]="maxDate" [min]="minDate" 
+                        (dateChange)="fromDate($event)" readonly/>
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>To</mat-label>
+                <input matInput [matDatepicker]="on_date" (click)="on_date.open()" formControlName="endDate" name="on_date"
+                  (focusout)="todate ? calculateDiff() : calculateDiff()" (dateChange)="calculateDiff()" [max]="maxDate" [min]="FromDate || minDate" (dateChange)="ToDate($event)" readonly>
+                <mat-datepicker-toggle matIconSuffix [for]="on_date"></mat-datepicker-toggle>
+                <mat-datepicker #on_date></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <button mat-raised-button color="primary" style="margin-top: 3px;" (click)="searchAttendence()"><i class="fa fa-search"></i> Search</button>
+            <button matTooltip="Refresh" class="resetBtn" (click)="reset()"><mat-icon class="rfrIcon">autorenew</mat-icon></button>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" align="end">
+            <button mat-raised-button color="primary" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+          </div> -->
+          <div class="col-md-2" align="end">
+
+            <input placeholder="Search" class="form-control" type="text" id="filter-text-box"
+              (input)="onFilterTextBoxChanged()" />
+          </div>
+        </div>
+      </form>
+      <!-- <div class="offering col-md-2">
+        <span>Offering</span> 
+      </div> -->
+  
+      <!-- <div class="cancel-offering col-md-2">
+        <span>Cancel Offer</span> 
+      </div> -->
+  
+
+  
+    </div>
+  
+    <mat-card>
+      <div class="form_head">
+        <h3>On-Boarding Employee List</h3>
+        <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div>
+      <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+          [rowData]="rowData" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+          (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </mat-card>
+  </div>
+  <div>
+  </div>

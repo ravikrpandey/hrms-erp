@@ -1,0 +1,88 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>CRM Services</h1>
+    <p>Material Request
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178"></i>
+      <span>Material Request List</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" class="btn_add" (click)="openModal()">Add</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select id="page-size" (change)="onPageSizeChanged()">
+        <option value="10" selected="">10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2" align="end">
+      <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()" placeholder="Search">
+    </div>
+  </div>
+
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 400px;" [rowData]="rowData" [columnDefs]="columnDefs" (cellClicked)='onCellClicked($event)' [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+
+  <div class="clear-remark-section" style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+    <div class="remark-input" style="flex: 1;">
+      <input type="text" class="form-control" [(ngModel)]="remark" placeholder="Enter remark" />
+    </div>
+    <div class="clear-button" style="margin-left: 10px;">
+      <button type="button" class="btn btn-primary" (click)="clearLocalStorage()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addMaterialModal" tabindex="-1" role="dialog" aria-labelledby="addMaterialModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header justify-content-center">
+        <h5 class="modal-title" id="addMaterialModalTitle">Add Material</h5>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="materialForm" (ngSubmit)="submitForm()">
+          <div class="form-group">
+            <label for="cetegory">Category</label>
+            <select formControlName="cetegory" (change)="getItem($event)" class="form-control">
+              <option value="" disabled selected>Select a category</option>
+              <option *ngFor="let cat of cetegory" [value]="cat.id">{{ cat.asset_category_name }}</option>
+            </select>
+            <div *ngIf="materialForm.get('cetegory')?.invalid && (materialForm.get('cetegory')?.touched || materialForm.get('cetegory')?.dirty)" class="text-danger">
+              Category is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="item">Item</label>
+            <select formControlName="item" class="form-control">
+              <option value="" disabled selected>Select an item</option>
+              <option *ngFor="let itm of item" [value]="itm.id">{{ itm.item_name }}</option>
+            </select>
+            <div *ngIf="materialForm.get('item')?.invalid && (materialForm.get('item')?.touched || materialForm.get('item')?.dirty)" class="text-danger">
+              Item is required.
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" formControlName="quantity" class="form-control" placeholder="Enter quantity" min="1">
+            <div *ngIf="materialForm.get('quantity')?.invalid && (materialForm.get('quantity')?.touched || materialForm.get('quantity')?.dirty)" class="text-danger">
+              Quantity is required and must be greater than 0.
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="materialForm.invalid" (click)="submitForm()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+

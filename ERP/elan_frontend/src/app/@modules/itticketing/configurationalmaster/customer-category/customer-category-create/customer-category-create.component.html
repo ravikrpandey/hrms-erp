@@ -1,0 +1,54 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      <span *ngIf="!id"> Create Customer Category  </span>
+      <span *ngIf="action_type=='edit'"> Update Customer Category </span>
+      <span *ngIf="action_type=='view'"> View Customer Category </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="onBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+    <form class="form_set" [formGroup]="customerCategoryForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" >
+              <mat-label>Customer Category Name</mat-label>
+              <input matInput type="text" formControlName="customer_category_name" [readonly]="action_type=='view'" />
+              <mat-error
+                *ngIf="
+                  customerCategoryForm.controls['customer_category_name'].hasError('required')
+                "
+              >
+                *Required!
+              </mat-error>
+              <mat-error
+                *ngIf="
+                  customerCategoryForm.controls['customer_category_name'].hasError(
+                    'required'
+                  ) && customerCategoryForm.controls['customer_category_name'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+      <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'">
+        <button (click)="onSubmit()">
+          {{ !id ? "Save" : "Update" }}
+        </button>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+      </div>
+    </form>
+  </div>
+</mat-card>

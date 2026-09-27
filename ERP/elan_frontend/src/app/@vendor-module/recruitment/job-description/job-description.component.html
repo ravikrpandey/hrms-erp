@@ -1,0 +1,43 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Job Description</h1>
+      <p>Recruitment <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span>Job Description List </span></p>
+    </div>
+    <!-- <div class="add_button a_at_bg">
+        <button routerLink="../job-create">Create New Job Description</button>
+        <button routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div> -->
+  </div>
+
+  <div class="right_data_all">
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="department" (selectionChange)="getAllAreas($event)">
+            <mat-option *ngFor="let department of departments"
+              [value]="department.dept_id">{{department.department_name}}</mat-option>
+          </mat-select>
+
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+
+        <input placeholder="Search" class="form-control" type="text" id="filter-text-box"
+          (input)="onFilterTextBoxChanged()" />
+
+      </div>
+
+
+
+    <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+        [rowData]="rowDataJob" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+        (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+      </ag-grid-angular>
+    </div>
+
+

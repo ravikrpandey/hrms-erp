@@ -1,0 +1,124 @@
+<div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Customer Credit Limit [{{cname}}]</h3>
+    </div>
+    <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="customerProfileForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                   <mat-form-field appearance="outline">
+                    <mat-label>Payment Terms</mat-label>
+                    <mat-select formControlName="payment_term_id" (selectionChange)="onPaymentTermChange($event.value)">
+                        <mat-option
+                        *ngFor="let term of paymentTerm"
+                        [value]="term.id">
+                        {{ term.term_name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="customerProfileForm.controls['payment_term_id'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                    </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sanctioned Credit Limit</mat-label>
+                        <input matInput type="number" formControlName="sanctioned_credit_limit" maxlength="30" [readonly]="isAdvancePayment">
+                        <mat-error *ngIf="customerProfileForm.controls['sanctioned_credit_limit'].hasError('required')">
+                        This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Utilized Credit Limit</mat-label>
+                        <input matInput type="number" formControlName="utilized_credit_limit" readonly/>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Available Credit Limit</mat-label>
+                        <input matInput type="number" formControlName="available_credit_limit" readonly/>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Sanctioned Credit Period Days</mat-label>
+                        <input matInput type="number" formControlName="sanctioned_credit_days" readonly>
+                        <mat-error *ngIf="customerProfileForm.controls['sanctioned_credit_days'].hasError('required')">
+                        This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Grace Period Days</mat-label>
+                        <input matInput type="number" formControlName="grace_period_days" maxlength="3" [readonly]="isAdvancePayment"/>
+                    </mat-form-field>
+                    </div>
+                </div>
+                
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Credit Days Consumed</mat-label>
+                        <input matInput type="number" formControlName="consumed_credit_days" readonly>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Remaining Credit Days</mat-label>
+                        <input matInput type="text" formControlName="remainig_credit_days" readonly/>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Effective From</mat-label>
+                        <input matInput [matDatepicker]="date" formControlName="effective_from" readonly/>
+                        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                        <mat-datepicker #date></mat-datepicker>
+                        <mat-error *ngIf="customerProfileForm.controls['effective_from'].hasError('required')">
+                        This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"> 
+                    <div class="form-group mb-4">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Update Remark</mat-label>
+                        <input matInput type="text" formControlName="change_reason"/>
+                    </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="common_button_sub">
+                    <button (click)="onSubmitForm()">Save Credit Limit</button>
+                    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dispatch Packing List-{{planningCode}}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12px;
+    color: #000;
+    background: #f2f2f2;
+    padding: 20px;
+  }
+  .sheet {
+    max-width: 950px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 10px 14px 0 14px;
+  }
+
+  .header-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+  }
+  .header-table td { vertical-align: top; padding: 2px; }
+  .logo-cell { width: 170px; text-align: left; }
+  .logo-main { color: #003366; font-weight: bold; font-size: 24px; letter-spacing: 0.5px; font-family: Arial, sans-serif; }
+  .logo-sub { color: #cc0000; font-size: 8px; font-weight: bold; letter-spacing: 0.3px; font-family: Arial, sans-serif; }
+  .logo-box { border: 2px solid #003366; padding: 4px 8px; display: inline-block; }
+
+  .company-cell { text-align: center; }
+  .company-name { font-size: 20px; font-weight: bold; font-family: Arial, sans-serif; }
+  .company-address { font-size: 12px; line-height: 1.35; margin-top: 2px; }
+  .company-pan { font-weight: bold; }
+
+  .doc-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: underline;
+    padding: 4px 0 6px 0;
+    font-family: Arial, sans-serif;
+  }
+
+  table.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.info-table td { padding: 2px 4px; vertical-align: top; }
+  .info-label { font-weight: bold; width: 150px; white-space: nowrap; }
+  .info-colon { width: 12px; }
+  .info-value { }
+
+  .section-header {
+    background: #f2f2f2;
+    font-weight: bold;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+    padding: 3px 6px;
+  }
+
+  table.party-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  table.party-table td { padding: 2px 4px; vertical-align: top; }
+  .party-col { width: 50%; }
+  .party-label { font-weight: bold; width: 90px; white-space: nowrap; }
+  .party-colon { width: 12px; }
+
+  table.items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 4px;
+    font-size: 12px;
+  }
+  table.items th, table.items td {
+    border: 1px solid #000;
+    padding: 4px 6px;
+  }
+  table.items th { text-align: left; font-weight: bold; }
+  table.items td.sno, table.items th.sno { width: 5%; text-align: left; vertical-align: top; }
+  table.items td.desc, table.items th.desc { width: 60%; }
+  table.items td.hsn, table.items th.hsn { width: 20%; text-align: left; }
+  table.items td.qty, table.items th.qty { width: 15%; text-align: right; }
+  .item-sub { font-size: 11px; color: #000; }
+
+  .total-row td { font-weight: bold; }
+  .total-row td.label { text-align: right; }
+  .total-row td.qty { text-align: right; }
+
+
+  .terms-block {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+  .terms-title { font-weight: bold; margin-bottom: 2px; }
+  .terms-block ol { margin-left: 18px; }
+
+  table.sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    font-size: 12px;
+  }
+  table.sign-table td { width: 33.33%; font-weight: bold; vertical-align: top; }
+  table.sign-table td.mid { text-align: center; }
+  table.sign-table td.right { text-align: right; }
+  .prepared-name { font-weight: normal; margin-top: 2px; }
+
+  .footer-note {
+    text-align: center;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 8px 0 6px 0;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header img {
+    max-width: 180px;
+    max-height: 80px;
+  }
+  .header h2 { margin: 5px 0; }
+  .header h1 { margin: 5px 0; }
+
+  
+  .sale-order-section {
+    margin-bottom: 20px;
+  }
+
+  .sale-order-header {
+    padding: 8px;
+    background: #f5f5f5;
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  .sale-order-header h3 { margin: 0; }
+
+  
+  .item-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 0;
+  }
+
+  .item-table th,
+  .item-table td {
+    border: 1px solid #000;
+    padding: 6px;
+  }
+
+
+  .item-table td:not(:first-child),
+  .item-table th:not(:first-child) {
+    border-left: none;
+  }
+  .item-table tr:not(:first-child) td,
+  .item-table tr:not(:first-child) th {
+    border-top: none;
+  }
+
+  .item-table th {
+    text-align: center;
+    background: #f5f5f5;
+  }
+
+  .item-table thead {
+    display: table-header-group;
+  }
+
+  .item-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .sale-order-total {
+    margin-top: 10px;
+    text-align: right;
+  }
+  .sale-order-total div { margin: 3px 0; }
+
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  
+  <table class="header-table">
+    <tr>
+      <td class="logo-cell">
+        <div class="logo-main"> <img src="{{company_logo}}" alt="Company Logo" width="140"/></div>
+      </td>
+      <td class="company-cell">
+        <div class="company-name">{{elanName}}</div>
+        <div class="company-address">
+       {{warehouse_address}}<br>
+          <span class="company-pan">PAN No.{{warehouse_pan}}</span>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="doc-title">DISPATCH PACKING LIST</div>
+
+ 
+  <table class="info-table">
+    <tr>
+      <td class="info-label">GSTIN / UTGSTIN No.</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{warehouse_gst}}</td>
+      <td class="info-label">Transporter Name</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{transportor_name}}</td>
+    </tr>
+    <tr>
+      <td class="info-label">Packing List No</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{packing_list_number}}</td>
+      <td class="info-label">LR No and LR Date</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{lr_no}}&nbsp;&nbsp;&nbsp;{{lr_date}}</td>
+    </tr>
+    <tr>
+      <td class="info-label">Packing List Date</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{packing_list_date}}</td>
+      <!-- <td class="info-label">Destination</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">GHAZIABAD</td> -->
+    </tr>
+    <tr>
+      <td class="info-label">No of Boxs/Packets</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">0</td>
+      <td class="info-label">Vehicle No.</td>
+      <td class="info-colon">:</td>
+      <td class="info-value">{{vehicle_no}}</td>
+    </tr>
+  </table>
+
+  
+  <!-- 
+  <table style="width:100%; border-collapse:collapse; margin-top:4px;">
+    <tr>
+      <td class="section-header" style="width:50%; border-right:1px solid #000; border-left: 1px solid;">Billing Details</td>
+      <td class="section-header" style="width:50%; border-right: 1px solid;">Shipping Details</td>
+    </tr>
+  </table>
+  <table class="party-table">
+    <tr>
+      <td class="party-col">
+        <table class="party-table" style="width:100%;">
+          <tr>
+            <td class="party-label">Party Name</td>
+            <td class="party-colon">:</td>
+            <td><strong>CHEFSHIELD INDIA PRIVATE LIMITED</strong></td>
+          </tr>
+        </table>
+      </td>
+      <td class="party-col">
+        <table class="party-table" style="width:100%;">
+          <tr>
+            <td class="party-label">Address</td>
+            <td class="party-colon">:</td>
+            <td><strong>Basement &amp; Ground Floor, J-23, Block JAK Accessories, Durga Industrail Park,Shreya Associates, SahibabadGHAZIABAD, Uttar Pradesh - 201005India</strong></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="party-col" style="vertical-align:top;">
+        <table class="party-table" style="width:100%;">
+          <tr>
+            <td class="party-label">Address</td>
+            <td class="party-colon">:</td>
+            <td>Basement &amp; Ground Floor, J-23, Block J AK Accessories, Durga Industrail Park, Shreya Associates, Sahibabad GHAZIABAD, Uttar Pradesh - 201005 ( India )</td>
+          </tr>
+          <tr>
+            <td class="party-label">State</td>
+            <td class="party-colon">:</td>
+            <td>Uttar Pradesh</td>
+          </tr>
+          <tr>
+            <td class="party-label">State Code</td>
+            <td class="party-colon">:</td>
+            <td>09</td>
+          </tr>
+          <tr>
+            <td class="party-label">GSTIN No.</td>
+            <td class="party-colon">:</td>
+            <td>09AAKCC1671Q1Z0</td>
+          </tr>
+        </table>
+      </td>
+      <td class="party-col"></td>
+    </tr>
+  </table> -->
+
+
+  {{saleOrderSections}}
+
+  <div class="terms-block" style="margin-top: -22px;">
+    <div class="terms-title">Terms &amp; Conditions</div>
+    <ol>
+      <li>Kindly refer detailed Terms and Conditions mentioned in Invoice.</li>
+      <li>It is a Mandatory Document for any Warranty Claim.</li>
+    </ol>
+
+    <table class="sign-table">
+      <tr>
+        <td class="left">
+          Prepared By
+          <div class="prepared-name">{{getInByUser}}</div>
+        </td>
+        <td class="mid">Checked By 
+          <div class="prepared-name">{{picklistUpdatedBy}}</div>
+          
+        </td>
+        <td class="right">Received By 
+          <div class="prepared-name">{{lrUpdatedBy}}</div>
+
+        </td>
+      </tr>
+    </table>
+
+    <div class="footer-note">This is a computer generated invoice Signature not required.</div>
+  </div>
+
+</div>
+
+</body>
+</html>

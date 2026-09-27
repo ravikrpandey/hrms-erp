@@ -1,0 +1,112 @@
+<div class="row" style="margin-bottom: 20px;justify-content: center;">
+  <div class="col-sm-12 col-md-12 col-lg-12 col-12">
+    <div class="date-selector">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>From</mat-label>
+        <mat-select [(ngModel)]="fromMonth">
+          <mat-option *ngFor="let month of months" [value]="month.id">
+            {{ month.month_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>To</mat-label>
+        <mat-select [(ngModel)]="toMonth" (ngModelChange)="onToMonthChange($event)">
+          <mat-option *ngFor="let month of months" [value]="month.id">
+            {{ month.month_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="row" style="margin-bottom: 20px; justify-content: center;">
+    <div class="col-sm-3 col-md-3 col-lg-3 col-12" *ngFor="let metric of metrics">
+      <div class="dashboard-card" [ngClass]="getMetricClass(metric.title)" (click)="navigateToMetric(metric)">
+        <div class="card-content">
+          <h3>{{ metric.title }}</h3>
+          <p style="font-weight: 600;">{{ metric.value || 0 }}</p>
+        </div>
+        <div class="icon">
+          <img src="../../../../assets/recruit-icon4.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="margin-bottom: 20px; display: flex;">
+  <div class="chart-container" style="flex: 0 0 50%; ">
+    <h3 class="text-center"><i class="fas fa-chart-line"></i> Job Requisitions Trend</h3>
+    <app-job-trend-chart></app-job-trend-chart>
+  </div>
+  <div class="chart-container" style="flex: 0 0 50%; ">
+    <h3 class="text-center"><i class="fas fa-filter"></i> Candidate Pipeline Funnel</h3>
+    <app-candidate-pipeline-funnel [fromMonth]="fromMonth" [toMonth]="toMonth"></app-candidate-pipeline-funnel>
+  </div>
+</div>
+
+
+<div class="recruiter-container">
+  <div class="recruiter-metrics-container">
+    <div class="header">
+      <h4 class="title">Recruiter Metrics</h4>
+    </div>
+
+    <div class="recruiter-select">
+      <div class="form-group">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Recruiter</mat-label>
+          <mat-select [(value)]="selectedRecruiter" (selectionChange)="getRecruiterData()">
+            <mat-option *ngFor="let recruiter of recruiters" [value]="recruiter.employee_id">
+              {{ recruiter.first_name }} {{ recruiter.last_name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="row" style="margin-bottom: 20px; justify-content: center;">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-12">
+        <div class="dashboard-card req-handled">
+          <div class="card-content">
+            <h3>Requisitions Handled</h3>
+            <p style="font-weight: 600;">{{ recruiterMetrics?.totalRequisitionsHandled || 0 }}</p>
+          </div>
+          <div class="icon ">
+            <img src="../../../../assets/recruit-icon4.png" />
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-3 col-lg-3 col-12">
+        <div class="dashboard-card shortlisted">
+          <div class="card-content">
+            <h3>Shortlisted Candidates</h3>
+            <p style="font-weight: 600;">{{ recruiterMetrics?.totalShortlistedCandidates || 0 }}</p>
+          </div>
+          <div class="icon ">
+            <img src="../../../../assets/recruit-icon4.png" />
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-3 col-lg-3 col-12">
+        <div class="dashboard-card hired">
+          <div class="card-content">
+            <h3>Hired Candidates</h3>
+            <p style="font-weight: 600;">{{ recruiterMetrics?.totalHiredCandidates || 0 }}</p>
+          </div>
+          <div class="icon ">
+            <img src="../../../../assets/recruit-icon4.png" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

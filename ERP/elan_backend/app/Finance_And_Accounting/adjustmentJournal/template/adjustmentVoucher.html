@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Adjustment Journal Voucher</title>
+
+    <style>
+
+       
+
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            background: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #000000;
+            font-size: 11px;
+        }
+
+
+        .page {
+            width: 794px;
+            min-height: 1123px;
+            margin: 0 auto;
+            padding: 44px 49px 35px 49px;
+            background: #ffffff;
+        }
+
+        .voucher {
+            width: 100%;
+            min-height: 1044px;
+            border: 1px solid #333333;
+            position: relative;
+            background: #ffffff;
+        }
+
+
+    
+        .company-header {
+            height: 76px;
+            border-bottom: 1px solid #222222;
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .logo-section {
+            display: table-cell;
+            width: 160px;
+            vertical-align: middle;
+            padding-left: 12px;
+            padding-right: 8px;
+        }
+
+        .logo-image {
+            width: 143px;
+            max-height: 54px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .company-section {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 8px;
+            padding-bottom: 2px;
+        }
+
+        .company-name {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 17px;
+            margin-bottom: 2px;
+        }
+
+        .company-info {
+            font-size: 11px;
+            line-height: 14px;
+            font-weight: normal;
+        }
+
+        .company-pan {
+            font-size: 11px;
+            line-height: 14px;
+        }
+
+        .company-pan strong {
+            margin-right: 10px;
+        }
+
+
+
+        .document-title {
+            height: 24px;
+            border-bottom: 1px solid #222222;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 23px;
+        }
+
+
+      
+        .voucher-info {
+            height: 26px;
+            border-bottom: 1px solid #222222;
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .voucher-info-left,
+        .voucher-info-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .voucher-info-left {
+            width: 50%;
+            padding-left: 8px;
+            text-align: left;
+        }
+
+        .voucher-info-right {
+            width: 50%;
+            padding-right: 8px;
+            text-align: right;
+        }
+
+        .voucher-label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+
+        /* =========================================================
+           MAIN TRANSACTION TABLE
+        ========================================================= */
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 11px;
+            margin: 18px 0 0 0;
+        }
+
+        .transaction-table th {
+            height: 23px;
+
+            background: #c9c9c9;
+
+            border-top: 1px solid #222222;
+            border-bottom: 1px solid #222222;
+            border-right: 1px solid #222222;
+
+            padding: 3px 5px;
+
+            text-align: center;
+            vertical-align: middle;
+
+            font-weight: bold;
+            font-size: 11px;
+            line-height: 15px;
+        }
+
+        .transaction-table th:first-child {
+            border-left: 1px solid #222222;
+        }
+
+        .transaction-table td {
+            border-right: 1px solid #222222;
+
+            vertical-align: top;
+
+            padding: 5px 5px;
+
+            line-height: 15px;
+            font-size: 11px;
+        }
+
+        .transaction-table td:first-child {
+            border-left: 1px solid #222222;
+        }
+
+
+        /* =========================================================
+           COLUMN WIDTHS
+        ========================================================= */
+
+        .col-sno {
+            width: 6%;
+        }
+
+        .col-particulars {
+            width: 56%;
+        }
+
+        .col-drcr {
+            width: 8%;
+        }
+
+        .col-debit {
+            width: 15%;
+        }
+
+        .col-credit {
+            width: 15%;
+        }
+
+ 
+        .transaction-body {
+            height: 555px;
+        }
+
+        .sno {
+            text-align: center;
+            vertical-align: top !important;
+            font-size: 11px;
+        }
+
+        .particulars {
+            text-align: left;
+            vertical-align: top !important;
+        }
+
+        .particular-main {
+            font-size: 11px;
+            line-height: 15px;
+            font-weight: normal;
+        }
+
+        .particular-child {
+            padding-left: 10px;
+            font-size: 10px;
+            line-height: 15px;
+        }
+
+        .drcr {
+            text-align: center;
+            vertical-align: top !important;
+            font-weight: normal;
+        }
+
+        .amount {
+            text-align: right;
+            vertical-align: top !important;
+            padding-right: 8px !important;
+            white-space: nowrap;
+            font-size: 11px;
+        }
+
+
+       
+        .total-row td {
+            height: 23px;
+
+            background: #c9c9c9;
+
+            border-top: 1px solid #222222;
+            border-bottom: 1px solid #222222;
+
+            vertical-align: middle;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            padding: 3px 5px;
+        }
+
+        .total-label {
+            text-align: right;
+            padding-right: 10px !important;
+        }
+
+        .total-amount {
+            text-align: right;
+            padding-right: 8px !important;
+            white-space: nowrap;
+        }
+
+
+      
+        .amount-words {
+            min-height: 26px;
+
+            border-bottom: 1px solid #222222;
+
+            background: #c9c9c9;
+
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .amount-words-left {
+            display: table-cell;
+
+            width: 67%;
+
+            vertical-align: middle;
+
+            padding-left: 8px;
+            padding-right: 5px;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            line-height: 15px;
+        }
+
+        .amount-words-right {
+            display: table-cell;
+
+            width: 33%;
+
+            vertical-align: middle;
+
+            text-align: right;
+
+            padding-right: 8px;
+
+            font-size: 11px;
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* =========================================================
+           NARRATION
+        ========================================================= */
+
+        .narration {
+            min-height: 47px;
+
+            border-bottom: 1px solid #222222;
+
+            padding: 6px 8px;
+
+            font-size: 11px;
+            line-height: 16px;
+        }
+
+        .narration-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .narration-text {
+            font-weight: normal;
+        }
+
+
+       
+        .signature-area {
+            height: 70px;
+            position: relative;
+            border-bottom: 0;
+        }
+
+        .prepared-name {
+            position: absolute;
+
+            left: 8px;
+            top: 5px;
+
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .signature {
+            position: absolute;
+
+            bottom: 8px;
+
+            font-size: 11px;
+            font-weight: normal;
+        }
+
+        .prepared-by {
+            left: 8px;
+        }
+
+        .authorized-by {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .received-by {
+            right: 8px;
+        }
+
+
+        
+        .page-number {
+            position: absolute;
+
+            right: 8px;
+            bottom: 5px;
+
+            font-size: 11px;
+        }
+
+ 
+        @media print {
+
+            html,
+            body {
+                width: 210mm;
+                height: 297mm;
+
+                margin: 0;
+                padding: 0;
+
+                background: #ffffff;
+            }
+
+            .page {
+                width: 210mm;
+                min-height: 297mm;
+
+                margin: 0;
+
+                padding: 11.6mm 13mm 9mm 13mm;
+            }
+
+            .voucher {
+                width: 100%;
+                min-height: 276mm;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <div class="voucher">
+
+
+        
+        <div class="company-header">
+
+            <div class="logo-section">
+
+                <img
+                    src="{companyLogo}"
+                    alt="Company Logo"
+                    class="logo-image"
+                />
+
+            </div>
+
+
+            <div class="company-section">
+
+                <div class="company-name">
+                    {companyName}
+                </div>
+
+                <div class="company-info">
+                    Unit No. 0802, Tower - 2, DLF Corporate Green, Sector - 74A,
+                </div>
+
+                <div class="company-info">
+                    Gurugram, Haryana - 122004, Phone No :- {phoneNumber}
+                </div>
+
+                <div class="company-pan">
+                    <strong>PAN NO.</strong> {panNumber}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        
+        <div class="document-title">
+           Adjustment Journal Voucher
+        </div>
+
+
+       
+        <div class="voucher-info">
+
+            <div class="voucher-info-left">
+
+                <span class="voucher-label">
+                    Voucher No.
+                </span>
+
+                <span>
+                    {voucherNumber}
+                </span>
+
+            </div>
+
+
+            <div class="voucher-info-right">
+
+                <span class="voucher-label">
+                    Voucher Date :
+                </span>
+
+                <span>
+                    {date}
+                </span>
+
+            </div>
+
+        </div>
+
+
+   
+        <table class="transaction-table">
+
+            <colgroup>
+
+                <col class="col-sno">
+
+                <col class="col-particulars">
+
+                <col class="col-drcr">
+
+                <col class="col-debit">
+
+                <col class="col-credit">
+
+            </colgroup>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        S.No.
+                    </th>
+
+                    <th>
+                        Particulars
+                    </th>
+
+                    <th>
+                        Account Code
+                    </th>
+
+                    <th>
+                        Debit Amount
+                    </th>
+
+                    <th>
+                        Credit Amount
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {accounts}
+
+
+                
+                <tr class="transaction-body">
+
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+
+
+              
+                <tr class="total-row">
+
+                    <td colspan="3"
+                        class="total-label">
+
+                        Total
+
+                    </td>
+
+                    <td class="total-amount">
+
+                        {totalDebit}
+
+                    </td>
+
+                    <td class="total-amount">
+
+                        {totalCredit}
+
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+
+        
+        <div class="amount-words">
+
+            <div class="amount-words-left">
+
+                ({amountInWords})
+
+            </div>
+
+
+            <div class="amount-words-right">
+
+                <span>Total</span>
+
+                <span style="margin-left: 18px;">
+                    {totalDebit}
+                </span>
+
+                <span style="margin-left: 18px;">
+                    {totalCredit}
+                </span>
+
+            </div>
+
+        </div>
+ 
+        <div class="narration">
+
+            <div class="narration-title">
+                Narration
+            </div>
+
+            <div class="narration-text">
+                {description}
+            </div>
+
+        </div>
+
+ 
+        <div class="signature-area">
+
+            <div class="prepared-name">
+                {preparedBy}
+            </div>
+
+
+            <div class="signature prepared-by">
+                Prepared By
+            </div>
+
+
+            <div class="signature authorized-by">
+                Authorized By
+            </div>
+
+
+            <div class="signature received-by">
+                Received By :
+            </div>
+
+        </div>
+
+
+      
+
+        <div class="page-number">
+            Page : 1/1
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

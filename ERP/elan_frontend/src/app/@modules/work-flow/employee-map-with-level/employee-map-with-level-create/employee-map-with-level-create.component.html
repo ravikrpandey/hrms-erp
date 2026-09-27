@@ -1,0 +1,70 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Workflow</h1>
+    <p>Employee Map With Level</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- Level Dropdown -->
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Level</mat-label>
+
+              <mat-select formControlName="level" *ngIf="viewMode !== 'view'">
+                <mat-option *ngFor="let lvl of levels" [value]="lvl.id"
+                  [disabled]="usedLevels.includes(lvl.id) && !(mode === 'edit' && form.value.level === lvl.id)">
+                  {{ lvl.level_type }}
+                </mat-option>
+              </mat-select>
+
+              <!-- Readonly mode -->
+              <input matInput [value]="form.get('level')?.value ? getLevelName(form.get('level')?.value) : ''" readonly
+                *ngIf="viewMode === 'view'" />
+
+              <mat-error *ngIf="form.get('level')?.hasError('required') && submitted">
+                Please select a level
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Employees Dropdown (multi + search) -->
+        <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Employees</mat-label>
+              <mat-select formControlName="employee_ids" multiple [disabled]="viewMode === 'view'">
+                <ngx-mat-select-search *ngIf="viewMode !== 'view'" [formControl]="employeeFilterCtrl"
+                  placeholderLabel="Search employees..." noEntriesFoundLabel="No results">
+                </ngx-mat-select-search>
+
+                <mat-option *ngFor="let emp of getAllData" [value]="emp.employee_id">
+                  {{ emp.full_name }}
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="form.get('employee_ids')?.hasError('required') && submitted">
+                Please select at least one employee
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 common_button_sub">
+        <button type="submit" *ngIf="viewMode !== 'view'">Save</button>
+        <!-- <button class="cancel_button_y" type="button" (click)="goBack()">Cancel</button> -->
+      </div>
+    </form>
+  </div>
+</section>

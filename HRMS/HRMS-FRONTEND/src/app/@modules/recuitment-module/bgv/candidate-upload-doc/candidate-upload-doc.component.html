@@ -1,0 +1,120 @@
+<div class="right_data_all candidateOffer">
+    <div class="candidate_Details">
+    <mat-card>
+      <h2>Basic Details</h2>
+      <div class="basic_details">
+        <div class="row">
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Ref Number</h5>
+            <p>{{recordData?.reference_number}}</p>
+          </div> -->
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Candidate Name</h5>
+            <p>{{recordData?.first_name + ' ' + recordData?.last_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Email</h5>
+            <p>{{recordData?.email}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Contact</h5>
+            <p>{{recordData?.contact_number}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Date</h5>
+            <p>{{ recordData?.createdAt | date: 'yyyy-MM-dd' }}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Position</h5>
+            <p>{{recordData?.designation_name}}</p>
+          </div>
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Base Salary</h5>
+            <p>{{recordData?.base_salary}}</p>
+          </div> -->
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Reporting Manager</h5>
+            <p>{{recordData?.report_manag_fname + ' ' + recordData?.report_manag_lname}}</p>
+          </div> -->
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Probation Period</h5>
+            <p>{{recordData?.probation_period}}</p>
+          </div> -->
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Location</h5>
+            <p>{{recordData?.location}}</p>
+          </div> -->
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Expected Joining Date</h5>
+            <p>{{recordData?.exp_joining_date}}</p>
+          </div> -->
+        </div>
+    
+        <div class="row" *ngFor="let doc of formObj.document_details; let i = index">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Document Name<span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input
+                  matInput
+                  type="text"
+                  [(ngModel)]="formObj.document_details[i].document_name"
+                  placeholder="Enter Document Name"
+                  style="color:black;"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+    
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Document Number<span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input
+                  matInput
+                  type="text"
+                  [(ngModel)]="formObj.document_details[i].document_number"
+                  placeholder="Enter Document Number"
+                  style="color:black;"
+                  required
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group fileWithViewImg">
+              <mat-label>Document <span class="alertspan">*</span></mat-label>
+              <input
+                class="form-control"
+                type="file"
+                (change)="uploadDoc($event, i)"
+                title="Upload Document Image"
+                style="padding-right: 10px; height: 42px; padding-top: 10px; font-size:14px;"
+              />
+              <img *ngIf="doc.document_path" [src]="this.baseUrl+'/'+doc.document_path" alt="Document Preview" class="fileViewImage" />
+            </div>
+            <i
+              class="material-icons"
+              (click)="removeFileControl(i)"
+              style="cursor: pointer; color: #d9534f;"
+              >delete</i
+            >
+          </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 btn-top-mr" >
+            <button type="button" (click)="addFileControl()" class="btn btn-outline-primary">
+              <i class="fa fa-plus"></i> 
+            </button>
+          </div>
+    </div>
+    
+    <div class="common_button_sub mt-3">
+      <button *ngIf="formObj.document_details?.length" (click)="handleSubmit()">
+        Submit
+      </button>
+    </div>
+    </div>
+    </mat-card>
+    </div>
+    </div>

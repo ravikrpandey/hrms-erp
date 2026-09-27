@@ -1,0 +1,1148 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Item Master
+      <i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #858586"
+      ></i>
+      <span *ngIf="!id"> Create Item </span>
+      <span *ngIf="id"> View Item </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="../" >
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+      </i
+      ><span>View Item</span>
+    </button>
+  </div>
+  <div class="add_button">
+    <button class="" routerLink="../">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Type</mat-label>
+              <mat-select formControlName="item_type_id">
+                <mat-select-filter
+                  [array]="itemTypeList"
+                  (filteredReturn)="itemTypeFilter($event)"
+                ></mat-select-filter>
+                <mat-option *ngFor="let item of itemType" [value]="item.id">{{
+                  item?.itemType
+                }}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['item_type_id'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['item_type_id'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Category</mat-label>
+              <mat-select formControlName="asset_id" (selectionChange)="onSelectionChange2($event)">
+                <mat-select-filter
+                  [array]="itemCategoryList"
+                  (filteredReturn)="itemFilter($event)"
+                  
+                ></mat-select-filter>
+                <mat-option
+                  *ngFor="let data of getCat_data"
+                  [value]="data.id"
+                  >{{ data?.asset_category_name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['asset_id'].hasError('required') &&
+                  createPrItemForm.controls['asset_id'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Name</mat-label>
+              <input matInput type="text" formControlName="item_name" readonly/>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['asset_id'].hasError('required') &&
+                  createPrItemForm.controls['asset_id'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['item_name'].hasError(
+                    'leadingSpaces'
+                  )
+                "
+              >
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="item_code"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Group</mat-label>
+              <input matInput type="text" formControlName="Item_group" readonly />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_group'].hasError('required') &&
+                  createPrItemForm.controls['Item_group'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_group'].hasError(
+                    'leadingSpaces'
+                  )
+                "
+              >
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Group Code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Item_group_code"
+                readonly
+                />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>UOM</mat-label>
+              <mat-select formControlName="uom_id">
+                <mat-select-filter
+                  [array]="uomList"
+                  (filteredReturn)="uomFilter($event)"
+                ></mat-select-filter>
+                <mat-option
+                  *ngFor="let data of getUom_data"
+                  [value]="data.uom_id"
+                  >{{ data?.uom_name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['uom_id'].hasError('required') &&
+                  createPrItemForm.controls['uom_id'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Manage By</mat-label>
+              <mat-select
+                formControlName="manage_by"
+                (selectionChange)="manageBy($event)"
+              >
+                <mat-option value="Batch Only">Batch Only</mat-option>
+                <mat-option value="S.No. Only">S.No. Only</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['manage_by'].hasError('required') &&
+                  createPrItemForm.controls['manage_by'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-3 col-12 minimum">
+          <mat-label class="lavel_class">Minimum Level</mat-label>
+          <div class="input-counter">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="decreaselevel()"
+              class="btn_class"
+            >
+              <mat-icon class="remove">remove_circle_outline</mat-icon>
+            </button>
+
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                type="number"
+                formControlName="minimum_level"
+                [value]="minMax_lavel"
+                min="0"
+                (keydown)="removePlus($event)"
+                class="new_class"
+                readonly
+              />
+            </mat-form-field>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="increaselevel()"
+              class="btn_class1"
+            >
+              <mat-icon class="increase">add_circle_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-3 col-12 minimum">
+          <mat-label class="lavel_class">Maximum Level</mat-label>
+          <div class="input-counter">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="decreaseMax()"
+              class="btn_class"
+            >
+              <mat-icon class="remove">remove_circle_outline</mat-icon>
+            </button>
+
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                type="number"
+                [value]="maximunm_lavel"
+                min="0"
+                (keydown)="removePlus($event)"
+                formControlName="maximum_level"
+                class="new_class"
+                readonly
+              />
+            </mat-form-field>
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="increaseMax()"
+              class="btn_class1"
+            >
+              <mat-icon class="increase">add_circle_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>CGST</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="%"
+                formControlName="cgst"
+                (keydown)="removePlusGST($event)"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>SGST</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="%"
+                formControlName="sgst"
+                (keydown)="removePlusGST($event)"
+              />
+            </mat-form-field>
+          </div>
+        </div> -->
+     
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Minimum Billing Rate</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="MVP"
+                (keydown)="removePlus($event)"
+                readonly
+              />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['MVP'].hasError('required') &&
+                  createPrItemForm.controls['MVP'].touched
+                "
+              >
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>HSN Code</mat-label>
+              <mat-select  formControlName="hsn_code_id">
+             
+                <mat-option (click)="onHSNCodeChange(data)"
+                  *ngFor="let data of hsnCodeList"
+                  [value]="data.id"
+                  >{{ data?.hsn_sac_code }}</mat-option
+                >
+              </mat-select>
+              <!-- <mat-error
+                *ngIf="
+                  createPrItemForm.controls['hsn_code_id'].hasError(
+                    'required'
+                  )
+                "
+              >
+                HSN Code is Required.
+              </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>GST</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="%"
+                formControlName="igst"
+                (keydown)="removePlus($event)"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Usage</mat-label>
+              <mat-select formControlName="usage_details" multiple>
+                <mat-option
+                  [value]="data.id"
+                  *ngFor="let data of getAllUsages"
+                  >{{ data.name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['usage_details'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['usage_details'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+         <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Maximum Discount</mat-label>
+              <mat-select formControlName="maximum_discount" multiple>
+                <mat-option
+                  [value]="data.id"
+                  *ngFor="let data of getAllUsages"
+                  >{{ data.name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['maximum_discount'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['maximum_discount'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Customer Type Price</mat-label>
+              <mat-select formControlName="customerDetail" multiple>
+                <mat-option
+                  [value]="data.id"
+                  *ngFor="let data of customerType; index as i"
+                  (click)="onSelectionChange(data, i)"
+                  >{{ data.customer_type_name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['customerDetail'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['customerDetail'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Print Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="item_print_name"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['item_print_name'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['item_print_name'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Description</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="item_description"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['item_description'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['item_description'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Colors</mat-label>
+              <mat-select formControlName="color" multiple>
+                <mat-option
+                [value]="color"
+                  *ngFor="let color of colors; index as i"
+                  >{{ color }}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['color'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['color'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Elan Pro Item Code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="elan_pro_item_code"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['elan_pro_item_code'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['elan_pro_item_code'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Factory Item Code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="factory_item_code"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['factory_item_code'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['factory_item_code'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Sub Category Name</mat-label>
+              <mat-select formControlName="sub_category_name">
+                <mat-option
+                  [value]="data.id"
+                  *ngFor="let data of subCategoryList; index as i"
+                  (click)="onSelectionChange(data, i)"
+                  >{{ data.sub_category_name }}</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['sub_category_name'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['sub_category_name'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Sub Category Code</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="sub_category_code"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['sub_category_code'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['sub_category_code'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Variant</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Variant"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Variant'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['Variant'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Length</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Item_length_before"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_length_before'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['Item_length_before'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Width</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Item_width_before"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_width_before'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['Item_width_before'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Height</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Item_height_before"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_height_before'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['Item_height_before'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>item Volume</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="Item_volume_before"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['Item_volume_before'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['Item_volume_before'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>External Length</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="external_length_after"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['external_length_after'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['external_length_after'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>External Width</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="external_width_after"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['external_width_after'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['external_width_after'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>External Height</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="external_height_after"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['external_height_after'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['external_height_after'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumetric Weight(Air Domestic)</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="volumetric_weight_air_domestic"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['volumetric_weight_air_domestic'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['volumetric_weight_air_domestic'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumetric Weight(Air International)</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="volumetric_weight_air_international"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['volumetric_weight_air_international'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['volumetric_weight_air_international'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumetric Weight(By sea)</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="volumetric_weight_by_sea"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['volumetric_weight_by_sea'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['volumetric_weight_by_sea'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumetric Weight(By Road)</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="volumetric_weight_by_road"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['volumetric_weight_by_road'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['volumetric_weight_by_road'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Volumetric Space</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="volumetric_space"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['volumetric_space'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['volumetric_space'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Product Brochures and Manuals</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="product_brochures_and_manuals"
+            
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['product_brochures_and_manuals'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['product_brochures_and_manuals'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div> -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Default Lead Time For Sales</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="default_lead_time_for_sales"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['default_lead_time_for_sales'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['default_lead_time_for_sales'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Default Lead time for purchase</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="default_lead_time_for_purchase"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['default_lead_time_for_purchase'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['default_lead_time_for_purchase'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Auto Requisition On Level</mat-label>
+              <mat-select formControlName="auto_requisition_on_level">
+                <mat-option
+                  value="Yes"
+                  >Yes</mat-option>
+                <mat-option
+                value="No"
+                > No </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['auto_requisition_on_level'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['auto_requisition_on_level'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Warranty Applicable</mat-label>
+              <mat-select formControlName="warranty_applicable">
+                <mat-option
+                  value="Yes"
+                  >Yes</mat-option>
+                <mat-option
+                value="No"
+                > No </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['warranty_applicable'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['warranty_applicable'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Warranty Applicable</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="warranty_applicable"
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['warranty_applicable'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['warranty_applicable'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div> -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Warranty Period</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="warranty_period"
+                readonly
+                />
+              <mat-error
+                *ngIf="
+                  createPrItemForm.controls['warranty_period'].hasError(
+                    'required'
+                  ) && createPrItemForm.controls['warranty_period'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <!-- dynamic fields -->
+
+        <ng-container *ngIf="dynamicFields.length > 0">
+          <div
+            class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+            *ngFor="let controls of dynamicFields"
+          >
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>{{ controls.lavel }}</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  [formControlName]="controls.customer_type_name"
+                  (keydown)="removePlus($event)"
+                  readonly
+                />
+                <mat-error
+                  *ngIf="
+                    createPrItemForm.controls[
+                      controls.customer_type_name
+                    ]?.hasError('required') &&
+                    createPrItemForm.controls[controls.customer_type_name]
+                      ?.touched
+                  "
+                >
+                  *Required!</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </div>
+        </ng-container>
+
+        <div
+          class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+          style="position: relative"
+        >
+          <div class="form-group mb-4" *ngIf="action_type !== 'view'">
+            <input
+              class="form-control"
+              type="file"
+              style="
+                padding-right: 10px;
+                height: 42px;
+                font-size: 14px;
+                padding-top: 10px;
+                border: 1px solid #9e9e9e;
+              "
+              title="Upload Document"
+              (change)="onChange($event)"
+              aria-describedby="inputGroupFileAddon04"
+              accept=".jpg,.jpeg,.png"
+              multiple
+            />
+            <!-- <mat-error
+            *ngIf="createPrItemForm.controls['image'].hasError('required') && (createPrItemForm.controls['image'].touched)"
+              >
+                *Required!</mat-error
+              > -->
+
+            <a
+              [href]="generateFileUrl(singleItem?.item_document)"
+              *ngIf="
+                id &&
+                getFileExtension(singleItem?.item_document) !== 'png' &&
+                getFileExtension(singleItem?.item_document) !== 'jpg' &&
+                getFileExtension(singleItem?.item_document) !== 'jpeg' &&
+                getFileExtension(singleItem?.item_document) !== 'gif' &&
+                singleItem?.item_document
+              "
+              class="viewBtn"
+              target="_blank"
+              >View</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+<div class="right_data_all">
+  <mat-card style="box-shadow: none">
+        <table>
+          <thead>
+            <tr>
+              <th>Serial Number</th>
+              <th>Image Preview</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let image of imagePath; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <img
+                  [src]="image"
+                  (click)="seePreview(this.singleItem?.item_document, image)"
+                  class="img-preview"
+                  alt="Image preview {{ i + 1 }}"
+                  style="width: 100px; height: auto"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </mat-card> 
+  </div>

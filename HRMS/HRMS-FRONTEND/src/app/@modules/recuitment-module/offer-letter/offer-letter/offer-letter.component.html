@@ -1,0 +1,41 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>HRMS</h1>
+      <p>Recruitment Candidate Profile Request <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>Job Candidate Profile Request </span></p>
+    </div>
+  </div>
+
+  <div class="right_data_all">
+      <mat-tab-group #tabGroup (selectedTabChange)="tabChange($event)">
+        <mat-tab *ngFor="let tab of tabs" [label]="tab.label">
+          <div class="mt-4">
+            <div class="employ_sube py-2">
+                <div class="example-header">
+                  <select (change)="onPageSizeChanged()" id="page-size">
+                    <option value="10" selected="">10</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1000</option>
+                  </select>
+                </div>
+              <div class="employee_2" align="end">
+                <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+                  (input)="onFilterTextBoxChanged()">
+              </div>
+            </div>
+          </div>
+          <div class="ag_grid">
+            <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+              [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div>
+    </div>
+  </div>

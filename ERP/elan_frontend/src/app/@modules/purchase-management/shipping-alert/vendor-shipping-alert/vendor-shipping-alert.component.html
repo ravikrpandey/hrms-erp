@@ -1,0 +1,1266 @@
+<div class="page-wrapper">
+  <app-vendor-top-header
+    [vendor_id]="vendor_id_header"
+    [po_id]="po_id_header"
+  ></app-vendor-top-header>
+
+  <div class="main">
+    <h1 class="main-heading">Create Shipping Alert</h1>
+    <p class="main-sub">
+      View all purchase orders along with their current status, shipment
+      progress, and quick actions to create or track shipments.
+    </p>
+
+    <form [formGroup]="shippingForm" (ngSubmit)="createShipping()" novalidate>
+      <!-- ══════════════════════════════════════════
+             CARD 1 — Shipment Setup
+        ══════════════════════════════════════════ -->
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon class="card-icon">inventory_2</mat-icon> Shipment Setup
+          </mat-card-title>
+
+          <a
+            style="padding-left: 10px"
+            mat-button
+            [routerLink]="['/vendor-tracking-alert']"
+            [queryParams]="{
+              po_id: po_id_header,
+              vendor_id: vendor_id_header,
+            }"
+          >
+            <mat-icon class="card-icon">track_changes</mat-icon>
+            <span class="txt-decoration">Track Shipment</span>
+          </a>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="row1 four-col">
+            <div class="w-full">
+              <mat-label class="label label-set">PO Number: </mat-label>
+              <span>{{ shippingForm.get("po_no")?.value }}</span>
+            </div>
+
+            <div class="w-full">
+              <mat-label class="label label-set">PO Date: </mat-label>
+              <span>{{ shippingForm.get("po_date")?.value | date }}</span>
+            </div>
+
+            <div class="w-full">
+              <mat-label class="label label-set">Delivery Location: </mat-label>
+              <span>{{ shippingForm.get("delivery_location")?.value }}</span>
+            </div>
+            <div
+              class="w-full"
+              *ngIf="shippingForm.get('incoterm_details')?.value != null"
+            >
+              <mat-label class="label label-set">Incoterm Details: </mat-label>
+              <span>{{ shippingForm.get("incoterm_details")?.value }}</span>
+            </div>
+          </div>
+          <!-- Transport Mode -->
+          <div class="row two-col mt-3">
+            <div class="field" style="align-items: flex-start">
+              <label class="field-label">Transport Mode</label>
+              <mat-button-toggle-group
+                formControlName="mode"
+                class="mode-toggle"
+              >
+                <ng-container *ngFor="let m of transportModes">
+                  <mat-button-toggle [value]="m.value">
+                    <span class="mode-emoji">{{ m.icon }}</span> {{ m.label }}
+                  </mat-button-toggle>
+                </ng-container>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+
+          <!-- Shipment Completed -->
+          <div *ngIf="shipped" class="shipment-completed">
+            <mat-icon>check_circle</mat-icon>
+            <span>All items for this PO have been shipped successfully.</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <div *ngIf="!shipped">
+        <!-- ══════════════════════════════════════════
+              CARD 2 — Shipment Schedule
+        ══════════════════════════════════════════ -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">calendar_month</mat-icon> Shipment
+              Schedule
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Shipment Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="shipPicker"
+                  formControlName="shipment_date"
+                  placeholder="DD/MM/YYYY"
+                  (click)="shipPicker.open()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="shipPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #shipPicker></mat-datepicker>
+                <mat-error *ngIf="hasError('shipment_date', 'required')"
+                  >Shipment date is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Expected Arrival</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="arrPicker"
+                  formControlName="expected_arrival"
+                  placeholder="DD/MM/YYYY"
+                  (click)="arrPicker.open()"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="arrPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #arrPicker></mat-datepicker>
+                <mat-error *ngIf="hasError('expected_arrival', 'required')"
+                  >Expected arrival is required.</mat-error
+                >
+                <mat-error
+                  *ngIf="
+                    shippingForm.hasError('arrivalBeforeShipment') &&
+                    shippingForm.get('expected_arrival')?.touched
+                  "
+                >
+                  Arrival must be after shipment date.
+                </mat-error>
+              </mat-form-field>
+
+              <app-mat-form-select-filter
+                [key]="'id'"
+                [items]="portList"
+                *ngIf="poDetails?.port_id"
+                [displayKey]="['port_id', 'unlocode', 'port_type']"
+                placeholder="Select Departure Port"
+                formControlName="port_id"
+              ></app-mat-form-select-filter>
+              <p class="text-danger" *ngIf="hasError('port_id', 'required')">
+                Departure Location is required.
+              </p>
+              <mat-form-field
+                appearance="outline"
+                class="w-full"
+                *ngIf="!poDetails?.port_id"
+              >
+                <mat-label>Departure Location</mat-label>
+                <input
+                  matInput
+                  formControlName="departure_location"
+                  placeholder="Departure Location"
+                />
+                <mat-icon matSuffix>room</mat-icon>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 4 — Shipment Items (mat-table)
+          ══════════════════════════════════════════ -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">receipt_long</mat-icon> Shipment Items
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="mat-elevation-z1 table-wrap">
+              <table
+                mat-table
+                [dataSource]="itemsDataSource"
+                class="items-table w-full"
+              >
+                <ng-container matColumnDef="item_name">
+                  <th mat-header-cell *matHeaderCellDef>Item Name</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.get("item_name")?.value }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="item_code">
+                  <th mat-header-cell *matHeaderCellDef>Item Code</th>
+                  <td mat-cell *matCellDef="let item">
+                    {{ item.get("item_code")?.value }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="quantity">
+                  <th mat-header-cell *matHeaderCellDef>PO Qty</th>
+                  <td mat-cell *matCellDef="let item">
+                    <span class="qty-badge">{{
+                      item.get("quantity")?.value
+                    }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="shipped_quantity">
+                  <th mat-header-cell *matHeaderCellDef>Shipped</th>
+                  <td mat-cell *matCellDef="let item">
+                    <span class="qty-badge">{{
+                      item.get("shipped_quantity")?.value
+                    }}</span>
+                  </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="unit_price">
+                    <th mat-header-cell *matHeaderCellDef>Shipped</th>
+                    <td mat-cell *matCellDef="let item">
+                      <span class="qty-badge">{{ item.get('unit_price')?.value }}</span>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="total_mvp">
+                    <th mat-header-cell *matHeaderCellDef>Shipped</th>
+                    <td mat-cell *matCellDef="let item">
+                      <span class="qty-badge">{{ item.get('total_mvp')?.value }}</span>
+                    </td>
+                  </ng-container> -->
+
+                <ng-container matColumnDef="remaining_quantity">
+                  <th mat-header-cell *matHeaderCellDef>Remaining</th>
+                  <td mat-cell *matCellDef="let item">
+                    <mat-chip
+                      [color]="
+                        item.get('remaining_quantity')?.value > 0
+                          ? 'primary'
+                          : 'warn'
+                      "
+                      selected
+                    >
+                      {{ item.get("remaining_quantity")?.value }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="unit_price">
+                  <th mat-header-cell *matHeaderCellDef>Price Per Unit</th>
+                  <td mat-cell *matCellDef="let item">
+                    <mat-chip
+                      [color]="
+                        item.get('unit_price')?.value > 0 ? 'primary' : 'warn'
+                      "
+                      selected
+                    >
+                      {{ currencySymbols }} {{ item.get("unit_price")?.value }}
+                    </mat-chip>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="this_shipment">
+                  <th mat-header-cell *matHeaderCellDef>This Shipment</th>
+                  <td mat-cell *matCellDef="let item" [formGroup]="item">
+                    <mat-form-field appearance="outline" class="table-input">
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="this_shipment"
+                        placeholder="0"
+                        min="0"
+                        (input)="enterQty($event)"
+                        [max]="item.get('remaining_quantity')?.value"
+                      />
+                      <mat-error
+                        *ngIf="item.get('this_shipment')?.hasError('max')"
+                      >
+                        Max {{ item.get("remaining_quantity")?.value }}
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+              </table>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-4" style="width: 100% !important">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Invoice No</mat-label>
+                  <input
+                    matInput
+                    formControlName="invoice_no"
+                    placeholder="Enter Invoice No"
+                  />
+                </mat-form-field>
+              </div>
+              <div class="col-md-4" style="width: 100% !important">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Invoice Amount</mat-label>
+                  <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="invoice_amount"
+                    placeholder="Enter Invoice Amount"
+                  />
+                  <span matSuffix>{{ currencyCode }}</span>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4" style="width: 100% !important">
+                <mat-form-field appearance="outline" class="w-full">
+                  <mat-label>Invoice Date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="invoicePicker"
+                    formControlName="invoice_date"
+                    placeholder="DD/MM/YYYY"
+                    (click)="invoicePicker.open()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle
+                    matIconSuffix
+                    [for]="invoicePicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #invoicePicker></mat-datepicker>
+                  <mat-error *ngIf="hasError('shipment_date', 'required')"
+                    >Shipment date is required.</mat-error
+                  >
+                </mat-form-field>
+              </div>
+
+                <div class="col-md-4" style="width: 100% !important;">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Advance Amount</mat-label>
+                  <span matPrefix>{{ currencySymbols }} &nbsp;</span>
+                  <input
+                    matInput
+                    type="number"
+                    formControlName="advance_amount"
+                    readonly
+                  />
+                  <span matSuffix>{{ currencyCode }}</span>
+                </mat-form-field>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 3a — ROAD
+          ══════════════════════════════════════════ -->
+        <mat-card
+          class="form-card"
+          *ngIf="mode === 'ROAD'"
+          formGroupName="road"
+        >
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">local_shipping</mat-icon> Road
+              Transport Details
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Vehicle Number</mat-label>
+                <input
+                  matInput
+                  formControlName="vehicle_number"
+                  placeholder="e.g. MH 01 AB 1234"
+                />
+                <mat-icon matSuffix>directions_car</mat-icon>
+                <mat-error *ngIf="hasError('road.vehicle_number', 'required')"
+                  >Vehicle number is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Driver Name</mat-label>
+                <input
+                  matInput
+                  formControlName="driver_name"
+                  placeholder="Full name"
+                />
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="hasError('road.driver_name', 'required')"
+                  >Driver name is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Driver Mobile</mat-label>
+                <input
+                  matInput
+                  formControlName="driver_mobile"
+                  placeholder="+91 XXXXX XXXXX"
+                />
+                <mat-icon matSuffix>phone</mat-icon>
+                <mat-error *ngIf="hasError('road.driver_mobile', 'pattern')"
+                  >Enter a valid mobile number.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Transporter Name</mat-label>
+                <input
+                  matInput
+                  formControlName="transporter_name"
+                  placeholder="Agency name"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>LR Number</mat-label>
+                <input
+                  matInput
+                  formControlName="lr_number"
+                  placeholder="Lorry Receipt No."
+                />
+                <mat-icon matSuffix>receipt</mat-icon>
+                <mat-error *ngIf="hasError('road.lr_number', 'required')"
+                  >LR number is required.</mat-error
+                >
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 3a — Courier
+          ══════════════════════════════════════════ -->
+        <!-- ══════════════════════════════════════════
+              CARD 3a — Courier
+          ══════════════════════════════════════════ -->
+        <mat-card
+          class="form-card"
+          *ngIf="mode === 'COURIER'"
+          formGroupName="courier"
+        >
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">local_shipping</mat-icon> Courier
+              Transport Details
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Courier Name</mat-label>
+                <input
+                  matInput
+                  formControlName="courier_name"
+                  placeholder="e.g. DHL, FedEx, BlueDart"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+                <mat-error *ngIf="hasError('courier.courier_name', 'required')"
+                  >Courier name is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>AWB / Tracking Number</mat-label>
+                <input
+                  matInput
+                  formControlName="awb_number"
+                  placeholder="Tracking Number"
+                />
+                <mat-icon matSuffix>receipt</mat-icon>
+                <mat-error *ngIf="hasError('courier.awb_number', 'required')"
+                  >AWB / Tracking number is required.</mat-error
+                >
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Tracking Web URL</mat-label>
+                <input
+                  matInput
+                  formControlName="tracking_url"
+                  placeholder="https://example.com/track"
+                />
+                <mat-icon matSuffix>link</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Remarks</mat-label>
+                <input
+                  matInput
+                  formControlName="remarks"
+                  placeholder="Add any instructions/notes"
+                />
+                <mat-icon matSuffix>notes</mat-icon>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 3b — AIR
+          ══════════════════════════════════════════ -->
+        <mat-card class="form-card" *ngIf="mode === 'AIR'" formGroupName="air">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">flight</mat-icon> Air Transport
+              Details
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="sub-title">
+              <mat-icon class="sub-icon">airlines</mat-icon> Airline Information
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Airline Name</mat-label>
+                <input
+                  matInput
+                  formControlName="airline_name"
+                  placeholder="e.g. IndiGo, Emirates"
+                />
+                <mat-icon matSuffix>flight_takeoff</mat-icon>
+                <mat-error *ngIf="hasError('air.airline_name', 'required')"
+                  >Airline name is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Flight Number</mat-label>
+                <input
+                  matInput
+                  formControlName="flight_number"
+                  placeholder="e.g. EK 512"
+                />
+                <mat-icon matSuffix>confirmation_number</mat-icon>
+                <mat-error *ngIf="hasError('air.flight_number', 'required')"
+                  >Flight number is required.</mat-error
+                >
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">article</mat-icon> Airway Bill
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>AWB Number</mat-label>
+                <input
+                  matInput
+                  formControlName="awb_number"
+                  placeholder="Air Waybill Number"
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+                <mat-error *ngIf="hasError('air.awb_number', 'required')"
+                  >AWB number is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>AWB Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="awbPicker"
+                  formControlName="awb_date"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="awbPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #awbPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">schedule</mat-icon> Flight Schedule
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETD — Departure Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etdAir"
+                  formControlName="etd"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etdAir"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etdAir></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETA — Arrival Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etaAir"
+                  formControlName="eta"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etaAir"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etaAir></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">inventory</mat-icon> Cargo Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Total Packages</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="total_packages"
+                  placeholder="0"
+                  min="0"
+                />
+                <mat-icon matSuffix>widgets</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gross Weight (KG)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="gross_weight"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>scale</mat-icon>
+                <mat-error *ngIf="hasError('air.gross_weight', 'required')"
+                  >Required.</mat-error
+                >
+                <mat-error *ngIf="hasError('air.gross_weight', 'min')"
+                  >Must be > 0.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Chargeable Weight</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="chargeable_weight"
+                  placeholder="0.00"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>monitor_weight</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">payments</mat-icon> Freight Details
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Freight Type</mat-label>
+                <mat-select formControlName="freight_type">
+                  <mat-option value="PREPAID">Prepaid</mat-option>
+                  <mat-option value="COLLECT">Collect</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Freight Forwarder</mat-label>
+                <input
+                  matInput
+                  formControlName="freight_forwarder"
+                  placeholder="Forwarder name"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 3c — SEA
+          ══════════════════════════════════════════ -->
+        <mat-card class="form-card" *ngIf="mode === 'SEA'" formGroupName="sea">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">directions_boat</mat-icon> Sea
+              Transport Details
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="sub-title">
+              <mat-icon class="sub-icon">anchor</mat-icon> Vessel Information
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Vessel Name</mat-label>
+                <input
+                  matInput
+                  formControlName="vessel_name"
+                  placeholder="e.g. MSC Gülsün"
+                />
+                <mat-icon matSuffix>anchor</mat-icon>
+                <mat-error *ngIf="hasError('sea.vessel_name', 'required')"
+                  >Vessel name is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Voyage Number</mat-label>
+                <input
+                  matInput
+                  formControlName="voyage_number"
+                  placeholder="Voyage / Trip No."
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Shipping Line</mat-label>
+                <input
+                  matInput
+                  formControlName="shipping_line"
+                  placeholder="e.g. Maersk, MSC"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">inventory_2</mat-icon> Container
+              Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Container Number</mat-label>
+                <input
+                  matInput
+                  formControlName="container_number"
+                  placeholder="e.g. MSCU1234567"
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Container Type</mat-label>
+                <mat-select formControlName="container_type">
+                  <mat-option value="20FT">20FT</mat-option>
+                  <mat-option value="40FT">40FT</mat-option>
+                  <mat-option value="40HC">40HC</mat-option>
+                  <mat-option value="Reefer">Reefer</mat-option>
+                  <mat-option value="Open Top">Open Top</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Seal Number</mat-label>
+                <input
+                  matInput
+                  formControlName="seal_number"
+                  placeholder="Seal No."
+                />
+                <mat-icon matSuffix>lock</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">receipt_long</mat-icon> Bill of Lading
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Number</mat-label>
+                <input
+                  matInput
+                  formControlName="bl_number"
+                  placeholder="B/L No."
+                />
+                <mat-icon matSuffix>receipt_long</mat-icon>
+                <mat-error *ngIf="hasError('sea.bl_number', 'required')"
+                  >BL number is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="blPicker"
+                  formControlName="bl_date"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="blPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #blPicker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>BL Type</mat-label>
+                <mat-select formControlName="bl_type">
+                  <mat-option value="Original">Original</mat-option>
+                  <mat-option value="Seaway Bill">Seaway Bill</mat-option>
+                  <mat-option value="Telex Release">Telex Release</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">schedule</mat-icon> Shipment Schedule
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETD</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etdSea"
+                  formControlName="etd"
+                  placeholder="DD/MM/YYYY"
+                  readonly
+                  (click)="etdSea.open()"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etdSea"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etdSea></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>ETA</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="etaSea"
+                  formControlName="eta"
+                  placeholder="DD/MM/YYYY"
+                  readonly
+                  (click)="etaSea.open()"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="etaSea"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #etaSea></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">inventory</mat-icon> Cargo Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Total Packages</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="total_packages"
+                  min="0"
+                />
+                <mat-icon matSuffix>widgets</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gross Weight (KG)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="gross_weight"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>scale</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Volume (CBM)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="volume"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>straighten</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">payments</mat-icon> Freight Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Freight Type</mat-label>
+                <mat-select formControlName="freight_type">
+                  <mat-option value="Prepaid">Prepaid</mat-option>
+                  <mat-option value="Collect">Collect</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Ocean Freight (USD)</mat-label>
+                <span matTextPrefix> &nbsp;</span>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="ocean_freight"
+                  step="0.01"
+                />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Forwarder</mat-label>
+                <input
+                  matInput
+                  formControlName="forwarder"
+                  placeholder="Forwarder name"
+                />
+                <mat-icon matSuffix>business</mat-icon>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 3d — RAIL
+          ══════════════════════════════════════════ -->
+        <mat-card
+          class="form-card"
+          *ngIf="mode === 'RAIL'"
+          formGroupName="rail"
+        >
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">train</mat-icon> Rail Transport
+              Details
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <p class="sub-title">
+              <mat-icon class="sub-icon">train</mat-icon> Train Information
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Train Number</mat-label>
+                <input
+                  matInput
+                  formControlName="train_number"
+                  placeholder="e.g. 12301"
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+                <mat-error *ngIf="hasError('rail.train_number', 'required')"
+                  >Train number is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Train Name</mat-label>
+                <input
+                  matInput
+                  formControlName="train_name"
+                  placeholder="e.g. Rajdhani Express"
+                />
+                <mat-icon matSuffix>directions_railway</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Railway Zone</mat-label>
+                <input
+                  matInput
+                  formControlName="railway_zone"
+                  placeholder="e.g. CR, WR, NR"
+                />
+                <mat-icon matSuffix>map</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">view_week</mat-icon> Wagon / Coach
+              Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Wagon Number</mat-label>
+                <input
+                  matInput
+                  formControlName="wagon_number"
+                  placeholder="Wagon No."
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+                <mat-error *ngIf="hasError('rail.wagon_number', 'required')"
+                  >Wagon number is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Coach Number</mat-label>
+                <input
+                  matInput
+                  formControlName="coach_number"
+                  placeholder="Coach No."
+                />
+                <mat-icon matSuffix>tag</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Container Number</mat-label>
+                <input
+                  matInput
+                  formControlName="container_number"
+                  placeholder="Container No."
+                />
+                <mat-icon matSuffix>inventory_2</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">schedule</mat-icon> Rail Schedule
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Departure Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="depRail"
+                  formControlName="departure_date"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="depRail"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #depRail></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Expected Arrival</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="arrRail"
+                  formControlName="expectedArrival"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="arrRail"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #arrRail></mat-datepicker>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">inventory</mat-icon> Cargo Details
+            </p>
+            <div class="row three-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Total Packages</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="total_packages"
+                  min="0"
+                />
+                <mat-icon matSuffix>widgets</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Gross Weight (KG)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="gross_weight"
+                  step="0.01"
+                />
+                <mat-icon matSuffix>scale</mat-icon>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Cargo Type</mat-label>
+                <input
+                  matInput
+                  formControlName="cargo_type"
+                  placeholder="e.g. General, Hazmat"
+                />
+                <mat-icon matSuffix>category</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <p class="sub-title">
+              <mat-icon class="sub-icon">receipt</mat-icon> Railway Receipt
+            </p>
+            <div class="row two-col">
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>RR Number</mat-label>
+                <input
+                  matInput
+                  formControlName="rr_number"
+                  placeholder="Railway Receipt No."
+                />
+                <mat-icon matSuffix>receipt</mat-icon>
+                <mat-error *ngIf="hasError('rail.rr_number', 'required')"
+                  >RR number is required.</mat-error
+                >
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="w-full">
+                <mat-label>RR Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="rrPicker"
+                  formControlName="rr_date"
+                  placeholder="DD/MM/YYYY"
+                />
+                <mat-datepicker-toggle
+                  matIconSuffix
+                  [for]="rrPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #rrPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- ══════════════════════════════════════════
+              CARD 5 — Shipping Documents
+          ══════════════════════════════════════════ -->
+        <mat-card class="form-card" formGroupName="documents">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon class="card-icon">attach_file</mat-icon> Shipping
+              Documents
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="doc-grid">
+              <div class="doc-upload-card" *ngFor="let doc of documentList">
+                <mat-icon class="doc-mat-icon">
+                  {{ doc.icon }}
+                </mat-icon>
+
+                <p class="doc-label">{{ doc.label }}</p>
+
+                <p class="doc-hint">{{ doc.hint }}</p>
+
+                <!-- Uploaded Files -->
+                <div *ngIf="fileNames[doc.key]?.length">
+                  <div
+                    class="doc-filename"
+                    *ngFor="let fileName of fileNames[doc.key]"
+                  >
+                    <mat-icon style="font-size: 14px">check_circle</mat-icon>
+                    {{ fileName }}
+                  </div>
+                </div>
+
+                <!-- Upload -->
+                <input
+                  type="file"
+                  hidden
+                  multiple
+                  [accept]="doc.accept"
+                  #fileInput
+                  (change)="onFileChange($event, doc.key)"
+                />
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  type="button"
+                  (click)="fileInput.click()"
+                >
+                  <mat-icon>upload</mat-icon>
+                  Browse
+                </button>
+                <span
+                  *ngIf="
+                    doc.key === 'invoice' &&
+                    !shippingForm.get('documents.invoice')?.value
+                  "
+                  style="color: #f44336"
+                  >This Document is required.</span
+                >
+                <div
+                  *ngIf="uploadStatus[doc.key]?.status === 'uploading'"
+                  class="mt-2"
+                >
+                  <mat-progress-bar
+                    mode="determinate"
+                    [value]="uploadStatus[doc.key]?.progress"
+                  >
+                  </mat-progress-bar>
+
+                  <small>
+                    Uploading... {{ uploadStatus[doc.key]?.progress }}%
+                  </small>
+                </div>
+
+                <div
+                  *ngIf="uploadStatus[doc.key]?.status === 'success'"
+                  class="mt-2"
+                >
+                  <small class="text-success"> Upload completed </small>
+                </div>
+                <!-- Uploaded Files Actions -->
+                <div
+                  class="doc-actions"
+                  *ngFor="let url of getFileUrls(doc.key); let i = index"
+                >
+                  <a
+                    mat-icon-button
+                    color="primary"
+                    [href]="url"
+                    target="_blank"
+                  >
+                    <mat-icon>visibility</mat-icon>
+                  </a>
+
+                  <a
+                    mat-icon-button
+                    color="accent"
+                    [href]="url"
+                    download
+                    target="_blank"
+                  >
+                    <mat-icon>download</mat-icon>
+                  </a>
+
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    type="button"
+                    (click)="removeFile(doc.key, i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <div class="tnc-check-row">
+          <mat-checkbox formControlName="terms_condition" color="primary">
+            I have read and agree to the
+            <a class="tnc-link" href="#" (click)="$event.preventDefault()">
+              Terms &amp; Conditions
+            </a>
+            and
+            <a class="tnc-link" href="#" (click)="$event.preventDefault()">
+              Shipping Policy
+            </a>
+            of Elan Pro ERP.
+          </mat-checkbox>
+          <mat-error
+            class="tnc-error"
+            *ngIf="
+              hasError('terms_condition', 'requiredTrue') &&
+              shippingForm.get('terms_condition')?.touched
+            "
+          >
+            You must accept the Terms &amp; Conditions.
+          </mat-error>
+        </div>
+
+        <!-- ══════════════════════════════════════════
+              ACTIONS
+          ══════════════════════════════════════════ -->
+        <div class="actions">
+          <!-- <button mat-stroked-button color="warn" type="button" (click)="cancel()">
+                <mat-icon>close</mat-icon> Cancel
+              </button> -->
+          <button mat-raised-button color="primary" type="submit">
+            <mat-icon>notifications_active</mat-icon> Create Dispatch
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

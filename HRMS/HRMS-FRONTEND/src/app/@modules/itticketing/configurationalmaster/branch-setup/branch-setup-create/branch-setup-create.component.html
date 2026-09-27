@@ -1,0 +1,348 @@
+<section class="section">
+  <div class="row head">
+    <p>Admin</p>
+  </div>
+  <div class="row py-1">
+    <div class="employee_top">Branch-Setup
+      <span class="employee_2" *ngIf="!employeId"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Create </span>
+      <span class="employee_2" *ngIf="employeId"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Update </span>
+    </div>
+  </div>
+
+  <mat-card>
+    <div class="form_head">
+      <h3>Branch Setup</h3>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="form_basic">
+      <!-- helpDiskForm -->
+      <form class="form_set" [formGroup]="branchSetupForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Branch Location</mat-label>
+                <input matInput type="text" formControlName="branch_name" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_name'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_name'].hasError('minlength')">
+                  This field accepted minimum 2 length.
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_name'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>GST NO.</mat-label>
+                <input matInput type="text" formControlName="branch_gstnumber" />
+                <!-- <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('required')">
+                  *Required!
+                </mat-error> -->
+                <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('minlength')">
+                  This field accepted minimum 2 length.
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_gstnumber'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Contact Person Name</mat-label>
+                <input matInput type="text" formControlName="branch_contact_person_name" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_contact_person_name'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_contact_person_name'].hasError('minlength')">
+                  This field accepted minimum 2 length.
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_contact_person_name'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="codeArea">
+              <div class="form-group addCoding">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="contact_country_code">
+                    <mat-option *ngFor="let countryCode of countryCodeList"
+                      [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+              </div>
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label style="padding: 0 0 0 55px;">Contact No.</mat-label>
+                  <input matInput type="text" formControlName="branch_contact_no" />
+                  <mat-error *ngIf="branchSetupForm.controls['branch_contact_no'].hasError('required')">
+                    *Required!
+                  </mat-error>
+                  <mat-error *ngIf="branchSetupForm.controls['branch_contact_no'].hasError('pattern')">
+                    Enter a Valid Contact No.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="codeArea">
+              <div class="form-group addCoding">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="alt_contact_country_code">
+                    <mat-option *ngFor="let countryCode of countryCodeList"
+                      [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                  </mat-select>
+
+                </mat-form-field>
+              </div>
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label style="padding: 0 0 0 55px;">Alt Contact No.</mat-label>
+                  <input matInput type="text" formControlName="branch_alt_contact_no" />
+                  <mat-error *ngIf="branchSetupForm.controls['branch_alt_contact_no'].hasError('required')">
+                    *Required!
+                  </mat-error>
+                  <mat-error *ngIf="branchSetupForm.controls['branch_alt_contact_no'].hasError('pattern')">
+                    Enter a Valid Alt Contact No.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Email Id</mat-label>
+                <input matInput type="text" formControlName="branch_email" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_email'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_email'].errors?.['email']"> *Please
+                  enter a valid email</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Alt Email Id</mat-label>
+                <input matInput type="text" formControlName="branch_alt_email" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_alt_email'].hasError('required')">
+                  *Required!
+                </mat-error>
+
+                <mat-error *ngIf="branchSetupForm.controls['branch_alt_email'].errors?.['email']"> *Please
+                  enter a valid email</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Country</mat-label>
+                <mat-select #productselect formControlName="country_id" (selectionChange)="optionEaCode($event)">
+
+                  <app-search-filter [array]="variable" [placeholder]="'Search by country name'"
+                    [searchFields]="['countryss_name']" (filteredReturn)="filterCountryName = $event.data">
+                  </app-search-filter>
+
+
+                  <mat-option *ngFor="let country of filterCountryName"
+                    [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="branchSetupForm.controls['country_id'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select formControlName="state_id" (selectionChange)="stateChange($event)">
+
+                  <app-search-filter [array]="stateVar2" [placeholder]="'Search by state name'"
+                    [searchFields]="['states_name']" (filteredReturn)="filterStateName = $event.data">
+                  </app-search-filter>
+
+
+                  <mat-option *ngFor="let state of filterStateName"
+                    [value]="state.states_id">{{state.states_name}}</mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="branchSetupForm.controls['state_id'].hasError('required')">
+                  *Required!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>City</mat-label>
+                <mat-select formControlName="city_id">
+
+                  <app-search-filter [array]="cityVar2" [placeholder]="'Search by city name'"
+                    [searchFields]="['city_name']" (filteredReturn)="filterCityName = $event.data">
+                  </app-search-filter>
+                  <mat-option *ngFor="let city of filterCityName" [value]="city.city_id">{{city.city_name}}</mat-option>
+                </mat-select>
+                <!-- <mat-error *ngIf="branchSetupForm.controls['city_id'].hasError('required')">
+                  *Required!
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Pin Code</mat-label>
+                <input matInput type="text" maxlength="6" formControlName="branch_pin_code"
+                  [value]="branchSetupForm.controls['branch_pin_code'].value | titlecase" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_pin_code'].hasError('pattern')">
+                  *Should contain 6 digit number
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_pin_code'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Branch Code.</mat-label>
+                <input matInput type="text" formControlName="branch_code" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_code'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12 input_css">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <input matInput (keydown)="changedText()" type="text" formControlName="branch_address"
+                  [attr.disabled]="words > 100 ? '' : null" (input)="wordCounter()" #text id="wmd-input"
+                  name="post-text" class="wmd-input s-input bar0 js-post-body-field processed" data-post-type-id="2"
+                  cols="92" rows="15" tabindex="101" data-min-length="" />
+                <mat-error *ngIf="branchSetupForm.controls['branch_address'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="branchSetupForm.controls['branch_address'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <span class="warn_text" *ngIf="extraWords">Please enter within the text limit: 50</span>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 input_css">
+            <div class="form-group">
+              <mat-checkbox class="checkbox" formControlName="useAsBillingAddress">- Use this branch as a billing
+                address</mat-checkbox>
+            </div>
+          </div>
+
+          <!-- Geofence & Office Coordinates Section -->
+          <div class="col-12 mt-3 mb-3">
+            <div class="geofence-card-section">
+              <div class="geofence-header">
+                <div class="geofence-title">
+                  <i class="fa fa-map-marker-alt text-primary" style="font-size: 18px;"></i>
+                  <span class="ms-2 fw-bold text-dark" style="font-size: 15px;">Geofence &amp; Biometric Attendance Settings</span>
+                  <span class="badge bg-primary text-white ms-2" style="font-size: 11px; padding: 4px 8px; border-radius: 12px;">GPS Boundary</span>
+                </div>
+                <div class="geofence-actions">
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="fetchCurrentLocation()" [disabled]="isFetchingLocation" style="border-radius: 6px; font-weight: 600;">
+                    <i class="fa fa-spinner fa-spin me-1" *ngIf="isFetchingLocation"></i>
+                    <i class="fa fa-crosshairs me-1" *ngIf="!isFetchingLocation"></i>
+                    {{ isFetchingLocation ? 'Acquiring GPS...' : '📍 Fetch Current Location' }}
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary ms-2" (click)="openGoogleMapsPreview()" style="border-radius: 6px; font-weight: 600;">
+                    <i class="fa fa-external-link-alt me-1"></i> View on Map
+                  </button>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12 input_css">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Branch Latitude</mat-label>
+                      <input matInput type="number" step="any" formControlName="latitude" placeholder="e.g. 28.613939" />
+                      <mat-icon matSuffix class="text-muted">my_location</mat-icon>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12 input_css">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Branch Longitude</mat-label>
+                      <input matInput type="number" step="any" formControlName="longitude" placeholder="e.g. 77.209021" />
+                      <mat-icon matSuffix class="text-muted">location_on</mat-icon>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12 input_css">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Geofence Radius (Meters)</mat-label>
+                      <input matInput type="number" min="20" max="5000" formControlName="geofence_radius_meters" placeholder="Default: 150" />
+                      <span matSuffix class="text-muted pe-2">meters</span>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="col-12 mt-1">
+                  <mat-checkbox class="checkbox" formControlName="is_geofence_active">
+                    Enable GPS Geofence boundary check for this branch (Employee must be within radius to check in)
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="!employeId" (click)="onSubmitForm()" mat-raised-button color="primary">
+            Submit
+          </button>
+
+          <button *ngIf="employeId" [disabled]="extraWords" (click)="updateForm($event)" mat-raised-button
+            color="primary">
+            Update
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+        </div>
+      </form>
+
+    </div>
+  </mat-card>
+</section>

@@ -1,0 +1,101 @@
+<div class="right_data_all">
+  <div class="row">
+
+    <div class="page-title">
+      <h1>{{earningId ? 'Edit Earning': 'New Earning'}}</h1>
+    </div>
+  </div>
+  <hr>
+  <div class="container">
+    <form [formGroup]="earningForm">
+      <div class="row">
+        <!-- Left Column -->
+        <div class="col-md-5 border-end border-danger">
+          <div class="col-md-8 mb-2">
+
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-label>Earning Name</mat-label>
+                <input matInput formControlName="variable_earning_name" placeholder="Earning Name" required />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <mat-label>Name in Payslip</mat-label>
+                <input matInput formControlName="name_in_payslip" placeholder="Name in Payslip" required />
+              </mat-form-field>
+
+            </div>
+          </div>
+
+          <div class="row mt-2" style="width: 60% !important;">
+            <div class="mb-4 custom-input-group">
+              <label for="bonusAmount" class="custom-label mandatory">Enter Amount</label>
+              <div class="custom-input-container" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                <input matInput formControlName="calculation_amount" type="number" class="custom-input-field"
+                  id="bonusAmount" aria-label="Bonus Amount">
+                <div class="custom-addon">₹</div>
+              </div>
+              <div class="text-danger"
+                *ngIf="earningForm.get('calculation_amount')?.touched && earningForm.get('calculation_amount')?.invalid">
+                <small *ngIf="earningForm.get('calculation_amount')?.errors?.['required']">Enter Amount is
+                  required</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-md-6">
+          <h3 class="fw-bold text-primary">Other Configurations</h3>
+          <!-- Taxable Earning Checkbox -->
+          <div class="row">
+            <mat-checkbox formControlName="is_taxable" (change)="onTaxableChange($event)"
+              [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+              This is a taxable earning
+            </mat-checkbox>
+            <p style="margin-left: 42px;">The income tax amount will be divided equally and deducted every month across
+              the financial year.</p>
+          </div>
+
+          <!-- Conditional checkboxes -->
+          <div class="row" *ngIf="earningForm.get('is_taxable')?.value == 1">
+            <div class="col-md-6">
+              <mat-checkbox formControlName="deduct_when_credited" (change)="onDeductChange('credited', $event)" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                Deduct tax when credited
+              </mat-checkbox>
+            </div>
+            <div class="col-md-6">
+              <mat-checkbox formControlName="deduct_monthly" (change)="onDeductChange('monthly', $event)" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                Deduct tax monthly
+              </mat-checkbox>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Note Section -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert mt-4 alert-warning fw-bold" role="alert">
+            <p>Note: Once you associate this component with an employee, you will only be able to edit the Name and
+              Amount. The changes you make to Amount will apply only to new employees.</p>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 d-flex justify-content-between">
+        <button class="btn btn-danger" (click)="back()">Cancel</button>
+        <button *ngIf="typeCheck !=='View'" class="btn btn-primary" (click)="submitForm()">{{earningId && typeCheck ===
+          'Edit' ? 'Update':'Save'}}</button>
+      </div>
+    </form>
+  </div>
+
+
+
+</div>

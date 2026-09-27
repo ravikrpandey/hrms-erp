@@ -1,0 +1,50 @@
+
+
+    <h3 mat-dialog-title class="popHead"> Add Country</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="">
+            <form [formGroup]="countryForm">
+                <div class="form-group mt-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Country Name </mat-label>
+                        <input matInput type="text" formControlName="countryss_name" />
+                        <mat-error *ngIf="countryForm.controls['countryss_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="countryForm.controls['countryss_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="form-group mt-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Country Code </mat-label>
+                        <input matInput type="text" formControlName="country_code" (input)="onInputChange($event)" />
+                        <mat-error *ngIf="countryForm.controls['country_code'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="countryForm.controls['country_code'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="form-group mt-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Phone Code </mat-label>
+                        <input matInput type="text" formControlName="phone_code" (input)="onInputDigitChange($event)" />
+                        <mat-error *ngIf="countryForm.controls['phone_code'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="countryForm.controls['phone_code'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub mb-3">
+        <button 
+            (click)="onSubmit(countryForm)">Save</button>
+        <button  mat-dialog-close class="cancel_button_y">Close</button>
+    </mat-dialog-actions>

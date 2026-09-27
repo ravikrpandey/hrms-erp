@@ -1,0 +1,13 @@
+<h3 mat-dialog-title class="popHead">Download CSV</h3>
+
+<div class="download_csv_dialog_body">
+  <div>
+    <mat-checkbox [checked]="isAllChecked"  (click)="selectAll()">Select All</mat-checkbox>
+  </div>
+  <mat-checkbox *ngFor="let data of employeeLabelList; let i = index" [checked]="data?.isChecked" (change)="getCheckedValue(i)">
+    {{ data?.label }}
+  </mat-checkbox>
+</div>
+<div class="add_button">
+  <button type="button" (click)="downloadEmployeeData()">Download CSV </button>
+</div>

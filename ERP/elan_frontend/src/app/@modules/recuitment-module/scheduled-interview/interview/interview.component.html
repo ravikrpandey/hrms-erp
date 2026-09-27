@@ -1,0 +1,107 @@
+<div class="section">
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Recruitment</h1>
+      <p>Recruitment Candidate Interview <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>Job Candidate Interview </span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+    </div>
+  </div>
+
+  <div class="right_data_all pt-4">
+    <mat-card class="mb-4 p-2">
+      <div class="basic_details">
+        <h2>Basic Details</h2>
+        <div class="row p-2">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Job title</h3>
+            <p>{{basicDetails?.job_title}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Job Position</h3>
+            <p>{{basicDetails?.designation_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Interview Round</h3>
+            <p>{{interview_round}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Department</h3>
+            <p>{{basicDetails?.department_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Area</h3>
+            <p>{{basicDetails?.area_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Experience Required (In Months)</h3>
+            <p>{{basicDetails?.experience}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Qualification</h3>
+            <p>{{basicDetails?.qualification_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Location</h3>
+            <p>{{basicDetails?.branch_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>First Name</h3>
+            <p>{{basicDetails?.first_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Middle Name</h3>
+            <p>{{basicDetails?.middle_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Last Name</h3>
+            <p>{{basicDetails?.last_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Contact Number</h3>
+            <p>{{basicDetails?.country_code}}-{{basicDetails?.contact_number}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h3>Email</h3>
+            <p>{{basicDetails?.email}}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+    <h2>Skills</h2>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>S.No.</th>
+          <th>Skill Name</th>
+          <th style="width: 35%">Rating</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of skill_list; let i = index">
+          <td>{{i+1}}</td>
+          <td>{{data?.skill_name}}</td>
+          <td>
+            <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': status =='completed'}">
+              <mat-label>Rating <span class="alertspan">*</span></mat-label>
+              <mat-select [(ngModel)]="data.skill_rating_point" name="rating">
+                <mat-option *ngFor="let rating of ratingList" [value]="rating?.id">{{rating?.descr}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <label>Final Remark</label>
+    <textarea class="form-control" row="3" [(ngModel)]="final_remarks" name="final_remarks"></textarea>
+
+    <div class="add_button a_at_bg mt-2" *ngIf="status !='completed'">
+      <button type="button" (click)="handleSubmit()" [disabled]="!skill_list?.length || !allSkillsRated()">Save</button>
+    </div>
+  </div>
+</div>

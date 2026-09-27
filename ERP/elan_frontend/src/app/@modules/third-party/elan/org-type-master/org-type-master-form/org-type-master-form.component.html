@@ -1,0 +1,48 @@
+<app-wrapper
+  [title]="'Organization Type Master'"
+  [showActions]="true"
+  [actions]="[
+    { label: '', icon: 'close', color: 'danger', callback: onClose() }
+  ]"
+>
+  <form [formGroup]="orgTypeForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="orgType">Organization Type</label>
+      <input
+        type="text"
+        id="orgType"
+        class="form-control"
+        formControlName="name"
+        placeholder="Enter Organization Type"
+      />
+      <div
+        *ngIf="
+          orgTypeForm.get('name')?.invalid &&
+          (orgTypeForm.get('name')?.touched || orgTypeForm.get('name')?.dirty)
+        "
+        class="text-danger"
+      >
+        Organization Type is required.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+        placeholder="Enter Description"
+      ></textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button
+        type="submit"
+        class="btn btn-primary mt-4"
+        [disabled]="orgTypeForm.invalid"
+      >
+        {{data.type === 'edit' ? 'Update' : 'Submit'}}
+      </button>
+    </div>
+  </form>
+</app-wrapper>

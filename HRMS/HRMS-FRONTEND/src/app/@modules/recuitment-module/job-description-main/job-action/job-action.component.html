@@ -1,0 +1,9 @@
+<div class="edd-del">
+    <mat-icon matTooltip="Create JD From Request" (click)="navigateToPO()"
+        *ngIf="!singleData?.isApproved">navigate_next</mat-icon>
+    <mat-icon matTooltip="User Link" *ngIf="(singleData?.isApproved && singleData?.isCompletedJd == 'COMPLETED' && singleData?.job_status == 'Active')"
+        (click)="generateIcon()">send</mat-icon>
+    <mat-icon matTooltip="View" *ngIf="assignAction?.Read" (click)="viewJD($event)">visibility</mat-icon>
+    <mat-icon matTooltip="Update" *ngIf="(singleData?.isCompletedJd == 'PENDING' || singleData?.job_status == 'Inactive' && assignAction?.Write)"
+        (click)="editJd($event)">edit</mat-icon>
+</div>

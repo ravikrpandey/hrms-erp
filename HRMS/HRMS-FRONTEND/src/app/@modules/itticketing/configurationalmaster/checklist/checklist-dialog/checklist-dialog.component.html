@@ -1,0 +1,88 @@
+<ng-container *ngIf="visibility=='visible'">
+    <h3 mat-dialog-title class="popHead">Checklist Type Record</h3>
+    <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+        <div class="checklist_key">
+          <!-- <p>S.NO. :</p> -->
+          <p>Checklist Type Name :</p>
+          <p>Status :</p>
+        </div>
+        <div class="checklist_value" *ngFor="let data of singleEmpt">
+          <!-- <p>{{ data?.id }}</p> -->
+          <p>{{ data?.checklist_name }}</p>
+          <p>{{ data?.status }}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub mb-3">
+      <button mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </ng-container>
+  
+  <ng-container *ngIf="AddChecklist_type=='Add_Checklist'">
+    <h3 mat-dialog-title class="popHead">Checklist Type</h3>
+    <form [formGroup]="checklistType">
+    <mat-dialog-content class="mat-typography">
+      <div class="">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <!-- <p>Department Name</p> -->
+              <mat-form-field appearance="outline" class="mt-2">
+                <mat-label>Checklist Name</mat-label>
+                <input matInput type="text" formControlName="checklist_name" />
+                <mat-error *ngIf="checklistType.controls['checklist_name'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="checklistType.controls['checklist_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+      </div>
+    </mat-dialog-content>
+    </form>
+    <mat-dialog-actions align="end" class="common_button_sub mb-3">
+      <button (click)="ngSubmitEmp(checklistType.value)">
+        Save
+      </button>
+      <button mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </ng-container>
+  
+  <ng-container *ngIf="editChecklist=='edit'">
+    <form [formGroup]="checklistType">
+      <h3 mat-dialog-title class="popHead">Checklist Type</h3>
+      <mat-dialog-content class="mat-typography">
+        <div class="">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="form-group row">
+              <!-- <p>Department Name</p> -->
+              <mat-form-field appearance="outline" class="mt-2">
+                <mat-label>Checklist Type</mat-label>
+                <input matInput type="text" formControlName="checklist_name" />
+                <mat-error *ngIf="checklistType.controls['checklist_name'].hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="checklistType.controls['checklist_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-dialog-content>
+    </form>
+    <mat-dialog-actions align="end" class="common_button_sub mb-3">
+      <button (click)="ngSubmitEmp(checklistType.value)">
+        Update
+      </button>
+      <button mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </ng-container>

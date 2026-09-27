@@ -1,0 +1,58 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales Management</h1>
+        <p>Rejected Sales Invoice <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+            </i><span>  List </span></p>
+    </div>
+    <!-- <div class="add_button">
+        <button type="button" class="btn_add" (click)="(navigateAddNew)()" >Add Sales Invoice</button>
+    </div> -->
+  </div>
+  <div class="right_data_all">
+      <div fxflex="100%">
+        <div class="row">
+          <div class="col-md-12 col-12">
+          <div class="tab_menu">
+            <div class="tab-item">
+              <button class="main-button" color="primary" (click)="(navigateAllQuotations)()"
+                routerLinkActive="active_button"> All Sales Invoices</button>
+              <button class="main-button" color="primary" routerLinkActive="active_button"
+              (click)="(navigatePending)()">To Be Approved Invoices</button>
+              <button class="main-button" color="primary" routerLinkActive="active_button"
+              (click)="(navigateApproved)()">Approved Sales Invoices</button>
+              <button class="main-button active_button" color="primary" routerLinkActive="active_button"
+              (click)="(navigateRejected)()">Rejected Invoices</button>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+  <div class="right_data_all">
+
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <select id="page-size" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()" placeholder="Search">
+        </div>
+    </div>
+
+    <div class="ag_grid">
+
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs"  [pagination]="true"
+            [paginationPageSize]=10 [rowData]="rowData" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+
+
+    </div>
+  </div>

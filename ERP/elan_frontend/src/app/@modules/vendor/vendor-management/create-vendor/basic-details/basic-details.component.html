@@ -1,0 +1,496 @@
+<div class="right_data_all">
+  <mat-card>
+    <div class="row form_head">
+      <h3>Vendor Basic Details {{ editbasicData?.vendor_code }}</h3>
+    </div>
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="basicForm">
+        <div class="row">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Parent Company</mat-label>
+                <mat-select formControlName="parent_company_id">
+                  <mat-select-filter
+                    [array]="vendorParentArray"
+                    (filteredReturn)="vendorParentFilter($event)"
+                  ></mat-select-filter>
+                  <mat-option [value]="null">No Parent</mat-option>
+                  <ng-container *ngFor="let data of vendorParentList">
+                    <mat-option *ngIf="data.id != vendor_id" [value]="data.id">
+                      {{ data.vendor_name }} [{{ data.vendor_code }}] -
+                      {{ data.vendor_category }}
+                    </mat-option>
+                  </ng-container>
+                </mat-select>
+                <mat-hint class="parent-hint">
+                  Select a Parent Company to create a Child Company.
+                </mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Vendor Category</mat-label>
+                <mat-select formControlName="vendor_category">
+                  <mat-option value="Domestic">Domestic</mat-option>
+                  <mat-option value="International">International</mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_category']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Vendor Country Currency</mat-label>
+                <mat-select formControlName="currency_id">
+                  <mat-select-filter
+                    [array]="currencies"
+                    (filteredReturn)="currencyFilter($event)"
+                  ></mat-select-filter>
+                  <mat-option
+                    [value]="data.Currency_Convert_id"
+                    *ngFor="let data of currencyData"
+                    >{{ data.Currency_Type }}</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['currency_id']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Trade Currencies</mat-label>
+                <mat-select formControlName="trade_currency_ids" multiple>
+                  <mat-select-filter
+                    [array]="currencies"
+                    (filteredReturn)="currencyFilter($event)"
+                  ></mat-select-filter>
+                  <mat-option
+                    [value]="data.Currency_Convert_id"
+                    *ngFor="let data of currencyData"
+                    >{{ data.Currency_Type }}</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['trade_currency_ids']?.hasError(
+                      'required'
+                    )
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': type === 'View' }"
+                [key]="'name'"
+                [items]="vendorTypeList"
+                [displayKey]="'name'"
+                placeholder="Vendor Type"
+                formControlName="vendor_type"
+              ></app-mat-form-select-filter>
+              <div
+                *ngIf="
+                  basicForm.controls['vendor_type']?.touched &&
+                  basicForm.controls['vendor_type']?.hasError('required')
+                "
+                style="
+                  color: #f44336;
+                  font-size: 11px;
+                  margin-top: -12px;
+                  padding-left: 4px;
+                "
+              >
+                This field is required!
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Company Name </mat-label>
+                <input matInput type="text" formControlName="vendor_name" />
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_name']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Business Email ID</mat-label>
+                <input matInput type="email" formControlName="vendor_email" />
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_email']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_email']?.hasError('pattern')
+                  "
+                >
+                  Invalid E-mail Id
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Business Contact Number</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="contact_number"
+                />
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['contact_number']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Business Alternate Contact Number</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="alternative_number"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': type === 'View' }"
+                [key]="'countryss_id'"
+                [items]="allCountryList"
+                [displayKey]="'countryss_name'"
+                placeholder="Country"
+                formControlName="country_id"
+                (selectionChange)="countryChange($event)"
+              ></app-mat-form-select-filter>
+              <div
+                *ngIf="
+                  basicForm.controls['country_id']?.touched &&
+                  basicForm.controls['country_id']?.hasError('required')
+                "
+                style="
+                  color: #f44336;
+                  font-size: 11px;
+                  margin-top: -12px;
+                  padding-left: 4px;
+                "
+              >
+                This field is required!
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': type === 'View' }"
+                [disabled]="type === 'View'"
+                [key]="'states_id'"
+                [items]="stateList"
+                [displayKey]="'states_name'"
+                placeholder="State / Province"
+                formControlName="state_id"
+                [masterName]="'State'"
+                [parentId]="basicForm.get('country_id')?.value"
+                (selectionChange)="stateChange($event)"
+              ></app-mat-form-select-filter>
+              <div
+                *ngIf="
+                  basicForm.controls['state_id']?.touched &&
+                  basicForm.controls['state_id']?.hasError('required')
+                "
+                style="
+                  color: #f44336;
+                  font-size: 11px;
+                  margin-top: -12px;
+                  padding-left: 4px;
+                "
+              >
+                This field is required!
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': type === 'View' }"
+                [disabled]="type === 'View'"
+                [key]="'city_id'"
+                [items]="cityList"
+                [displayKey]="'city_name'"
+                placeholder="City"
+                formControlName="city_id"
+                [masterName]="'City'"
+                [parentId]="basicForm.get('state_id')?.value"
+                (selectionChange)="cityChange($event)"
+              ></app-mat-form-select-filter>
+              <div
+                *ngIf="
+                  basicForm.controls['city_id']?.touched &&
+                  basicForm.controls['city_id']?.hasError('required')
+                "
+                style="
+                  color: #f44336;
+                  font-size: 11px;
+                  margin-top: -12px;
+                  padding-left: 4px;
+                "
+              >
+                This field is required!
+              </div>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Address</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="vendor_address"
+                  autocomplete="off"
+                />
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_address']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>PIN/ZIP Code</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="vendor_pincode"
+                  autocomplete="off"
+                />
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['vendor_pincode']?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>PAN Number / Tax ID</mat-label>
+                <input matInput type="text" formControlName="pan_number" />
+                <mat-error
+                  *ngIf="basicForm.controls['pan_number']?.hasError('required')"
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Payment Terms</mat-label>
+                <mat-select formControlName="payment_term_id">
+                  <mat-option
+                    *ngFor="let term of paymentTerm"
+                    [value]="term.id"
+                  >
+                    {{ term.term_name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['payment_term_id'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>With Effect Date</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="date"
+                  formControlName="effective_date"
+                  readonly
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="date"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>Discount %</mat-label>
+                <input matInput type="number" formControlName="discount" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>CIN Number</mat-label>
+                <input matInput type="text" formControlName="cin_number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>GSTIN / VAT</mat-label>
+                <input matInput type="text" formControlName="gst_in" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>MSME Number</mat-label>
+                <input matInput type="text" formControlName="msme_number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>TAN Number</mat-label>
+                <input matInput type="text" formControlName="tan_number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': type === 'View' }"
+              >
+                <mat-label>ICE Code</mat-label>
+                <input matInput type="text" formControlName="ice_code" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-checkbox class="example-margin" formControlName="rcm_charge"
+                >Apply Reverse Charge Mechanism (RCM)</mat-checkbox
+              >
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 common_button_sub" *ngIf="type !== 'View'">
+          <button (click)="onSubmit()">Save & Next</button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</div>

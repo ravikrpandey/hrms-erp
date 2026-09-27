@@ -1,0 +1,86 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      SubCategory
+      <i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #858586"
+      ></i>
+      <span *ngIf="!id"> Create SubCategory  </span>
+      <span *ngIf="action_type=='edit'"> Update SubCategory </span>
+      <span *ngIf="action_type=='view'"> View SubCategory </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="onBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+    <form class="form_set" [formGroup]="subCategoryForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" [ngClass]="{'readonly-select': action_type === 'view'}">
+              <mat-label>Item Category</mat-label>
+              <mat-select formControlName="item_category_id" >
+                <mat-option
+                  *ngFor="let category of data; index as i"
+                  [value]="category.id"
+                  >{{ category.asset_category_name }}</mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  subCategoryForm.controls['item_category_id'].hasError(
+                    'required'
+                  ) && subCategoryForm.controls['item_category_id'].touched
+                "
+              >
+                *Required!</mat-error
+              >
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Sub Category Name</mat-label>
+              <input matInput type="text" formControlName="sub_category_name" [readonly]="action_type == 'view'" />
+              <mat-error
+                *ngIf="
+                  subCategoryForm.controls['sub_category_name'].hasError('required')
+                "
+              >
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="display: none;">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Sub Category Code</mat-label>
+              <input matInput type="text" formControlName="sub_category_code" [readonly]="action_type == 'view' || action_type == 'edit'" />
+              <mat-error
+                *ngIf="
+                  subCategoryForm.get('sub_category_code')?.hasError('required')
+                "
+              ></mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'">
+        <button (click)="onSubmit()">
+          {{ !id ? "Save" : "Update" }}
+        </button>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </div>
+</mat-card>

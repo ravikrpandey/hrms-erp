@@ -1,0 +1,79 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+  </i><span> Probation Update </span></p>
+</div>
+  <div class="add_button">
+    <button routerLink="../" type="button">List</button>
+    <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+
+      <div class="form_head">
+        <h3> Probation Update</h3> 
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+      </div>
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="grievanceForm">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+  
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Employee Name</mat-label>
+                  <input matInput type="text" formControlName="action_manager" readonly/>
+                  <!-- <mat-select formControlName="action_manager">
+                    <mat-option *ngFor="let item of allAchievement" readonly (click)="candidateClick(item.employee_id)" [value]="item.first_name">{{item.first_name}}</mat-option>
+                  </mat-select> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" readonly>
+                    <mat-label>Reporting Manager</mat-label>
+                    <input matInput type="text" formControlName="reporting_manager" readonly/>
+                    <!-- <mat-select formControlName="reporting_manager">
+                      
+                      <mat-option *ngFor="let val of propertyManager" [value]="val">{{val}}</mat-option>
+                    </mat-select> -->
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Joining Date</mat-label>
+                    <input matInput type="text" formControlName="date_of_joining" readonly/>
+                    <!-- <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date_of_joining" readonly/>
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker> -->
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Probation Date</mat-label>
+                    <input matInput [matDatepicker]="dp1" (click)="dp1.open()" formControlName="probation1" />
+                    <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                    <mat-datepicker #dp1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+          </div>
+  
+          <div class="mt-2">
+            <button (click)="updateForm()" mat-raised-button color="primary" class="mx-3">
+              Update
+            </button>
+  
+            <button mat-raised-button color="warn" (click)="reLoad()">Cancel</button>
+          </div>
+        </form>
+      </div>

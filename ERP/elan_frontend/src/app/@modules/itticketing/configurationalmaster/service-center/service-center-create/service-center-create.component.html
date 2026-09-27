@@ -1,0 +1,97 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>Service Center<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>{{ readable ? 'View' : (id ? 'Update' : 'Create') }}</span></p>
+  </div>
+</div>
+<div class="form_head mx-2">
+  <h3>Service Center Master</h3>
+  <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+</div>
+<div class="right_data_all">
+  <form class="form_set" [formGroup]="servicecenterForm">
+    <fieldset [disabled]="readable">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Phone Number</mat-label>
+            <input type="number" matInput formControlName="sc_contact_no">
+            <mat-error *ngIf="servicecenterForm.controls['sc_contact_no'].hasError('required')">
+              Contact No is Required.
+            </mat-error>
+            <mat-error *ngIf="servicecenterForm.controls['sc_contact_no'].hasError('pattern')">
+              Contact No is Only 10 Digit Alloweds.
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Code</mat-label>
+            <input type="text" matInput formControlName="sc_code">
+            <mat-error *ngIf="servicecenterForm.get('sc_code')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input type="text" matInput formControlName="sc_name">
+            <mat-error *ngIf="servicecenterForm.get('sc_name')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>GST No</mat-label>
+            <input type="text" matInput formControlName="sc_gst_no" maxlength="15">
+            <mat-error *ngIf="servicecenterForm.get('sc_gst_no')?.hasError('required')">
+              GST Number is Invalid
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Contact Person</mat-label>
+            <input type="text" matInput formControlName="contact_person">
+            <mat-error *ngIf="servicecenterForm.get('contact_person')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Email ID</mat-label>
+            <input matInput type="email" formControlName="sc_email" />
+            <mat-error *ngIf="servicecenterForm.controls['sc_email'].hasError('required')">
+              This field is required!
+            </mat-error>
+            <mat-error *ngIf="servicecenterForm.controls['sc_email'].errors?.['pattern']">Please enter valid
+              email</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address</mat-label>
+            <textarea matInput formControlName="sc_address" rows="4" placeholder="Enter your address"></textarea>
+            <mat-error *ngIf="servicecenterForm.get('sc_address')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </fieldset>
+  </form>
+  <div class="add_button" align="end">
+    <button class="backBtn" type="button" *ngIf="!readable" (click)="savecenter()">{{ id ? 'Update' : 'Save' }}</button>
+    <button class="backBtn" type="button" (click)="cancel()">Cancel </button>
+  </div>
+</div>

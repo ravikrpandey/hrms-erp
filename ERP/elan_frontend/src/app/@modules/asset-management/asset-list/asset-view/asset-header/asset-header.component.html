@@ -1,0 +1,53 @@
+<div class="heading_top">
+  <div class="page-title ">
+    <h1>Asset Management</h1>
+    <p>
+      Asset
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+      <span> Asset Header</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" class="backBtn" routerLink="/master/asset-management/asset-list">
+      <i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+
+</div>
+
+<div class="right_data_all">
+  <div class="row mb-3">
+    <div class="col-md-4 mb-3">
+      <label for="readyToUseDate" class="form-label">Ready to use date:</label>
+      <input type="text" id="readyToUseDate" class="form-control" [value]="rowdata?.putto_use_date | date: 'dd-MM-yyyy'"
+        readonly>
+
+    </div>
+    <div class="col-md-4 text-end">
+      <h4>{{rowdata?.item_name}} <span style="font-size: small;">({{rowdata?.status_name}})</span></h4>
+      <h5>Current Acquisition Amount : {{rowdata?.total_amount}}</h5>
+      <h5>Accumulated Depreciation : {{rowdata?.accumulated_dep}}</h5>
+      <h5>Net Value : {{rowdata?.net_value}}</h5>
+
+      <!-- <div class="add_button">
+                <button class="backBtn" routerLink="/master/asset-management/asset-list">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+            </div> -->
+    </div>
+    <div class="col-md-4 text-end">
+      <h5>Old Acquisition Value : {{rowdata?.old_value || 'NA'}}</h5>
+      <h5>Revaluation Date : {{rowdata?.revaluation_date || 'NA'}}</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 col-12">
+      <div class="tab_menu">
+        <div class="tab-item">
+          <button *ngFor="let button of buttons" [ngClass]=" button.active ? 'active_button' : 'main-button' "
+            (click)="onButtonClick(button)">{{button.label}}</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

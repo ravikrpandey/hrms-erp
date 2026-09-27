@@ -1,0 +1,120 @@
+<div class="heading_top py-3 d-flex">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p><i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+    </i><span>Finance Dashboard</span></p>
+  </div>
+  <div class="page-title">
+    <div class="d-flex">
+        <div class="employee_2 mx-3" align="end">
+            <input type="text" class="form-control" id="filter-text-box"
+                placeholder="Search">
+    </div>
+        <mat-icon class="icon_class mt-2">settings</mat-icon>
+        <mat-icon class="icon_class mt-2">notifications</mat-icon>
+    </div>
+  </div>
+  </div>
+
+ 
+
+   <div class="row mt-3 justify-content-center">
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <mat-card appearance="outlined">
+            <mat-card-content class="badgeClass"><span class="dollor"></span> Total Revenue <mat-icon class="mt-2" style="color: green;">arrow_upward</mat-icon></mat-card-content>
+            <mat-card-content class="style_class txt">{{totalDebit}} </mat-card-content>
+             <div style="display: block; width: 50%;">
+          <canvas id="canvas1" height="200">{{ chart1 }}</canvas>
+        </div>
+          </mat-card>
+    </div>
+    
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 " >
+      <mat-card appearance="outlined" style="height: 145px;">
+        <button class="left-btn" (click)="moveLeft4()"><</button>
+        <mat-card-content class="badgeClass " style="margin-top: 14px;"><span class="dollor"></span> Active Posting Period<mat-icon class="mt-2" style="color: green;">arrow_upward</mat-icon></mat-card-content>
+        <mat-card-content class="style_class text-center txt">{{ month }} </mat-card-content>
+        
+
+        <button class="right-btn" (click)="moveRight4()">></button>
+        </mat-card>
+
+  </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 " >
+      <mat-card appearance="outlined" style="height: 145px;">
+        <button class="left-btn" (click)="moveLeft3()"><</button>
+        <mat-card-content class="badgeClass " style="margin-top: 14px;"><span class="dollor"></span> Available Cash <mat-icon class="mt-2" style="color: green;">arrow_upward</mat-icon></mat-card-content>
+        <mat-card-content class="style_class text-center txt">{{ currentAccount2?.text }} </mat-card-content>
+        <mat-card-content class="style_class text-center txt">{{ currentAccount2?.amount }} </mat-card-content>
+
+        <button class="right-btn" (click)="moveRight3()">></button>
+        </mat-card>
+
+  </div>
+  <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+    <mat-card appearance="outlined" style="height: 145px;">
+      <button class="left-btn" (click)="moveLeft2()">&#60;</button>
+
+      <mat-card-content class="badgeClass" style="margin-top: 14px;">
+        <span class="dollor" ></span> Bank Account
+        <mat-icon class="mt-2" style="color: green;">arrow_upward</mat-icon>
+      </mat-card-content>
+      <mat-card-content class="style_class text-center txt" style="text-transform: capitalize;" >
+        {{ currentAccount?.account_name }}
+      </mat-card-content>
+      <mat-card-content class="style_class text-center txt"  >
+        {{ currentAccount?.total_amount }}
+      </mat-card-content>
+
+      <button class="right-btn" (click)="moveRight2()">&#62;</button>
+    </mat-card>
+  </div>
+
+
+    <div class="d-flex justify-content-center gap-5 mt-3 ">
+      <div style="display: block; width: 250px;text-align: center;">
+        <canvas id="canvas2" height="75">{{ chart2 }}</canvas>
+        <span class="mt-3 employee_top">Profit & Loss</span>
+      </div>
+      <div style="display: block; width: 250px;text-align: center; margin-left: 8rem;">
+        <canvas id="canvas3" height="75">{{ chart3 }}</canvas>
+        <span class="mt-3 employee_top">Balance Sheet</span>
+
+      </div>
+    </div>
+
+<div class="mt-2">
+
+  <div class="card-container" style="margin-top: 30px;" >
+    <!-- Left button -->
+    <button class="left-btn" (click)="moveLeft()"><</button>
+
+    <div class="card-slider">
+      <div class="card " style="cursor: pointer;"   *ngFor="let card of cards1"  [routerLink]="card.url" >
+       <div class="d-flex p-3 mt-3">
+         <mat-icon class="mat-icon1">calendar_today</mat-icon>
+        <span class="mx-3" style="font-weight: 600;">{{card.name}}</span>
+
+       </div>
+
+       <p class="px-3 mt-2" >{{card.text}}</p>
+       <div class="d-flex justify-content-between px-3 " [ngClass]="card.name!=='Reports'?'NewClass':''"   >
+        <div [ngClass]="card.name=='Cash Book'?'mt-4':''">
+          <!-- <p style="margin: 2px; ">Total Account</p> -->
+          <p class="actives dcard " style="font-size: 15px;" >{{card?.total}}</p>
+        </div>
+        <div [ngClass]="card.name=='Cash Book'?'mt-4':''">
+          <!-- <p style="margin: 2px; ">Active</p> -->
+          <p class="actives dcard"  style="font-size: 15px;">{{card?.totalActive}}</p>
+        </div>
+       </div>
+
+      </div>
+    </div>
+
+    <button class="right-btn" (click)="moveRight()">></button>
+  </div>
+
+
+
+   </div>

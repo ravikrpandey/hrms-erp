@@ -1,0 +1,27 @@
+<div class="attendance-container">
+  <div class="header">
+      <h3 class="dashboard-title"> Participants</h3>
+  </div>
+
+  <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+    <div class="form-group mb-3">
+      <app-inputfield 
+        type="select"
+        [selectoptions]="filteredSessions"
+        selectvaluekey="id"
+        selectshowvaluekey="text"
+        [required]="true"
+        (modelChange)="onSessionChange($event)">
+      </app-inputfield>
+    </div>
+  </div>
+
+  <div class="table-section">
+      <app-tableview 
+          [rowData]="rowData" 
+          [columnDefs]="columnDefs" 
+          [pagination]="true" 
+          [paginationPageSize]="10">
+      </app-tableview>
+  </div>
+</div>

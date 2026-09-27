@@ -1,0 +1,68 @@
+<div class="right_data_all">
+    <div class="row">
+
+        <div class="page-title">
+            <h1>{{payroll_cycle_id ? 'View Payroll Cycle':'New Payroll Cycle'}}</h1>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="container">
+        <form [formGroup]="payrollCycleForm">
+          <div class="row">
+            <!-- <div class="col-md-6">
+                <div class="form-group">
+                    <mat-label>Branch <span class="alertspan">*</span></mat-label>
+                  <mat-form-field appearance="outline">
+                 
+                    <mat-select formControlName="payroll_cycle_branch">
+                      <mat-option *ngFor="let branch of branchList" [value]="branch.id"> {{branch?.branch_name}} </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="payrollCycleForm.controls['payroll_cycle_branch'].hasError('required')">Entity is required.</mat-error>
+                  </mat-form-field>
+                </div>
+              </div> -->
+              <div class="col-md-6">
+                <div class="form-group form_group">
+                  <mat-label>From Date of Payroll Cycle <span class="alertspan">*</span></mat-label>
+                  <mat-form-field appearance="outline">
+                    <input type="number" matInput  formControlName="from_payroll_Cycle_date"  required />
+                    <!-- <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker> -->
+                    <mat-error *ngIf="payrollCycleForm.controls['from_payroll_Cycle_date'].hasError('required')">Payroll cycle is required.</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group form_group">
+                  <mat-label>To Date of Payroll Cycle <span class="alertspan">*</span></mat-label>
+                  <mat-form-field appearance="outline">
+                    <input type="number" matInput  
+                      formControlName="to_payroll_Cycle_date" required />
+                    <!-- <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker> -->
+                    <mat-error *ngIf="payrollCycleForm.controls['to_payroll_Cycle_date'].hasError('required')">Payroll cycle date is required.</mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+          </div>
+      
+          <ng-container *ngIf="payroll_cycle_id ; else other">
+            <div class="mt-4 d-flex justify-content-between">
+              <button class="btn btn-danger" (click)="back()">Back</button>
+          </div>
+          </ng-container>
+          <ng-template #other>
+            <div class="mt-4 d-flex justify-content-between">
+              <button class="btn btn-danger" (click)="back()">Cancel</button>
+              <button class="btn btn-primary" (click)="submitForm()">Save</button>
+          </div>
+ 
+          </ng-template>
+        </form>
+      </div>
+      
+
+
+</div>

@@ -1,0 +1,91 @@
+<ng-container *ngIf="view">
+
+  <h3 mat-dialog-title class="popHead">State Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <!-- <p>State ID : </p> -->
+        <p>Country Name :</p>
+        <p>State Name : </p>
+        <p>Status :</p>
+      </div>
+      <div class="emp_value" *ngFor="let data of singleStateData">
+        <!-- <p>{{data.states_id}}</p> -->
+        <p>{{data.countryss_name}}</p>
+        <p>{{data.states_name}}</p>
+        <p>{{data.status}}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>
+
+
+<fieldset *ngIf="!view">
+  <div class="m-3" [formGroup]="stateForm">
+    <div class="row">
+      <!-- First Row -->
+
+      <!-- Country Name -->
+
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+        <div class="form-group">
+          <mat-label>Country <span class="alertspan">*</span></mat-label>
+          <mat-form-field readonly>
+
+            <mat-select formControlName="countryss_id" placeholder="Select Country">
+
+              <app-search-filter [array]="variable" [placeholder]="'Search by country name'"
+                [searchFields]="['countryss_name']" (filteredReturn)="filterCountryName = $event.data">
+              </app-search-filter>
+
+
+              <mat-option *ngFor="let country of filterCountryName"
+                [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+            </mat-select>
+            <!-- <mat-error *ngIf="this.stateForm.controls['country_id'].hasError('required')">
+                        This field is required!
+                      </mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+        <div class="form-group">
+          <mat-label>State Name</mat-label>
+          <mat-form-field>
+            <input matInput type="text" style="text-transform:lowercase" formControlName="states_name" />
+            <!-- <mat-error *ngIf="stateForm.get('states_name')?.hasError('email')">
+                  Please enter state name
+                </mat-error> -->
+          </mat-form-field>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+
+  <mat-dialog-actions align="end" *ngIf="!view">
+    <button *ngIf="!state_id" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+      Submit
+    </button>
+    <button *ngIf="state_id" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+      Update
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+      Close
+    </button>
+  </mat-dialog-actions>
+</fieldset>

@@ -1,0 +1,440 @@
+<div class="dialog-scroll-wrapper">
+  <!-- Add Mode -->
+  <div class="right_data_all2" *ngIf="allDataGet?.status !=='view' && allDataGet?.type !=='addSO'">
+    <form [formGroup]="proposalForm">
+      <h3 mat-dialog-title class="popHead">Customization & Branding Details</h3>
+      <div class="row mx-1 my-4">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-0">
+            <mat-form-field appearance="outline">
+              <mat-label>Item Name</mat-label>
+              <input matInput type="text" formControlName="item_name" readonly="true" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-0">
+            <mat-form-field appearance="outline">
+              <mat-label>Quantity</mat-label>
+              <input matInput type="number" formControlName="item_quantity" [max]="maxQuantity"
+                (input)="onQuantityInput()" />
+              <mat-error *ngIf="proposalForm.get('item_quantity')?.hasError('max')">
+                Quantity should not exceed {{ maxQuantity }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-0">
+            <mat-form-field appearance="outline">
+              <mat-label>Remaining Quantity</mat-label>
+              <input matInput type="number" formControlName="remaining_quantity" readonly/>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="conatiner" *ngIf="customizationCheck">
+        <section class="mx-3">
+          <div class="row">
+            <div class="flexRow col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="padding">
+                <input type="radio" formControlName="typeCheck" value="Accessories">
+                Accessories
+              </div>
+              <div class="padding">
+                <input type="radio" formControlName="typeCheck" value="Baskets">
+                Baskets
+              </div>
+            </div>
+          </div>
+
+          <!-- start form -->
+          <div class="form_table" *ngIf="proposalForm.get('typeCheck')?.value === 'Accessories'">
+            
+              <div class="tab_table1 table-responsive">
+                <table class="ng-table-Branding table mb-0 table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Accessory Name</th>
+                      <th>HSN Code</th>
+                      <th>GST</th>
+                      <th>Quantity</th>
+                      <th>Price Per Unit</th>
+                      <th>Total Price</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="productDetailList" *ngFor="
+                    let control of CF_1.productDetailList['controls'];
+                    let i = index">
+                      <tr [formGroup]="control">
+                        <td>
+                          <div class="form-group">
+                          <app-searchable-select
+                          formControlName="product_master_id"
+                          [options]="productData"
+                          displayKey="accessories_name"
+                          valueKey="id"
+                          placeholder="Select Accessories"
+                          searchPlaceholder="Search"
+                          (optionSelected)="getProductData($event, i)">
+                          </app-searchable-select>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>HSN Code</mat-label> -->
+                              <input matInput type="text" maxlength="30" formControlName="hsn_code" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>GST</mat-label> -->
+                              <input matInput type="text" maxlength="30" formControlName="gst_type"
+                                (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" #box
+                                (keyup)="keyUpItem(box.value,i,control)" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>Quantity</mat-label> -->
+                              <input matInput type="number" maxlength="5" minlength="0" formControlName="qty"
+                                (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" #box
+                                (keyup)="keyUpItem(box.value,i,control)" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>Price Per Unit</mat-label> -->
+                              <input matInput type="number" maxlength="5" formControlName="price"
+                                (ngModelChange)="productCalculation()" (keypress)="keyPress($event)" #box
+                                (keyup)="keyUpItem(box.value,i,control)" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>Total Price</mat-label> -->
+                              <input matInput type="number" maxlength="5" formControlName="total_price"
+                                (keypress)="keyPress($event)" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="ng-table-icons">
+                            <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteRow(i, control,'Accessories')" aria-hidden="true"></i>
+                            <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"></i>
+                          </span>
+                        </td>
+
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            
+              <div class="calculate ng-flex-calculate">
+                <span>Total GST - {{totalGSTAmount || 0}}</span>
+                <span>Grand Total - {{totalGrandAmountPrice || 0}}</span>
+              </div>
+          </div>
+          <!-- end in form -->
+
+          <!-- start baskets -->
+          <div class="form_table" *ngIf="proposalForm.get('typeCheck')?.value === 'Baskets'">
+              <div class="tab_table1 table-responsive">
+                <table class="ng-table-Branding table mb-0 table-bordered">
+                  <thead>
+                    <tr>
+                      <th>Type Of Basket</th>
+                      <th>HSN Code</th>
+                      <th>GST</th>
+                      <th>No Of Partition</th>
+                      <th>Quantity</th>
+                      <th>Price Per Unit</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="basketDetailList" *ngFor="
+                    let control of CF_1.basketDetailList['controls'];
+                    let i = index">
+                      <tr [formGroup]="control">
+                        <td>
+                          <div class="form-group">
+                          <app-searchable-select
+                          formControlName="typeOfBasket"
+                          [options]="getAllBasketData"
+                          displayKey="type_of_basket"
+                          valueKey="id"
+                          placeholder="Type Of Basket"
+                          searchPlaceholder="Search"
+                          (optionSelected)="getBasketData($event, i)">
+                          </app-searchable-select>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>HSN Code</mat-label> -->
+                              <input matInput type="text" maxlength="30" formControlName="hsn_code" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>GST</mat-label> -->
+                              <input matInput type="text" maxlength="30" formControlName="gst_value" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>No Of Partition</mat-label> -->
+                              <input matInput type="number" maxlength="30" minlength="0" formControlName="no_of_partition" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>QTY Of Basket</mat-label> -->
+                              <input matInput type="number" maxlength="30" minlength="0" formControlName="qty_of_basket" #box
+                                (keyup)="keyUpItemBasket(box.value,i,control)" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-label>Price Per Unit</mat-label> -->
+                              <input matInput type="number" maxlength="30" formControlName="price_per_unit" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <span class="ng-table-icons">
+                            <i class="fa fa-plus-circle" (click)="addBasket(i)" aria-hidden="true"></i>
+                            <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteRow(i, control,'Baskets')" aria-hidden="true"></i>
+                          </span>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+   
+              <div class="calculate ng-flex-calculate">
+                <span>Total GST - {{this.totalGSTAmountBasket || 0}}</span>
+                <span>Grand Total - {{this.totalGrandAmountPriceBasket || 0}}</span>
+              </div>
+         
+          </div>
+        </section>
+      </div>
+
+      <!-- branding -->
+      <div class="brading" *ngIf="bradingCheck">
+        <div class="container" style="padding: 15px;">
+          <form [formGroup]="proposalForm">
+            <div class="row">
+            </div>
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Branding Name</mat-label>
+                    <input matInput type="text" formControlName="description" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <app-searchable-select
+                formControlName="brandingTypes"
+                [options]="getAllBrandingData"
+                displayKey="type_of_branding"
+                valueKey="id"
+                placeholder="Branding Types"
+                searchPlaceholder="Search"
+                (optionSelected)="brandingChange($event)">
+                </app-searchable-select>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Price Per Unit</mat-label>
+                    <input matInput type="number" formControlName="original_branding_amt" readonly />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>HSN Code</mat-label>
+                    <input matInput type="number" formControlName="hsn_code_branding" readonly />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>GST</mat-label>
+                    <input matInput type="number" formControlName="gst_value_branding" readonly />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Branding Sides</mat-label>
+                    <mat-select formControlName="branding_sides" multiple>
+                      <mat-option value="Upper">Upper</mat-option>
+                      <mat-option value="Lower">Lower</mat-option>
+                      <mat-option value="Front">Front</mat-option>
+                      <mat-option value="Back">Back</mat-option>
+                      <mat-option value="Left">Left</mat-option>
+                      <mat-option value="Right">Right</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-12 common_button_sub">
+        <button (click)="onSubmit()">Submit</button>
+        <button mat-dialog-close class="cancel_button_y">Close</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- View Mode -->
+  <div class="view popup-container" *ngIf="allDataGet?.status ==='view' || allDataGet?.type ==='addSO'">
+    <!-- Popup Header -->
+    <div class="popup-header">
+      <h3>Customization & Branding Details</h3>
+      <button mat-icon-button mat-dialog-close class="cancel_button_y" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="proposalForm">
+      <ng-container *ngFor="let scheme of schemeDataArray; let index = index">
+        <div class="popup-section-header">
+          <span>{{ index + 1 }}. {{ allDataGet?.data?.product_name || 'Item Name' }} - {{ scheme?.qty || 0 }} QTY</span>
+          <button mat-icon-button (click)="removeScheme(index)" aria-label="Delete" *ngIf="allDataGet?.type !=='addSO'">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <!-- Accessory/Basket Section View Mode -->
+        <div class="popup-section-content" *ngIf="scheme?.customisation_data.length > 0">
+          <table class="table table-bordered" style="margin-left: 10px;">
+            <thead>
+              <tr>
+                <th>S.No.</th>
+                <th>Type</th>
+                <th>Accessory/Basket Name</th>
+                <th>Qty</th>
+                <th>HSN Code</th>
+                <th>GST</th>
+                <th>Price Per Unit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of scheme?.customisation_data; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ item?.custome_type }}</td>
+                <td>{{ item?.product_name || item?.item_name || item?.accessories_name || item?.type_basket_name || item?.type_of_basket}}
+                  <!-- Partition count on new line -->
+                  <span *ngIf="item?.no_of_partition || item?.no_of_partician">
+                    <br>Number of Partition-{{ item?.no_of_partition || item?.no_of_partician }}
+                  </span>
+                </td>
+                <td>{{ item?.qty || item?.qty_of_basket || item?.basket_qty }}</td>
+                <td>{{ item?.hsn_code || item?.basket_hsn_code || item?.acce_hsn_code }}</td>
+                <td>{{ item?.gst || item?.gst_value }}</td>
+                <td>{{ item?.price_per_unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Branding Section View Mode -->
+        <div class="brading bradingView" *ngIf="scheme?.branding_data">
+          <div class="container" style="padding: 15px;">
+            <div class="row" *ngFor="let branding of getBrandingObjects(scheme.branding_data)">
+              <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" style="padding-bottom: 15px;">
+                <mat-form-field appearance="outline">
+                  <mat-label>Branding Name</mat-label>
+                  <input matInput type="text" [value]="branding?.branding_description" readonly />
+                </mat-form-field>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <mat-form-field appearance="outline">
+                  <mat-label>Branding Types</mat-label>
+                  <mat-select (selectionChange)="brandingChange($event)" [disabled]="true"
+                    [value]="branding?.brandingTypes || branding?.branding_mst_id">
+                    <mat-option *ngFor="let data of getAllBrandingData" [value]="data?.id">{{ data?.type_of_branding}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <mat-form-field appearance="outline">
+                  <mat-label>Price Per Unit</mat-label>
+                  <input matInput type="text" [value]="branding?.branding_amt" readonly />
+                </mat-form-field>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>HSN Code</mat-label>
+                    <input matInput type="number" [value]="branding?.hsn_code_branding || branding?.hsn_sac_code"
+                      readonly />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>GST</mat-label>
+                    <input matInput type="number" [value]="branding?.gst || branding?.value" readonly />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <mat-form-field appearance="outline">
+                  <mat-label>Branding Sides</mat-label>
+                  <mat-select multiple [value]="branding?.branding_sides" [disabled]="true">
+                    <mat-option *ngFor="let side of branding?.branding_sides" [value]="side">{{ side
+                      }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <div *ngIf="!allDataGet?.schemeData?.length  || schemeDataArray.length === 0 || !hasAnyCustomizationOrBranding()"
+        class="alert alert-warning text-center mt-3">
+        No customization or branding data available.
+      </div>
+    </form>
+  </div>
+
+</div>

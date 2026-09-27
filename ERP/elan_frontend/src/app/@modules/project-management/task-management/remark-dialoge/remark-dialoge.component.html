@@ -1,0 +1,51 @@
+<h3 mat-dialog-title class="popHead">Remarks</h3>
+<mat-dialog-content class="mat-typography">
+  <div class="remarks-btn-container">
+    <button class="remarks-btn" (click)="toggleRemarkInput()">My Remarks</button>
+  </div>
+
+  <div class="remarks-table mt-3">
+    <div *ngIf="!remarksData || remarksData.length === 0" class="no-remarks">
+      No remarks available.Click on My Remarks to enter remarks.
+    </div>
+
+    <table *ngIf="remarksData && remarksData.length > 0" mat-table [dataSource]="remarksData" class="no-shadow">
+      <ng-container matColumnDef="employeeName">
+        <th mat-header-cell *matHeaderCellDef> Employee Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.employee_name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Date </th>
+        <td mat-cell *matCellDef="let element"> {{element.remarks_date | date:'short'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="remarks">
+        <th mat-header-cell *matHeaderCellDef> Remarks </th>
+        <td mat-cell *matCellDef="let element"> {{element.remarks}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+
+  <div *ngIf="isRemarkInputVisible">
+    <form [formGroup]="remarksForm">
+      <div class="form-group mt-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Enter Remarks</mat-label>
+          <input matInput type="text" formControlName="remarks" />
+          <mat-error *ngIf="remarksForm.controls['remarks']?.hasError('required')">
+            Please enter remarks!.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button (click)="onSubmit()" *ngIf="isRemarkInputVisible">Save</button>
+  <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>

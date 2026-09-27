@@ -1,0 +1,226 @@
+<mat-card #goUp>
+  <div class="section">
+    <div class="main">
+      <div class="employee">
+      </div>
+      <div class="msater-nav">
+        <a href="">Price Mapping<mat-icon>keyboard_arrow_right</mat-icon></a>
+        <a routerLink="../">Price Mapping Master List</a>
+      </div>
+   
+      <div class="updatetitle">
+        <h2><b>Price Mapping Master List</b></h2>
+      </div>
+      
+      <section class="job-nav">
+        <div class="section">
+          <div class="employ_sube" *ngIf="edit">
+            <div class="">
+              <div class="add_btn" align="right">
+                <button type="button" class="btn_add"  (click)="addPrice()">Add New Price</button>
+              </div>
+              <br>
+            </div>
+          </div>
+          <mat-card>
+            <div class="row form_head">
+              <h3>{{typs}} Price for Cert/Non Cert</h3>
+            </div>
+            <div class="form_basic">
+              <div>
+                <form class="form_set" [formGroup]="certForm">
+
+                  <div class="row" *ngIf="create">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Segment</mat-label>
+                          <mat-select formControlName="segmentType" (selectionChange)="segmentType($event)">
+                            <mat-option [value]="data.segment_id"
+                              *ngFor="let data of segment_ids">{{data.segment_name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Certificate Type</mat-label>
+                          <mat-select formControlName="certificate_type" (selectionChange)="certificateType($event)">
+                            <mat-option [value]="data.cer_id" *ngFor="let data of certificate_filter">
+                              <div>
+                                {{data.cer_name}}
+                              </div>
+                            </mat-option>
+
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                          <mat-label>Product Master</mat-label>
+                          <mat-select formControlName="product_master_id" (selectionChange)="selectProduct($event)">
+                            <mat-option *ngFor="let item of product_list" [value]="item.product_master_id">{{
+                              item.product_master_name }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="create">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="cer_name=='Non-Cert' || non_">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                          <mat-label>Type</mat-label>
+                          <mat-select formControlName="type">
+                            <mat-option *ngFor="let item of non_cert_list" [value]="item.type">{{
+                              item.type }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Value</mat-label>
+                          <input matInput type="number" formControlName="price" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="edit">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="cer_name=='Non-Cert' || non_">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                          <mat-label>Type</mat-label>
+                          <mat-select formControlName="type">
+                            <mat-option *ngFor="let item of non_cert_list" [value]="item.type">{{
+                              item.type }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Value</mat-label>
+                          <input matInput type="number" formControlName="price" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="upload-btn" align="right">
+                      <button class="cancel-btn" routerLink="/master/itticket/configurational-master">
+                        Cancel
+                      </button>
+                      <button *ngIf="create" class="favorite styled" (click)="submitFinalForm(certForm)">Submit</button>
+                      <button *ngIf="edit" class="favorite styled" (click)="updateFinalForm(certForm)">Update</button>
+
+                    </div>
+                  </div>
+      
+                </form>
+           
+
+                <!-- <form class="form_set" [formGroup]="nonCertForm">
+
+                <div class="row" *ngIf="certificate_name=='non-cert'">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                        <mat-label>Product Master</mat-label>
+                        <mat-select formControlName="product_master_id" (selectionChange)="selectProduct($event)">
+                          <mat-option *ngFor="let item of allProductType" [value]="item.product_master_id">{{
+                            item.product_master_name }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+          
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline">
+                        <mat-label>Value</mat-label>
+                        <input matInput type="number" formControlName="price" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="upload-btn">
+                    <button class="cancel-btn" routerLink="/master/itticket/configurational-master">
+                      Cancel
+                    </button>
+                    <button class="favorite styled" (click)="submitFinalForm()">Submit</button>
+                  </div>
+                </div>
+                
+              </form> -->
+
+              </div>
+
+
+              <div class="row form_head ">
+                <div [ngClass]="msaCertListShow ?'nav':''" class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <h3 (click)="msaCertListShow = true" style="text-align: center">MSA Price list(Cert & Non-Cert)</h3>
+                </div>
+                <div  [ngClass]="!msaCertListShow ?'nav':''" class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <h3 style="text-align: center" (click)="msaCertListShow = false">MED Price list(Cert & Non-Cert)</h3>
+
+                </div>
+              </div>
+              <ng-container *ngIf="msaCertListShow; else other">
+                <div class="ag_grid">
+                  <div class="row">
+                    <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                      <mat-radio-group aria-label="Select an option" (click)="filter($event)">
+                        <mat-radio-button checked value="Cert">Cert</mat-radio-button>
+                        <mat-radio-button value="Non Cert">Non-Cert</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div align="right">
+                        <input placeholder="Search" class="form-control" type="text" id="filter-text-box"
+                          (input)="onFilterTextBoxChanged()" />
+                      </div>
+                    </div>
+                  </div>
+                  <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+                    [rowData]="rowDataNew" [columnDefs]="columnDefs" (cellClicked)='onCellClicked($event)' [pagination]=true
+                    [paginationPageSize]=10 (cellValueChanged)="onCellValueChanged($event)" (gridReady)="onGridReady($event)">
+                  </ag-grid-angular>
+                </div>
+              </ng-container>
+              <ng-template #other>
+                <div class="ag_grid">
+                  <div class="row">
+                    <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                      <mat-radio-group aria-label="Select an option" (click)="filter_MED_by_Segment($event)">
+                        <mat-radio-button checked value="Cert">Cert</mat-radio-button>
+                        <mat-radio-button value="Non Cert">Non-Cert</mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div align="right">
+                        <input placeholder="Search" class="form-control" type="text" id="filter-text-box"
+                          (input)="onFilterTextBoxChanged()" />
+                      </div>
+                    </div>
+                  </div>
+                  <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:400px;"
+                    [rowData]="medRowData" [columnDefs]="columnDefs2" (cellClicked)='onCellClicked($event)' [pagination]=true
+                    [paginationPageSize]=10 (cellValueChanged)="onCellValueChanged($event)" (gridReady)="onGridReady($event)">
+                  </ag-grid-angular>
+                </div>
+              </ng-template>
+            </div>
+          </mat-card>
+        </div>
+      </section>
+    </div>
+  </div>
+</mat-card>

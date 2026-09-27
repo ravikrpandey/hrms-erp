@@ -1,0 +1,39 @@
+<aside class="left_nav_bar" id="sidebar" [class.collapsed]="collapsed">
+  <nav class="left_sidebar">
+    <div class="nav_bar new_menu_left">
+      <ul>
+        <!-- Dashboard Menu -->
+        <li [ngClass]="dashboardActive ? 'active_sidebar_menu' : ''">
+          <a href="vendor/ess/dashboard">
+            <span style="display: flex; align-items: center;">
+              <i class="fas fa-home"></i>
+              <h4>Dashboard</h4>
+            </span>
+          </a>
+        </li>
+
+        <!-- Dynamic Menu Items -->
+        <li *ngFor="let nav of sidebarList; let i = index">
+          <span routerLinkActive="active" (click)="openMenu(nav)"
+          [ngClass]="nav?.isActive ? 'active_sidebar_menu' : ''">
+            <div class="ADsdsv" [ngClass]="{'bold-label': sidebarList.length === 1}">
+              <i [class]="nav.menuIcon" class="addicon"></i>
+              <h4>{{ nav.menu_master_name }}</h4>
+            </div>
+            <i *ngIf="sidebarList" class="fa-angle-down fas icon_arrow_do"></i>
+          </span>
+
+          <!-- Submenu Items -->
+          <ul *ngIf="nav.submenuData?.length > 0" class="submenu_inner">
+            <li *ngFor="let subMenu of nav.submenuData">
+              <span (click)="openSubMenu(subMenu); "
+              [ngClass]="subMenu?.isActive ? 'active_sidebar_menu' : ''">
+                <i class="fa-dot-circle fas"></i> {{ subMenu.submenu_name }}
+              </span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</aside>

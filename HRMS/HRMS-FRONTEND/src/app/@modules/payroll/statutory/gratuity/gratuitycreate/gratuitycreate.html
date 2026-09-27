@@ -1,0 +1,67 @@
+<div class="right_data_all">
+  <div class="row">
+    <div class="page-title">
+      <h1>Gratuity (Employer)</h1>
+    </div>
+  </div>
+
+  <section>
+    <div class="form_basic p-4">
+      <form class="form_set" [formGroup]="gratuityForm" (ngSubmit)="onSubmit()">
+        <!-- Formula Section -->
+        <div class="formula-box p-3 rounded-lg shadow bg-light mb-4">
+          <span><strong>Gratuity</strong></span>
+          <span>=</span>
+
+          <div style="display:flex;gap:10px;align-items: center;">
+            <span style="font-size: 50px;">(</span>
+            <div>Last Drawn Basic Salary + Dearness Allowance</div>
+            <span style="font-size: 50px;">)</span>
+          </div>
+
+          <span style="font-size: 40px;">&times;</span>
+
+          <mat-form-field appearance="outline" class="inline-field mx-2">
+            <mat-label>Assumed Work Days</mat-label>
+            <input matInput type="number" formControlName="assumed_work_days" />
+          </mat-form-field>
+
+          <span style="font-size: 40px;">&times;</span>
+
+          <div style="display:flex;gap:10px;align-items: center;">
+            <span style="font-size: 50px;">(</span>
+            No. of Completed Year of Service
+            <span>/</span>
+            <mat-form-field appearance="outline" class="inline-field mx-2">
+              <mat-label>Assumed Total Working Days</mat-label>
+              <input matInput type="number" formControlName="assumed_total_days" />
+            </mat-form-field>
+            <span style="font-size: 50px;">)</span>
+          </div>
+        </div>
+
+        <!-- Maximum Limit -->
+        <mat-form-field appearance="outline" class="w-25 mb-4">
+          <mat-label>Tax Exemption Threshold</mat-label>
+          <input matInput placeholder="Enter maximum limit" formControlName="maximum_limit" />
+        </mat-form-field>
+
+        <!-- Status -->
+        <mat-form-field appearance="outline" class="w-25 mb-4" style="margin-left:10px">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="ACTIVE">ACTIVE</mat-option>
+            <mat-option value="INACTIVE">INACTIVE</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Save/Update Button -->
+        <div class="text-end">
+          <button mat-raised-button color="primary" type="submit">
+            {{ editId ? 'Update' : 'Save' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

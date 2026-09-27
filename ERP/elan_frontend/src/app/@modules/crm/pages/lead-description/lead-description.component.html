@@ -1,0 +1,79 @@
+<div class="main section">
+  <div class="employee">
+    <p>CRM</p>
+  </div>
+  <div class="employ_sube">
+    <div class="msater-nav">
+      <a href="">Dashboard<mat-icon>keyboard_arrow_right</mat-icon></a>
+      <a routerLink="../">Lead Description</a>
+    </div>
+
+    <div class="employee_2" align="end">
+
+      <input type="text" placeholder="Search" class="form-control" id="filter-text-box"
+        (input)="onFilterTextBoxChanged()" />
+    </div>
+  </div>
+
+  <form class="form-set" [formGroup]="achivementForm">
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Product Name</mat-label>
+            <mat-select formControlName="product_name">
+              <mat-option *ngFor="let item of productList" [value]="item.id">{{item.product_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Lead Owner</mat-label>
+            <input matInput type="text" formControlName="lead_owner" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="employ_sube total_user">
+          <div class="profile-count">
+            <p style="margin: 20px 5px;">Total Users &nbsp;<span class="text"
+                style="padding:5px 15px;">{{rowData.length>0?rowData.length:2}}</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="form_head">
+      <h3>Lead Description</h3>
+      <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+        [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+        (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)'>
+      </ag-grid-angular>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-6">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Select Employee Name</mat-label>
+            <mat-select formControlName="employee_name">
+              <mat-option *ngFor="let item of productList" [value]="item.id">{{item.product_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-3">
+          Save
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<div>
+</div>

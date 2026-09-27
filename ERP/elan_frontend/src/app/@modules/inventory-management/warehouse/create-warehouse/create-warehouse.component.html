@@ -1,0 +1,183 @@
+<app-wrapper [title]="'Warehouse Management'" [subTitle]="'Create Warehouse'" [subheading]="''"
+    [showActions]="true" [isBack]="true">
+
+    <div class="form_basic mb-0">
+        <form class="form_set" [formGroup]="form">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Name</mat-label>
+                            <input matInput type="text" formControlName="warehouse_name" />
+                            <mat-error *ngIf="form.controls['warehouse_name'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Type</mat-label>
+                            <mat-select formControlName="warehouse_type">
+                                <mat-option *ngFor="let item of getAllWareHouseType"
+                                    [value]="item?.id">{{item?.warehouse_type_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.controls['warehouse_type'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Area (ft)<sup>3</sup></mat-label>
+                            <input matInput type="text" formControlName="area" maxlength="30" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Gate Bypass I/O</mat-label>
+                            <mat-select formControlName="inOut">
+                                <mat-option [value]="'YES'">Yes</mat-option>
+                                <mat-option [value]="'NO'">No</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="form.controls['inOut'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="heading_neo">
+                <h3>Warehouse Location details</h3>
+            </div>
+            <div class="row mt-2">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Pin Code</mat-label>
+                            <input matInput type="text" formControlName="pin" />
+                            <mat-error *ngIf="form.controls['pin'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="form.get('pin')?.hasError('pattern') === true">6 digits</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline" *ngIf="postOffice.length > 0">
+                            <mat-label>Choose Postal Address</mat-label>
+                            <mat-select formControlName="postal_address"
+                                (selectionChange)="postalAddressChanged($event.value)">
+                                <mat-option *ngFor="let post of postOffice" [value]="post">{{
+                                    post?.Name +
+                                    ", " +
+                                    post?.District +
+                                    ", " +
+                                    post?.State +
+                                    ", " +
+                                    post?.Country
+                                    }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="addressData">
+                    <div class="add_button">
+                        <button type="button" (click)="locationSave()">Find Location</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Location</mat-label>
+                            <!-- <input matInput type="text" formControlName="location"/> -->
+                            <mat-select formControlName="location_id">
+                                <mat-option *ngFor="let location of locationData"
+                                    [value]="location?.id">{{location?.location_name }}-
+                                    {{location?.location_code}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Address</mat-label>
+                            <input matInput type="text" formControlName="address" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="heading_neo mt-4">
+                <h3>Warehouse Manager</h3>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <app-mat-form-select-filter formControlName="manager_id" [key]="'employee_id'"
+                            [items]="managerData" [displayKey]="['full_name']"
+                            placeholder="Warehouse Manager"></app-mat-form-select-filter>
+                        <mat-error *ngIf="form.controls['manager_id'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+
+            <div class="heading_neo mt-4">
+                <h3>Integration and Compliance Details</h3>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>GST Number</mat-label>
+                            <input matInput type="text" noCapitalize formControlName="gst_number" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>PAN/TIN number</mat-label>
+                            <input matInput type="text" formControlName="pan_number" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Warehouse License Number</mat-label>
+                            <input matInput type="text" formControlName="warehouse_license_number" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="common_button_sub" *ngIf="mode !== 'view'">
+                <button (click)="onSubmitForm()">
+                    {{warehouse_id ? 'Update Warehouse' : 'Create Warehouse' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</app-wrapper>

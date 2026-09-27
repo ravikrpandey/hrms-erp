@@ -1,0 +1,196 @@
+<div class="heading_top">
+  <div class="page-title">
+    <!--  Use for warehouse pick list and sales crm dispatch picklist -->
+    <p><span>Dispatch Pick List</span></p>
+  </div>
+
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<section class="right_data_all">
+
+  <!-- Vehicle Planning Details -->
+  <div class="card mb-3">
+    <div class="card-header">
+      <h3>Vehicle Planning Details</h3>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Vehicle Planning Code: </label>
+          <p>{{ planningData?.planning_code }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Delivery Route: </label>
+          <p>{{ planningData?.vehicle_root_status }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Transported By: </label>
+          <p>{{ planningData?.transported_by }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Transporter Type: </label>
+          <p>{{ planningData?.transporter_type }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Transporter Name: </label>
+          <p>{{ planningData?.transportor_name }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Vehicle Type: </label>
+          <p>{{ planningData?.vehicle_type_name }}</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Orders -->
+  <div
+    class="sale-order-card card mb-4"
+    *ngFor="let order of planningData?.sale_orders"
+  >
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3>{{ order.sales_order_no }}</h3>
+
+      <button style="color: #fff;"
+        mat-button
+        class="downloadButton"
+        (click)="viewSerialNo(order.id, planningData.id)"
+      >
+        View Map Serial/Batch No.
+      </button> 
+
+      <!-- <button
+        mat-button
+        class="downloadButton"
+        (click)="downloadpdf(order.id)"
+      >
+        Download
+        <mat-icon fontIcon="download"></mat-icon>
+      </button> -->
+    </div>
+
+    <div class="card-body">
+
+      <div class="row">
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Loading Priority: </label>
+          <p>{{ order?.pickup_info?.priority }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Pickup Date: </label>
+          <p>{{ order?.pickup_info?.pickup_date | date:'dd-MM-yyyy' }}</p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Expected Delivery Date: </label>
+          <p>
+            {{ order?.pickup_info?.expected_delivery_date | date:'dd-MM-yyyy' }}
+          </p>
+        </div>
+
+        <div class="col-md-3 mb-3">
+          <label class="fw-bold">Warehouse Name: </label>
+          <p>{{ order?.pickup_info?.warehouse_name }}</p>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="fw-bold">Pickup Address: </label>
+          <p>{{ order?.pickup_info?.warehouse_address }}</p>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="fw-bold">Delivery Address: </label>
+          <p>{{ order?.address }}, {{ order?.postal_address }}, {{ order?.pincode }}</p>
+        </div>
+
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>S.No.</th>
+              <th>Item Name</th>
+              <th>Item Code</th>
+              <th>Item Description</th>
+              <th>Item Type</th>
+              <th>HSN Code</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <ng-container *ngFor="let item of getParentItems(order.sale_order_items); let i = index">
+
+              <!-- Parent Items -->
+              <ng-container *ngIf="!item.parent_item_id">
+
+                <tr class="parent-row">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <strong>{{ item.item_name }}</strong>
+                  </td>
+                  <td>{{ item.item_code || '-' }}</td>
+                  <td>{{ item.item_description || '-' }}</td>
+                  <td>{{ item.item_type }}</td>
+                  <td>{{ item.hsncode || '-' }}</td>
+                  <td>{{ item.qty }} {{ item.UOM || '' }}</td>
+                </tr>
+
+                <!-- Child Items -->
+                <tr
+                  *ngFor="let child of getChildItems(order.sale_order_items, item.id)"
+                  class="child-row"
+                >
+                  <td></td>
+
+                  <td class="ps-4">
+                    ↳ {{ child.item_name }}
+                  </td>
+
+                  <td>{{ child.item_code || '-' }}</td>
+
+                  <td>{{ child.item_description || '-' }}</td>
+
+                  <td> {{ child.item_type }}
+                    <!-- <span class="badge bg-secondary">
+                      {{ child.item_type }}
+                    </span> -->
+                  </td>
+
+                  <td>{{ child.hsncode || '-' }}</td>
+
+                  <td>{{ child.qty }} {{ child.UOM || '' }}</td>
+                </tr>
+
+              </ng-container>
+
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  <div class="mt-3 common_button_sub" *ngIf="status == 'IRN' && irnstatus == 'Pending'">
+         
+    <button type="submit" (click)="createIrn()">
+      Genrate IRN
+    </button>
+  </div>
+</section>

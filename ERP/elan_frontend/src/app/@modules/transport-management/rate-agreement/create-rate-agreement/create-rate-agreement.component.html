@@ -1,0 +1,274 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>Rate Agreement Details</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="createForm">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let field of formFields" [ngClass]="{'d-none': (field.name === 'agreement_no' && createForm.get('agrno_type')?.value === 'Auto') || (field.name === 'agrno_type' && isEditMode)}">
+          <div class="form-group mb-4">
+            <ng-container *ngIf="field.type !== 'file' && field.type !== 'date'">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput *ngIf="field.type !== 'select' && field.type !== 'date'"
+                [type]="field.type"
+                [formControlName]="field.name"/>
+                <mat-select *ngIf="field.type === 'select'" [formControlName]="field.name" (selectionChange)="showHodeField(field.name)">
+                  <mat-option *ngFor="let option of getOptions(field.name)" [value]="option.value">
+                    {{ option.label }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="field.required && createForm.controls[field.name].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="field.type === 'date'">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput [matDatepicker]="picker" [formControlName]="field.name" [min]="field.name === 'valid_to' ? createForm.get('valid_from')?.value : null" readonly/>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="field.required && createForm.controls[field.name].hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="createForm.hasError('invalidDateRange') && createForm.get('valid_to')?.touched">
+                    Valid To date should not be earlier than Valid From date
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+           
+            <ng-container *ngIf="field.type === 'file'">
+              <label>{{ field.label }}</label>
+              <div class="input-group">
+                <input *ngIf="status!='View'"
+                  class="form-control"
+                  type="file"
+                  style="padding-right: 10px;"
+                  (change)="onChangefile($event, field)"
+                />
+                <div class="input-group-append" *ngIf="createForm.controls[field.name].value">
+                  <button class="btn btn-outline-primary" (click)="openFileInNewTab(createForm.controls[field.name].value)">
+                    View
+                  </button>
+                </div>
+              </div>
+              <mat-error *ngIf="field.required && createForm.controls[field.name].hasError('required') && status!='View'">
+                This field is required!
+              </mat-error>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub" *ngIf="status!='View'">
+          <button (click)="submitForm()">
+            {{ id ? 'Save' : 'Save & Continue' }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <form class="form_set" [formGroup]="dataFormArray" (ngSubmit)="onSubmit()" *ngIf="id">
+      <div formArrayName="rows">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="vehicle">
+            <th mat-header-cell *matHeaderCellDef> Vehicle Type</th>
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i">
+
+              <mat-form-field appearance="outline">
+                <mat-select placeholder="Vehicle Type"
+                            formControlName="vehicle_type_id" required>
+                  <mat-option *ngFor="let v of vehicleTypeList"
+                              [value]="v.vehicle_type_id">
+                    {{ v.vehicle_type_name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="from">
+            <th mat-header-cell *matHeaderCellDef> From Location </th>
+
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i"><br>
+              <div class="select-wrapper"
+                  [class.error-border]="
+                    rowsFormArray.at(i).get('from_state_id')?.invalid &&
+                    (rowsFormArray.at(i).get('from_state_id')?.touched ||
+                    rowsFormArray.at(i).get('from_state_id')?.dirty)">
+                <app-mat-form-select-filter
+                  formControlName="from_state_id"
+                  [key]="'states_id'"
+                  [items]="stateList"
+                  [displayKey]="['states_name']"
+                  placeholder="From State" required>
+                </app-mat-form-select-filter>
+              </div>
+
+              <div class="select-wrapper"
+                  [class.error-border]="
+                    rowsFormArray.at(i).get('from_city_id')?.invalid &&
+                    (rowsFormArray.at(i).get('from_city_id')?.touched ||
+                    rowsFormArray.at(i).get('from_city_id')?.dirty)">
+                <app-mat-form-select-filter
+                  formControlName="from_city_id"
+                  [key]="'city_id'"
+                  [items]="filteredFromCities[i]"
+                  [displayKey]="'city_name'"
+                  placeholder="From City"
+                  [disabled]="!filteredFromCities[i]?.length" required>
+                </app-mat-form-select-filter>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="to">
+            <th mat-header-cell *matHeaderCellDef> To Location </th>
+
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i"><br>
+
+              <div class="select-wrapper"
+                  [class.error-border]="
+                    rowsFormArray.at(i).get('to_state_id')?.invalid &&
+                    (rowsFormArray.at(i).get('to_state_id')?.touched ||
+                    rowsFormArray.at(i).get('to_state_id')?.dirty)">
+                <app-mat-form-select-filter
+                  formControlName="to_state_id"
+                  [key]="'states_id'"
+                  [items]="stateList"
+                  [displayKey]="['states_name']"
+                  placeholder="To State" required>
+                </app-mat-form-select-filter>
+              </div>
+              <div class="select-wrapper"
+                  [class.error-border]="
+                    rowsFormArray.at(i).get('to_city_id')?.invalid &&
+                    (rowsFormArray.at(i).get('to_city_id')?.touched ||
+                    rowsFormArray.at(i).get('to_city_id')?.dirty)">  
+                <app-mat-form-select-filter
+                  formControlName="to_city_id"
+                  [key]="'city_id'"
+                  [items]="filteredToCities[i]"
+                  [displayKey]="'city_name'"
+                  placeholder="To City"
+                  [disabled]="!filteredToCities[i]?.length" required>
+                </app-mat-form-select-filter>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="rate">
+            <th mat-header-cell *matHeaderCellDef> Rate </th>
+
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i">
+
+              <mat-form-field appearance="outline" >
+                <input matInput
+                      type="text"
+                      placeholder="Enter Rate"
+                      formControlName="rate" 
+                      required
+                      pattern="[0-9]*"
+                      maxlength="7">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="extra">
+            <th mat-header-cell *matHeaderCellDef> Extra Charge </th>
+
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i">
+
+              <mat-form-field appearance="outline" >
+                <input matInput
+                      type="text"
+                      placeholder="Enter Extra Charge"
+                      formControlName="extra_charge" 
+                      required
+                      pattern="[0-9]*"
+                      maxlength="7">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="remark">
+            <th mat-header-cell *matHeaderCellDef> Remark </th>
+
+            <td mat-cell
+                *matCellDef="let row; let i = index"
+                [formGroupName]="i">
+
+              <mat-form-field appearance="outline" >
+                <input matInput
+                      placeholder="Enter Remark"
+                      formControlName="remark" required>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Action </th>
+
+            <td mat-cell *matCellDef="let row; let i = index">
+
+              <button mat-icon-button
+                      color="warn"
+                      type="button"
+                      *ngIf="rowsFormArray.length > 1 && status !== 'View'"
+                      (click)="removeRow(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+
+              <button mat-icon-button
+                      color="primary"
+                      type="button"
+                      *ngIf="status !== 'View' && i === rowsFormArray.length - 1"
+                      (click)="addRow()">
+                <mat-icon>add_circle</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- ================= HEADER / ROW ================= -->
+          <tr mat-header-row
+              *matHeaderRowDef="[
+                'vehicle','from','to','rate','extra','remark','action'
+              ]">
+          </tr>
+
+          <tr mat-row
+              *matRowDef="let row; columns: [
+                'vehicle','from','to','rate','extra','remark','action'
+              ]">
+          </tr>
+        </table>
+      </div>
+
+      <div class="common_button_sub " style="margin-right: 10px;">
+        <button type="submit" *ngIf="status !== 'View'">Save Rates</button>
+      </div>
+    </form>
+
+  </div>
+</div>

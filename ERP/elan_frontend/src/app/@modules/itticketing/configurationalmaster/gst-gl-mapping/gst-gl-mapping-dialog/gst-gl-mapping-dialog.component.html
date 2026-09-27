@@ -1,0 +1,156 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!id?"Add GST GL Account Mapping":"Update GST GL Account Mapping"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px"> GST Account Mapping List</h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Additional Charge Name : </p>
+                    <p>HSN Code: </p>
+                    <p>Gst Rate: </p>
+                    <p>Description: </p>
+                   
+                  
+                    
+                </div>
+                <div class="emp_value">
+                    <p>{{additionalCharge?.additional_name}}</p>
+                    <p> {{additionalCharge?.hsn_sac_code}}</p>
+                    <p> {{additionalCharge?.gstRate}}</p>
+                    <p> {{additionalCharge?.description_additional}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button mat-dialog-close class="cancel_button_y">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+    <fieldset *ngIf="!view">
+     <div class="m-3" [formGroup]="glMappingForm">
+  <div class="row">
+
+    <!-- GST Type -->
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>GST Type: <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100" >
+          <mat-label>-Select GST Type-</mat-label>
+          <mat-select formControlName="gst_type_id">
+            <mat-option *ngFor="let data of gstTypeList" [value]="data.id">
+              {{data.gst_type}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="glMappingForm.get('gst_type_id')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Direction -->
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>Direction: <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100" >
+          <mat-label>-Select Direction-</mat-label>
+          <mat-select formControlName="direction">
+            <mat-option *ngFor="let data of directionList" [value]="data.direction_name">
+              {{data.direction_name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="glMappingForm.get('direction')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="col-12">
+      <div class="form-group mb-3">
+        <mat-label>Description: </mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Enter here..</mat-label>
+          <input matInput type="text" formControlName="description" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- GL Account Code -->
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>GL Account Code: <span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline" class="w-100" >
+          <mat-label>-Select GL Account-</mat-label>
+          <mat-select formControlName="chart_account_id">
+            <mat-option *ngFor="let data of accountList" [value]="data.id">
+              {{data.account_names}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="glMappingForm.get('chart_account_id')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- GL Account Name -->
+    <!-- <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>GL Account Name: </mat-label>
+        <mat-form-field appearance="outline" class="w-100" readonly>
+          <input matInput type="text" formControlName="gl_account_name" />
+        </mat-form-field>
+      </div>
+    </div> -->
+
+    <!-- Applicable For -->
+    <!-- <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>Applicable For: </mat-label>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>-Select-</mat-label>
+          <mat-select formControlName="applicable_for">
+            <mat-option *ngFor="let data of applicableForList" [value]="data.applicable_for">
+              {{data.applicable_for}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div> -->
+
+    <!-- Status -->
+    <!-- <div class="col-md-6 col-sm-12">
+      <div class="form-group mb-3">
+        <mat-label>Status: </mat-label>
+        <mat-form-field appearance="outline" class="w-100" >
+          <mat-label>-Select-</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="ACTIVE">Active</mat-option>
+            <mat-option value="INACTIVE">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div> -->
+
+  </div>
+</div>
+
+
+        <mat-dialog-actions align="end" *ngIf="!view" class="common_button_sub">
+
+               <button mat-dialog-close class="cancel_button_y" style="float: right">
+                Cancel
+            </button>
+            <button *ngIf="!id" (click)="onSubmitForm()" class="mx-2">
+                Save Mapping
+            </button>
+            <button *ngIf="id" (click)="onUpdateForm()" class="mx-2">
+                Update Mapping
+            </button>
+         
+        </mat-dialog-actions>
+    </fieldset>
+</div>

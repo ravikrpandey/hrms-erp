@@ -1,0 +1,233 @@
+<div class="dialog-header">
+    <div>
+        <h3 class="mb-0">Installation Kit (BOM)</h3>
+        <div class="item-name">
+            Item Name : {{ getAllData?.item_name }}
+        </div>
+    </div>
+
+    <button
+        *ngIf="accessControl && !isViewMode"
+        mat-raised-button
+        color="primary"
+        class="create-bom-btn"
+        title="Create New BOM"
+        (click)="createBom()">
+        <mat-icon>add</mat-icon>
+        Create BOM
+    </button>
+
+    <div class="header-right">
+        <span class="qty-badge">
+            Qty : {{ getAllData?.qty }}
+        </span>
+
+        <button mat-icon-button mat-dialog-close class="close-btn">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+
+<div class="dialog-body">
+    <div *ngIf="bomList.length > 0; else noBomTemplate">
+        <div class="bom-card" *ngFor="let row of bomList" [ngClass]="{'last-used-card': row.last_used}">
+            <div class="bom-header">
+                <div class="left-section">
+
+                    <mat-checkbox
+                        [(ngModel)]="row.selected"
+                        (change)="onBomSelection(row)"
+                        [disabled]="isViewMode">
+                    </mat-checkbox>
+
+                    <div style="cursor:pointer;flex:1" (click)="toggleBom(row)">
+                        <div class="bom-title">
+                            {{ row.bom_code }} |
+                            {{ row.bom_name }}
+
+                            <button
+                                *ngIf="accessControl && !isViewMode"
+                                mat-stroked-button
+                                class="edit-bom-btn"
+                                title="Edit BOM"
+                                (click)="editBom(row); $event.stopPropagation()">
+                                <mat-icon>edit</mat-icon>
+                                Edit
+                            </button>
+                        </div>
+                        <div class="bom-meta">
+                            <span>
+                                Version V{{ row.version_no }}
+                            </span>
+                            <span *ngIf="+row.bom_price > 0">
+                                {{ currency?.symbols }} {{ row.bom_price }}
+                            </span>
+                            <span *ngIf="+row.bom_price <= 0"
+                                class="free-kit">
+                                Free Kit
+                            </span>
+                            <ng-container *ngIf="+row.bom_price > 0">
+                                <span>
+                                    GST {{ row.gst | number:'1.0-2' }}%
+                                </span>
+                                <span>
+                                    HSN {{ row.hsn_code }}
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Used Information -->
+                <div class="last-used-box" *ngIf="row.last_used">
+                    <div class="last-used-title">
+                        <i class="fa fa-check-circle"></i>
+                        Last Used In Quotation
+                    </div>
+                    <div class="last-used-info">
+                        <div>
+                            <b>Quotation No.</b>
+                            <span>{{ row.last_proposal_no }}</span>
+                        </div>
+                        <div>
+                            <b>Quotation Date</b>
+                            <span>{{ row.last_proposal_date | date:'dd MMM yyyy' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-section" (click)="toggleBom(row)">
+                    <span class="status-badge">{{ row.item_count }} Item(s)</span>
+                    <i class="fa" [ngClass]="row.expanded ? 'fa-chevron-up':'fa-chevron-down'"></i>
+                </div>
+
+            </div>
+
+            <div class="bom-content" *ngIf="row.expanded">
+                <table class="table table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th width="60">#</th>
+                            <th>Item Name</th>
+                            <th width="100">Qty</th>
+                            <!-- <th width="300">Substitute Item</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of row.items">
+                            <td>
+                                <mat-checkbox
+                                    [(ngModel)]="item.selected"
+                                    (change)="onItemSelection(row)"
+                                    [disabled]="isViewMode">
+                                </mat-checkbox>
+                            </td>
+                            <td>
+                                <span *ngIf="!item.selectedSubstitute">
+                                    {{item.item_name}}
+                                </span>
+
+                                <span *ngIf="item.selectedSubstitute">
+                                    {{item.selectedSubstitute.item_name}}
+                                </span>
+                            </td>
+                            <td>
+                                {{item.quantity | number:'1.0-0'}}
+                            </td>
+                            <!-- <td>
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="substitute-field">
+
+                                    <mat-select
+                                        [(ngModel)]="item.selectedSubstitute"
+                                        (selectionChange)="onSubstituteChange(row,item)"
+                                        [disabled]="isViewMode">
+                                        <mat-option
+                                            [value]="null">
+                                            -- Clear Selection --
+                                        </mat-option>
+                                        <mat-option
+                                            *ngFor="let sub of item.substitute_bom"
+                                            [value]="sub">
+                                            {{sub.item_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noBomTemplate>
+        <div class="empty-bom-state">
+            <i class="fa fa-cubes empty-icon"></i>
+
+            <h5>No Installation Kit (BOM) Available</h5>
+
+            <p>
+                No BOM has been created yet, or no BOM is associated with this quotation.
+            </p>
+        </div>
+    </ng-template>
+</div>
+
+<div class="bom-summary" *ngIf="bomList.length > 0">
+    <div class="summary-card">
+        <div class="label">
+            Selected BOM
+        </div>
+        <div class="value">
+            {{selectedBomCount}}
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="label">
+            Total Qty
+        </div>
+        <div class="value">
+            {{totalBomQty}}
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="label">
+            Total Amount
+        </div>
+        <div class="value">
+            {{ currency?.symbols }} {{totalBomAmount | number:'1.2-2'}}
+        </div>
+    </div>
+
+    <div class="summary-card green">
+        <div class="label">
+            Total With GST
+        </div>
+        <div class="value">
+            {{ currency?.symbols }} {{totalBomAmountWithGST | number:'1.2-2'}}
+        </div>
+    </div>
+</div>
+
+<div class="action-btn" *ngIf="!isViewMode">
+    <button
+        mat-stroked-button
+        color="warn"
+        *ngIf="selectedBomCount > 0"
+        (click)="clearBom()">
+        <mat-icon>delete_outline</mat-icon>
+        Clear BOM
+    </button>
+
+    <button class="saveAllBomButton"
+        mat-raised-button
+        color="primary"
+        (click)="saveAllBom()">
+        <mat-icon>save</mat-icon>
+        Save
+    </button>
+</div>

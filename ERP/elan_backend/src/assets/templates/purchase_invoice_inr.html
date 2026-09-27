@@ -1,0 +1,288 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      font-family: "Times New Roman", serif;
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #000;
+      padding: 6px;
+    }
+
+    th {
+      background: #f2f2f2;
+    }
+
+    .no-border td {
+      border: none;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    @page {
+      margin: 40px 20px;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tfoot {
+      display: table-footer-group;
+    }
+
+    /* ── Signature footer: always at the bottom of the last page ── */
+    .signature-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      border-top: 2px solid #000;
+      background: #fff;
+    }
+
+    /* Push content up so it doesn't hide behind the fixed footer.
+         Adjust the height value to match the signature row height.      */
+    .signature-spacer {
+      height: 60px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- OUTER WRAPPER TABLE -->
+  <table style="border: none">
+    <thead>
+      <tr>
+        <!-- LEFT: LOGO -->
+        <td style="width: 10%; border: none; vertical-align: top">
+          <img src="{{entityLogo}}" style="max-width: 120px; max-height: 120px" />
+        </td>
+
+        <!-- CENTER: COMPANY DETAILS -->
+        <td style="
+              width: 55%;
+              border: none;
+              text-align: center;
+              vertical-align: middle;
+            ">
+          <div style="font-size: 18px; font-weight: bold">{{entityName}}</div>
+          <div style="margin-top: 5px">{{mainAddress}}</div>
+          <!-- <div style="margin-top: 5px">
+              Phone: 01814156009, 01814150077 | Email: mail@gravityprintech.com
+            </div> -->
+          <div style="margin-top: 5px">
+            {{entity_gst_in}}
+          </div>
+        </td>
+
+        <!-- RIGHT: VOUCHER BOX -->
+        <td style="width: 30%; border: none; vertical-align: top">
+          <table style="width: 100%; border-collapse: collapse">
+            <tr>
+              <td class="right" style="width: 50%; border: 0px">
+                <b>Voucher No:</b>
+              </td>
+              <td class="right" style="text-align: right; border: 0px">
+                {{voucher_no}}
+              </td>
+            </tr>
+            <tr>
+              <td class="right" style="border: 0px"><b>Voucher Date:</b></td>
+              <td class="right" style="text-align: right; border: 0px">
+                {{voucher_date}}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- INVOICE TITLE ROW -->
+      <tr>
+        <td colspan="3" style="
+              border: none;
+              text-align: center;
+              padding-top: 10px;
+              padding-bottom: 5px;
+            ">
+          <h2 style="margin: 5px 0">{{heading}}</h2>
+        </td>
+      </tr>
+    </thead>
+
+    <tbody>
+      <!-- BILLING INFO ROW -->
+      <tr>
+        <td colspan="3" style="border: none; padding: 0">
+          <table style="width: 100%; border-collapse: collapse">
+            <tr>
+              <!-- LEFT SIDE (Vendor Details) -->
+              <td style="
+                    width: 50%;
+                    vertical-align: top;
+                    border: 1px solid #000;
+                    padding: 8px;
+                  ">
+                <b>Bill From:</b><br /><br />
+                {{vendor_name}}<br />
+                {{vendor_address}}<br />
+                {{vendor_pincode}}<br />
+                {{vendor_country}}<br />
+                {{vendor_gstin}}
+              </td>
+
+              <!-- RIGHT SIDE (Invoice Info) -->
+              <td style="
+                    width: 50%;
+                    vertical-align: top;
+                    padding: 0;
+                    border: none;
+                  ">
+                <table style="width: 100%; border-collapse: collapse; height: 100%">
+                  <tr>
+                    <td><b>Vendor Invoice No.</b></td>
+                    <td style="text-align: right">{{vendor_invoice_no}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Vendor Invoice Date</b></td>
+                    <td style="text-align: right">{{vendor_invoice_date}}</td>
+                  </tr>
+                  <!-- <tr>
+                    <td><b>Due Date</b></td>
+                    <td style="text-align: right">{{due_date}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>E-way Bill No.</b></td>
+                    <td style="text-align: right">{{e_way_bill_no}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Docket No.</b></td>
+                    <td style="text-align: right">{{docket_no}}</td>
+                  </tr>
+                  <tr>
+                    <td><b>Courier Company</b></td>
+                    <td style="text-align: right">{{courier_company}}</td>
+                  </tr> -->
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- ITEMS TABLE ROW -->
+      <tr>
+        <td colspan="3" style="border: none; padding: 0; padding-top: 8px">
+          <table style="width: 100%; border-collapse: collapse">
+            <thead>
+              <tr>
+                <th>S.N.</th>
+                <th>Item</th>
+                <th>Description</th>
+                <th>HSN/SAC</th>
+                <th>Qty</th>
+                {{dynamic_columns_header}}
+              </tr>
+            </thead>
+            <tbody>
+              {{itemsTable}}
+              <!-- TOTALS -->
+              <tr>
+                <td colspan="3" style="border-right: 0px"></td>
+                <td class="right" style="border-left: 0px">
+                  <b>Total Qty:</b>
+                </td>
+                <td><b>{{total_qty}}</b></td>
+                <td class="right"><b>Sub Total</b></td>
+                <td class="right">₹ {{sub_total}}</td>
+              </tr>
+
+              {{gst_block}}
+              {{usd_block}}
+
+              <tr>
+                <td colspan="5" style="border-right: 0px"></td>
+                <td class="right"><b>Final Total</b></td>
+                <td class="right"><b>{{final_total}}</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+
+      <!-- HSN SUMMARY ROW -->
+      <tr>
+        <td colspan="3" style="
+              border: none;
+              padding-top: 12px;
+              padding-bottom: 0;
+              padding-left: 0;
+              padding-right: 0;
+            ">
+          <h4 style="margin: 0 0 4px 0">HSN/SAC Summary</h4>
+          <table style="width: 100%; border-collapse: collapse">
+            <tr>
+              <th class="right">HSN/SAC</th>
+              <th class="right">Taxable Value</th>
+              <th class="right">Input IGST - GPIPL</th>
+              <th class="right">Total Tax</th>
+            </tr>
+            {{hsnTable}}
+          </table>
+        </td>
+      </tr>
+
+      <!-- SPACER: prevents content from going behind the fixed signature bar -->
+      <tr>
+        <td colspan="3" style="border: none; padding: 0">
+          <div class="signature-spacer"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+         SIGNATURE BAR — fixed to the bottom of the last (every) page.
+         Uses position:fixed so it always appears at the page bottom
+         regardless of how long the content is.
+    ════════════════════════════════════════════════════════════════ -->
+  <table class="signature-footer" style="border: none">
+    <tr>
+      <td style="width: 33%; text-align: center; border: 1px solid #000; padding: 10px 6px;">
+        <div style="margin-bottom: 30px; font-size: 11px; color: #555;"></div>
+        <b>Prepared By:</b> {{prepared_by}}
+      </td>
+      <td style="width: 34%; text-align: center; border: 1px solid #000; padding: 10px 6px;">
+        <div style="margin-bottom: 30px; font-size: 11px; color: #555;"></div>
+        <b>Verified By:</b> {{verified_by}}
+      </td>
+      <td style="width: 33%; text-align: center; border: 1px solid #000; padding: 10px 6px;">
+        <div style="margin-bottom: 30px; font-size: 11px; color: #555;"></div>
+        <b>Approved By:</b> {{approved_by}}
+      </td>
+    </tr>
+  </table>
+
+</body>
+
+</html>

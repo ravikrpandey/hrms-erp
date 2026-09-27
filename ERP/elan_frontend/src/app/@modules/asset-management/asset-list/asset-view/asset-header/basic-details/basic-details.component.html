@@ -1,0 +1,122 @@
+<mat-card style="box-shadow: none;">
+  <app-asset-header></app-asset-header>
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Basic Details</h3>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Asset / Item Code</th>
+            <td>{{asset?.asset_tagId}} / {{asset?.item_code}}</td>
+            <th>Company / Vendor</th>
+            <td>{{asset?.company_name || asset?.vendor_name}}</td>
+          </tr>
+          <tr>
+            <th>Purchase Date</th>
+            <td>{{(asset?.purchase_date || asset?.po_date) | date: 'dd-MM-yyyy'}}</td>
+            <th>Category</th>
+            <td>{{asset?.asset_category_name}}</td>
+          </tr>
+          <tr>
+            <th>Purchase Cost</th>
+            <td>{{(asset?.total_amount || asset?.purchaseCost) | currency:'INR'}}</td>
+            <th>Location</th>
+            <td>{{asset?.branch_address}}</td>
+          </tr>
+          <!-- <tr>
+            <th>Description</th>
+            <td>{{asset?.description}}</td>
+            <th>Assign To</th>
+            <td>{{asset?.assignTo}}</td>
+          </tr> -->
+          <tr>
+            <th>Put To Use Date</th>
+            <td>{{ asset?.putto_use_date | date: 'dd-MM-yyyy' }}</td>
+            <th>Status</th>
+            <td>{{asset?.status}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="heading_neo">
+          <h3>Miscellaneous</h3>
+        </div>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">S.NO</th>
+              <td>{{asset?.itemSerialNo}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Purchase From</th>
+              <td>{{asset?.vendor_name}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-6">
+        <div class="heading_neo">
+          <h3>Purchase Details</h3>
+        </div>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">POCode</th>
+              <td>{{asset?.po_number}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Purchase Details</th>
+              <td><button class="btn btn-view" (click)="poView(asset?.purchase_order_id)">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="heading_neo">
+          <h3>Invoice Details</h3>
+        </div>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">InvoiceCode</th>
+              <td>ks8217398jn</td>
+            </tr>
+            <tr>
+              <th scope="row">Invoice Details</th>
+              <td><button class="btn btn-view">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-md-6">
+        <div class="heading_neo">
+          <h3>Creation</h3>
+        </div>
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <th scope="row">Date Created</th>
+              <td>{{asset?.createdAt | date:'dd-MM-yyyy'}}</td>
+            </tr>
+            <tr>
+              <th scope="row">Created By</th>
+              <td>{{asset?.employee_name || asset?.employee_id}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</mat-card>

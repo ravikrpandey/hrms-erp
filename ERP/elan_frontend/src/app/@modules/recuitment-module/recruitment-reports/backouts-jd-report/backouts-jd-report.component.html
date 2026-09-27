@@ -1,0 +1,37 @@
+<div class="row align-items-center mt-3 mx-1 my-1">
+    <div class="col-12 text-end mb-2">
+        <button class="reset-filters-btn" (click)="resetFilters()">
+            Reset Filters
+        </button>
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Month</mat-label>
+            <mat-select [(ngModel)]="selectedMonth" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let month of months" [value]="month.id">
+                    {{ month.month_name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-6 col-sm-12 mb-3">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear" (ngModelChange)="onSelectionChange()">
+                <mat-option *ngFor="let year of years" [value]="year.financial_year">
+                    {{ year.financial_year }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="ag_grid-container">
+    <h3 class="text-center">Backout Candidates Report</h3>
+    <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 480px;" [rowData]="rowData"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)"
+            [rowClass]="rowClass">
+        </ag-grid-angular>
+    </div>
+</div>

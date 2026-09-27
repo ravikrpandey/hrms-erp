@@ -1,0 +1,97 @@
+<div class="right_data_all candidateOffer">
+<div class="candidate_Details">
+<mat-card>
+  <h2>Basic Details</h2>
+  <div class="basic_details">
+    <div class="row">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Ref Number</h5>
+        <p>{{recordData?.reference_number}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Candidate Name</h5>
+        <p>{{recordData?.first_name + ' ' + recordData?.last_name}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Date</h5>
+        <p>{{ recordData?.createdAt | date: 'dd/MM/yyyy' }}</p>
+    </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Position</h5>
+        <p>{{recordData?.designation_name}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Base Salary</h5>
+        <p>{{recordData?.base_salary}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Reporting Manager</h5>
+        <p>{{recordData?.report_manag_fname + ' ' + recordData?.report_manag_lname}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Type of Contract </h5>
+        <p>{{recordData?.contract_type}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Probation Period</h5>
+        <p>{{recordData?.probation_period}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Location</h5>
+        <p>{{recordData?.location}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Expected Joining Date</h5>
+        <p>{{recordData?.exp_joining_date}}</p>
+      </div>
+    </div>
+ 
+<table class="table table-bordered tableContent mt-4 mb-4">
+  <thead>
+    <tr>
+      <th>S.No.</th>
+      <th>Allowance Name</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of recordData?.allowance_details; let i = index;">
+      <td>{{i+1}}</td>
+      <td>{{data?.allowance_name}}</td>
+      <td>{{data?.allowance_amount}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col-md-12">
+    <a href="{{baseUrl}}/api/WL/download_offer_letter/{{recordData?.candidate_id}}" download target="_blank">
+      <button mat-button class="downloadButton">
+        Download Offer Letter
+        <mat-icon aria-hidden="false" aria-label="Example download" fontIcon="download"></mat-icon>
+      </button>
+    </a>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+    <mat-radio-group [(ngModel)]="formObj.candidate_offer_status">
+      <mat-radio-button value="ACCEPTED">I am accepting this
+        offer</mat-radio-button>
+      <mat-radio-button value="REJECTED">I am rejecting this
+        offer</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
+    <label>Remark</label>
+    <textarea class="form-control" rows="3" [(ngModel)]="formObj.remarks"></textarea>
+  </div>
+</div>
+
+<div class="common_button_sub mt-3">
+  <button (click)="handleSubmit()">
+    Submit
+  </button>
+</div>
+</div>
+</mat-card>
+</div>
+</div>

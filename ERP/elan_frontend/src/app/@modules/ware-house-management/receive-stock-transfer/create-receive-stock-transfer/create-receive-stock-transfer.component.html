@@ -1,0 +1,466 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+           Recieve Stock Transfer<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Recieve Stock Transfer</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="" [formGroup]="createStockTransfer">
+                <div class="heading_neo">
+                    <h3>Basic Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Stock Entry Type</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Stock Entry Type</mat-label>
+                                    <mat-select formControlName="stock_entry_type">
+                                        <mat-option value="transfer">Transfer</mat-option>
+                                        <!-- <mat-option value="receiving">Receiving</mat-option> -->
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls[
+                        'stock_entry_type'
+                      ].hasError('required')
+                    ">
+                                        Stock Entry Type is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls[
+                        'stock_entry_type'
+                      ].hasError('leadingSpaces')
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Date</mat-label>
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Date</mat-label>
+                                    <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp4></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['date'].hasError('required')
+                    ">
+                                        Date is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Reason</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Reason</mat-label>
+                                    <input matInput type="text" formControlName="reason" maxlength="100"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['reason'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Reason is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['reason'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heading_neo">
+                    <h3>Source Transfer Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <!-- <mat-label>Source Warehouse</mat-label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Source Warehouse</mat-label>
+                                    <mat-select formControlName="source_warehouse_id" (selectionChange)="onSourceSelectionChange($event)">
+                                        <mat-option *ngFor="let warehouse of sourseWarehouseList" [value]="warehouse.id" [hidden]="warehouse.hidden">
+                                          {{ warehouse?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['source_warehouse_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Source Warehouse is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['source_warehouse_id'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="sourceZones.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Zone</mat-label>
+                                        <mat-select formControlName="source_zone_id" (selectionChange)="onSourceZoneChange($event.value)">
+                                            <mat-option *ngFor="let zone of sourceZones" [value]="zone.id">{{ zone.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="sourceBays.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Bay (Row)</mat-label>
+                                        <mat-select formControlName="source_row_id" (selectionChange)="onSourceBayChange($event.value)">
+                                            <mat-option *ngFor="let bay of sourceBays" [value]="bay.id">{{ bay.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="sourceRacks.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Rack (Shelf)</mat-label>
+                                        <mat-select formControlName="source_shelf_id" (selectionChange)="onSourceRackChange($event.value)">
+                                            <mat-option *ngFor="let rack of sourceRacks" [value]="rack.id">{{ rack.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="sourceBins.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Bin (Section)</mat-label>
+                                        <mat-select formControlName="source_section_id" (selectionChange)="onSourceBinChange($event.value)">
+                                            <mat-option *ngFor="let bin of sourceBins" [value]="bin.id">{{ bin.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="heading_neo">
+                    <h3>Target Transfer Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Target Warehouse</mat-label>
+                                    <mat-select formControlName="target_warehouse_id" (selectionChange)="onTargetSelectionChange($event)">
+                                        <mat-option *ngFor="let warehouse of targetWarehouseList" [value]="warehouse.id" [hidden]="warehouse.hidden">
+                                          {{ warehouse?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['target_warehouse_id'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Target Warehouse is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['target_warehouse_id'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="targetZones.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Zone</mat-label>
+                                        <mat-select formControlName="target_zone_id" (selectionChange)="onTargetZoneChange($event.value)">
+                                            <mat-option *ngFor="let zone of targetZones" [value]="zone.id">{{ zone.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="targetBays.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Bay (Row)</mat-label>
+                                        <mat-select formControlName="target_row_id" (selectionChange)="onTargetBayChange($event.value)">
+                                            <mat-option *ngFor="let bay of targetBays" [value]="bay.id">{{ bay.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="targetRacks.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Rack (Shelf)</mat-label>
+                                        <mat-select formControlName="target_shelf_id" (selectionChange)="onTargetRackChange($event.value)">
+                                            <mat-option *ngFor="let rack of targetRacks" [value]="rack.id">{{ rack.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="targetBins.length">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group mb-3">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Select Bin (Section)</mat-label>
+                                        <mat-select formControlName="target_section_id" (selectionChange)="onTargetBinChange($event.value)">
+                                            <mat-option *ngFor="let bin of targetBins" [value]="bin.id">{{ bin.name }}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Expected Transfer Date</mat-label>
+                                    <input matInput [matDatepicker]="dp5" (click)="dp5.open()"
+                                        formControlName="expected_transfer_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp5></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls[
+                        'expected_transfer_date'
+                      ].hasError('required')
+                    ">
+                                        Target Warehouse is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heading_neo">
+                    <h3>Item Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S. No.</th>
+                                        <th>Item</th>
+                                        <th>Item code</th>
+                                        <th>Quantity</th>
+                                        <th>Accepted Quantities</th>
+                                        <th>Quantities Damaged</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="item_details">
+                                    <tr *ngFor="
+                      let stakeHolderRow of stakeHoldersFormArray.controls;
+                      let i = index
+                    " [formGroupName]="i">
+                                        <td>
+                                            <div class="form-group-name-cat center">
+                                                <div>{{ i + 1 }}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Item list</mat-label>
+                                                    <mat-select formControlName="item_id">
+                                                      <mat-option *ngFor="let item of itemsList" [value]="item.id" (click)="getItemDetail(item,i)">
+                                                        {{ item?.item_name }}
+                                                      </mat-option>
+                                                    </mat-select>
+
+
+                                                    <mat-error *ngIf="createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('required') &&
+                                                    !createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('leadingSpaces')">
+                                                      Required!
+                                                    </mat-error>
+
+                                                    <mat-error *ngIf="createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('leadingSpaces')">
+                                                      No Leading Spaces!
+                                                    </mat-error>
+
+                                                </mat-form-field>
+
+                                                <!-- Serial Numbers Condition Mapping -->
+                                                <div *ngIf="stakeHolderRow.get('manage_by')?.value === 'S.No. Only'" class="p-2 mt-1 border rounded bg-light" style="max-height: 120px; overflow-y: auto;">
+                                                    <span class="d-block mb-1 font-weight-bold" style="font-size: 11px;">Condition (Green=Ok, Red=Damage):</span>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        <button type="button" *ngFor="let serial of stakeHolderRow.get('serials_list')?.value; let sIdx = index"
+                                                            (click)="toggleSerialStatus(i, sIdx)"
+                                                            [disabled]="isView"
+                                                            class="btn btn-xs p-1"
+                                                            [class.btn-success]="!serial.isDamaged"
+                                                            [class.btn-danger]="serial.isDamaged"
+                                                            style="font-size: 10px; line-height: 1;">
+                                                            {{ serial.itemSerialNo }}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Item Code</mat-label>
+                                                    <input matInput type="text" formControlName="item_code"   readonly/>
+
+
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Quantity</mat-label>
+                                                    <input matInput type="text" formControlName="quantity" (input)="calculateValue(i)" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0" readonly/>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Accepted Quantities</mat-label>
+                                                    <input matInput type="text" formControlName="accepted_qty" [readonly]="stakeHolderRow.get('manage_by')?.value === 'S.No. Only'" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0"/>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Quantities Damaged</mat-label>
+                                                    <input matInput type="text" formControlName="damaged_qty" [readonly]="stakeHolderRow.get('manage_by')?.value === 'S.No. Only'" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0"/>
+
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="heading_neo">
+                    <h3>Transporter Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Recieved By</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Recieved By</mat-label>
+                                    <input matInput type="text" formControlName="recieve_by" maxlength="100"/>
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Date Recieved</mat-label>
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Date Recieved</mat-label>
+                                    <input matInput [matDatepicker]="dp8" (click)="dp8.open()" formControlName="date_recieved" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp8"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp8></mat-datepicker>
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Acknowledge</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Acknowledge</mat-label>
+                                    <input matInput type="text" formControlName="acknowledge" maxlength="100"/>
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Remarks</mat-label>
+                                    <input matInput type="text" formControlName="remarks" maxlength="150"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['remarks'].hasError(
+                        'required'
+                      )
+                    ">
+                                        remarks is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['remarks'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- *ngIf="status=='Pending'" -->
+                <div class="common_button_sub mt-4" align="end"   >
+                    <button (click)="onSubmitForm()" *ngIf="!isView">Recieve Stock Transfer</button>
+                    <button class="cancel_button_y" (click)="goBack()">Discard</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

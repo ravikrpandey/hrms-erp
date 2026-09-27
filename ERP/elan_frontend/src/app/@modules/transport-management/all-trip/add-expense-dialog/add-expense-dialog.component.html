@@ -1,0 +1,63 @@
+<h2 mat-dialog-title>Add Expense</h2>
+
+<form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="p-3">
+  <div class="mb-3">
+    <mat-form-field class="w-100">
+      <mat-label>Expense Category</mat-label>
+      <mat-select formControlName="category">
+        <mat-option>
+          <div class="add_button">
+            <button type="button" (click)="openDialog()">
+              + Add New
+            </button>
+          </div></mat-option
+        >
+        <mat-option *ngFor="let cat of rowData" [value]="cat.id">{{
+          cat?.expense_category
+        }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="mb-3">
+    <mat-form-field class="w-100">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+  <div class="mb-3">
+    <mat-form-field class="w-100">
+      <mat-label>Amount</mat-label>
+      <input matInput type="number" formControlName="amount" />
+    </mat-form-field>
+  </div>
+
+  <div class="mb-3">
+    <label>Upload Document:</label>
+    <input type="file" (change)="onFileChange($event)" />
+  </div>
+
+  <div class="mb-3">
+    <mat-form-field class="w-100">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="d-flex justify-content-end">
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="!expenseForm.valid"
+    >
+      Submit
+    </button>
+    <button mat-flat-button color="warn" class="ms-2" (click)="onCancel()">
+      Cancel
+    </button>
+  </div>
+</form>

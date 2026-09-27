@@ -1,0 +1,50 @@
+<div class="dashboard">
+  <div class="summary">
+    <h3>Total Tasks</h3>
+    <p>{{ totalTasks }}</p>
+  </div>
+  <div class="charts">
+    <div *ngFor="let data of progressData; let i = index" class="chart-container">
+      <p>{{ data.label }}</p>
+      <canvas id="chart-{{i}}"></canvas>
+      <div class="chart-label">
+        <h4>{{ data.percentage }}%</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="container">
+    <div class="left-box">
+      <h3 class="text-center mt-4"><i class="fas fa-tasks"></i> Deep Project View Table</h3>
+      <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:778px;" [rowData]="rowData"
+          [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=18 [rowData]="rowData"
+          (gridReady)="onGridReady($event)"   [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </div>
+    <div class="right-box">
+      <div class="top-right-box">
+        <h3 class="text-center mt-4"><i class="fas fa-hourglass-end"></i> Overdue Task</h3>
+        <div class="ag_grid">
+          <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:350px;" [rowData]="rowData1"
+            [columnDefs]="columnDefs1" [pagination]=true [paginationPageSize]=7 [rowData]="rowData1"
+            (gridReady)="onGridReady($event)"   [rowClass]="rowClass">
+          </ag-grid-angular>
+        </div>
+      </div>
+      <div class="bottom-right-box aside">
+        <h3 class="text-center"><i class="fas fa-clock"></i> Upcoming Deadlines</h3>
+        <div class="ag_grid">
+          <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:351px;" [rowData]="rowData2"
+            [columnDefs]="columnDefs2" [pagination]=true [paginationPageSize]=7 [rowData]="rowData2"
+            (gridReady)="onGridReady($event)"   [rowClass]="rowClass">
+          </ag-grid-angular>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
+  

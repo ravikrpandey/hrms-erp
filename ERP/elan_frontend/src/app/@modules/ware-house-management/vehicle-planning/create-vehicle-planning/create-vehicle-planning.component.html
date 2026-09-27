@@ -1,0 +1,281 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Warehouse Management</h1>
+    <p> Vehicle Planning </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="form" (ngSubmit)="onCreate()">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Dispatch From</mat-label>
+              <mat-select formControlName="mainWarehouseId" (selectionChange)="onWarehouseChange($event)">
+                <mat-option *ngFor="let item of mainWarehouseList" [value]="item.id"> {{ item.name }}
+                  - {{ item.code }}
+                  <span *ngIf="item?.postal_address.District">
+                    ({{ item.postal_address.District }})
+                  </span>
+                  - {{ item.address }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group mb-3">
+            <!-- <mat-form-field appearance="outline">
+              <mat-label>Sales Order</mat-label>
+              <mat-select formControlName="saleOrderIds" multiple>
+                  <mat-option *ngFor="let item of dispatchedSO" [value]="item.sales_order_id">{{
+                  item.sales_order_no +
+                  " - " +
+                  item.company_name +
+                  " - " +
+                  item.sales_invoice_no
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field> -->
+            <mat-form-field appearance="outline">
+              <mat-label>Sales Order(s)</mat-label>
+
+              <mat-select formControlName="saleOrderIds" multiple>
+
+                <mat-option *ngFor="let item of dispatchedSO" [value]="item.sales_order_id"
+                  [disabled]="!item.sales_invoice_no">
+
+                  <span [ngStyle]="{
+                    color: !item.sales_invoice_no ? 'red' : ''
+                  }">
+
+                    {{ item.sales_order_no }} -
+                    {{ item.company_name }} -
+
+                    <ng-container *ngIf="item.sales_invoice_no; else invoiceMissing">
+                      {{ item.sales_invoice_no }}
+                    </ng-container>
+
+                    <ng-template #invoiceMissing>
+                      Invoice Pending - Create Invoice First
+                    </ng-template>
+                  </span>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div formArrayName="saleOrders" *ngIf="saleOrdersArray.length > 0">
+          <div *ngFor="let item of saleOrdersArray.controls; let i = index" [formGroupName]="i"
+            class="row col-12 sale-order-card">
+            <div class="row col-12">
+              <div class="col-md-2 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline" title="Loading Sequence">
+                    <mat-label>Loading Sequence</mat-label>
+                    <mat-select formControlName="priority" [compareWith]="comparePriority">
+                      <mat-option [disabled]="formDisabled" *ngFor="let item of priorityList" [value]="item">{{ item
+                        }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>SO Number</mat-label>
+                    <input matInput type="text" formControlName="sales_order_no" readonly="true"/>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-2 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Dispatch Date</mat-label>
+                    <input readonly matInput [matDatepicker]="picker1" formControlName="pickup_date"
+                      (click)="picker1.open()" [min]="minDate" (dateChange)="onPickupDateChange($event.value)"/>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Expected Delivery Date</mat-label>
+                    <input readonly matInput [matDatepicker]="picker2" formControlName="expected_delivery_date"
+                      (click)="picker2.open()" [min]="minDate2" />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-2 col-12 text-end">
+                <div class="form-group mb-3">
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    type="button"
+                    (click)="viewItemDetails(item)">
+                    <mat-icon>inventory_2</mat-icon>
+                    View SO Items
+                  </button>
+                </div>
+              </div>
+
+              <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-3">
+                  <div class="select-readonly-wrapper">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Pickup Warehouse</mat-label>
+                    <mat-select formControlName="warehouse_id">
+                      <mat-option (click)="selectWarehouse(warehouse)" *ngFor="let warehouse of warehouseList"
+                        [value]="warehouse.id" >{{
+                        warehouse.name + "-" + warehouse.address
+                        }}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="readonly-overlay"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-xxl-2 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Pickup Address</mat-label>
+                    <input matInput type="text" formControlName="pickup_address" readonly />
+                  </mat-form-field>
+                </div>
+              </div> -->
+
+              <div class="col-md-12 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Delivery Address</mat-label>
+                    <input matInput readonly type="text" formControlName="delivery_address"/>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Customer</mat-label>
+                    <input matInput readonly type="text" formControlName="company_name"/>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Dispatch City</mat-label>
+                    <input matInput readonly type="text" formControlName="pickup_city_name"/>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-md-3 col-12">
+                <div class="form-group mb-3">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Delivery City</mat-label>
+                    <input matInput readonly type="text" formControlName="delivery_city_name"/>
+                  </mat-form-field>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" *ngIf="saleOrdersArray.length > 0">
+        <!-- <div class="col-md-3">Delivery Route
+          <div class="form-group custom-outline readonly-radio">
+            <mat-label>Delivery Route</mat-label>
+            <mat-radio-group aria-label="Select an option" (change)="changeSelect($event)" formControlName="vehicle_root_status">
+              <mat-radio-button value="DIRECT">Direct</mat-radio-button>
+              <mat-radio-button value="VIA" style="margin-left:40px">Via</mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div> -->
+
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Transported By</mat-label>
+              <mat-select formControlName="transported_by_id" (selectionChange)="selectTranpBy($event.value)">
+                <mat-option *ngFor="let trasType of transportedByList" [value]="trasType.id"
+                  [disabled]="formDisabled">{{ trasType.typeName }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Transport Type</mat-label>
+              <mat-select formControlName="transport_type_id">
+                <mat-option *ngFor="let trasType of transportTypeList" [value]="trasType.id"
+                  [disabled]="formDisabled">{{ trasType.typeName }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Vehicle Type</mat-label>
+              <mat-select formControlName="vehicle_type_id">
+                <mat-option *ngFor="let vehicle of vehicleTypes" [value]="vehicle.vehicle_type_id"
+                  [disabled]="formDisabled">{{
+                  vehicle.vehicle_type_name
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" *ngIf="showTransporter">
+              <mat-label>Transporter </mat-label>
+              <mat-select multiple (valueChange)="selectedViaWarehouse($event)"
+                formControlName="transportor_id">
+                <mat-option *ngFor="let transporter of transporterList" [value]="transporter.id"
+                  [disabled]="formDisabled">{{ transporter.tm_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- <div class="col-12" *ngIf="!isMultiple">
+          <div class="form-group mb-3">
+            <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+              [columnDefs]="columnDefs" [pagination]="false" [paginationPageSize]="9" [rowData]="rowData"
+              (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" [getDataPath]="getDataPath"
+              [rowSelection]="'single'" [frameworkComponents]="frameworkComponents"
+              [autoGroupColumnDef]="autoGroupColumnDef" [treeData]="true" [animateRows]="true"
+              (selectionChanged)="onSelectionChanged($event)" (firstDataRendered)="onFirstDataRendered($event)">
+            </ag-grid-angular>
+          </div>
+        </div> -->
+
+      </div>
+
+      <div class="mt-3 common_button_sub" *ngIf="mode!='view'">
+        <button type="submit"> Submit </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,361 @@
+<div class="right_data_all">
+  <div>
+    <mat-card>
+      <div class="row form_head">
+        <h3 *ngIf="type == 'View'"> Bank Details</h3>
+        <h3 *ngIf="type !== 'View'">Add Bank</h3>
+
+      </div>
+      <div class="form_basic mb-0" *ngIf="type !== 'View'">
+        <form class="form_set" [formGroup]="bankForm">
+          <div class="row">
+            <!-- <div *ngIf="!vendor_id && !bank_id" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Vendor ID/Name</mat-label>
+                  <mat-select formControlName="vendor_management_id">
+                    <mat-option *ngFor="let vendor of vendorName" [value]="vendor.vendor_management_id">{{ vendor.vendor_name }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="bank_name" placeholder="Enter Bank Name"/>
+                  <mat-error *ngIf="
+                  bankForm.controls['bank_name'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Branch Name</mat-label>
+                  <input matInput type="text" formControlName="branch" />
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['branch'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          <!-- </div> -->
+          <!-- <div class="row"> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Holder Name</mat-label>
+                  <input matInput type="text" formControlName="account_holder_name" />
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['account_holder_name'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Account Number / IBAN</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    [min]="0"
+                    formControlName="bank_account_number"
+                    #acc
+                    (keyup)="checkAcc(acc)"
+                  />
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['bank_account_number'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+             <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>IFSC Code</mat-label>
+                    <input matInput type="text" formControlName="unique_bank_no" />
+                    <!-- <mat-error *ngIf="
+                    bankForm.controls['unique_bank_no'].hasError(
+                      'required'
+                    )
+                  ">
+                          Required Filed
+                        </mat-error> -->
+                  </mat-form-field>
+                </div>
+              </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Swift Code</mat-label>
+                  <input matInput type="text" formControlName="swift_code" />
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['swift_code'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+
+                    <mat-form-field appearance="outline">
+                  <mat-label>Country</mat-label>
+
+                      <mat-select formControlName="country_id" (selectionChange)="countryChange($event)">
+                        <mat-select-filter [array]="reporting"
+                          (filteredReturn)="reportingManagerSearch($event)" ></mat-select-filter>
+
+                        <mat-option *ngFor="let country of allCopyCountry"
+                        (click)="getReportingData(country)"
+                        [value]="country.countryss_id">{{country.countryss_name}}</mat-option>
+                      </mat-select>
+                      <!-- <mat-error *ngIf="
+                      bankForm.controls['country_id'].hasError(
+                        'required'
+                      )
+                    ">
+                            Required Filed
+                          </mat-error> -->
+                      </mat-form-field>
+
+              </div>
+            </div>
+          <!-- </div> -->
+
+          <!-- <div class="row"> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>State</mat-label>
+                  <mat-select
+                  (selectionChange)="stateChange($event)"
+                  formControlName="state_id"
+                >
+                <mat-select-filter [array]="states" (filteredReturn)="stateFilter($event)"></mat-select-filter>
+                  <mat-option
+                    *ngFor="let state of stateList"
+                    [value]="state.states_id"
+                    >{{ state.states_name }}</mat-option
+                  >
+                </mat-select>
+                <!-- <mat-error *ngIf="
+                bankForm.controls['state_id'].hasError(
+                  'required'
+                )
+              ">
+                      Required Filed
+                    </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="city_id" (selectionChange)="cityOnChange($event)">
+                    <mat-select-filter [array]="cities" (filteredReturn)="cityFilter($event)"></mat-select-filter>
+                    <mat-option
+                    *ngFor="let city of cityList"
+                    [value]="city.city_id"
+                    >{{ city.city_name }}</mat-option
+                  >
+                  </mat-select>
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['city_id'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="branch_city"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Bank Address</mat-label>
+                  <input matInput type="text" formControlName="bank_address" />
+                  <!-- <mat-error *ngIf="
+                  bankForm.controls['bank_address'].hasError(
+                    'required'
+                  )
+                ">
+                        Required Filed
+                      </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Code</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="number_code"
+                  />
+                </mat-form-field>
+              </div>
+            </div> -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Contact No.gdfgdfg</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="contact_number"
+                  />
+                </mat-form-field>
+              </div>
+            </div> -->
+
+          <!-- </div> -->
+          <!-- <div class="row"> -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>A/C Type</mat-label>
+                  <mat-select formControlName="account_type">
+                    <mat-option *ngFor="let acType of acountType" [value]="acType.value">{{ acType.value }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>IFSC No.</mat-label>
+                  <input matInput type="text" formControlName="ifsc_number" />
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>IBAN Code</mat-label>
+                  <input matInput type="text" formControlName="iban_code" />
+
+                </mat-form-field>
+              </div>
+            </div> -->
+          </div>
+          <div class="mt-3 common_button_sub text-center"  *ngIf="type !== 'View'">
+            <button (click)="addBankDetails()"
+            [ngClass]="{'add-button': indexDetail == null, 'update-button': indexDetail !== null}">
+      {{ indexDetail == null ? 'Add Bank Detail' : 'Update Bank Detail' }}
+    </button>
+            </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+
+
+<div class="table-responsive mt-4">
+<div class="tableBox">
+  <table class="table table-bordered">
+<thead>
+  <tr>
+    <th>S.No</th>
+    <th>Bank Name</th>
+    <th>Branch Name</th>
+    <th>Account Holder Name</th>
+    <th>Account Number / IBAN</th>
+    <th>IFSC Code</th>
+    <th>Swift Code</th>
+    <th>Country</th>
+    <th>State</th>
+    <th>City</th>
+    <th>Bank Address</th>
+    <th *ngIf="type !== 'View'" style="width: 100px;">Action</th>
+  </tr>
+</thead>
+<tbody>
+  <tr *ngFor="let details of arrayData;  let i = index">
+    <td>{{i + 1}}</td>
+    <td>{{details?.bank_id}}</td>
+    <td>{{details?.branch_name}}</td>
+    <td>{{details?.account_holder_name}}</td>
+    <td>{{details?.bank_account_number}}</td>
+    <td>{{details?.unique_number_bank}}</td>
+    <td>{{details?.swift_code}}</td>
+    <td>{{details?.countryName || details?.countryss_name}}</td>
+    <td>{{details?.stateName || details?.states_name}}</td>
+    <td>{{details?.cityName || details?.city_name}}</td>
+    <td>{{details?.bank_address}}</td>
+    <!-- <td>{{details?.iban_code}}</td> -->
+
+    <td *ngIf="type !== 'View'" style="
+
+                        color: #7c7c7c;
+                        cursor: pointer;
+
+                      ">
+                            <i class="material-icons" (click)="deletData(details)">delete</i>
+                            <i class="material-icons" (click)="editData(details,i)">edit</i>
+
+
+
+                          </td>
+
+
+  </tr>
+
+</tbody>
+
+  </table>
+  <div class="row">
+    <div *ngIf="arrayData.length === 0">
+      <p style="text-align: center;
+      font-size: 16px;">Bank Details Not Found</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="mt-3 common_button_sub" *ngIf="type !== 'View'">
+  <button *ngIf="vendor_id && !status"
+  (click)="editBankById()"
+  >
+   Save & Next
+  </button>
+
+  <button *ngIf="bank_id"  (click)="updateBank()" >Update</button>
+  <!-- <button class="cancel_button_y" (click)="onCancel('/master/vendor/vendor-list')">
+    Cancel
+  </button> -->
+</div>
+</div>
+

@@ -1,0 +1,140 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>Driver Vehicle Mapping</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<section class="right_data_all" *ngIf="actionType!='View'">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="createform" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Drivers</mat-label>
+              <mat-select formControlName="drivers_id" multiple>
+                <mat-option *ngFor="let data of getDriverList" [value]="data.driver_id">
+                  {{ data.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Vehicles</mat-label>
+              <mat-select formControlName="vehicles_id" multiple>
+                <mat-option *ngFor="let data of getVehicleList" [value]="data.id">
+                  {{ data.vehicle_number }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 common_button_sub">
+        <button type="submit">Link Driver & Vehicle</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="right_data_all">
+    <div class="row mt-3">
+        <div class="col-lg-6 col-md-12">
+            <mat-card class="mapping-card">
+            <mat-card-title>
+                <mat-icon>person</mat-icon>
+                Drivers Mapped Details
+            </mat-card-title>
+
+            <table class="mapping-table">
+                <thead>
+                <tr>
+                    <th>Driver Name</th>
+                    <th>Mobile</th>
+                    <th>Linked On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr *ngFor="let d of mappedDrivers"
+                    [ngClass]="{ 'unlinked-row': d.status === 'UNLINKED' }">
+
+                    <td>{{ d.full_name }} [{{d.driver_code}}]</td>
+                    <td>{{ d.mobile_number }}</td>
+                    <td>{{ d.createdAt | date:'dd-MMM-yyyy' }}</td>
+
+                    <td>
+                    <span class="status-badge linked" *ngIf="d.status==='LINKED'">LINKED</span>
+                    <span class="status-badge unlinked" *ngIf="d.status==='UNLINKED'">UNLINKED</span>
+                    </td>
+
+                    <td>
+                    <button *ngIf="d.status==='LINKED'"
+                            class="delink-btn"
+                            (click)="delinkDriverVehicle(d.id,'driver')">
+                        Delink
+                    </button>
+                    <span *ngIf="d.status==='UNLINKED'">{{ d.updatedAt | date:'dd-MMM-yyyy' }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </mat-card>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <mat-card class="mapping-card">
+            <mat-card-title>
+                <mat-icon>local_shipping</mat-icon>
+                Vehicles Mapped Details
+            </mat-card-title>
+
+            <table class="mapping-table">
+                <thead>
+                <tr>
+                    <th>Vehicle No</th>
+                    <th>Vehicle Model</th>
+                    <th>Linked On</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr *ngFor="let v of mappedVehicles"
+                    [ngClass]="{ 'unlinked-row': v.status === 'UNLINKED' }">
+
+                    <td>{{ v.vehicle_number }}</td>
+                    <td>{{ v.vehicle_model }}</td>
+                    <td>{{ v.createdAt | date:'dd-MMM-yyyy' }}</td>
+
+                    <td>
+                    <span class="status-badge linked" *ngIf="v.status==='LINKED'">LINKED</span>
+                    <span class="status-badge unlinked" *ngIf="v.status==='UNLINKED'">UNLINKED</span>
+                    </td>
+
+                    <td>
+                    <button *ngIf="v.status==='LINKED'"
+                            class="delink-btn"
+                            (click)="delinkDriverVehicle(v.id,'vehicle')">
+                        Delink
+                    </button>
+                    <span *ngIf="v.status==='UNLINKED'">{{ v.updatedAt | date:'dd-MMM-yyyy' }}</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </mat-card>
+        </div>
+    </div>
+</section>

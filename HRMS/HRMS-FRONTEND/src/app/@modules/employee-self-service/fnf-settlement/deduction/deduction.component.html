@@ -1,0 +1,43 @@
+<div style="width: 100%;
+    float: left;padding-top: 20px;">
+<form [formGroup]="deductionForm" class="deduction-form" novalidate>
+
+  <div class="form-row">
+    <label>LOP Days</label>
+    <input type="text" formControlName="lop_days" />
+    <small *ngIf="deductionForm.get('lop_days')?.touched && deductionForm.get('lop_days')?.invalid" class="text-danger">
+    LOP Days are Required.
+    </small>
+  </div>
+
+  <div class="form-row">
+    <label>LOP Deduction Amount</label>
+    <input type="text" formControlName="lop_deduction_amount" />
+    <small *ngIf="deductionForm.get('lop_deduction_amount')?.touched && deductionForm.get('lop_deduction_amount')?.invalid" class="text-danger">
+    LOP Deduction Amount are Required.
+    </small>
+  </div>
+
+  <div class="form-row">
+    <label>Loan Recovery Amount</label>
+    <input type="text" formControlName="loan_recovery_amount" />
+  </div>
+
+  <div class="form-row">
+    <label>Assets Recovery Amount</label>
+    <input type="text" formControlName="assets_recovery_amount" />
+  </div>
+
+  <div class="form-row">
+    <label>Notice Pay Recovery</label>
+    <input type="text" formControlName="notice_pay_recovery" />
+  </div>
+
+  <div class="form-actions">
+    <button type="button" class="action-btn btn btn-primary" (click)="handleSubmit()">Save & Next</button>
+    <button type="button" class="action-btn btn btn-secondary Cancel" [routerLink]="['/master/ess/fnf-settlement']">Cancel</button>
+  </div>
+
+</form>
+</div>
+

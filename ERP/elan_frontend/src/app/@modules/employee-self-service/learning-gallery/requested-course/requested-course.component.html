@@ -1,0 +1,70 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Lms Master</h1>
+    <p>
+      Course Master
+      <i class="fa fa-angle-right" aria-hidden="true"></i>
+      <span>Course Master Table</span>
+    </p>
+  </div>
+</div>
+
+<div class="d-flex justify-content-between flex-wrap w-100 py-2">
+  <div class="example-header">
+    <select id="page-size" (change)="onPageSizeChanged()">
+      <option value="10" selected="">10</option>
+      <option value="100">100</option>
+      <option value="500">500</option>
+      <option value="1000">1000</option>
+    </select>
+  </div>
+  <div class="employee_2" align="end">
+    <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+      placeholder="Search">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3" *ngFor="let column of rowData">
+    <div class="course_contact">
+      <div class="course_pic">
+        <img [src]="baseUrl + '/' + column?.LMS_COURSE?.thumbnail" />
+      </div>
+
+      <ul class="course_dayslist">
+        <li>
+          <div class="day_title">Title</div>
+          <div class="day_number">{{ column?.LMS_COURSE?.course_name }}</div>
+        </li>
+        <li>
+          <div class="day_title">Category</div>
+          <div class="day_number">{{ column?.LMS_COURSE?.category }}</div>
+        </li>
+        <li>
+          <div class="day_title">Total Content</div>
+          <div class="day_number">{{ column?.LMS_COURSE?.contentCount }}</div>
+        </li>
+        <li *ngIf="column.final_status !== 'PENDING'">
+          <div class="date">
+            <div>Start Data</div>
+            <div>
+              {{ column?.LMS_COURSE?.startDate | date : "dd-MMM-yyyy" }}
+            </div>
+          </div>
+          <div class="date">
+            <div>End Date</div>
+            <div>{{ column?.LMS_COURSE?.endDate | date : "dd-MMM-yyyy" }}</div>
+          </div>
+        </li>
+      </ul>
+      <div class="add_button_new">
+        <button *ngIf="column.final_status !== 'PENDING'" (click)="View(column)">Open</button>
+        <div [ngClass]="{
+              'pending': column.final_status === 'PENDING',
+              'approved': column.final_status === 'APPROVED'
+            }">{{column.final_status}} </div>
+      </div>
+
+    </div>
+  </div>
+</div>

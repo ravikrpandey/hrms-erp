@@ -1,0 +1,274 @@
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CellValueChangedEvent, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigurationalmasterService } from 'src/app/@shared/services/configurationalmaster.service';
+import { RbacMasterService } from 'src/app/@shared/services/rbac-master.service';
+import { BehaviorSubject } from 'rxjs';
+import { LanguageTranslateService } from 'src/app/@shared/services/language_translate/language-translate.service';
+import { DepartmentActionStatusComponent } from '../../department/department-action/department-action-status/department-action-status.component';
+import { DepartmentActionComponent } from '../../department/department-action/department-action.component';
+import { DepartmentDialogComponent } from '../../department/department-dialog/department-dialog.component';
+import { DepartmentComponent } from '../../department/department.component';
+import { AllowanceCreateComponent } from '../allowance-create/allowance-create.component';
+import { ActionComponent } from './action/action.component';
+import { AlloanceActionStatusComponent } from './action/alloance-action-status/alloance-action-status.component';
+import { CommonService } from 'src/app/@shared/services/common.service';
+
+@Component({
+  selector: 'app-allowance-list',
+  templateUrl: './allowance-list.component.html',
+  styleUrls: ['./allowance-list.component.scss']
+})
+export class AllowanceListComponent {
+  errorMessage: any;
+  id: any;
+  countryss_id: any;
+  rowClass: any;
+  entity_id: any;
+  private gridApi!: GridApi<any>;
+  public gridOptions: any = { rowSelection: 'multiple', };
+  rowData: any;
+  count: any = 0;
+  assignAction: any;
+  languageFlag: 'en' | 'pt' = 'en';
+  columnDefs: any
+  AllowanceList:any
+  domestics_Allowance:any
+  private languageSubject = new BehaviorSubject<'en' | 'pt'>('en');
+  language$ = this.languageSubject.asObservable();
+  translations = {
+    en: {
+      pageTitle: 'Configurational  Master',
+      master: 'Allowance',
+      masterTable: 'Allowance List',
+      placeholder: 'Search',
+      addButton: 'Add'
+    },
+    pt: {
+      pageTitle: 'Configurational Master',
+      master: 'Allowance ',
+      masterTable: 'Allowance',
+      placeholder: 'Pesquisar',
+      addButton: 'Adicionar',
+    }
+  };
+  international_Allowance: any;
+  constructor(
+    private _configurationalMasterService: ConfigurationalmasterService,
+    private _rbackService: RbacMasterService,
+    public dialog: MatDialog, private route: Router, private activetRoute: ActivatedRoute,
+    private toaster: ToastrService,
+    private language_service:LanguageTranslateService,
+    private _commonService: CommonService
+  ) {
+    this.rowClass = 'rowClass';
+  }
+
+  ngOnInit(): void {
+    this.entity_id = localStorage.getItem('selectedEntityId');
+    this.languageSwitch()
+    this.assignAction = this._rbackService.accessAssignAction();
+    this.getDepartment();
+
+
+    this.activetRoute.queryParams.subscribe((params: any) => {
+      this.id = params;
+      
+
+      this.countryss_id = this.id.countryss_id;
+      
+    });
+
+  }
+
+  languageSwitch(){
+    this.language_service.data$.subscribe((languagetype:any)=>{
+      this.languageFlag = languagetype || 'en';
+      this.languageSubject.next(this.languageFlag);
+      this.updateColumnDefs();
+    })
+  }
+
+  // private getColumnHeaderTranslations() {
+  //   return {
+  //     en: {
+  //       sno: 'S.NO',
+  //       // cc_code: 'CC Code',
+  //       AllowanceList : 'Allowance Name',
+  //       status: 'Status',
+  //       action: 'Action'
+  //     },  
+  //     pt: {
+  //       sno: 'Nº',
+  //       // cc_code: 'Código CC',
+  //       AllowanceList: 'AllowanceList',
+  //       domestics_Allowance :"Domestic Allowance "
+  //       status: 'Estado',
+  //       action: 'Ação'
+  //     }
+  //   };
+  // }
+
+
+  private updateColumnDefs() {
+    // const translations = this.getColumnHeaderTranslations()[this.languageFlag];
+
+   this.columnDefs = [
+    {
+      headerName: "S.No" ,
+      valueGetter: "node.rowIndex + 1",
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      maxWidth:85,
+    },
+    {
+      headerName:"Allowance Name",
+      field: 'allowance_name',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth:150,
+      //editable: true,
+    },
+    // {
+    //   headerName: translations.cc_code,
+    //   field: 'cc_code',
+    //   sortable: true,
+    //   resizable: true,
+    //   wrapHeaderText: true,
+    //   autoHeaderHeight: true,
+    //   cellClass: 'grid-cell-centered',
+    //   flex: 1,
+    //   minWidth:150,
+    //   //editable: true,
+    // },
+    {
+      headerName: "Domestic Allowance",
+      field: 'domestic_allowance',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth:150,
+      //editable: true,
+    },
+    {
+      headerName: "International Allowance",
+      field: 'international_allowance',
+      sortable: true,
+      resizable: true,
+      wrapHeaderText: true,
+      autoHeaderHeight: true,
+      cellClass: 'grid-cell-centered',
+      flex: 1,
+      minWidth:150,
+      //editable: true,
+    },
+    {
+      headerName: "Status",
+      field: 'entity_status',
+      cellRenderer: AlloanceActionStatusComponent,
+      cellRendererParams: {
+        className: 'mat-blue',
+        hideRequestButton: true,
+        hideDetailsButton: false,
+        hideDownloadIcon: false,
+        showCustomIcon: false,
+        someProperty: 'value',
+      },
+      cellClass: "grid-cell-centered",
+      minWidth:150,
+    },
+    {
+      headerName: "Action",
+      field: 'id',
+      flex: 1,
+      minWidth: 150,
+       cellRenderer: ActionComponent,
+      cellRendererParams: {
+        className: 'mat-blue',
+        hideRequestButton: true,
+        hideDetailsButton: false,
+        hideDownloadIcon: false,
+        showCustomIcon: false, // Hide attachment icon
+      },
+    },
+  ];
+}
+
+  onGridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    
+  }
+
+  onPageSizeChanged() {
+    var value = (document.getElementById('page-size') as HTMLInputElement)
+      .value;
+    this.gridApi.paginationSetPageSize(Number(value));
+  }
+
+
+  
+  translate(key: keyof typeof DepartmentComponent.prototype.translations['en']): string {
+    const language = this.languageSubject.getValue();
+    return this.translations[language][key] || key.toString();
+  }
+
+
+  getDepartment() {
+    this._configurationalMasterService.getAllAllownce().subscribe((res: any) => {
+      this.rowData = res.data;
+      
+    },(err:any) => {
+      this.rowData = []
+    })
+  }
+  downloadCSV() {
+    this._commonService?.downloadCSV(this.rowData,"Allowance_List.xlsx");
+  }
+  reloadCurrentRoute() {
+    let currentUrl = this.route.url;
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.route.navigate([currentUrl]);
+    });
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setQuickFilter(
+      (document.getElementById('filter-text-box') as HTMLInputElement).value
+    );
+  }
+  openDialog() {
+    const dialogRef = this.dialog.open(AllowanceCreateComponent, {
+      // data: { id: this.queryParamss },
+
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+}
+let rowIdSequence = 100;
+
+function createDataItem(color: string) {
+  const obj = {
+    id: rowIdSequence++,
+    color: color,
+    value1: Math.floor(Math.random() * 100),
+    value2: Math.floor(Math.random() * 100),
+  };
+
+  return obj;
+}
+

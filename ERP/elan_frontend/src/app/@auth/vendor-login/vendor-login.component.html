@@ -1,0 +1,93 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+
+    <!-- Close Button -->
+  <button class="close-btn" (click)="closePopup()" mat-icon-button><mat-icon>close</mat-icon></button>
+
+    <!-- 🔹 Heading Left -->
+    <div class="heading_neo"><h3>{{loginTypeUser }} Login Panel</h3></div>
+
+    <!-- 🔹 Row: Left form + Right image -->
+ 
+ <div class="pop-content-row align-items-center">
+      <!-- Left Side: Form -->
+      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-12 col-12"></div>
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+        <form class="form_set formBorder" [formGroup]="loginForm" (ngSubmit)="onloginForm()">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group">
+                    <mat-label>Email ID <span class="alertspan">*</span></mat-label>
+                    <mat-form-field>
+                    <input matInput maxlength="50" type="text" formControlName="userId" placeholder="Enter Email ID"/>
+                    <mat-error *ngIf="loginForm.controls['userId'].hasError('required')">This field is required!</mat-error>
+                    </mat-form-field>
+                </div>
+                </div>
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 get-otp-btn">
+                    <div class="common_button_sub" style="text-align: left !important;">
+                        <button class="btn" type="button" [class.spinner]="loading" [disabled]="loading" (click)="getOTP()" *ngIf="showGetOtpBtn">
+                            {{buttonName}}
+                        </button>
+                        <!-- countdown view -->
+                        <div *ngIf="!showGetOtpBtn" class="otp-timer">
+                        Resend OTP in <strong>{{ timer }}</strong> sec
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="hideShowForm">
+                    <div class="form-group">
+                        <mat-label>OTP <span class="alertspan">*</span></mat-label>
+                        <mat-form-field>
+                        <input matInput maxlength="6" type="text" formControlName="OTP" (keypress)="onlyNumber($event)" placeholder="Enter OTP"/>
+                        <mat-error *ngIf="loginForm.controls['OTP'].hasError('required')">This field is required!</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="hideShowForm" >
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                <div class="common_button_sub" style="text-align: left !important;">
+                    <button type="submit" [class.spinner]="loading" [disabled]="loading">
+                    Login
+                    </button>
+                </div>
+                </div>
+            </div>
+        </form>
+
+        <div style="height: 450px;">
+            <div class="otp-info-box">
+                <div class="info-icon">ℹ️</div>
+                <div class="info-text">
+                    <p class="info-title">Secure Login Verification</p>
+
+                    <p class="info-desc">
+                        To access the portal, please enter your <strong>Registered Email Address</strong> 
+                        <br><br>
+
+                        After clicking the <strong>“GET OTP”</strong> button, a secure 
+                        <strong>6-digit OTP</strong> will be sent to your registered email address.
+                        <br><br>
+
+                        • Enter your registered Email Address.<br>
+                        • Click on the <strong>“GET OTP”</strong> button to receive the OTP.<br>
+                        • The OTP will be valid for <strong>10 minutes</strong> only.<br>
+                        • Enter the correct OTP to verify your identity securely.<br>
+                        • Once the OTP is verified successfully, you will be automatically logged in.<br>
+                        • After successful verification, you will be redirected to your dashboard.<br>
+                        • If the OTP expires, you can request a new OTP anytime.
+                    </p>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!-- Right Side: Image -->
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 col-12 text-center">
+        <img src="assets/change-password-page.png" alt="Reset Password" class="password-image"/>
+      </div>
+    </div>
+    
+  </div>
+</div>

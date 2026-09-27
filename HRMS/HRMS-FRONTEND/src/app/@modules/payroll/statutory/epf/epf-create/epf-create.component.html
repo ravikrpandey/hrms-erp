@@ -1,0 +1,217 @@
+<div class="right_data_all">
+  <div class="row">
+    <div class="page-title">
+      <h1>Employees' Provident Fund</h1>
+    </div>
+  </div>
+
+  <Section>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="epfForm">
+        <div class="row">
+          <!--<div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                         <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>EPF Number</mat-label>
+                                <input matInput formControlName="epf_number" placeholder="MHBAN00000640000000125" />
+                                <mat-error *ngIf="epfForm.controls['epf_number'].hasError('required')">
+                                    EPF Number is required
+                                </mat-error>
+                                <mat-error *ngIf="epfForm.controls['epf_number'].hasError('pattern')">
+                                    Invalid EPF Number format. Expected format: XXYYY0000000XXX0000000
+                                </mat-error>
+                            </mat-form-field>
+                        </div> 
+                    </div>-->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Deduction Cycle</mat-label>
+                <mat-select formControlName="deduction_cycle">
+                  <mat-option value="monthly">Monthly</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Employee Contribution -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-md-0">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employee Contribution Rate</mat-label>
+                <mat-select formControlName="employee_contribution_rate">
+                  <mat-option
+                    *ngFor="let item of employeeContibutationList"
+                    [value]="item.emp_contribution_rate_id"
+                  >
+                    {{ item.contribution_rate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Employer Contribution -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Employer Contribution Rate</mat-label>
+                <mat-select formControlName="employer_contribution_rate">
+                  <mat-option
+                    *ngFor="let item of employerContibutationList"
+                    [value]="item.emplr_contribution_rate_id"
+                  >
+                    {{ item.contribution_rate }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- EDLI Rate -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>EDLI Rate (%)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="edli_rate"
+                  placeholder="0.50"
+                />
+                <mat-error
+                  *ngIf="epfForm.controls['edli_rate'].hasError('required')"
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Admin Charges Rate -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Admin Charges Rate (%)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="admin_charges_rate"
+                  placeholder="0.01"
+                />
+                <mat-error
+                  *ngIf="
+                    epfForm.controls['admin_charges_rate'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Admin Charges Capping Amount -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Admin Charges Capping Amount (₹)</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="admin_charges_cap"
+                  placeholder="25"
+                />
+                <mat-error
+                  *ngIf="
+                    epfForm.controls['admin_charges_cap'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Employer Contribution in CTC -->
+          <div class="col-12 mt-3">
+            <h2 class="text-primary fw-bold">Other Configuration</h2>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+              <div class="form-group">
+                <mat-checkbox
+                  formControlName="is_employer_contribution_in_ctc"
+                  (ngModelChange)="changeContribution($event)"
+                >
+                  <b>Include employer's contribution in the CTC</b>
+                </mat-checkbox>
+              </div>
+
+              <div class="mt-2">
+                <div class="form-group">
+                  <mat-checkbox formControlName="is_edli_contribution_in_ctc">
+                    <b>Include employer's EDLI contribution in the CTC</b>
+                  </mat-checkbox>
+                </div>
+                <!-- Uncomment if needed -->
+
+                <div class="form-group">
+                  <mat-checkbox formControlName="is_admin_charges_in_ctc">
+                    <b>Include admin charges in the CTC</b>
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class=" col-12 mt-3">
+                        <div class="form-group">
+                            <mat-checkbox formControlName="override_at_employee_level">
+                            <b>Override PF contribution rate at employee level</b>
+                            </mat-checkbox>
+                        </div>
+                    </div> -->
+
+          <!-- <div class=" col-12 mt-3">
+                        <h2 class="text-primary fw-bold">PF Configuration when LOP Applied</h2>
+                        <div class="form-group">
+                            <mat-checkbox formControlName="is_pro_rate_restricted_pf_wage">
+                               <b> Pro-rate Restricted PF Wage</b> <br>
+                                PF Contibution will be pro-rated based on the number of days worked by the employee. 
+                            </mat-checkbox>
+                            
+                        </div>
+                    </div> -->
+
+          <!-- <div class=" col-12 mt-3">
+                        <div class="form-group">
+                            <mat-checkbox formControlName="consider_salary_components_if_low_pf">
+                            <b> Consider all applicable salary components if PF wage is less than ₹15000 after Loss of
+                                Pay </b><br>
+                                PF wagw will be computed using the salary earned in that particular month(based on LOP)
+                                      rather than the actual amount mentioned in the salary structure.
+                            </mat-checkbox>
+                        </div>
+                    </div> -->
+        </div>
+
+        <div class="mt-3 alert alert-info">
+          <strong>Note:</strong> When wages are capped at ₹15,000/month, the
+          employer's share gets split as:
+          <ul>
+            <li>EPS - 8.33%</li>
+            <li>EPF - 3.67%</li>
+          </ul>
+          Otherwise, the employee and employer should submit a joint EPS
+          application to EPFO to enable EPS; otherwise, only EPF will be
+          considered.
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+          <button class="btn btn-danger" (click)="back()">Cancel</button>
+          <button class="btn btn-primary" (click)="submitForm()">
+            {{ epfId ? "Update" : "Save" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </Section>
+</div>

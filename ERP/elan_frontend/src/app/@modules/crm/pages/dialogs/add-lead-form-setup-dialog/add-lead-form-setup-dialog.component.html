@@ -1,0 +1,54 @@
+<div class="addmodelCRM">
+  <h3 class="popHead">Add Lead Form Setup</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <form class="" [formGroup]="leadFormSetupObj" (ngSubmit)="saveDetails(leadFormSetupObj)">
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" *ngIf="fieldTypeList">
+              <mat-label>Field Type</mat-label>
+              <mat-select formControlName="field_type_id" (closed)="onPanelClose()" disableOptionCentering class="cdk-overlay-pane deepdrop">
+                <mat-form-field>
+                  <input matInput [formControl]="filterControl" type="text" placeholder="Search" />
+                </mat-form-field>
+                <mat-option *ngFor="let data of filteredFieldTypeList" [value]="data?.id">
+                  {{data?.field_type}}
+                </mat-option>
+                <mat-option *ngIf="!filteredFieldTypeList?.length" disabled>
+                  <p>Field Type Not Found</p>
+                </mat-option>
+              </mat-select>              
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Field Name</mat-label>
+                <input matInput type="text" formControlName="field_name" required />
+
+                <mat-error *ngIf="
+                    leadFormSetupObj.controls['field_name'].hasError(
+                        'maxlength'
+                      )
+                    ">
+                  Field Name should be limit 150.
+                </mat-error>
+              </mat-form-field> 
+            </div>
+          </div>
+          <div class="col-md-12 common_button_sub ">
+            <button  [class.spinner]="loading"
+              [disabled]="loading">
+              {{candidate_id?'Update':'Submit'}}
+            </button>
+              <button  mat-dialog-close  class="cancel_button_y">Close</button>
+              <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+        </div>
+        </div>
+      </form>
+
+    </div>
+
+  </mat-dialog-content>
+</div>

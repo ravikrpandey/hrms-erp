@@ -1,0 +1,141 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            Quality Management
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+                Quality Check Chart</span>
+        </div>
+    </div>  
+    <mat-card>
+        <div class="form_head">
+            <h3>Quality Check Chart</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic p-3">
+            <form class="form_set"  [formGroup]="QualityChartform" >
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="">
+                            <mat-label>Select Product Category</mat-label>
+                            <mat-select  formControlName="product_category_id" (selectionChange)="getAllActiveProduct($event)">
+                              <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="QualityChartform.get('cetegory')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                   
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Select Product Name</mat-label>
+                            <mat-select formControlName="product_id" >
+                              <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="QualityChartform.get('product_id')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                   
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Product Variant</mat-label>
+                                <input type="text" matInput formControlName="product_variant" readonly>
+
+                                <!-- <mat-error *ngIf="form.get('wokflowcategory')?.hasError('required')">
+                                    This field is required!
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="card-body"  >
+                    <canvas #pieChart></canvas>
+                  </div> 
+                  <hr class="mt-2">
+
+                  <div class="row mt-5"> 
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group"> 
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Total Production</mat-label>
+                                 <input type="text" matInput formControlName="All_production" readonly>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group"> 
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Quality Pass</mat-label>
+                                 <input type="text" matInput formControlName="All_quality_passed" readonly>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group"> 
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>NG</mat-label>
+                                 <input type="text" matInput formControlName="All_ng" readonly>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-2">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group"> 
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Select Shift</mat-label>
+                                    <mat-select   formControlName="shift_id"    multiple>
+                                        <mat-option  *ngFor="let data of getAllShift; index  as i" 
+                                         [value]="data.shift_id"  (click)="getShiftId(data,i)" >{{data.MASTER_SHIFT.shift_name}}</mat-option>
+                                        
+                                    </mat-select>
+                                    <!-- <mat-error *ngIf="qualityCheck.get('shift_id')?.hasError('required')">
+                                        This field is required!
+                                   </mat-error>  -->
+                                </mat-form-field>
+                            </div>
+                        </div> 
+                    </div>
+                    <hr>
+                   <ng-container *ngFor="let shift of getAllShiftById" >
+                    <div class="row mt-3"> 
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group"> 
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Total Production</mat-label>
+                                     <input type="text" matInput  [value]="shift.total_production" readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group"> 
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Quality Pass</mat-label>
+                                     <input type="text" matInput  [value]="shift.quality_passed" readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group"> 
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>NG</mat-label>
+                                     <input type="text" matInput [value]="shift.ng_values" readonly>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        </div>
+                   </ng-container>
+                   
+            </form>
+        </div>
+    </mat-card>
+</section>

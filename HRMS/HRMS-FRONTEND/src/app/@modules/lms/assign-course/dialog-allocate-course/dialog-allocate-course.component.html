@@ -1,0 +1,228 @@
+<div>
+
+    <form [formGroup]="form" class="form_set">
+        <div class="row">
+
+
+            <mat-radio-group aria-label="Select an option" formControlName="type">
+                <mat-radio-button [disabled]="data?.id" value="all">All Employess</mat-radio-button>
+                <mat-radio-button [disabled]="data?.id" value="department">Department</mat-radio-button>
+                <mat-radio-button [disabled]="data?.id" value="designation">Designation</mat-radio-button>
+                <mat-radio-button [disabled]="data?.id" value="employe">Employee</mat-radio-button>
+            </mat-radio-group>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="entity_id" placeholder="Select Entity" multiple>
+                            <app-search-filter [array]="entityList" [placeholder]="'Search by branch'"
+                                [searchFields]="['company_branch']" (filteredReturn)="filterEntityList = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let item of filterEntityList" [value]="item?.entity_id">
+                                {{ item?.company_branch }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Start Date</mat-label>
+                        <input matInput [min]="getTodayDate()" [matDatepicker]="startPicker"
+                            formControlName="startDate" />
+                        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>End Date</mat-label>
+                        <input matInput [min]="getEndDate()" [matDatepicker]="endPicker" formControlName="endDate" />
+                        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Course Category</mat-label>
+                        <mat-select formControlName="category" placeholder="Select Course Category"
+                            (selectionChange)="getCourseList($event.value)">
+                            <app-search-filter [array]="categoryList" [placeholder]="'Search category'"
+                                [searchFields]="['category_name']" (filteredReturn)="filterCategoryList = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let category of filterCategoryList" [value]="category.category_name">
+                                {{ category.category_name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Course</mat-label>
+                        <mat-select formControlName="course_id">
+                            <app-search-filter [array]="courses" [placeholder]="'Search course'"
+                                [searchFields]="['course_name']" (filteredReturn)="filterCourseList = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let course of filterCourseList" [value]="course.id">
+                                {{ course.course_name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="form.value.type == 'department'">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Department</mat-label>
+                <mat-select formControlName="department" multiple
+                    (selectionChange)="toggleSelectAllDepartments($event)">
+                    <app-search-filter [array]="getAllDepartment" [placeholder]="'Search Department'"
+                        [searchFields]="['department_name']" (filteredReturn)="filterDepartmentList = $event.data">
+                    </app-search-filter>
+
+                    <!-- Select All Option -->
+                    <mat-option [value]="allDepartmentsValue" [disabled]="filterDepartmentList.length === 0">
+                        Select All
+                    </mat-option>
+
+
+
+
+                    <!-- Actual Department Options -->
+                    <mat-option *ngFor="let item of getMergedDepartmentList()" [value]="item.dept_id">
+                        {{ item.department_name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="form.value.type == 'designation'">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Designation</mat-label>
+                <mat-select formControlName="designation" multiple
+                    (selectionChange)="toggleSelectAllDesignations($event)">
+                    <app-search-filter [array]="getAllDesignation" [placeholder]="'Search Designation'"
+                        [searchFields]="['designation_name']" (filteredReturn)="filterDesignationList = $event.data">
+                    </app-search-filter>
+
+                    <!-- Select All Option -->
+                    <mat-option [value]="allDesignationsValue" [disabled]="filterDesignationList.length === 0">
+                        Select All
+                    </mat-option>
+
+                    <!-- Actual Designation Options -->
+                    <mat-option *ngFor="let item of getMergedDesignationList()" [value]="item.designation_id">
+                        {{ item.designation_name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div style="border-width: 1px;border-style: dashed; border-color: #717174; padding: 8px;"
+            *ngIf="form.value.type == 'employe'">
+            <h4>Add Employe</h4>
+            <mat-form-field appearance="outline">
+                <mat-label>Designation</mat-label>
+                <mat-select formControlName="employe_designation">
+                    <app-search-filter [array]="roleGet" [placeholder]="'Search Role'"
+                        [searchFields]="['role_master_name']" (filteredReturn)="filterRoleList = $event.data">
+                    </app-search-filter>
+
+                    <mat-option *ngFor="let role of filterRoleList" [value]="role.role_master_id"
+                        (click)="onDesignationChange(role.role_master_id)">
+                        {{ role.role_master_name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+
+            <div class="row">
+                <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-10 col-12">
+                    <mat-form-field appearance="outline">
+  <mat-label>Employee Name</mat-label>
+  <mat-select formControlName="employe" multiple (selectionChange)="toggleSelectAllEmployees($event)">
+
+    <app-search-filter
+      [array]="roleGetByemployee"
+      [placeholder]="'Search employee'"
+      [searchFields]="['first_name', 'last_name', 'employee_id']"
+      (filteredReturn)="onEmployeeFilter($event.data)">
+    </app-search-filter>
+
+    <!-- Select All Option -->
+    <mat-option [value]="allEmployeesValue" [disabled]="filterEmployeeList.length === 0">
+      Select All
+    </mat-option>
+
+    <!-- Actual Employee Options -->
+    <mat-option *ngFor="let role of filterEmployeeList" [value]="role.employee_id">
+      {{ role.first_name + ' ' + role.last_name }} ({{ role.employee_id }})
+    </mat-option>
+
+  </mat-select>
+</mat-form-field>
+
+                </div>
+
+
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    <button class="add-button" (click)="addemploye()">Add</button>
+                </div>
+
+            </div>
+            <div class="form_basic">
+                <table class="table table-bordered text-center" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th scope="col">S.No</th>
+                            <th scope="col">Designation</th>
+                            <th scope="col">Employe Name</th>
+                            <th scope="col">Employe Code</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let content of employeData; let i = index">
+                            <td>{{ i+1 }}</td>
+                            <td>{{ content.designation }}</td>
+                            <td>{{ content.employee_name }}</td>
+                            <td>{{ content.employee_code }}</td>
+
+                            <td>
+                                <button mat-icon-button color="warn" type="button" (click)="deleteEmployee(i)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+    <mat-dialog-actions align="end" *ngIf="data?.id">
+        <button class="submit-button" style="background-color: hsl(140, 49%, 47%); " (click)="onupdate()"
+            class="mx-2">Update</button>
+        <button class="close-botton" mat-button mat-dialog-close style="float: right">Close</button>
+    </mat-dialog-actions>
+    <mat-dialog-actions align="end" *ngIf="!data?.id">
+        <button class="submit-button" (click)="onSubmit()" style="background-color: hsl(236, 52%, 58%);"
+            class="mx-2">Submit</button>
+        <button class="close-botton" mat-button mat-dialog-close style="float: right">Close</button>
+    </mat-dialog-actions>
+
+</div>

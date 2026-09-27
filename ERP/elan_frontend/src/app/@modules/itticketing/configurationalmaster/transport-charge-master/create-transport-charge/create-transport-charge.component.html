@@ -1,0 +1,64 @@
+<form [formGroup]="chargeMasterForm">
+
+  
+  <div class="d-flex justify-content-between align-items-center px-4 pt-3 border-bottom" style="background-color: #00644d;color: white;">
+    <h2 mat-dialog-title class="mb-0" style="color: white;">Charge Master</h2>
+
+    <button mat-icon-button mat-dialog-close type="button" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  
+  <mat-dialog-content class="pt-3">
+
+    <div class="row">
+
+  
+      <div class="col-md-12 mb-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Charge Name</mat-label>
+          <input matInput formControlName="charge_name">
+        </mat-form-field>
+      </div>
+
+     
+
+    </div>
+
+  </mat-dialog-content>
+
+  
+  <mat-dialog-actions align="end" class="px-4 pb-3 border-top">
+
+    <button
+      mat-stroked-button
+      color="warn"
+      type="button"
+      mat-dialog-close>
+      Close
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      *ngIf="!isEditMode"
+      (click)="save()"
+      [disabled]="chargeMasterForm.invalid">
+      Save
+    </button>
+
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      *ngIf="isEditMode"
+      (click)="update()"
+      [disabled]="chargeMasterForm.invalid">
+      Update
+    </button>
+
+  </mat-dialog-actions>
+
+</form>

@@ -1,0 +1,84 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>CRM Services</h1>
+        <p>Assign Center<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+            </i><span>{{ readable ? 'View' : (id ? 'Update' : 'Create') }}</span></p>
+    </div>
+</div>
+<div class="form_head mx-2">
+    <h3>Assign Center</h3>
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+</div>
+<div class="right_data_all">
+    <form class="form_set" [formGroup]="assigncenteraddForm">
+        <fieldset [disabled]="readable">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Service Center</mat-label>
+                        <mat-select formControlName="service_center_id">
+                            <mat-option *ngFor="let data of servicecenters"
+                                [value]="data?.id">{{data?.sc_name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="assigncenteraddForm.controls['service_center_id'].hasError('required')">
+                            Contact No is Required.
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Complain</mat-label>
+                        <input type="text" matInput formControlName="complain">
+                        <!-- <mat-error *ngIf="assigncenteraddForm.get('code')?.hasError('required')">
+                            This field is required!
+                        </mat-error> -->
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>System Serial Number</mat-label>
+                        <input type="text" matInput formControlName="system_serial_number">
+                        <!-- <mat-error *ngIf="assigncenteraddForm.get('name')?.hasError('required')">
+                            This field is required!
+                        </mat-error> -->
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" style="position: relative;">
+                    <div class="form-group">
+                        <input class="form-control" type="file" style="padding-right: 50px;" title="UPLOAD DOCUMENT"
+                            (change)="onChange($event)" aria-describedby="inputGroupFileAddon04"
+                            accept=".jpg,.jpeg,.png" formControlName="image" />
+                        <img [src]="imagePath?imagePath:id?generateImageUrl(singleItem?.item_document):''"
+                            *ngIf="imagePath || id && (getFileExtension(singleItem?.item_document) === 'jpg' || getFileExtension(singleItem?.item_document) === 'jpeg' || getFileExtension(singleItem?.item_document) === 'png' || getFileExtension(singleItem?.item_document) === 'gif')"
+                            (click)="seePreview(this.singleItem?.item_document, imagePath)" class="img" alt="Image">
+                        <a [href]="generateFileUrl(singleItem?.item_document)"
+                            *ngIf="id && getFileExtension(singleItem?.item_document) !== 'png' && getFileExtension(singleItem?.item_document) !== 'jpg' && getFileExtension(singleItem?.item_document) !== 'jpeg' && getFileExtension(singleItem?.item_document) !== 'gif' && singleItem?.item_document"
+                            class="viewBtn" target="_blank">View</a>
+                    </div>
+                    <div *ngIf="assigncenteraddForm.controls['image']" class="invalid-feedback">
+                        file is required
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Customer Address</mat-label>
+                        <textarea matInput formControlName="address" rows="4"
+                            placeholder="Enter your address"></textarea>
+                        <!-- <mat-error *ngIf="assigncenteraddForm.get('address')?.hasError('required')">
+                            This field is required!
+                        </mat-error> -->
+                    </mat-form-field>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+    <div class="add_button" align="end">
+        <button class="backBtn" type="button" *ngIf="!readable" (click)="assignServiceCenter()">{{ id ? 'Update' : 'Save'
+            }}</button>
+        <button class="backBtn" type="button" (click)="cancel()">Cancel </button>
+    </div>
+</div>

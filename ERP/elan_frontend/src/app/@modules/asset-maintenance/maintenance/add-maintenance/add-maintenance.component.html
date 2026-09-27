@@ -1,0 +1,135 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Asset Maintenance </h1>
+        <p>Maintenance<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i>
+        <span>{{id && mode!== 'view' ? 'Update Maintenance': id && mode=='view' ? 'View Maintenance':'Create Maintenance'}}</span>
+        </p>
+      </div>
+    
+  </div>
+  
+  <mat-card style="box-shadow: none;">
+    <form class="form_set" [formGroup]="createmaintenanceForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group d-flex align-items-center">
+            <div class="col-md-8">
+              <p class="mb-0">Select Asset From Catalogue</p>
+            </div>
+            <div class="col-md-4 d-flex justify-content-end" (click)="showAsset()" style="padding-right: 110px;">
+              <i class="fas fa-plus ms-2"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12" *ngIf="status">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Asset Tag ID</mat-label>
+              <mat-select formControlName="asset_tagIds" multiple
+              (selectionChange)="onEntitySelectionChange($event.value)">
+              <mat-select-filter [array]="entities"
+              (filteredReturn)="entitySearch($event)"></mat-select-filter>
+              <mat-option  *ngFor="let assetTag of Asset"
+              [value]="assetTag.id">
+              {{ assetTag.asset_tagId }}
+               
+              </mat-option>
+            </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+    
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-checkbox formControlName="isUnderAmc">Is Under AMC</mat-checkbox>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-checkbox formControlName="expireAmc">Expire AMC</mat-checkbox>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Repair Details</mat-label>
+              <input matInput formControlName="repairDetails" type="text" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Maintenance By</mat-label>
+              <mat-select formControlName="maintenanceBy">
+                <mat-option *ngFor="let v of vendor" [value]="v.id">
+                  {{ v.vendor_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Scheduled Date</mat-label>
+              <input matInput [matDatepicker]="dp3" formControlName="scheduledDate" (click)="dp3.open()" />
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Maintenance Status</mat-label>
+              <mat-select formControlName="maintenanceStatus">
+                <mat-option [value]="'PENDING'">Pending</mat-option>
+                <mat-option [value]="'INPROGRESS'">In Progress</mat-option>
+                <mat-option [value]="'COMPLETED'">Completed</mat-option>
+                <mat-option [value]="'CANCELLED'">Cancelled</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Amount</mat-label>
+              <input matInput formControlName="amount" type="number" placeholder="0" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Completion Date</mat-label>
+              <input matInput [matDatepicker]="dp4" formControlName="completionDate" (click)="dp4.open()" />
+              <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+              <mat-datepicker #dp4></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+  
+      <div class="common_button_sub" align="end">
+        <span *ngIf="mode!='view'">
+          <button type="submit">{{ !id ? 'Save' : 'Update' }}</button>
+        </span>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </mat-card>
+  
+  
+  
+  

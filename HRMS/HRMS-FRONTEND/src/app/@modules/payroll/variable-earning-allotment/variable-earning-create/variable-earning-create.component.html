@@ -1,0 +1,259 @@
+<div class="heading_top">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>Payroll</h1>
+      <p>
+        Variable Earning Allotment
+        <i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+        <span>{{ isViewMode ? 'View' : (isEditMode ? 'Update' : 'Create') }}</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Financial Year -->
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Financial Year</mat-label>
+            <mat-select [(ngModel)]="selectedYearId" [disabled]="isViewMode">
+              <mat-option *ngFor="let year of financialYearList" [value]="year.id">
+                {{ year.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYearId">* This field is required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <!-- Department -->
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Department</mat-label>
+            <mat-select multiple [(ngModel)]="dept_id" (selectionChange)="checkAlldepartment()" [disabled]="isViewMode">
+              <app-search-filter [array]="departmentdata" [placeholder]="'Search by department name'"
+                [searchFields]="['department_name']"
+                (filteredReturn)="filterDepartment = $event.data"></app-search-filter>
+              <mat-checkbox (change)="selectAllDepartments($event)" [checked]="isAllDepartmentSelected">
+                Select All
+              </mat-checkbox>
+              <mat-option *ngFor="let dept of filterDepartment" [value]="dept?.dept_id">
+                {{ dept?.department_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!dept_id?.length">* This field is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Employee -->
+        <!-- Employee -->
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Employee</mat-label>
+            <mat-select [(ngModel)]="selectedEmployee" (selectionChange)="onEmployeeChange($event.value)"
+              [disabled]="isViewMode">
+              <app-search-filter [array]="employeeList" [placeholder]="'Search by employee name'"
+                [searchFields]="['full_name']" (filteredReturn)="filteredEmployees = $event.data">
+              </app-search-filter>
+
+              <mat-option *ngFor="let emp of filteredEmployees" [value]="emp?.employee_id">
+                {{ emp?.full_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedEmployee">* This field is required</mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="row mt-3" *ngIf="variableearningComponentList.length > 0">
+        <div class="row form_head">
+          <h3>Variable Component Details</h3>
+        </div>
+        <div class="col-md-12">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 50%">Component Name</th>
+                <th style="width: 50%">Annual Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let comp of variableearningComponentList; let i = index">
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <input matInput [(ngModel)]="variableearningComponentList[i].componentName"
+                      name="componentName{{ i }}" readonly />
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <input matInput type="number" [(ngModel)]="variableearningComponentList[i].fixedAllowanceAnnual"
+                      name="annualAmount{{ i }}" required [readonly]="isViewMode" />
+                  </mat-form-field>
+
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Total Annual Amount</th>
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <input matInput [value]="totalAnnualAmount" readonly />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+
+
+      <div class="row mt-3">
+        <div class="row form_head" style="margin-bottom:12px !important">
+          <h3>Allotment Details</h3>
+        </div>
+        <!-- Total Annual Amount -->
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Approve Salary Percentage</mat-label>
+            <input matInput type="number" [(ngModel)]="componentName" name="componentName"
+              (input)="updatePercentageAmount()" required [disabled]="isViewMode" />
+            <mat-error *ngIf="!componentName">* This field is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Approve Salary Amount</mat-label>
+            <input matInput type="number" [value]="componentAmount" name="componentAmount" readonly [ngClass]="{
+  'blink-green': allotmentType === 'enterManually' && toNumber(componentAmount) === toNumber(getTotalAmount())
+}" [disabled]="isViewMode" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Credit Type</mat-label>
+            <mat-select [(ngModel)]="creditType" (selectionChange)="onCreditTypeChange($event.value)"
+              [disabled]="isViewMode">
+              <mat-option value="oneTime">One Time</mat-option>
+              <mat-option value="multiple">Multiple</mat-option>
+            </mat-select>
+            <mat-error *ngIf="!creditType">* This field is required</mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="col-md-3" *ngIf="creditType === 'multiple'">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Choose Allotment Type</mat-label>
+            <mat-select [(ngModel)]="allotmentType" (selectionChange)="onAllotmentTypeChange($event.value)"
+              [disabled]="isViewMode">
+              <mat-option value="divideEqually">Divide Equally</mat-option>
+              <mat-option value="enterManually">Enter Manually</mat-option>
+            </mat-select>
+            <mat-error *ngIf="creditType === 'multiple' && !allotmentType">* This field is required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Credit Type Table -->
+      <div class="row mt-3" *ngIf="creditType === 'oneTime' || (creditType === 'multiple' && allotmentType)">
+        <div class="col-md-12">
+          <div class="row form_head">
+            <h3>Credit Allotment</h3>
+          </div>
+
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width: 35%">Year</th>
+                <th style="width: 35%">Month</th>
+                <th style="width: 39%">Amount</th>
+
+                <th *ngIf="creditType === 'multiple'" style="width: 10%">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of creditRows; let i = index">
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-label>Financial Year</mat-label>
+                    <mat-select [(ngModel)]="creditRows[i].year" (selectionChange)="validateDuplicateRow(i)"
+                      [disabled]="isViewMode">
+                      <mat-option *ngFor="let year of financialYearList" [value]="year.id">
+                        {{ year.financial_year }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="!creditRows[i].year">* This field is required</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <mat-select [(ngModel)]="creditRows[i].month" (selectionChange)="validateDuplicateRow(i)"
+                      [disabled]="isViewMode || (creditType === 'oneTime' && i > 0)">
+                      <mat-option *ngFor="let month of monthList" [value]="month.value"
+                        [disabled]="isMonthDisabled(month.value, i)">
+                        {{ month.label }}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="!row.month">* Month required</mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <input matInput type="number" [(ngModel)]="creditRows[i].amount"
+                      [readonly]="(creditType === 'oneTime' || allotmentType ==='divideEqually')"
+                      [value]="creditType === 'oneTime' ? componentAmount : creditRows[i].amount"
+                      [disabled]="isViewMode" />
+                    <mat-error *ngIf="allotmentType === 'enterManually' && !row.amount">* Amount required</mat-error>
+                  </mat-form-field>
+                </td>
+                <td *ngIf="creditType === 'multiple'" class="text-center">
+                  <button mat-icon-button color="warn" (click)="removeRow(i)" *ngIf="creditRows.length > 2">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th></th>
+                <td>
+                  <mat-form-field appearance="outline" style="width: 100%">
+                    <input matInput [value]="getTotalAmount()" readonly [ngClass]="{
+  'blink-green': allotmentType === 'enterManually' && toNumber(componentAmount) === toNumber(getTotalAmount())
+}" [disabled]="isViewMode" />
+                  </mat-form-field>
+                </td>
+                <td *ngIf="creditType === 'multiple'"></td>
+              </tr>
+            </tfoot>
+
+
+          </table>
+
+          <div *ngIf="creditType === 'multiple'" class="mt-2">
+            <button mat-raised-button color="primary" (click)="addRow()">
+              <mat-icon>add</mat-icon> Add Row
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Submit / Update Button -->
+      <div class="row mt-3">
+        <div class="col-md-12" *ngIf="!isViewMode">
+          <button mat-raised-button color="primary" (click)="onSubmit()">
+            {{ isEditMode ? 'Update' : 'Submit' }}
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

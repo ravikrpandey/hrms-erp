@@ -1,0 +1,421 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Record Vendor Payment </h1>
+    <p> Record Vendor Payment</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+  </div>
+  <div class="heading_neo mt-3">
+    <h3>Record Vendor Payment</h3>
+</div>
+<div class="form_basic mb-0">
+<form [formGroup]="createVendorPayment">
+<!-- <div class="d-flex justify-content-center mt-3">
+  <div class="tw-toggle">
+    <label class="toggle toggle-yes" (checked)="getData('VENDER')" >Vendor</label> 
+    <input checked type="radio" name="toggle" value="-1" (change)="getData('CUSTOMER')">
+    <label class="toggle toggle-yes" >Customer</label> 
+    <input type="radio" name="toggle" value="false"  (change)="getData('VENDOR')" >
+    <span></span>   
+  </div>
+</div> -->
+<div class="p-4">
+  <div class="row mt-3">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="dp5" (click)="dp5.open()" formControlName="date"  />
+          <mat-datepicker-toggle matSuffix [for]="dp5"  ></mat-datepicker-toggle>
+          <mat-datepicker #dp5></mat-datepicker>
+          
+          </mat-form-field>
+      </div>
+  </div>
+
+   
+   <ng-container >
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group mb-3">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Select Vendor</mat-label>
+            <mat-select  formControlName="vendor_id"    > 
+              <mat-select-filter   [array]="vendorData1" (filteredReturn)="vendorFilter($event)"></mat-select-filter>
+                
+              <mat-option *ngFor="let vendor of vendorData" [value]="vendor.id" (click)="getVendorData(vendor)">{{vendor.vendor_name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    </div>
+   </ng-container>
+   <ng-container *ngIf="vendor_ids">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 " >
+      <mat-form-field appearance="outline"  >
+        <mat-label>Document Type</mat-label>
+        <mat-select formControlName="document_type" (selectionChange)="getAllDocumentType($event)">
+         
+          <mat-option value="PO"  >PO</mat-option>
+          <mat-option value="GRN"  >GRN</mat-option>
+          <mat-option value="INVOICES"  >INVOICES</mat-option>
+          <mat-option value="OTHERS"  >OTHERS</mat-option>
+        </mat-select>
+         
+      </mat-form-field>
+    </div>
+  </ng-container>
+   <ng-container *ngIf="documentType">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+      <mat-form-field appearance="outline">
+        <mat-label>{{documentType}}</mat-label>
+          <ng-container *ngIf="documentType=='OTHERS'">
+            <input matInput type="text" formControlName="others" />
+          </ng-container>
+          <ng-container *ngIf="documentType=='PO'">
+            <mat-select formControlName="po_id">
+            
+
+              <mat-option [value]="data.po_id" *ngFor="let data of getAllAdvanceData;let i = index"  
+                (click)="getAmountByPo(data)"  >
+                {{data.po_number}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+          <ng-container *ngIf="documentType=='GRN'">
+            <mat-select formControlName="grn_id">
+            
+
+              <mat-option [value]="data.grn_id" *ngFor="let data of getAllAdvanceData;let i = index"  
+                   >
+                {{data.grn_number}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+          <ng-container *ngIf="documentType=='INVOICES'">
+            <mat-select formControlName="invoice_id">
+            
+
+              <mat-option [value]="data.invoice_id" *ngFor="let data of getAllAdvanceData;let i = index" 
+                  >
+                {{data.invoiceNo}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+          <ng-container *ngIf="documentType=='DO'">
+            <mat-select formControlName="delivery_order_id">
+            
+
+              <mat-option [value]="data.delivery_order_id" *ngFor="let data of getAllAdvanceData;let i = index"  
+                  >
+                {{data.invoiceNo}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+
+          <ng-container *ngIf="documentType=='SO'">
+            <mat-select formControlName="sales_order_id">
+            
+
+              <mat-option [value]="data.sales_order_id" *ngFor="let data of getAllAdvanceData;let i = index"  
+                   >
+                {{data.sales_order_no}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+          <ng-container *ngIf="documentType=='SI'">
+            <mat-select formControlName="sales_invoice_id">
+            
+
+              <mat-option [value]="data.sales_invoice_id" *ngFor="let data of getAllAdvanceData;let i = index"  
+                   >
+                {{data.invoiceNo}}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+
+      </mat-form-field>
+    </div>
+  </ng-container>
+    <!-- <ng-container *ngIf="customer">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group  mb-3">                           
+          <mat-form-field appearance="outline">
+              <mat-label>Select Customer</mat-label>
+              <mat-select formControlName="customer_id" (selectionChange)="getAllCustomerData($event)"> 
+                <mat-select-filter   [array]="customersData1" (filteredReturn)="customerFilter($event)"></mat-select-filter>
+  
+                <mat-option *ngFor="let user of getAllCustomerDataList" [value]="user.id">{{user.company_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      </div>
+    </ng-container> -->
+    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group mb-3">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Select Category</mat-label>
+            <mat-select  formControlName="category_id" (selectionChange)="getCategoryByInvoice($event)"> 
+              
+              <mat-option [value]="cat.product_id" *ngFor="let cat of getCategoryById">{{cat.name}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    </div> -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+      <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+          <mat-label>Transaction Date</mat-label>
+          <input matInput [matDatepicker]="dp6" (click)="dp6.open()" formControlName="date"  />
+          <mat-datepicker-toggle matSuffix [for]="dp6"  ></mat-datepicker-toggle>
+          <mat-datepicker #dp6></mat-datepicker>
+          
+          </mat-form-field>
+      </div>
+  </div>
+  <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group mb-4">
+      <mat-form-field appearance="outline"   >
+        <mat-label>Branch</mat-label>
+        <mat-select formControlName="branch_id" >
+          <mat-option  [value]="branch.id"  *ngFor="let branch of getAllBranchData"  (click)="getBranchById(branch)" >{{branch.branch_name}}</mat-option>
+          
+        </mat-select>
+       
+      </mat-form-field>
+    </div>
+  </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group mb-3">                           
+        <mat-form-field appearance="outline">
+            <mat-label>Payment Type</mat-label>
+            <mat-select  formControlName="payment_type" (selectionChange)="getAllInvoicesData($event)" > 
+                <mat-option  value="advance_payment">Advance Payment</mat-option>
+                <mat-option  value="general">General</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    </div>
+     
+      
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Document Number</mat-label>
+            <input matInput type="text" formControlName="documentNo"  readonly/>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 ">
+        <div class="form-group mb-3">                           
+          <mat-form-field appearance="outline">
+              <mat-label>Payment Method</mat-label>
+              <mat-select  formControlName="payment_method" (selectionChange)="getNotedeta($event)" > 
+                  <mat-option value="cash_payment">Cash Payment</mat-option>
+                  <mat-option value="bank_payment">Bank Payment</mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      </div>
+
+       <div class="heading_neo mt-2">
+        <div>
+        Payment History
+        </div>
+       </div>
+      
+      <div class="ag_grid mt-3">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 300px"
+            [columnDefs]="columnDefs"  [pagination]="false"
+             [rowData]="vendorHistoryData" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+    </div>
+
+   <!-- <div class="d-flex  justify-content-between heading_neo mt-2"    >
+    <th scope="col" style="color: black;">Total Invoice Amount</th>
+    <th scope="col" style="color: black;">{{total_invoice_amt || '00' | currency:'NGN':'symbol-narrow':'1.0-0'}}</th>
+   </div> -->
+
+   <hr>
+   <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+    <div class="form-group inp_disable mb-3">
+      <mat-form-field appearance="outline">
+        <mat-label>TDS Section</mat-label>
+        <mat-select  formControlName="tds_id"  >
+          <ng-container>
+            <mat-option [value]="data.id" *ngFor="let data of getAllTdsSection" (click)="getAllNatureTransaction(data)"  
+               >
+              {{data.section}}
+            </mat-option>
+          </ng-container>
+
+        </mat-select>
+    </mat-form-field>
+    </div>   
+  </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline"  >
+          <mat-label>TDS Nature</mat-label>
+          <input matInput type="text" formControlName="nature"
+             readonly />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Nature Of Transaction</mat-label>
+          <mat-select  formControlName="nature_id"  >
+            <ng-container>
+              <mat-option [value]="data.id" *ngFor="let data of getAllNatureOfTrsanction" (click)="getTdsRateData(data)"   
+                 >
+                {{data.nature_of_transaction}}
+              </mat-option>
+            </ng-container>
+
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>TDS Rate</mat-label>
+          <input matInput type="text" formControlName="tds_rate"   />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Amount</mat-label>
+          <input matInput type="text" formControlName="total_amount"   readonly/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount Paid Till Now</mat-label>
+          <input matInput type="text" formControlName="recieved_amount"   readonly/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Amount Due</mat-label>
+          <input matInput type="text" formControlName="amount_due"   readonly/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Record Amount </mat-label>
+          <input matInput type="number" formControlName="record_amount"  (keyup)="calculations($event)"      />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>TDS Amount</mat-label>
+          <input matInput type="text" formControlName="tds_amount" readonly  />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Net Amount</mat-label>
+          <input matInput type="text" formControlName="net_amount"  readonly />
+        </mat-form-field>
+      </div>
+    </div>
+
+<div class="mt-1" *ngIf="maximum_amount_cross">
+  <p class="">This transaction exceeds the <strong>{{maximum_amount | currency:'INR':'symbol-narrow':'1.0-0'}}</strong> threshold under TDS Section 194C. The TDS liability for this transaction is <strong>{{tdsAmountForPopup | currency:'INR':'symbol-narrow':'1.0-0'}}</strong>, but considering the previous TDS liabilities of <strong>{{calculatedTdsAmt | currency:'INR':'symbol-narrow':'1.0-0'}}</strong>, the adjusted TDS liability is <strong>{{tdsAmountForPopup - calculatedTdsAmt | currency:'INR':'symbol-narrow':'1.0-0'}}</strong>. The net amount after adjustment will be <strong> {{getRecordPaymentVal - (tdsAmountForPopup - calculatedTdsAmt) | currency:'INR':'symbol-narrow':'1.0-0'}}</strong></p>
+</div>
+
+    <div class="heading_neo mt-2">
+      <div>
+      Select Payment Account
+      </div>
+     </div>
+     <div class="table-responsive col-12 mt-2">
+      <table class="table table-bordered" formArrayName="chartOfAccountList">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Credit/Debit</th>
+            <th>Amount</th>
+            
+          
+            <th  >Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let group of chartOfAccountList.controls; let i = index" [formGroupName]="i">
+            <td>
+              <mat-form-field appearance="outline">
+                <mat-label>Account</mat-label>
+                <mat-select #select2 formControlName="chart_of_account_id"  >
+
+                  <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                    (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                  
+                    <mat-option [value]="data.id" *ngFor="let data of chartedAccount"  
+                      >
+                      {{data.account_name}}
+                    </mat-option>
+                 </mat-select>
+            </mat-form-field>
+            </td>
+             <td>
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline"  >
+        <mat-label>Credit/Debit</mat-label>
+        <mat-select formControlName="payment_mode" >
+         
+          <mat-option value="credit"  >Credit</mat-option>
+          <mat-option value="debit"  >Debit</mat-option>
+           
+        </mat-select>
+         
+      </mat-form-field>
+              </div>
+             </td>
+             <td>
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Amount`</mat-label>
+                  <input matInput type="text" formControlName="amount"  />
+                </mat-form-field>
+              </div>
+             </td>
+               
+            <td  >
+             
+              <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="chartOfAccountList.length>1">delete</mat-icon>
+              <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    
+    </div>
+    
+  </div>
+</div>
+  <div class="common_button_sub"> 
+    <button   (click)="submitCreditDebitNote(createVendorPayment)"  >
+      Submit
+    </button>
+    <button    class="cancel_button_y" (click)="goBack()" >
+      Discard
+    </button>
+  </div>
+</form>
+</div>

@@ -1,0 +1,1211 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales</h1>
+    <p>
+      Invoice Irn
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #363636">
+      </i><span> Generate Irn </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="/master/sales/sales-invoice-list">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="frmDeliveryChallan" (ngSubmit)="generateIrn()">
+      <div class="row">
+        <div class="col-md-4 disablePage">
+          <mat-label>Type of Delivery </mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="do_type">
+              <mat-option *ngFor="let item of docTypeList" [value]="item?.id">{{
+                item?.name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('do_type')?.touched &&
+              frmDeliveryChallan.get('do_type')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('do_type')?.errors?.['required']">
+              Do Type is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('do_type')?.invalid && !frmDeliveryChallan.get('do_type')?.errors?.['required']">
+              Do Type is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Type of Supply</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="supply_type">
+              <mat-option *ngFor="let item of supplyTypeList" [value]="item?.id">{{ item?.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('supply_type')?.touched &&
+              frmDeliveryChallan.get('supply_type')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('supply_type')?.errors?.['required']">
+              Supply Type is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('supply_type')?.invalid && !frmDeliveryChallan.get('supply_type')?.errors?.['required']">
+              Supply Type is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Invoice Date</mat-label>
+          <mat-form-field appearance="outline">
+            <input readonly matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="invoice_date"
+              [max]="today" />
+            <mat-datepicker-toggle matSuffix [for]="dp" class="disablePage"></mat-datepicker-toggle>
+            <mat-datepicker #dp class="disablePage"></mat-datepicker>
+          </mat-form-field>
+
+          <div *ngIf="
+              frmDeliveryChallan.get('invoice_date')?.touched &&
+              frmDeliveryChallan.get('invoice_date')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('invoice_date')?.errors?.['required']">
+              Invoice date is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('invoice_date')?.invalid && !frmDeliveryChallan.get('invoice_date')?.errors?.['required']">
+              Invoice date is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Invoice No.</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Invoice No." formControlName="invoice_no" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('invoice_no')?.touched &&
+              frmDeliveryChallan.get('invoice_no')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('invoice_no')?.errors?.['required']">
+              Invoice No. is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('invoice_no')?.invalid && !frmDeliveryChallan.get('invoice_no')?.errors?.['required']">
+              Invoice No. is required
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Delivery Challan No.</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Delivery Challan No." formControlName="do_no" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('do_no')?.touched &&
+              frmDeliveryChallan.get('do_no')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('do_no')?.errors?.['required']">
+              Delivery Challan No. is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('do_no')?.invalid && !frmDeliveryChallan.get('do_no')?.errors?.['required']">
+              Delivery Challan No. is required
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Customer Name</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Customer Nane" formControlName="customer_name" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_name')?.touched &&
+              frmDeliveryChallan.get('customer_name')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_name')?.errors?.['required']">
+              Customer Nane is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_name')?.invalid && !frmDeliveryChallan.get('customer_name')?.errors?.['required']">
+              Customer Nane is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 disablePage">
+          <mat-label>Customer Code</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Customer Code" formControlName="customer_code" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_code')?.touched &&
+              frmDeliveryChallan.get('customer_code')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_code')?.errors?.['required']">
+              Customer Code is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_code')?.invalid && !frmDeliveryChallan.get('customer_code')?.errors?.['required']">
+              Customer Code is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 disablePage">
+          <mat-label>Trans Type</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="transition_type">
+              <mat-option *ngFor="let item of transTypeList" [value]="item?.id" (click)="selectTransType(item)">
+                {{ item?.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('transition_type')?.touched &&
+              frmDeliveryChallan.get('transition_type')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('transition_type')?.errors?.['required']">
+              Trans type is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('transition_type')?.invalid && !frmDeliveryChallan.get('transition_type')?.errors?.['required']">
+              Trans type is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 disablePage">
+          <mat-label>Billing Branch</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="billing_branch" (selectionChange)="checkApplicableGst($event)">
+              <mat-form-field>
+                <input matInput [formControl]="filterbranchControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!branchList?.length" disabled>
+                <p>Branch Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let item of branchList" [value]="item?.id">
+                {{ item?.branch_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_branch')?.touched &&
+              frmDeliveryChallan.get('billing_branch')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_branch')?.errors?.['required']">
+              Billing branch is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_branch')?.invalid && !frmDeliveryChallan.get('billing_branch')?.errors?.['required']">
+              Billing branch is invalid
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row disablePage" *ngIf="isGst && isShippingAddress">
+        <span><label for="">Ship from Address-</label></span>
+        <div class="col-md-4">
+          <mat-label>GST of Supplier</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="GST of Supplier" formControlName="supplier_gst" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('supplier_gst')?.touched &&
+              frmDeliveryChallan.get('supplier_gst')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('supplier_gst')?.errors?.['required']">
+              GST of Supplier is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('supplier_gst')?.invalid && !frmDeliveryChallan.get('supplier_gst')?.errors?.['required']">
+              GST of Supplier is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <mat-label>Supplier Name</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Supplier Name" formControlName="gst_supplier_name" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('gst_supplier_name')?.touched &&
+              frmDeliveryChallan.get('gst_supplier_name')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('gst_supplier_name')?.errors?.['required']">
+              Supplier Name is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('gst_supplier_name')?.invalid && !frmDeliveryChallan.get('gst_supplier_name')?.errors?.['required']">
+              Supplier Name is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <mat-label>Trade name</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Trade name" formControlName="trade_name" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('trade_name')?.touched &&
+              frmDeliveryChallan.get('trade_name')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('trade_name')?.errors?.['required']">
+              Trade name is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('trade_name')?.invalid && !frmDeliveryChallan.get('trade_name')?.errors?.['required']">
+              Trade name is invalid
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row disablePage">
+        <div class="col-md-3">
+          <mat-label>Country</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="billingCountryChange($event)" formControlName="billing_country">
+              <mat-form-field>
+                <input matInput [formControl]="filterCountryControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!billingCountryList?.length" disabled>
+                <p>Country Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let country of billingCountryList" [value]="country?.countryss_id">{{
+                country?.countryss_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_country')?.touched &&
+              frmDeliveryChallan.get('billing_country')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_country')?.errors?.['required']">
+              Billing country is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_country')?.invalid && !frmDeliveryChallan.get('billing_country')?.errors?.['required']">
+              Billing country is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>State</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="billingStateChange($event)" formControlName="billing_state">
+              <mat-form-field>
+                <input matInput [formControl]="filterStateControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!billingSteteData?.length" disabled>
+                <p>State Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let state of billingSteteData" [value]="state?.states_id">{{ state?.states_name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_state')?.touched &&
+              frmDeliveryChallan.get('billing_state')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_state')?.errors?.['required']">
+              Billing state is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_state')?.invalid && !frmDeliveryChallan.get('billing_state')?.errors?.['required']">
+              Billing state is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>City</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="billing_city">
+              <mat-form-field>
+                <input matInput [formControl]="filtercityControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!billingCityList?.length" disabled>
+                <p>City Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let city of billingCityList" [value]="city?.city_id">{{ city?.city_name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_city')?.touched &&
+              frmDeliveryChallan.get('billing_city')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_city')?.errors?.['required']">
+              Billing city is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_city')?.invalid && !frmDeliveryChallan.get('billing_city')?.errors?.['required']">
+              Billing city is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>Pin Code</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Pin Code" formControlName="billing_pin" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_pin')?.touched &&
+              frmDeliveryChallan.get('billing_pin')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_pin')?.errors?.['required']">
+              Billing pin is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_pin')?.invalid && !frmDeliveryChallan.get('billing_pin')?.errors?.['required']">
+              Billing pin is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address1</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 1" formControlName="billing_add1" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_add1')?.touched &&
+              frmDeliveryChallan.get('billing_add1')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_add1')?.errors?.['required']">
+              Billing address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_add1')?.invalid && !frmDeliveryChallan.get('billing_add1')?.errors?.['required']">
+              Billing address is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address2</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 2" formControlName="billing_add2" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('billing_add2')?.touched &&
+              frmDeliveryChallan.get('billing_add2')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('billing_add2')?.errors?.['required']">
+              Billing address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('billing_add2')?.invalid && !frmDeliveryChallan.get('billing_add2')?.errors?.['required']">
+              Billing address is invalid
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row disablePage" *ngIf="customerAddress">
+        <span> <label for="">Customer Billing Address-</label></span>
+        <div class="col-md-3">
+          <mat-label>Country</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="customerBillingCountryChange($event)"
+              formControlName="customer_billing_country">
+              <mat-form-field>
+                <input matInput [formControl]="customerFilterCountryControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!customerBillingCountryList?.length" disabled>
+                <p>Country Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let country of customerBillingCountryList" [value]="country?.countryss_id">{{
+                country?.countryss_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_country')?.touched &&
+              frmDeliveryChallan.get('customer_billing_country')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_country')?.errors?.['required']">
+              Billing country is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_country')?.invalid && !frmDeliveryChallan.get('customer_billing_country')?.errors?.['required']">
+              Billing country is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>State</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="customerBillingStateChange($event)" formControlName="customer_billing_state">
+              <mat-form-field>
+                <input matInput [formControl]="customerFilterStateControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!customerBillingSteteData?.length" disabled>
+                <p>State Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let state of customerBillingSteteData" [value]="state?.states_id">{{
+                state?.states_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_state')?.touched &&
+              frmDeliveryChallan.get('customer_billing_state')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_state')?.errors?.['required']">
+              Billing state is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_state')?.invalid && !frmDeliveryChallan.get('customer_billing_state')?.errors?.['required']">
+              Billing state is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>City</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="customer_billing_city">
+              <mat-form-field>
+                <input matInput [formControl]="customerFiltercityControl" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!customerBillingCityList?.length" disabled>
+                <p>City Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let city of customerBillingCityList" [value]="city?.city_id">{{ city?.city_name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_city')?.touched &&
+              frmDeliveryChallan.get('customer_billing_city')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_city')?.errors?.['required']">
+              Billing city is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_city')?.invalid && !frmDeliveryChallan.get('customer_billing_city')?.errors?.['required']">
+              Billing city is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>Pin Code</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Pin Code" formControlName="customer_billing_pin" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_pin')?.touched &&
+              frmDeliveryChallan.get('customer_billing_pin')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_pin')?.errors?.['required']">
+              Billing pin is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_pin')?.invalid && !frmDeliveryChallan.get('customer_billing_pin')?.errors?.['required']">
+              Billing pin is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address 1</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 1" formControlName="customer_billing_add1" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_add1')?.touched &&
+              frmDeliveryChallan.get('customer_billing_add1')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_add1')?.errors?.['required']">
+              Billing address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_add1')?.invalid && !frmDeliveryChallan.get('customer_billing_add1')?.errors?.['required']">
+              Billing address is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address 2</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 2" formControlName="customer_billing_add2" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('customer_billing_add2')?.touched &&
+              frmDeliveryChallan.get('customer_billing_add2')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('customer_billing_add2')?.errors?.['required']">
+              Billing address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('customer_billing_add2')?.invalid && !frmDeliveryChallan.get('customer_billing_add2')?.errors?.['required']">
+              Billing address is invalid
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mb-3 disablePage">
+        <div class="col-md-6">
+          <mat-label>Customer GST</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Customer GST" formControlName="customer_gst_number" />
+            <div *ngIf="
+              frmDeliveryChallan.get('customer_gst_number')?.touched &&
+              frmDeliveryChallan.get('customer_gst_number')?.invalid
+            " class="text-danger mt-2">
+              <div *ngIf="frmDeliveryChallan.get('customer_gst_number')?.errors?.['required']">
+                Customer gst is required
+              </div>
+
+              <div
+                *ngIf="frmDeliveryChallan.get('customer_gst_number')?.invalid && !frmDeliveryChallan.get('customer_gst_number')?.errors?.['required']">
+                Customer gst is invalid
+              </div>
+            </div>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" *ngIf="(!isGst && isShippingAddress) || (isGst && isShippingAddress)">
+        <span><label for="">Customer Shipping Address-</label></span>
+
+        <div class="col-md-3">
+          <mat-label>Country</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="shippingCountryChange($event)" formControlName="shipping_country">
+              <mat-form-field>
+                <input matInput [formControl]="filterCountryControl2" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!shippingCountryList?.length" disabled>
+                <p>Country Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let country of shippingCountryList" [value]="country?.countryss_id">{{
+                country?.countryss_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_country')?.touched &&
+              frmDeliveryChallan.get('shipping_country')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_country')?.errors?.['required']">
+              Shipping country is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_country')?.invalid && !frmDeliveryChallan.get('shipping_country')?.errors?.['required']">
+              Shipping country is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>State</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select (selectionChange)="shippingStateChange($event)" formControlName="shipping_state">
+              <mat-form-field>
+                <input matInput [formControl]="filterStateControl2" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!shippingSteteData?.length" disabled>
+                <p>State Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let state of shippingSteteData" [value]="state?.states_id">{{ state?.states_name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_state')?.touched &&
+              frmDeliveryChallan.get('shipping_state')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_state')?.errors?.['required']">
+              Shipping state is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_state')?.invalid && !frmDeliveryChallan.get('shipping_state')?.errors?.['required']">
+              Shipping state is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>City</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-select formControlName="shipping_city">
+              <mat-form-field>
+                <input matInput [formControl]="filtercityControl2" type="text" placeholder="Search" />
+              </mat-form-field>
+              <mat-option *ngIf="!shippingCityList?.length" disabled>
+                <p>City Not Found</p>
+              </mat-option>
+              <mat-option *ngFor="let city of shippingCityList" [value]="city?.city_id">{{ city?.city_name
+                }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_city')?.touched &&
+              frmDeliveryChallan.get('shipping_city')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_city')?.errors?.['required']">
+              Shipping city is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_city')?.invalid && !frmDeliveryChallan.get('shipping_city')?.errors?.['required']">
+              Shipping city is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <mat-label>Pin Code</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Pin Code" formControlName="shipping_pin" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_pin')?.touched &&
+              frmDeliveryChallan.get('shipping_pin')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_pin')?.errors?.['required']">
+              Shipping pin code is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_pin')?.invalid && !frmDeliveryChallan.get('shipping_pin')?.errors?.['required']">
+              Shipping pin code is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address1</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 1" formControlName="shipping_add1" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_add1')?.touched &&
+              frmDeliveryChallan.get('shipping_add1')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_add1')?.errors?.['required']">
+              Shipping address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_add1')?.invalid && !frmDeliveryChallan.get('shipping_add1')?.errors?.['required']">
+              Shipping address is invalid
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <mat-label>Address2</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Address 2" formControlName="shipping_add2" />
+          </mat-form-field>
+          <div *ngIf="
+              frmDeliveryChallan.get('shipping_add2')?.touched &&
+              frmDeliveryChallan.get('shipping_add2')?.invalid
+            " class="text-danger">
+            <div *ngIf="frmDeliveryChallan.get('shipping_add2')?.errors?.['required']">
+              Shipping address is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('shipping_add2')?.invalid && !frmDeliveryChallan.get('shipping_add2')?.errors?.['required']">
+              Shipping address is invalid
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="form_table">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.NO.</th>
+                  <th> Category</th>
+                  <th>Sub  Category</th>
+                  <th> Name</th>
+                  
+                  <th> Description</th>
+                  <th>HSN Code</th>
+                  
+                  <th>UOM</th>
+                  <th>Quantity</th>
+                  <th>Price Per Unit</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="items">
+                <tr *ngFor="let item of productItems.controls; let i = index" [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <mat-form-field appearance="outline" class="disablePage">
+                      <mat-label> Category</mat-label>
+                      <mat-select (selectionChange)="getAllActiveProduct($event, i)"
+                        formControlName="product_category_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterCategories($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!categoryList[i]?.length" disabled>
+                          <p>Category Not Found</p>
+                        </mat-option>
+                        <mat-option class="disablePage" *ngFor="let data of categoryList[i]" [value]="data.id">{{
+                          data.asset_category_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Item Sub Category</mat-label>
+                      <mat-select formControlName="product_sub_category_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterProductVariant($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!subCategory[i]?.length" disabled>
+                          <p>Sub Category Not Found</p>
+                        </mat-option>
+                        <mat-option *ngFor="let item of subCategory[i]" [value]="item?.id"
+                          (click)="getProductList(item,item,i)">{{ item?.sub_category_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline" class="disablePage">
+                      <mat-label>Item Name</mat-label>
+                      <mat-select (selectionChange)="getAllProductVariant($event, i)"
+                        formControlName="product_master_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterProduct($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!productList[i]?.length" disabled>
+                          <p>Product Not Found</p>
+                        </mat-option>
+                        <mat-option class="disablePage" *ngFor="let item of productList[i]" [value]="item?.id">{{
+                          item?.item_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline" class="disablePage">
+                      <mat-label>Description</mat-label>
+                      <input matInput formControlName="product_description" placeholder="Description" readonly />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline" class="disablePage">
+                      <mat-label>HSN Code</mat-label>
+                      <input matInput formControlName="hsn_code" placeholder="HSN Code" readonly />
+                    </mat-form-field>
+                  </td>
+                 
+                  <td>
+                    <mat-form-field appearance="outline" class="disablePage">
+                      <mat-label>UOM</mat-label>
+                      <input matInput formControlName="uom_name" placeholder="UOM" readonly />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Quantity</mat-label>
+                      <input readonly type="text" matInput formControlName="quantity" placeholder="quantity"
+                        (keyup)="checkQuantity($event, i)" oninput="this.value=this.value.replace(/[^0-9,]/g,'');" />
+                    </mat-form-field>
+                    <div *ngIf="
+                        item.get('quantity')?.touched &&
+                        item.get('quantity')?.invalid
+                      " class="text-danger">
+                      <div *ngIf="item.get('quantity')?.errors?.['required']">
+                        Item quantity is required
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Price Per Unit</mat-label>
+                      <input readonly type="text" matInput formControlName="price_per_unit" placeholder="Price Per Unit"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');" />
+                    </mat-form-field>
+                    <div *ngIf="
+                        item.get('price_per_unit')?.touched &&
+                        item.get('price_per_unit')?.invalid
+                      " class="text-danger">
+                      <div *ngIf="item.get('price_per_unit')?.errors?.['required']">
+                        Item price is required
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
+      </div> -->
+      <div class="form_table">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.NO.</th>
+                  <th>Item Category</th>
+                  <th>Item Sub Category</th>
+                  <th>Item Name</th>
+                  <th>Item Description</th>
+                  <th>HSN Code</th>
+
+                  <!-- <th>UOM</th> -->
+                  <th>Quantity</th>
+                  <th>Price Per Unit</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of irnProductList; let i = index">
+                  <!-- Main Item Row -->
+                  <tr>
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.category_name }}</td>
+                    <td>{{ item.sub_category_name }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.product_description }}</td>
+                    <td>{{ item.hsn_code }}</td>
+                    <td>{{ item.quantity }} {{ item.uom_name }}</td>
+                    <td>{{ item.price_per_unit }}</td>
+                  </tr>
+
+                
+                  <tr *ngIf="(item.customisation_data?.length || 0) > 0 || (item.branding_data?.length || 0) > 0">
+                    <td colspan="8">
+
+                      <table class="table table-sm table-bordered mt-2">
+                        <thead>
+                          <tr>
+                            <th>Sub Item Name</th>
+                            <th>Sub Item Type</th>
+                            <th>Quantity</th>
+                            <th>HSN Code</th>
+                            <th>GST Rate (%)</th>
+                            <th>Price/Unit</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let cust of item.customisation_data">
+                            <td>{{ cust.item_name }}</td>
+                            <td>Customisations</td>
+                            <td>{{ cust.quantity }}</td>
+                            <td>{{ cust.hsn_code }}</td>
+                            <td>{{ cust.gst_rate }}</td>
+                            <td>{{ cust.price_per_unit }}</td>
+                          </tr>
+
+
+                          <tr *ngFor="let brand of item.branding_data">
+                            <td>{{ brand.item_name }}</td>
+                            <td>Branding</td>
+                            <td>{{ brand.quantity }}</td>
+                            <td>{{ brand.hsn_code }}</td>
+                            <td>{{ brand.gst_rate }}</td>
+                            <td>{{ brand.price_per_unit }}</td>
+                          </tr>
+
+
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+
+                  
+
+                </ng-container>
+
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
+      </div>
+      <!-- <section class="example-section disablePage">
+        <mat-checkbox class="example-margin" (change)="returnableCheckbox($event)">Returnable item</mat-checkbox>
+      </section> -->
+      <div class="form_table disablePage" *ngIf="isReturnableChecked">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.NO.</th>
+                  <th>Product Category</th>
+                  <th>Product Name</th>
+                  <!-- <th>Product Varient</th> -->
+                  <th>Product Description</th>
+                  <th>HSN Code</th>
+                  <th>Proposed Quantity</th>
+                  <th>UOM</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="returnableItems">
+                <tr *ngFor="
+                    let item of productReturnableItems.controls;
+                    let i = index
+                  " [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Product Category</mat-label>
+                      <mat-select (selectionChange)="getAllActiveProduct2($event, i)"
+                        formControlName="product_category_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterCategories2($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!categoryList2[i]?.length" disabled>
+                          <p>Category Not Found</p>
+                        </mat-option>
+                        <mat-option class="disablePage" *ngFor="let data of categoryList2[i]" [value]="data.id">{{
+                          data.category_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Product Name</mat-label>
+                      <mat-select (selectionChange)="getAllProductVariant2($event, i)"
+                        formControlName="product_master_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterProduct2($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!productList2[i]?.length" disabled>
+                          <p>Product Not Found</p>
+                        </mat-option>
+                        <mat-option class="disablePage" *ngFor="let item of productList2[i]" [value]="item?.id">{{
+                          item?.product_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <!-- <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Product Varient</mat-label>
+                      <mat-select (valueChange)="selectedVarient2($event, i)" formControlName="variant_id">
+                        <mat-form-field>
+                          <input matInput (input)="filterProductVariant2($event, i)" placeholder="Search" />
+                        </mat-form-field>
+                        <mat-option *ngIf="!varientList2[i]?.length" disabled>
+                          <p>Varient Not Found</p>
+                        </mat-option>
+                        <mat-option class="disablePage" *ngFor="let varient of varientList2[i]" [value]="varient?.id">{{
+                          varient?.variant_name }}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td> -->
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Description</mat-label>
+                      <input readonly matInput formControlName="product_description" placeholder="Description" />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>HSN Code</mat-label>
+                      <input matInput formControlName="hsn_code" placeholder="HSN Code" formControlName="hsn_code"
+                        readonly />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Proposed Quantity</mat-label>
+                      <input readonly type="text" matInput formControlName="proposed_quantity"
+                        placeholder="Proposed Quantity" oninput="this.value=this.value.replace(/[^0-9,]/g,'');" />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>UOM</mat-label>
+                      <input matInput formControlName="uom_name" placeholder="UOM" readonly />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <div class="edit_del flexRow">
+                      <div (click)="addReturnableItem()">
+                        <mat-icon class="addButton" matTooltip="Add Item">add_circle</mat-icon>
+                      </div>
+                      <div>
+                        <ng-container *ngIf="i + 1 !== 1">
+                          <mat-icon class="deleteButton" matTooltip="delete Item"
+                            (click)="removeReturnableItem(i)">delete_circle</mat-icon>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
+      </div>
+      <div class="row ">
+        <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-label>Remark</mat-label>
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Remark" formControlName="remark" />
+          </mat-form-field>
+          <div
+            *ngIf="
+              frmDeliveryChallan.get('remark')?.touched &&
+              frmDeliveryChallan.get('remark')?.invalid
+            "
+            class="text-danger"
+          >
+            <div *ngIf="frmDeliveryChallan.get('remark')?.errors?.['required']">
+              remark is required
+            </div>
+
+            <div
+              *ngIf="frmDeliveryChallan.get('remark')?.invalid && !frmDeliveryChallan.get('remark')?.errors?.['required']"
+            >
+              remark is invalid
+            </div>
+          </div>
+        </div> -->
+
+        <div class="row">
+          <mat-slide-toggle [(ngModel)]="chargesToggle" [ngModelOptions]="{ standalone: true }"
+            (change)="toggleChargesRow($event)">
+            Include Additional Charges
+          </mat-slide-toggle>
+          <div class="form_table mb-3" *ngIf="chargesToggle">
+            <mat-card>
+              <div class="tab_table table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>
+                        Additional Charges Name <span class="text-danger">*</span>
+                      </th>
+                      <th>Amount <span class="text-danger">*</span></th>
+                      <th>HSN Code <span class="text-danger">*</span></th>
+                      <th>Tax Rate(%)</th>
+                      <th>Description</th>
+                      <!-- <th *ngIf="(proposalId && actionType == 'edit') || leadId">
+                        Action
+                      </th> -->
+                      <!-- <th *ngIf="type == 'existing_client'">Action</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="chargesDetailList" *ngFor="
+           let control of CF_2.chargesDetailList['controls'];
+           let i = index
+         ">
+                      <tr [formGroup]="control">
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <input matInput type="text" formControlName="charges_name" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <input matInput type="text" formControlName="charges_amount" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-select formControlName="charges_hsn_id">
+                              <mat-select-filter [array]="hsn" (filteredReturn)="hsnSearch($event)"></mat-select-filter>
+                              <mat-option *ngFor="let data of hsnCodeList" [value]="data.id">{{ data?.hsn_sac_code
+                                }}</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <input matInput maxlength="30" formControlName="charges_rate" [readonly]="true" />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                              <input matInput maxlength="255" formControlName="charges_desc" [readonly]="true" />
+                            </mat-form-field>
+                          </div>
+                        </td>
+                        <!-- <td *ngIf="
+               (proposalId && actionType == 'edit') ||
+               leadId ||
+               type == 'existing_client'
+             " style="text-align: center; padding: 0px">
+                          <span *ngIf="!control?.controls?.isDisabled" style="
+                 color: #8d8d8d;
+                 cursor: pointer;
+                 font-size: 20px;
+               ">
+                            <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteChargesRow(i, control)"
+                              aria-hidden="true"></i>
+                          </span>
+                          <span style="
+                 color: #8d8d8d;
+                 cursor: pointer;
+                 font-size: 20px;
+               ">
+                            <i class="fa fa-plus-circle" (click)="addChargesRow()" aria-hidden="true"
+                              style="margin-left: 10px !important"></i>
+                          </span>
+                        </td> -->
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Notes</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-label>Notes</mat-label>
+              <input matInput type="text" formControlName="notes" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Terms & Conditions</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-label>Terms & Conditions</mat-label>
+              <input matInput type="text" formControlName="terms_and_conditions" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-label>Upload File</mat-label>
+          <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+            (change)="uploadDoc($event)" accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc" />
+          <mat-icon *ngIf="uploadedFile" class="formFileViewIcon" (click)="viewImg1()">visibility</mat-icon>
+        </div>
+      </div>
+
+      <div class="mt-3 common_button_sub">
+        <button *ngIf="isIRN">Generate IRN</button>
+        <button class="cancel_button_y" type="button" routerLink="/master/sales/sales-invoice-list">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,460 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Finance and Accounting </h1>
+    <p>Budget Planning <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i>
+    <!-- <span>Update Budget Plan</span></p> -->
+    <span  *ngIf="!planning_id"> Add Budget Plan </span>
+    <span  *ngIf="planning_id && mode == 'view' && page=='planning'"> View Budget Plan </span>
+    <span  *ngIf="planning_id && mode != 'view' && page!='draft' && page=='planning'"> Update Budget Plan </span>
+    <span  *ngIf="planning_id && page=='pending-for-approval'"> Map Cost Center and Update Status</span>
+    <span  *ngIf="planning_id && page=='approved-by-me'"> View Budget Plan </span>
+    <span  *ngIf="planning_id && page=='draft'"> Update Budget Plan </span>
+  </div>
+
+  <!-- <div class="form_head">
+    <button (click)="back()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div> -->
+  <div class="add_button">
+    <button type="button" style="cursor:pointer" (click)="back()" ><i class="fa fa-arrow-circle-left"></i>   Back </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+    <form class="form_set" [formGroup]="budgetPlanningForm">
+      <div class="row">
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Serial No</mat-label>
+            <input type="text" matInput formControlName="serial_no" readonly>
+            <mat-error *ngIf="budgetPlanningForm.get('serial_no')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div> -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Buisness Unit</mat-label>
+            <input type="text" readonly matInput formControlName="buisness_unit" readonly>
+            <mat-error *ngIf="budgetPlanningForm.get('buisness_unit')?.hasError('required')">
+                This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline" >
+            <mat-label>Budget Category</mat-label>
+            <mat-select formControlName="budgetCategory_id">
+              <mat-option *ngFor="let budgetCategory of budgetCategories"
+              [value]="budgetCategory.id">{{budgetCategory.budget_category}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('budgetCategory_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Budget Category</mat-label>
+            <input type="text" readonly matInput readonly [value]="budgetCategory">
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <mat-form-field appearance="outline">
+            <mat-label>Type Of Expense</mat-label>
+            <mat-select formControlName="expenseType_id">
+              <mat-option *ngFor="let expenseType of expenseTypes"
+              [value]="expenseType.id">{{expenseType.expense_type}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('expenseType_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Expense Type</mat-label>
+            <input type="text" readonly matInput readonly [value]="expenseType">
+          </mat-form-field>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <mat-select formControlName="location_id">
+              <mat-option *ngFor="let location of locations"
+              [value]="location.id">{{location.branch_name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('location_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Location</mat-label>
+            <input type="text" readonly matInput readonly [value]="location">
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <mat-form-field appearance="outline">
+            <mat-label>Type Of Need</mat-label>
+            <mat-select formControlName="needType_id">
+              <mat-option *ngFor="let needType of needTypes"
+              [value]="needType.id">{{needType.need_type}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('needType_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Type Of Need</mat-label>
+            <input type="text" readonly matInput readonly [value]="needType">
+          </mat-form-field>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" style="height: 100px">
+            <mat-label>Nature Of Need</mat-label>
+            <textarea type="text" rows="3" matInput formControlName="nature_need" [readonly]="viewMode"></textarea>
+            <mat-error *ngIf="budgetPlanningForm.get('nature_need')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Quantity</mat-label>
+            <input type="number" matInput [readonly]="viewMode" (input)="onValueChange()" formControlName="quantity" >
+            <mat-error *ngIf="budgetPlanningForm.get('quantity')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <mat-form-field appearance="outline">
+            <mat-label>Currency</mat-label>
+            <mat-select formControlName="currency_id">
+              <mat-option *ngFor="let currency of currencies"
+              [value]="currency.Currency_Convert_id">{{currency.Currency_Type}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('currency_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Price Without VAT per unit</mat-label>
+            <input type="number" (input)="onValueChange()" [readonly]="viewMode" matInput formControlName="price_without_vat" >
+            <mat-error *ngIf="budgetPlanningForm.get('price_without_vat')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>VAT per unit</mat-label>
+            <input type="number" (input)="onValueChange()" [readonly]="viewMode" matInput formControlName="vat" >
+            <mat-error *ngIf="budgetPlanningForm.get('vat')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Estimated Unit Price with VAT per unit</mat-label>
+            <input type="number" readonly matInput readonly formControlName="estimated_unit_price_with_vat" >
+            <mat-error *ngIf="budgetPlanningForm.get('estimated_unit_price_with_vat')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Currency</mat-label>
+            <input type="text" readonly matInput readonly [value]="currency">
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Source Of Price</mat-label>
+            <input type="text" matInput [readonly]="viewMode" formControlName="source_of_price" >
+            <mat-error *ngIf="budgetPlanningForm.get('source_of_price')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Freight, Insurance and Transport per unit</mat-label>
+            <input type="number" (input)="onValueChange()" [readonly]="viewMode" matInput formControlName="flight_insurance_transport" >
+            <mat-error *ngIf="budgetPlanningForm.get('flight_insurance_transport')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Custom Duties per unit</mat-label>
+            <input type="number" (input)="onValueChange()" [readonly]="viewMode"  matInput formControlName="custom_duties" >
+            <mat-error *ngIf="budgetPlanningForm.get('custom_duties')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Total Value per unit</mat-label>
+            <input type="number" readonly matInput readonly formControlName="total_Value" >
+            <mat-error *ngIf="budgetPlanningForm.get('total_Value')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Total Value</mat-label>
+            <input type="number" readonly matInput readonly formControlName="total_Value_All" >
+            <mat-error *ngIf="budgetPlanningForm.get('total_Value_All')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" style="height: 100px">
+            <mat-label>Justification Of Need</mat-label>
+            <textarea type="text" rows="3" matInput [readonly]="viewMode" formControlName="justification_need"></textarea>
+            <mat-error *ngIf="budgetPlanningForm.get('justification_need')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+         <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Vat Classification</mat-label>
+            <input type="text" matInput [readonly]="viewMode" formControlName="vat_classification" >
+            <mat-error *ngIf="budgetPlanningForm.get('vat_classification')?.invalid">
+                invalid!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode  && ( page=='planning' || page=='draft' )" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <mat-form-field appearance="outline">
+            <mat-label>Month</mat-label>
+            <mat-select formControlName="month" multiple>
+              <mat-option *ngFor="let month of months"
+              [value]="month.name">{{month.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('month')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode  && page=='planning'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Months</mat-label>
+            <input type="text" readonly matInput [value]="monthsValue">
+          </mat-form-field>
+        </div>
+        <div *ngIf="!viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Region</mat-label>
+            <mat-select formControlName="region_id">
+              <mat-option *ngFor="let region of regions"
+              [value]="region.id">{{region.region_name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('region')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div *ngIf="viewMode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Region</mat-label>
+            <input type="text" readonly matInput readonly [value]="region">
+          </mat-form-field>
+        </div>
+
+        <!-- Below fields are conditionally shown depending on which page tab is open -->
+
+        <!-- Remarks tab for draft tab -->
+        <br *ngIf="page=='draft'"/>
+        <br *ngIf="page=='draft'"/>
+        <br *ngIf="page=='draft'"/>
+        <br *ngIf="page=='draft'"/>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4" *ngIf="page=='draft'" >
+          <mat-form-field appearance="outline" style="height: 100px">
+            <mat-label>Remark</mat-label>
+            <textarea type="text" rows="3" matInput formControlName="remark"></textarea>
+            <mat-error *ngIf="budgetPlanningForm.get('remark')?.hasError('required')">
+                Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- submit button for planning tab -->
+        <div *ngIf="mode!='view' && page=='planning'" class="row m-3"> 
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="common_button_sub">
+              <button  (click)="onSubmit()">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+
+         <!-- Close button for Draft tab -->
+        <div *ngIf="page=='draft'" class="row m-3"> 
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="common_button_sub">
+              <button  (click)="onSubmit()">
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <!-- months for pending-for-approval tab and approved-by-me tab -->
+        <div *ngIf="page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="parentDiv">
+            <div style="margin-top:9px"><h4>Months</h4></div>  
+            <div *ngFor="let month of getData?.month" class="monthBox">
+                <div >{{month}}</div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <!-- value in USD for pending-for-approval tab and approved-by-me tab -->
+        <div *ngIf="page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Value in MOZ</mat-label>
+            <input type="number" matInput readonly formControlName="value_in_moz" >
+          </mat-form-field>
+        </div>
+        <!-- <div *ngIf="page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+        </div>    -->
+        <br/>
+        <!--pushback checkbox  for pending-for-approval tab -->
+        <div *ngIf="page=='pending-for-approval'" class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 flexRow">
+          <mat-checkbox  class="checkbox" formControlName="pushback"  (change)="onCheckboxChange($event)">
+          </mat-checkbox>
+          <div  [class.pushback]="!budgetPlanningForm.get('pushback')?.value" [class.pushback2]="budgetPlanningForm.get('pushback')?.value">Pushback</div>
+        </div>
+        <br *ngIf="page!='approved-by-me'"/>
+        <br *ngIf="page!='approved-by-me'"/>
+        <br *ngIf="page!='approved-by-me'"/>
+        <br *ngIf="page!='approved-by-me'"/>
+        <!-- cost center  for pending-for-approval tab and approved-by-me tab -->
+        <div *ngIf="!budgetPlanningForm.get('pushback')?.value && page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Cost Center</mat-label>
+            <mat-select formControlName="cost_center_id"  (selectionChange)="onSelectedCostCenter()">
+              <mat-option *ngFor="let costCenter of costCenters"
+              [value]="costCenter.id">{{costCenter.cost_center_name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="budgetPlanningForm.get('cost_center_id')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <!-- <div *ngIf="page=='approved-by-me'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Cost Center</mat-label>
+            <input type="text" matInput readonly formControlName="cost_center" >
+          </mat-form-field>
+        </div> -->
+
+        <!-- cost center code for pending-for-approval tab and approved-by-me tab -->
+        <div *ngIf="!budgetPlanningForm.get('pushback')?.value && page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Cost Center Code</mat-label>
+            <input type="text" matInput readonly formControlName="cost_center_code" >
+          </mat-form-field>
+        </div>
+        <div *ngIf="!budgetPlanningForm.get('pushback')?.value && page=='pending-for-approval' || page=='approved-by-me'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        </div>
+        <br *ngIf="!budgetPlanningForm.get('pushback')?.value"/>
+        <br *ngIf="!budgetPlanningForm.get('pushback')?.value"/>
+        <br *ngIf="!budgetPlanningForm.get('pushback')?.value"/>
+        <br *ngIf="!budgetPlanningForm.get('pushback')?.value"/>
+
+           <!--Close button  for approved-by-me tab -->
+        <div *ngIf="page=='approved-by-me'" class="row m-3"> 
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="common_button_sub">
+              <button  (click)="onSubmit3()">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+         <!--remark  for pending-for-approval tab-->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4" *ngIf="page=='pending-for-approval'"  >
+          <p [ngClass]="{'error-message': !budgetPlanningForm.get('remark')?.valid && budgetPlanningForm.get('remark')?.touched}">Remarks</p>
+            <textarea [ngClass]="{'invalid-border': !budgetPlanningForm.get('remark')?.valid && budgetPlanningForm.get('remark')?.touched}" style="resize:both" type="text" rows="3" matInput formControlName="remark"></textarea>
+            <mat-error *ngIf="!budgetPlanningForm.get('remark')?.valid && budgetPlanningForm.get('remark')?.touched">
+              This field is required!
+            </mat-error>
+        </div>
+         <!--submit button  for pending-for-approval tab -->
+        <div *ngIf="page=='pending-for-approval'" class="row m-3"> 
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="common_button_sub">
+              <button  (click)="onSubmit2()">
+                Submit
+              </button>
+              <!-- <button  (click)="onSubmitForm(this.budgetPlanningForm.value)">
+                Update
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>

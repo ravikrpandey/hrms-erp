@@ -1,0 +1,79 @@
+<div class="right_data_all">
+  
+<div class="heading_neo">
+  <h3>Salary Details</h3>
+</div>
+  <mat-card>
+    <div class="row form_set">
+      <div class="col-md-4">
+        <p>
+          Base Salary</p>
+        <h3>{{dataObj?.basic_salary ? dataObj?.basic_salary : '-'}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Salary per Day</p>
+        <h3>{{dataObj?.salary_per_day ? dataObj?.salary_per_day :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Salary per Hr</p>
+        <h3>{{dataObj?.salary_per_hr? dataObj?.salary_per_hr :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Total Monthly Hr</p>
+        <h3>{{dataObj?.total_monthly_hr? dataObj?.total_monthly_hr :"-"}}</h3>
+      </div>
+      <div class="col-md-4">
+        <p>Weekly Hour</p>
+        <h3>{{dataObj?.weekly_hour? dataObj?.weekly_hour :"-"}}</h3>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="heading_neo">
+    <h3>Allowance Details</h3>
+  </div>
+  <mat-card>
+    <table class="table table-bordered form_set">
+      <thead>
+        <tr>
+          <th>Allowance Name</th>
+          <th>Amount</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of dataObj?.allowance_details">
+          <td >{{data?.allowance_name}}</td>
+          <td>{{data?.allowance_amount}}</td>
+        </tr>
+      </tbody>
+      </table>
+  </mat-card>
+
+  
+  <div class="heading_neo">
+    <h3>History of salary revision</h3>
+  </div>
+  <mat-card>
+    <table class="table table-bordered form_set">
+      <thead>
+        <tr>
+          <th >Year</th>
+          <th>Month</th>
+          <th >New Salary</th>
+          <th >Old Salary</th>
+          <th >% of Increment</th>
+          <th >Remark</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of dataObj?.history_salary">
+          <td >{{data?.salary_Year}}</td>
+          <td >{{data?.salary_month}}</td>
+          <td >{{data?.new_salary}}</td>
+          <td >{{data?.old_salary}}</td>
+          <td >{{data?.percent_increment}}</td>
+          <td>{{data?.remarks}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>

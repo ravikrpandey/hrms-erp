@@ -1,0 +1,155 @@
+<div class="employee_basic_details">
+
+  <mat-card>
+    <h3>Basic Information</h3>
+    <div class="row">
+      <div class="col-md-4">
+        <p><b>Title</b></p>
+        <p>{{dataObj?.title}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Employee Number</b></p>
+        <p>{{dataObj?.employee_code}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>First Name</b></p>
+        <p>{{dataObj?.first_name}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Middle Name</b></p>
+        <p>{{dataObj?.middle_name ? dataObj?.middle_name : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Last Name</b></p>
+        <p>{{dataObj?.last_name}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Entity</b></p>
+        <span *ngFor="let entity of dataObj?.entityList">
+          {{ entity.entity_name ? entity.entity_name : '-' }},
+        </span>
+      </div>
+
+      <div class="col-md-4">
+        <p><b>Gender</b></p>
+        <p>{{dataObj?.gender}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b> Date Of Birth</b></p>
+        <p>{{dataObj?.date_of_birth | date:'dd/MM/yyyy'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Joining Date</b></p>
+        <p>{{dataObj?.emp_join_date | date:'dd/MM/yyyy'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Emp Probation Date</b></p>
+        <p>{{dataObj?.emp_probation_date | date:'dd/MM/yyyy'}}</p>
+      </div>
+      <div class="col-md-4 d-flex justify-content-between align-items-center">
+        <div class="email-info">
+          <p><b>Personal Email Id</b></p>
+          <p>{{ dataObj?.emp_personal_email }}</p>
+        </div>
+        <mat-icon class="edit-icon mx-3" (click)="openEmailDialog()">edit</mat-icon>
+      </div>
+
+
+      <div class="col-md-4">
+        <p><b> Grade</b></p>
+        <p>{{dataObj?.grade_name}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>PF Account Number </b></p>
+        <p>{{dataObj?.pf_account_number ?dataObj?.pf_account_number :"-" }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>UAN Number</b></p>
+        <p>{{dataObj?.UAN_number ?dataObj?.UAN_number :"-" }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>ESIC Number </b></p>
+        <p>{{dataObj?.ESIC_number ?dataObj?.ESIC_number :"-" }}</p>
+      </div>
+      <div class="col-md-4 d-flex justify-content-between align-items-center">
+        <div class="contact-info">
+          <p class="mb-1"><b>Contact Number</b></p>
+          <p class="mb-0">
+            <span [ngStyle]="{
+          'background-color': dataObj?.country_code ? 'skyblue' : 'transparent',
+          'color': dataObj?.country_code ? 'white' : 'black',
+          'padding': '2px 6px',
+          'border-radius': '4px'
+        }">
+              {{ dataObj?.country_code ? '+' + dataObj.country_code : '-' }}
+            </span>
+            {{ ' ' + (dataObj?.contact_number ? dataObj.contact_number : '-') }}
+          </p>
+        </div>
+        <mat-icon class="edit-icon ms-3" (click)="openContactDialog()">edit</mat-icon>
+      </div>
+
+      <div class="col-md-4">
+        <p><b>Reporting Manager</b></p>
+        <p>{{dataObj?.reporting_manager}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Approval Manager</b></p>
+        <p>{{dataObj?.approval_manager}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Branch</b></p>
+        <p>{{ dataObj?.branch_names?.join(', ') }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Department </b></p>
+        <p>{{dataObj?.department_name ?dataObj?.department_name :"-" }}</p>
+      </div>
+
+      <div class="col-md-4">
+        <p><b>Sub Department </b></p>
+        <p>{{dataObj?.area_name}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Division </b></p>
+        <p>{{dataObj?.division_name ?dataObj?.division_name :"-" }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Position </b></p>
+        <p>{{dataObj?.designation_name ? dataObj?.designation_name : '-' }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Employee Type </b></p>
+        <p>{{dataObj?.emptype_name ? dataObj?.emptype_name : '-' }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b> Official Email Id</b></p>
+        <p>{{dataObj?.employee_official_email ? dataObj?.employee_official_email : '-' }}</p>
+      </div>
+      <!-- <div class="col-md-4">
+        <p><b> Official Contact Number</b></p>
+        <p>{{dataObj?.official_country_code ? dataObj?.official_country_code : '-' + dataObj?.official_contact_number ? dataObj?.official_contact_number : '-' }}</p>
+      </div> -->
+      <div class="col-md-4">
+        <p><b>Official Contact Number</b></p>
+        <p>
+          <span
+            [ngStyle]="{'background-color': dataObj?.official_country_code ? 'skyblue' : 'transparent', 'color': dataObj?.official_country_code ? 'white' : 'black'}">
+            {{ dataObj?.official_country_code ? '+' + dataObj.official_country_code : '-' }}
+          </span>
+          {{ ' ' + (dataObj?.official_contact_number ? dataObj.official_contact_number : '-') }}
+        </p>
+      </div>
+
+
+      <div class="col-md-4">
+        <p><b>Assign Designation</b></p>
+        <p>{{dataObj?.role_master_name ? dataObj?.role_master_name: '-' }}</p>
+      </div>
+      <!-- <div class="col-md-4">
+        <p><b>Uploaded Image</b></p>
+        <img *ngIf="dataObj?.employee_photo" [src]="baseUrl + '/' + dataObj?.employee_photo" alt class="fileViewImage">          
+      </div> -->
+    </div>
+  </mat-card>
+</div>

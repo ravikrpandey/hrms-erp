@@ -1,0 +1,363 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span> {{complaintId?'Update Complaint':'Add Complaint'}} </span></p>
+  </div>
+  <div class="add_button">
+    <button routerLink="../complaint-list" type="button">List</button>
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Add / Update Complaint</h3>
+    </div>
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="createComplaint">
+        <div class="row mb-3">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <mat-radio-group formControlName="type">
+              <mat-radio-button value="DEPARTMENT" class="me-3">Department</mat-radio-button>
+              <mat-radio-button value="USER">User</mat-radio-button>
+                <mat-error *ngIf="createComplaint.controls['type'].hasError('required')">
+                    Type is required!
+                </mat-error>
+            </mat-radio-group>
+          </div>
+        </div>
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>Name</mat-label>
+              <input matInput type="text" formControlName="name" />
+              <mat-error *ngIf="createComplaint.controls['name'].hasError('required')">
+                Name is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Employee Number</mat-label>
+              <input matInput type="text" formControlName="emp_code" />
+              <mat-error *ngIf="createComplaint.controls['emp_code'].hasError('required')">
+                  Employee Number is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" readonly>
+              <mat-label>Department</mat-label>
+              <input matInput type="text" formControlName="dept_name" />
+              <mat-error *ngIf="createComplaint.controls['dept_name'].hasError('required')">
+                  Department is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="createComplaint.get('type')?.value=='DEPARTMENT'">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Department Name</mat-label>
+              <mat-select formControlName="dept_id" (selectionChange)="getAllArea($event)">
+                <mat-select-filter [array]="departments"
+                  (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                  {{department?.department_name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="
+              createComplaint.controls['dept_id'].hasError(
+                    'required') ">
+                  Department Name is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="createComplaint.get('type')?.value=='DEPARTMENT'">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Area</mat-label>
+              <mat-select formControlName="area_id">
+                <mat-select-filter [array]="areas" (filteredReturn)="areaSearch($event)"></mat-select-filter>
+                <mat-option *ngFor="let area of areaList" [value]="area?.id">{{
+                  area?.area_name }}</mat-option>
+              </mat-select>
+              <mat-error
+              *ngIf="createComplaint.controls['area_id'].hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Complaint Type</mat-label>
+              <mat-select formControlName="complaint_type_id">
+                <mat-option *ngFor="let val of rowData" [value]="val?.id">{{ val?.complaint_type }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createComplaint.controls['complaint_type_id'].hasError('required')">
+                  Complaint Type is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="createComplaint.get('type')?.value=='USER'">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Employee</mat-label>
+              <mat-select formControlName="employee_id">
+                <mat-option *ngFor="let emp of getAllSuperviserData"
+                  [value]="emp.employee_id">{{emp?.first_name + ' ' + emp?.last_name + ' ' +
+                  emp?.employee_code}}</mat-option>
+                <!-- [value]="emp.employee_id">{{$common?.generateFullName(emp?.first_name, emp?.middle_name, emp?.last_name)}}</mat-option> -->
+              </mat-select>
+              <mat-error *ngIf="createComplaint.controls['employee_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <ckeditor #editer [data]="htmlEditorValue2"  id="ckediter" formControlName="complaint_description"></ckeditor>
+
+          </div>
+          <div
+            *ngIf="createComplaint.get('complaint_description')?.invalid && createComplaint.get('complaint_description')?.touched"
+            class="text-danger">
+            Text is required
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div
+        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngFor="let file of fileArray; let i = index"
+        style="padding: 15px 10px; display: flex; align-items: center"
+      >
+        <div
+          style="
+            margin-right: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          "
+        >
+          <div class="edd_del" (click)="addFileInput(i)" style="cursor: pointer">
+            <mat-icon class="addButton" matTooltip="Add Item">add_circle</mat-icon>
+          </div>
+          <div class="edd-del" (click)="removeFileInput(i)" style="cursor: pointer">
+            <mat-icon class="closeButton" matTooltip="Remove Item" >remove_circle</mat-icon>
+          </div>
+        </div>
+        <div style="position: relative; flex-grow: 1">
+          <input class="form-control" type="file" title="Upload Document" accept=".jpg,.jpeg,.png,.pdf" (change)="onChangefile($event, i)" style="width: 100%; padding-right: 10px; height: 42px; padding-top: 10px; font-size: 14px; "/>
+          <img *ngIf="file.imagePath" [src]="file.imagePath" (click)="openFileInNewTab(file.url)" style="width: 30px; height: 30px; position: absolute; top: 5px; right: 5px; cursor: pointer; "/>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-3"  *ngIf="createComplaint.get('type')?.value=='DEPARTMENT'  && complaintId && status=='HR'">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <label style="text-decoration: underline; color:black">Allocate To</label>
+      </div>
+    </div>
+    <div class="row" *ngIf="createComplaint.get('type')?.value=='DEPARTMENT' && complaintId && status=='HR'" >
+      <div  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Department Name</mat-label>
+            <mat-select formControlName="allocate_dept_id" (selectionChange)="getAllEmployee($event)">
+              <mat-select-filter [array]="departments"
+                (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+              <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                {{department?.department_name }}</mat-option>
+            </mat-select>
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee</mat-label>
+            <mat-select formControlName="allocate_emp_id">
+
+              <mat-option *ngFor="let emp of dep_Employee"
+                [value]="emp.employee_id">{{emp?.first_name + ' ' + emp?.last_name + ' ' +
+                emp?.employee_code}}</mat-option>
+            </mat-select>
+
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="createComplaint.get('type')?.value=='DEPARTMENT' && complaintId && status=='HR'">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <ckeditor #editer [data]="htmlEditorValue2"  id="ckediter" formControlName="hr_remark"></ckeditor>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" *ngIf="complaintId && status=='assigned'">
+      <div class="form-group" >
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input
+          [(ngModel)]="isChecked"
+            type="checkbox"
+            id="partRequiredCheckbox"
+            style="font-size: 25px;"
+            class="form-check-input"
+            [ngModelOptions]="{standalone: true}" />
+          <label for="partRequiredCheckbox" class="form-check-label" style="margin-bottom: -5px;">
+            Do you want to escalate this complaint
+          </label>
+        </div>
+
+
+      </div>
+    </div>
+    <br>
+    <div class="row" *ngIf="status=='assigned'">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="isChecked">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee</mat-label>
+            <mat-select formControlName="assign_to">
+              <mat-option *ngFor="let emp of getAllSuperviserData"
+                [value]="emp.employee_id">
+                {{emp?.first_name + ' ' + emp?.last_name + ' ' + emp?.employee_code}}
+              </mat-option>
+            </mat-select>
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!isChecked">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" placeholder="HOLD || REJECTED || COMPLETED">
+              <mat-option value="HOLD">Hold </mat-option>
+              <mat-option value="REJECTED">Rejected </mat-option>
+              <mat-option value="COMPLETED">Completed </mat-option>
+            </mat-select>
+
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- New Textarea Field -->
+      <div class="col-xxl-4 col-lg-8 col-md-8 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <ckeditor #editer [data]="htmlEditorValue2"  id="ckediter" formControlName="comment_Evaluator"></ckeditor>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row" *ngIf="createComplaint.get('type')?.value=='USER' && complaintId">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <ckeditor #editer [data]="htmlEditorValue2"  id="ckediter" formControlName="reply_remark"></ckeditor>
+
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="createComplaint.get('type')?.value=='USER' && complaintId">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+      *ngFor="let file of fileArray; let i = index"
+      style="padding: 15px 10px; display: flex; align-items: center"
+    >
+      <div style="position: relative; flex-grow: 1">
+        <input
+          class="form-control"
+          type="file"
+          title="Upload Document"
+          accept=".jpg,.jpeg,.png,.pdf"
+          (change)="onChangefile($event, i)"
+          style="
+            width: 100%;
+            padding-right: 10px;
+            height: 42px;
+            padding-top: 10px;
+            font-size: 14px;
+          "
+        />
+        <img
+          *ngIf="file.imagePath"
+          [src]="file.imagePath"
+          (click)="openFileInNewTab(file.url)"
+          style="
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+          "
+        />
+      </div>
+    </div>
+
+  </div>
+  <div class="row" *ngIf="createComplaint.get('type')?.value=='USER' && complaintId && status=='HR'">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+      <div class="form-group mb-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="hr_status" placeholder="Send to Union || Close Case || Close Case With Action">
+            <mat-option value="Send to Union">Send to Union </mat-option>
+            <mat-option value="Close Case ">Close Case  </mat-option>
+            <mat-option value="Close Case With Action">Close Case With Action </mat-option>
+          </mat-select>
+
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="createComplaint.get('hr_status')?.value=='Close Case With Action' && complaintId">
+      <div class="form-group mb-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Action</mat-label>
+          <mat-select formControlName="action_status" placeholder="
+          Verbal Warning || Writing Warning || Suspension  || Fine
+ || Demotion || Dismissal ">
+            <mat-option value="Verbal Warning">Verbal Warning </mat-option>
+            <mat-option value="Writing Warning">Writing Warning   </mat-option>
+            <mat-option value="Suspension ">Suspension  </mat-option>
+            <mat-option value="Fine">Fine   </mat-option>
+            <mat-option value="Demotion">Demotion  </mat-option>
+            <mat-option value="Dismissal">Dismissal  </mat-option>
+          </mat-select>
+
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+    <br>
+
+      <div class="common_button_sub" *ngIf="status!='view'">
+        <button *ngIf="!complaintId"  (click)="onSubmitForm()">
+          Save
+        </button>
+        <button *ngIf="complaintId" (click)="updateForm($event)">
+          Update
+        </button>
+        <button class="cancel_button_y" (click)="reLoad()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

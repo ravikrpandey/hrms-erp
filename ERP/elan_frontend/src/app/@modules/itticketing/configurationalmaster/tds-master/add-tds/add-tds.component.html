@@ -1,0 +1,142 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Configurational Master</h1>
+      <p>
+        Price Master
+        <i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #858586"
+        ></i>
+        <span *ngIf="!id"> Create TDS Master</span>
+        <span *ngIf="action_type=='edit'"> Update TDS Master </span>
+        <span *ngIf="action_type=='view'"> View TDS Master </span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="onBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+  </div>
+  
+  <mat-card style="box-shadow: none">
+    <div class="mb-0">
+      <form class="form_set" [formGroup]="createForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Section</mat-label>
+                <input matInput type="text" formControlName="section" [readonly]="action_type=='view'" />
+                <mat-error
+                  *ngIf="createForm.controls['section'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Maximum Amount</mat-label>
+                <input matInput type="text" formControlName="maximum_amount" [readonly]="action_type=='view'" />
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Nature</mat-label>
+                <input matInput type="text" formControlName="nature" [readonly]="action_type=='view'" />
+                <mat-error
+                  *ngIf="createForm.controls['nature'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+ <div class="heading_neo mt-2">
+    <h3>Threshold</h3>
+ </div>
+<div class="table-responsive col-12 mt-2">
+  <table class="table table-bordered" formArrayName="tdsList">
+    <thead>
+      <tr>
+        <th>Nature of Transaction</th>
+        <th>Threshold Limit</th>
+        <th>Maximum Threshold Limit</th>
+        <!-- <th>Rate (%)</th> -->
+        <th>Current Rate</th>
+        <th>New Rate</th>
+        <th>New Rate WEF</th>
+      
+        <th *ngIf="action_type !== 'view'">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let group of tdsList.controls; let i = index" [formGroupName]="i">
+        <td>
+            <mat-form-field appearance="outline" class="w-100">
+                <input matInput placeholder="Nature Of Transaction" formControlName="nature_of_transaction" />
+              </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Threshold" formControlName="threshold_limit" />
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Maximum Threshold Limit" formControlName="maximum_amount" />
+          </mat-form-field>
+        </td>
+        <!-- <td>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="Rate(%)" formControlName="rate" />
+            </mat-form-field>
+          </td> -->
+          <td>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="Rate(%)" formControlName="current_rate" />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field appearance="outline" class="w-100">
+              <input matInput placeholder="Rate(%)" formControlName="new_rate" />
+            </mat-form-field>
+          </td>
+          <td>
+           
+              <mat-form-field appearance="outline">
+                <mat-label>From Date </mat-label>
+                <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" />
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+               
+              
+              </mat-form-field>
+          
+          </td>
+
+
+        <td *ngIf="action_type !== 'view'">
+         
+          <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="tdsList.length>1">delete</mat-icon>
+          <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+        <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'">
+          <button (click)="onSubmit()">
+            {{ !id ? "Save" : "Update" }}
+          </button>
+          <button class="cancel_button_y" routerLink="../">Cancel</button>
+        </div>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  

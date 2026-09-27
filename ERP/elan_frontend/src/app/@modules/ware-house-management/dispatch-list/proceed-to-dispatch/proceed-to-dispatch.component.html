@@ -1,0 +1,323 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Warehouse Management</h1>
+    <p>Proceed to Dispatch </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="/master/warehouse-management/dispatch">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form
+      class="form_set"
+      [formGroup]="frmSalesOrder"
+      (ngSubmit)="createSalesOrder()"
+    >
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Sales Order No.</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="sales_order_no"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>SO Date</mat-label>
+              <input
+                matInput
+                [disabled]="true"
+                [matDatepicker]="picker"
+                formControlName="sales_order_date"
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                class="toggel_class"
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+          *ngIf="isSOStatus"
+        >
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Dispatch Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker2"
+                formControlName="dispatched_date"
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Quotation Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="proposal_no"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+     
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Company Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="company_name"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Person Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_person_name"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_number"
+                (keypress)="keyPress($event)"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Mail ID</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="mail_id"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="frmSalesOrder?.value?.schemeData">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="readonly-select">
+              <mat-label>Schems</mat-label>
+
+              <mat-select formControlName="schemeData">
+                <mat-option
+                  *ngFor="let item of schemeData"
+                  [value]="item?.id"
+                  >{{ item?.scheme_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Elan SO Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="elan_sales_order_no"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Elan SO Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="elan_so_date"
+                readonly
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Delivery Address</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="deliveryAddress"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="form_table">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Item Name</th>
+                  <th>Item Code</th>
+                  <th>Item Description</th>
+                  <th>Item Type</th>
+                  <th>HSN Code</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of getAllProductDetails; let i = index">
+                  <!-- Parent Item -->
+                  <tr *ngIf="!item.parent_item_id" class="parent-row">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.item_code }}</td>
+                    <td>{{ item.item_description }}</td>
+                    <td>{{ item.item_type }}</td>
+                    <td>{{ item.hsncode }}</td>
+                    <td>{{ item.qty }} {{ item.UOM }}</td>
+                  </tr>
+
+                  <!-- Child Items -->
+                  <tr
+                    *ngFor="let child of getChildItems(item.id)"
+                    class="child-row"
+                  >
+                    <td></td>
+                    <td style="padding-left: 30px;">
+                      ↳ {{ child.item_name }}
+                    </td>
+                    <td>{{ child.item_code }}</td>
+                    <td>{{ child.item_description }}</td>
+                    <td>{{ child.item_type }}</td>
+                    <td>{{ child.hsncode }}</td>
+                    <td>{{ child.qty }} {{ child.UOM }}</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Expected Delivery Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker5"
+                formControlName="expected_delivery_date"
+                readonly
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker5"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker5></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Expected Dispatch Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker4"
+                [min]="frmSalesOrder.get('expected_delivery_date')?.value"
+                (click)="picker4.open()"
+                formControlName="expected_dispatch_date"
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker4"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker4></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Remark</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Remark"
+                formControlName="remark"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3" *ngIf="isDispatchExceeded">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Reason</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Reason"
+                formControlName="reason"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="mt-3 common_button_sub">
+        <button *ngIf="status !== 'view'">Proceed to Dispatch</button>
+      </div>
+    </form>
+  </div>
+</section>

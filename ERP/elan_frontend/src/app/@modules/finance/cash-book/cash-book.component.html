@@ -1,0 +1,124 @@
+
+<mat-drawer-container class="example-container">
+  <mat-drawer #drawer mode="over" position="end" class="drawer" [ngClass]="selectedForm === 'cash_book_receipt' || selectedForm === 'cash_payment_voucher'?'drawer1':'drawer'"  >
+    <div class="drawer-header">
+      <h2 class="drawer-title">{{formTitle}}</h2>
+      <button mat-icon-button (click)="drawer.close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+
+
+
+    <ng-container *ngIf="selectedForm == 'transfer_from_another_account'
+    || selectedForm == 'interest_income' || selectedForm == 'other_income'  || selectedForm == 'expense_refund' || selectedForm == 'deposit_from_other_accounts'
+    || selectedForm == 'owner_contribution' || selectedForm == 'vendor_payment_refund'">
+      <app-customer-advance-form [formType] ="selectedForm"></app-customer-advance-form>
+    </ng-container>
+
+
+    <ng-container *ngIf="selectedForm == 'expense'
+    || selectedForm == 'transfer_to_another_account'  || selectedForm == 'owner_drawings'">
+      <app-money-out-form [formType] ="selectedForm"></app-money-out-form>
+    </ng-container>
+    <!-- <ng-container *ngIf="selectedForm === 'cash_book_receipt'">
+     <app-cash-book-receipt></app-cash-book-receipt>
+    </ng-container>
+    <ng-container *ngIf="selectedForm === 'cash_payment_voucher'">
+     <app-cash-payment-voucher></app-cash-payment-voucher>
+    </ng-container> -->
+
+  </mat-drawer>
+
+  <mat-drawer-content>
+    <div class="heading_top">
+      <div class="page-title">
+        <h1>Finance & Accounting </h1>
+        <p> Cash Book <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636"></i> <span>Maintain Cash Book</span></p>
+      </div>
+      <div class="add_button">
+        <button  [matMenuTriggerFor]="menu" class="add-transaction-button">Add Transaction</button>
+        <mat-menu #menu="matMenu" class="custom-menu">
+          <div class="money-in">
+            <span class="group-label">Money In</span>
+            <!-- <button mat-menu-item (click)="openForm('customer_advance')">Customer Advance</button>
+            <button mat-menu-item (click)="openForm('customer_payment')">Customer Payment</button> -->
+            <button mat-menu-item (click)="openForm('transfer_from_another_account')">Transfer From Another Account</button>
+            <button mat-menu-item (click)="openForm('interest_income')">Interest Income</button>
+            <button mat-menu-item (click)="openForm('other_income')">Other Income</button>
+            <!-- <button mat-menu-item (click)="openForm('expense_refund')">Expense Refund</button> -->
+            <!-- <button mat-menu-item (click)="openForm('deposit_from_other_accounts')">Deposit From Other Accounts</button> -->
+            <button mat-menu-item (click)="openForm('owner_contribution')">Owner's Contribution</button>
+            <!-- <button mat-menu-item (click)="openForm('cash_book_receipt')">Cash Book Receipt Voucher</button> -->
+            <!-- <button mat-menu-item (click)="openForm('vendor_credit_refund')">Vendor Credit Refund</button> -->
+            <!-- <button mat-menu-item (click)="openForm('vendor_payment_refund')">Vendor Payment Refund</button> -->
+          </div>
+          <div class="money-out">
+            <span class="group-label">Money Out</span>
+            <button mat-menu-item (click)="openForm('expense')">Expense</button>
+            <!-- <button mat-menu-item (click)="openForm('vendor_advance')">Vendor Advance</button>
+            <button mat-menu-item (click)="openForm('vendor_payment')">Vendor Payment</button> -->
+            <button mat-menu-item (click)="openForm('transfer_to_another_account')">Transfer To Another Account</button>
+            <!-- <button mat-menu-item (click)="openForm('card_payment')">Card Payment</button> -->
+            <button mat-menu-item (click)="openForm('owner_drawings')">Owner Drawings</button>
+            <!-- <button mat-menu-item (click)="openForm('cash_payment_voucher')">Cash Payment Voucher</button> -->
+            <!-- <button mat-menu-item (click)="openForm('credit_note_refund')">Credit Note Refund</button>
+            <button mat-menu-item (click)="openForm('payment_refund')">Payment Refund</button> -->
+          </div>
+        </mat-menu>
+      </div>
+    </div>
+
+    <div class="right_data_all">
+      <form [formGroup]="cashBookForm" class="mt-2">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <div class="input-wrapper">
+                <i class="fa fa-wallet icon" aria-hidden="true"></i>
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Amount Available</mat-label>
+                  <input matInput ([ngModel)]="available_amount" type="text" formControlName="available_amount" readonly />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Department</mat-label>
+                <input matInput type="text" formControlName="department_name" readonly />
+              </mat-form-field>
+            </div>
+          </div> -->
+        </div>
+      </form>
+
+      <div class="employ_sube py-2">
+          <div class="example-header">
+            <select (change)="onPageSizeChanged()" id="page-size">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+          </div>
+          <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" placeholder="Search" (input)="onFilterTextBoxChanged()">
+          </div>
+      </div>
+
+      <ag-grid-angular
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="9"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+      </div>
+  </mat-drawer-content>
+</mat-drawer-container>

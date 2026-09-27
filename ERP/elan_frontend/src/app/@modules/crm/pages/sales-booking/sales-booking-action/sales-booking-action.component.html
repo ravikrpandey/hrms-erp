@@ -1,0 +1,30 @@
+<!-- <div class="edd-del">
+    <mat-icon class=""  (click)="sendProposal($event)">arrow_forward</mat-icon>
+
+</div> -->
+
+
+<div class="edd-del">
+    <!-- <mat-icon matTooltip="Delete"  (click)="delete($event)">delete</mat-icon> -->
+    <ng-container>
+        <!-- <mat-icon (click)="sendRfpLink($event)">fast_forward</mat-icon> -->
+        <mat-icon matTooltip="View" *ngIf="!this.dataAll?.data?.so_status || this.dataAll?.data?.so_status !== 'PENDING'"(click)="viewProposalVersion()">visibility</mat-icon>
+        <mat-icon matTooltip="Edit" *ngIf="!this.dataAll?.data?.so_status || this.dataAll?.data?.so_status !== 'PENDING'" (click)="edit($event)">edit</mat-icon>
+        <mat-icon *ngIf="this.dataAll?.data?.so_status === 'PENDING'" (click)="comercialApproved($event)">fast_forward</mat-icon>
+
+        <!-- <button  (click)="addPO($event)" style="margin-top: 2px;" *ngIf="(this.dataAll?.data?.is_addpo === null || this.dataAll?.data?.is_addpo === 'With_PO' && this.dataAll?.data?.so_status !== 'PENDING') && this.dataAll?.data.version_status=='approved'"> Save With PO </button>
+        <button  (click)="addPOWithout($event)" style="margin-top: 2px;" *ngIf="this.dataAll?.data?.is_addpo === null  && this.dataAll?.data?.so_status !== 'PENDING' && this.dataAll?.data.version_status=='approved'">Save Without PO</button>
+        <button matTooltip="Follow Up" *ngIf="isValidDate === false && this.dataAll?.data?.so_status !== 'PENDING' && this.dataAll?.data.version_status=='approved'" (click)="reMail($event)" style="margin-top: 2px;">{{ dataAll?.data?.email_status === 'PENDING' ? 'Re-Email' : dataAll?.data?.email_status }}</button>
+        <mat-icon *ngIf="this.dataAll?.data?.so_status !== 'PENDING' && this.dataAll?.data.version_status=='approved'" (click)="updatedSales($event)">forward</mat-icon> -->
+        
+        <mat-icon [matMenuTriggerFor]="moreMenu" *ngIf="this.dataAll?.data?.so_status !== 'PENDING' && this.dataAll?.data.version_status=='approved'">menu</mat-icon>
+        <mat-menu #moreMenu="matMenu">
+            <button class="btnList" mat-menu-item *ngIf="(this.dataAll?.data?.is_addpo === null || this.dataAll?.data?.is_addpo === 'With_PO')" (click)="addPO($event)">Save With PO </button>
+            <button class="btnList" mat-menu-item *ngIf="this.dataAll?.data?.is_addpo === null" (click)="addPOWithout($event)">Save Without PO</button>
+            <button class="btnList" mat-menu-item *ngIf="isValidDate === false" (click)="reMail($event)">{{ dataAll?.data?.email_status === 'PENDING' ? 'Re-Email' : dataAll?.data?.email_status }}</button>
+            <button class="btnList" mat-menu-item (click)="updatedSales($event)">Reject SB</button>
+        </mat-menu>
+
+        <mat-icon (click)="statusCellClicked()" *ngIf="this.dataAll?.data?. is_version_approvel_status==1 && this.dataAll?.data.version_status=='pending'" >donut_small</mat-icon>
+    </ng-container>
+</div>

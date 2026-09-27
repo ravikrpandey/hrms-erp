@@ -1,0 +1,73 @@
+<mat-card style="box-shadow: none;">
+  <app-asset-header></app-asset-header>
+  
+  <div class="right_data_all mt-3 pt-0">
+    <div class="docs-section-card">
+      <div class="docs-section-header">
+        <div class="header-title">
+          <i class="fa fa-folder-open"></i>
+          <h3>Asset Documents</h3>
+        </div>
+        <button type="button" class="btn-add-row" (click)="addStakeHoldersRow()">
+          <i class="fa fa-plus-circle"></i> Add Row
+        </button>
+      </div>
+
+      <form [formGroup]="leadForm" (ngSubmit)="Submit()">
+        <div class="table-responsive docs-table-container">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th style="width: 45%;">Attachment File</th>
+                <th style="width: 45%;">Description</th>
+                <th style="width: 10%; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="docs_details">
+              <tr *ngFor="let stakeHolderRow of stakeHoldersFormArray.controls; let i = index" [formGroupName]="i">
+                <td>
+                  <!-- If document exists, show file preview link and a replace button -->
+                  <div *ngIf="stakeHolderRow.value.document" class="uploaded-file-info">
+                    <a (click)="downloadFile(stakeHolderRow.value)" class="file-preview-link" title="Click to view file">
+                      <i class="fa fa-file-pdf-o file-icon pdf" *ngIf="stakeHolderRow.value.document.endsWith('.pdf')"></i>
+                      <i class="fa fa-file-image-o file-icon img" *ngIf="!stakeHolderRow.value.document.endsWith('.pdf')"></i>
+                      <span class="file-name-label">View Uploaded Document</span>
+                    </a>
+                    <button type="button" class="btn-replace-file" (click)="clearFileInput(i)" title="Upload a different file">
+                      <i class="fa fa-refresh"></i> Replace
+                    </button>
+                  </div>
+                  
+                  <!-- If document does not exist, show file input -->
+                  <div *ngIf="!stakeHolderRow.value.document" class="file-uploader-box">
+                    <input type="file" (change)="onFileChange($event, i)" class="form-control file-input-custom" />
+                  </div>
+                </td>
+                <td>
+                  <textarea 
+                    class="form-control description-textarea" 
+                    formControlName="description" 
+                    placeholder="Enter short description about this document..." 
+                    rows="2">
+                  </textarea>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn-delete-row" (click)="removeStakeHoldersRow(i)" title="Remove this row">
+                    <i class="fa fa-trash-o"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="common_button_sub mt-3">
+          <button type="submit" class="btn-submit-docs">
+            <i class="fa fa-check-circle"></i> Save All Documents
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</mat-card>
+

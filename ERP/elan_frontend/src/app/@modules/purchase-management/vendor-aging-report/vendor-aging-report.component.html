@@ -1,0 +1,211 @@
+<div class="vendor-aging-report-container">
+  <div class="report-header">
+    <h2>Vendor Aging Report</h2>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="refreshData()" >
+        <mat-icon>refresh</mat-icon> Refresh
+      </button>
+      <button mat-raised-button color="accent" (click)="exportToExcel()"  style="background-color:#00644d">
+        <mat-icon>file_download</mat-icon> Excel
+      </button>
+      <button mat-raised-button color="accent" (click)="exportToPDF()"  style="background-color:#00644d">
+        <mat-icon>picture_as_pdf</mat-icon> PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <mat-card>
+      <mat-card-content>
+        <form [formGroup]="filterForm" class="filter-form">
+          <div class="filter-row">
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Vendor</mat-label>
+              <mat-select formControlName="vendor_id">
+                <mat-option [value]="null">All Vendors</mat-option>
+                <mat-option *ngFor="let vendor of rowData" [value]="vendor.vendor_id">
+                  {{ vendor.vendor_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>From Date</mat-label>
+              <input matInput [matDatepicker]="fromPicker" formControlName="from_date" placeholder="DD/MM/YYYY">
+              <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+              <mat-datepicker #fromPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>To Date</mat-label>
+              <input matInput [matDatepicker]="toPicker" formControlName="to_date" placeholder="DD/MM/YYYY">
+              <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+              <mat-datepicker #toPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Aging Bucket</mat-label>
+              <mat-select formControlName="aging_bucket">
+                <mat-option value="all">All Buckets</mat-option>
+                <mat-option value="current">Current</mat-option>
+                <mat-option value="1_30">1-30 Days</mat-option>
+                <mat-option value="31_60">31-60 Days</mat-option>
+                <mat-option value="61_90">61-90 Days</mat-option>
+                <mat-option value="over_90">Over 90 Days</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Payment Terms</mat-label>
+              <mat-select formControlName="payment_term_id">
+                <mat-option [value]="null">All Terms</mat-option>
+                <mat-option *ngFor="let term of paymentTermsList" [value]="term.id">
+                  {{ term.term_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <div class="filter-actions">
+              <button mat-raised-button color="primary" (click)="applyFilter()" [disabled]="isLoading">
+                <mat-icon>search</mat-icon> Apply Filters
+              </button>
+              <button mat-button (click)="resetFilters()">
+                <mat-icon>clear</mat-icon> Reset
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading report...</p>
+  </div>
+
+  <div *ngIf="!isLoading && rowData.length > 0 && !showDetailView" class="summary-cards">
+    <div class="summary-card total">
+      <div class="card-label">Total Outstanding</div>
+      <div class="card-value">{{ totalOutstanding | currency:currencyCode:'symbol':'1.2-2' }}</div>
+    </div>
+    <div class="summary-card current">
+      <div class="card-label">Current</div>
+      <div class="card-value">{{ totalCurrent | currency:currencyCode:'symbol':'1.2-2' }}</div>
+    </div>
+    <div class="summary-card overdue">
+      <div class="card-label">Overdue</div>
+      <div class="card-value">{{ totalOverdue | currency:currencyCode:'symbol':'1.2-2' }}</div>
+    </div>
+    <div class="summary-card count">
+      <div class="card-label">Total Vendors</div>
+      <div class="card-value">{{ rowData.length }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !showDetailView" class="ag-grid-container">
+    <div class="grid-toolbar">
+      <div class="grid-toolbar-left">
+        <input
+          type="text"
+          id="filter-text-box"
+          placeholder="Search by vendor, GSTIN, code..."
+          (input)="onFilterTextBoxChanged()"
+          class="search-input"
+        />
+      </div>
+      <div class="grid-toolbar-right">
+        <label>Rows per page: </label>
+        <select id="page-size" (change)="onPageSizeChanged()" class="page-size-select">
+          <option value="10">10</option>
+          <option value="25" selected>25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+    </div>
+
+    <ag-grid-angular
+      style="width: 100%; height: 500px;"
+      class="ag-theme-alpine"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [gridOptions]="{
+        pagination: true,
+        paginationPageSize: 25,
+        rowSelection: 'single',
+        enableCellTextSelection: true,
+        ensureDomOrder: true,
+        suppressHorizontalScroll: false
+      }"
+      (gridReady)="onGridReady($event)"
+      [defaultColDef]="{
+        sortable: true,
+        resizable: true,
+        filter: true
+      }"
+    >
+    </ag-grid-angular>
+  </div>
+
+  <div *ngIf="!isLoading && showDetailView" class="detail-view">
+    <div class="detail-header">
+      <div class="back-button">
+        <button mat-icon-button (click)="backToSummary()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h3>Vendor Details: {{ selectedVendor?.vendor_name }}</h3>
+      </div>
+      <div class="vendor-summary">
+        <span class="total-label">Total Outstanding:</span>
+        <span class="total-value">{{ selectedVendor?.total_outstanding | currency:currencyCode:'symbol':'1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="ag-grid-container">
+      <div class="grid-toolbar">
+        <div class="grid-toolbar-left">
+          <input
+            type="text"
+            id="detail-filter-text-box"
+            placeholder="Search by invoice..."
+            (input)="onDetailFilterTextBoxChanged()"
+            class="search-input"
+          />
+        </div>
+        <div class="grid-toolbar-right">
+          <span>Showing {{ detailRowData.length }} invoices</span>
+        </div>
+      </div>
+
+      <ag-grid-angular
+        style="width: 100%; height: 400px;"
+        class="ag-theme-alpine"
+        [rowData]="detailRowData"
+        [columnDefs]="detailColumnDefs"
+        [gridOptions]="{
+          pagination: true,
+          paginationPageSize: 25,
+          rowSelection: 'single',
+          enableCellTextSelection: true
+        }"
+
+        [defaultColDef]="{
+          sortable: true,
+          resizable: true,
+          filter: true
+        }"
+      >
+      </ag-grid-angular>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && rowData.length === 0 && !showDetailView" class="no-data-container">
+    <mat-icon class="no-data-icon">receipt_long</mat-icon>
+    <h3>No Data Found</h3>
+    <p>No vendors with outstanding balances found for the selected filters</p>
+    <button mat-raised-button color="primary" (click)="refreshData()">
+      <mat-icon>refresh</mat-icon> Refresh
+    </button>
+  </div>
+</div>

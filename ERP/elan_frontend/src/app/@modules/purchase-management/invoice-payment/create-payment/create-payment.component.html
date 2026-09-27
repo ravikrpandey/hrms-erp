@@ -1,0 +1,189 @@
+<app-wrapper [title]="'Purchase Management'" [subTitle]="'Payment'" [subheading]="'Make Payments'" [showActions]="true"
+    [isBack]="true">
+
+    <form [formGroup]="frmMakePayments" (ngSubmit)="onSubmit()">
+        <div class="form_set formBorder">
+            <div class="form_sePo">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Invoice Number </mat-label>
+                            <mat-form-field>
+                                <input readonly matInput formControlName="invoiceNo" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Vendor </mat-label>
+                            <mat-form-field>
+                                <input readonly matInput formControlName="vendor_name" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Date Selection -->
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Date </mat-label>
+                            <mat-form-field>
+                                <input readonly matInput [matDatepicker]="sp" [min]="now"
+                                    formControlName="invoiceDate" />
+                                <mat-datepicker-toggle matSuffix [for]="sp"></mat-datepicker-toggle>
+                                <mat-datepicker #sp></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Payment Mode<span class="alertspan">*</span></mat-label>
+                            <mat-form-field>
+                                <mat-select (valueChange)="selectedPayMode($event)" formControlName="paymentMode">
+                                    <mat-option *ngFor="let val of PaymentModeList" [value]="val">
+                                        {{ val }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="
+                  frmMakePayments.controls['paymentMode'].hasError('required')
+                ">
+                                    This field is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="item-table mt-2">
+                    <span>Payment History </span>
+                    <div class="ag_grid">
+                        <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 250px"
+                            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10"
+                            [rowData]="bankHistory1" (gridReady)="onGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+
+                    <div class="container mt-3">
+                        <div class="row">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Bank <span class="alertspan">*</span></mat-label>
+                                    <mat-form-field [ngClass]="isActive ? 'newClass1' : ''">
+                                        <mat-select #bank (valueChange)="selectedbank($event)" formControlName="bank">
+                                            <mat-option *ngFor="let val of bankList" [value]="val?.id">
+                                                {{ val?.bank_name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Account Name </mat-label>
+                                    <mat-form-field [ngClass]="isActive ? 'newClass1' : ''">
+                                        <!-- <input matInput readonly  maxlength="30" type="text" /> -->
+                                        <mat-select formControlName="accountNumber">
+                                            <mat-option *ngFor="let val of accountDetails" [value]="val?.id">
+                                                {{ val?.account_name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Cheque Number</mat-label>
+                                    <mat-form-field [ngClass]="isActive ? 'newClass1' : ''">
+                                        <input matInput formControlName="chequeNumber" maxlength="30" type="text" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Cheque Reference Date: </mat-label>
+                                    <mat-form-field>
+                                        <input readonly matInput [matDatepicker]="sp1" [min]="now"
+                                            formControlName="cheque_ref_date" />
+                                        <mat-datepicker-toggle matSuffix [for]="sp1"></mat-datepicker-toggle>
+                                        <mat-datepicker #sp1></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Total Amount</mat-label>
+                                    <mat-form-field>
+                                        <input matInput readonly formControlName="totalAmt" maxlength="30" type="text"
+                                            appCommaFormat />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+
+                          <div class="form-group fileWithViewImg">
+                              <mat-label> Advance Paid</mat-label>
+                              <input class="form-control" type="text" style="padding-right: 19%"
+                                  formControlName="advancePaid" readonly  />
+
+                          </div>
+                      </div> -->
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group fileWithViewImg">
+                                    <mat-label> Amount Due</mat-label>
+                                    <input class="form-control" type="text" style="padding-right: 19%"
+                                        formControlName="amountDue" readonly />
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group fileWithViewImg"
+                                    [ngClass]="payment_status != 'PAID' ? '' : 'disableClass'">
+                                    <mat-label> Amount Paid</mat-label>
+                                    <input class="form-control" type="text" style="padding-right: 19%"
+                                        formControlName="amountPaid" #box1 (input)="getValue(box1.value)"
+                                        appCommaFormat />
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group fileWithViewImg">
+                                    <mat-label> Upload Document </mat-label>
+                                    <input class="form-control" type="file" style="padding-right: 19%" title="Upload"
+                                        formControlName="image" accept=".png, .jpg, .jpeg" />
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Terms</mat-label>
+                                    <mat-form-field>
+                                        <input matInput formControlName="terms" maxlength="30" type="text" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label>Remarks</mat-label>
+                                    <mat-form-field>
+                                        <input matInput formControlName="remarks" maxlength="30" type="text" />
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="common_button_sub mt-3">
+                <button type="submit" *ngIf="payment_status != 'PAID'" [disabled]="spinner" class="payment-button">
+                    <mat-spinner *ngIf="spinner" style="height: 15px; width: 15px"></mat-spinner><span>Record
+                        Payment</span>
+                </button>
+                <button class="cancel_button_y" type="button" (click)="back()">
+                    Discard
+                </button>
+            </div>
+        </div>
+    </form>
+</app-wrapper>

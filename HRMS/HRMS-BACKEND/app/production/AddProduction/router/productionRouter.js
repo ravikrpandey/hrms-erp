@@ -1,0 +1,29 @@
+const ProductionDetails = require('../controller/productionController');
+const { upload } = require("../../../middleware/production_doc");
+module.exports = app => {
+    app.post("/api/v1/createProduction", upload.single('image_upload'), ProductionDetails.createProduction);
+    app.post("/api/v1/createPlant", ProductionDetails.createPlant);
+    app.get("/api/v1/getAllProductions", ProductionDetails.getAllProductions);
+    app.delete("/api/v1/productionsDelete/:id", ProductionDetails.productionsDelete);
+    app.put("/api/v1/productionsStatus/:id", ProductionDetails.productionsStatus);
+    app.put("/api/v1/productionsVerify/:id", ProductionDetails.productionsVerify);
+    app.put("/api/v1/productionsStatusActive/:id", ProductionDetails.productionsStatusActive);
+    app.get("/api/v1/getbyID/:id", ProductionDetails.getbyID);
+    app.put("/api/v1/updateProduction/:id", upload.single('image_upload'),ProductionDetails.updateProduction);
+    app.post("/api/v1/getAllRepeat", ProductionDetails.getAllRepeat);
+    app.get("/api/v1/getRepeatById/:id", ProductionDetails.getRepeatById);
+    app.put("/api/v1/updateProductionWorkstation/:id", ProductionDetails.updateProductionWorkstation);
+    app.get("/api/v1/getRepeatByIDquality/:id", ProductionDetails.getRepeatByIDquality);
+    app.put("/api/v1/updateQuality/:production_mapping_id", ProductionDetails.updateQuality);
+    app.post("/api/v1/createCode/:id", ProductionDetails.createCode);
+    app.get("/api/v1/GraphGetdata/:id", ProductionDetails.GraphGetdata);
+    app.get("/api/v1/graphDataByRepeatId/:id", ProductionDetails.graphDataByRepeatId);
+    app.post("/api/v1/updateplant", ProductionDetails.updateplant);
+    app.get("/api/v1/scheduleproductionbyId/:id", ProductionDetails.scheduleproductionbyId);
+    app.post("/api/v1/createprodRaiseIndent", ProductionDetails.createprodRaiseIndent);
+    app.post("/api/v1/schedprodformaintenance", ProductionDetails.schedprodformaintenance);
+    app.post("/api/v1/getQualityParameter", ProductionDetails.getQualityParameter);
+    app.post("/api/v1/createQualityControl", ProductionDetails.createQualityControl);
+    app.post("/api/v1/qualityControlList/:id", ProductionDetails.qualityControlList);
+
+}

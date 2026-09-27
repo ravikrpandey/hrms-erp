@@ -1,0 +1,97 @@
+<div class="shedule-interview">
+
+    <div class="small_modal_design">
+    
+        <div class="heading_small_modal">Schedule  Fixed Interview</div>
+    
+    
+    </div>
+    
+        <div class="form_sm_se">
+            
+            <form [formGroup]="sheduleForm">
+                <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
+                        <div class="form-group">
+                            <mat-label class="label_o">Round Of Interview <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                                       
+                            
+
+                                <mat-select formControlName="roundOfInterview">
+                                    <mat-option  *ngFor="let levelup of roundResult" [value]="levelup?.levelCount"
+                                     [disabled]="+levelup.levelCount != +getApiData.round_level">{{levelup?.level}}
+                                  
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *ngIf="sheduleForm.controls['roundOfInterview'].errors?.['required']">Round level
+                                    is required</mat-error>
+                
+                            </mat-form-field>
+                    </div>
+                    </div>
+    
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-4">
+                        <div class="form-group">
+                            <mat-label class="label_o">Mode Of Interview <span>*</span></mat-label>
+                        <mat-form-field appearance="outline">
+                           
+                            <mat-select formControlName="modeOfInterview">
+                                <mat-option value="Online">Online</mat-option>
+                                <mat-option value="Offline">Offline</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        </div>
+                    </div>
+    
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Interviewer Name <span>*</span></mat-label>
+                        <mat-form-field appearance="outline">
+                            
+                            <mat-select formControlName="interviewerName">
+                                <mat-option *ngFor="let interviewer of checkData" [value]="interviewer.fullName">{{interviewer.fullName}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        </div>
+                    </div>
+    
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Start Date <span>*</span></mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="startDate" 
+                                [max]="maxDate" [min]="minDate"
+                                        (dateChange)="fromDate($event)"/>
+                                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                <mat-datepicker #dp></mat-datepicker>
+                            </mat-form-field>
+                            <mat-error
+                            *ngIf="sheduleForm.controls['startDate'].errors?.['matDatepickerMin']">Round level
+                            Date is invalid</mat-error>
+                        </div>
+                    </div>
+    
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label class="label_o">Time <span>*</span></mat-label>
+                        <mat-form-field appearance="outline">
+                          
+                            <input matInput name="selected_time_B" [format]=24 formControlName="time"
+                                [ngxMatTimepicker]="pickerB" readonly />
+                            <mat-icon matSuffix (click)="pickerB.open()"> watch_later </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="accent" #pickerB></ngx-mat-timepicker>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="fotter_button_small">
+                <button [disabled]="btnDisable" (click)="shedule()">{{this.patchData?.action === 'Pending'?'Re-Schedule':'Schedule'}}</button>
+               
+                <button mat-dialog-close  class="red_col">Cancel</button>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,142 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Payroll </h1>
+    <p> Ad hoc
+      <!-- Create -->
+      <span class="employee_2" *ngIf="!bonus_id && actionType !== 'view'">
+        <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+        Create
+      </span>
+
+      <!-- Update -->
+      <span class="employee_2" *ngIf="bonus_id && actionType !== 'view'">
+        <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+        Update
+      </span>
+
+      <!-- View -->
+      <span class="employee_2" *ngIf="actionType === 'view'">
+        <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+        View
+      </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<mat-card>
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="bonusDeductionForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" style="width: 100%;">
+              <mat-label>Year</mat-label>
+              <mat-select formControlName="financial_year_id">
+                <mat-option *ngFor="let year of financialYearList" [value]="year?.id">
+                  {{ year?.financial_year }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Month</mat-label>
+              <mat-select formControlName="month" multiple [(ngModel)]="selectedMonth">
+                <mat-checkbox class="check" [checked]="isAllSelectMonth" (click)="selectAllMOnth($event)">Select
+                  All</mat-checkbox>
+                <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                  {{ data?.label }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Ad hoc Type</mat-label>
+              <mat-select formControlName="bonus_type">
+                <mat-option value="Bonus">Bonus</mat-option>
+                <mat-option value="Deduction">Deduction</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="bonusDeductionForm.get('bonus_type')?.value">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>{{ bonusDeductionForm.get('bonus_type')?.value }} Name</mat-label>
+              <input matInput type="text" formControlName="bonus_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" [ngClass]="{'disable-pointer-events': bonus_id}">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Department</mat-label>
+              <mat-select formControlName="department_list" [(ngModel)]="selectedDepartment" multiple
+                (selectionChange)="getAllArea($event.value)">
+                <mat-select-filter [array]="departments"
+                  (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                <mat-checkbox class="check" [checked]="isAllSelectDepartment"
+                  (click)="selectAllDepartment($event)">Select
+                  All</mat-checkbox>
+                <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                  {{department?.department_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" [ngClass]="{'disable-pointer-events': bonus_id}">
+          <div class="form-group">
+            <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': disableField}">
+              <mat-label>Employee</mat-label>
+              <mat-select formControlName="employee_ids" multiple [(ngModel)]="selectedEmployee">
+                <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                <mat-checkbox class="check" [checked]="isAllSelect" (click)="selectAllEmployee($event)">Select
+                  All</mat-checkbox>
+                <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                  {{ item?.first_name }} {{ item?.middle_name || '' }} {{ item?.last_name }} {{ item?.employee_code }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Amount</mat-label>
+              <input matInput type="text" formControlName="amount" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group service_description">
+            <mat-form-field appearance="outline">
+              <mat-label>Description</mat-label>
+              <input matInput type="text" formControlName="description" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-12"
+          *ngIf="bonusDeductionForm.get('bonus_type')?.value === 'Bonus'">
+          <label>Are you sure for taxable amount</label>
+          <mat-checkbox class="example-margin" formControlName="amount_type" (change)="onCheckboxChange($event)">
+          </mat-checkbox>
+        </div>
+
+      </div>
+      <div class="common_button_sub">
+        <button (click)="onSubmitForm()" *ngIf="actionType !='view'">
+          Submit
+        </button>
+        <button class="cancel_button_y" (click)="back()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</mat-card>

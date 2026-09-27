@@ -1,0 +1,24 @@
+<!-- <div class="edd-del">
+  <mat-icon matTooltip="Download"
+    (click)="download_offer_letter()">download</mat-icon>
+  <mat-icon matTooltip="User Link"
+    (click)="sendLink()">send</mat-icon>
+  <mat-icon matTooltip="Generate Offer Letter"
+    (click)="generatePdf()">touch_app</mat-icon>
+  <mat-icon matTooltip="Create candidate offer letter" (click)="offerLetterOpen()"
+    >refresh</mat-icon>
+</div> -->
+
+
+<div class="edd-del">
+  <mat-icon matTooltip="Download" *ngIf="paramsVal?.approval_status == 'GENERATED'"
+    (click)="download_offer_letter()">download</mat-icon>
+  <mat-icon matTooltip="Send Mail" *ngIf="paramsVal?.approval_status == 'GENERATED'"
+    (click)="sendLink()">send</mat-icon>
+    <mat-icon matTooltip="Copy Link" *ngIf="paramsVal?.approval_status == 'GENERATED'"
+    (click)="copyLink()">filter_none</mat-icon>
+  <mat-icon matTooltip="Generate Offer Letter" *ngIf="paramsVal?.approval_status == 'APPROVED'"
+    (click)="generatePdf()">touch_app</mat-icon>
+  <mat-icon matTooltip="Create candidate offer letter" (click)="offerLetterOpen()"
+    *ngIf="paramsVal?.bgv_status == 'COMPLETED'">refresh</mat-icon>
+</div>

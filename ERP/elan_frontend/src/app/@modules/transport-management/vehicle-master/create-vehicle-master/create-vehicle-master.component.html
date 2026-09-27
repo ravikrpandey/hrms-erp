@@ -1,0 +1,81 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>Vehicle Registartion</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="createVehicleForm">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let field of formFields">
+          <div class="form-group mb-4">
+            <ng-container *ngIf="field.type !== 'file' && field.type !== 'date'">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ field.label }}</mat-label>
+
+                <input matInput *ngIf="field.type !== 'select' && field.type !== 'date'"
+                [type]="field.type"
+                [formControlName]="field.name"/>
+
+                <mat-select *ngIf="field.type === 'select'" [formControlName]="field.name">
+                  <mat-option *ngFor="let option of getOptions(field.name)" [value]="option.value">
+                    {{ option.label }}
+                  </mat-option>
+                </mat-select>
+
+                <mat-error *ngIf="field.required && createVehicleForm.controls[field.name].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngIf="field.type === 'date'">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>{{ field.label }}</mat-label>
+                <input matInput [matDatepicker]="picker" [formControlName]="field.name" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+
+                <mat-error *ngIf="field.required && createVehicleForm.controls[field.name].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="field.type === 'file'">
+              <label>{{ field.label }}</label>
+              <div class="input-group">
+                <input *ngIf="status!='view'"
+                  class="form-control"
+                  type="file"
+                  style="padding-right: 10px;"
+                  (change)="onChangefile($event, field)"
+                />
+                <div class="input-group-append" *ngIf="createVehicleForm.controls[field.name].value">
+                  <button class="btn btn-outline-primary" (click)="openFileInNewTab(createVehicleForm.controls[field.name].value)">
+                    View
+                  </button>
+                </div>
+              </div>
+              <mat-error *ngIf="field.required && createVehicleForm.controls[field.name].hasError('required')">
+                This field is required!
+              </mat-error>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub" *ngIf="status!='view'">
+          <button (click)="submitForm()">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

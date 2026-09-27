@@ -1,0 +1,19 @@
+<app-wrapper [title]="'Warehouse Management'" [subTitle]="'Warehouse Bifurcation List'"
+    [subheading]="''">
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+        <div class="form-group ">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Warehouse</mat-label>
+                <mat-select [formControl]="warehouse_id">
+                    <mat-option *ngFor="let warehouse of warehouseList" [value]="warehouse.id"
+                        (click)="setupBifurcation(warehouse?.id)">
+                        {{ warehouse.name }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 426px" [rowData]="rowData"
+        [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [gridOptions]="gridOptions">
+    </ag-grid-angular>
+</app-wrapper>

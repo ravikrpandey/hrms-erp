@@ -1,0 +1,164 @@
+<div class="right_data_all">
+    <div class="row mt-3">
+
+        <div class="page-title">
+            <h1>{{riemburcementId ? 'Update Allowances':'Create Allowances'}}</h1>
+        </div>
+    </div>
+    <hr>
+
+
+    <div class="container">
+        <form [formGroup]="reimbursementForm">
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                        <mat-label>Allowances Type</mat-label>
+                        <input matInput formControlName="reimbursement_name" required />
+                    </mat-form-field>
+                    <!-- <mat-form-field appearance="outline">
+                      <mat-label>Earning Type</mat-label>
+                      <mat-select formControlName="tax_allowance_id" (selectionChange)="changeAllownce($event)">
+                        <mat-option *ngFor="let earningType of allownceData"
+                          [value]="earningType.id">{{earningType.allowance_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field> -->
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                        <mat-label>Name in Payslip</mat-label>
+                        <input matInput formControlName="reimbursement_type"  required />
+                    </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <mat-label>Tax Calculation<span class="alertspan">*</span></mat-label>
+
+              <mat-radio-group aria-label="Select an option"  formControlName="is_taxable" (change)="onSelectionChange($event)">
+
+                <mat-radio-button value="true">Yes</mat-radio-button>
+                <mat-radio-button value="false">No</mat-radio-button>
+              </mat-radio-group>
+              
+            </div>
+          
+<!-- 
+            <div class="row">
+              <div class="col-md-4">
+                <p class="mandatory custom-label">Calculation Type</p>
+                <div class="form-group">
+                  <mat-radio-group formControlName="calculation_type" class="vertical-radio-group"
+                    (change)="onCalculationTypeChange($event)" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                    <mat-radio-button value="Flat Amount">Flat
+                      Amount</mat-radio-button>
+                    <mat-radio-button value="Percentage of">Percentage of </mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+              <ng-container *ngIf="reimbursementForm.get('calculation_type')?.value === 'Percentage of'">
+                <div class="col-md-4">
+              
+              <mat-label>Select Component<span class="alertspan">*</span></mat-label>
+
+                  <mat-form-field>
+                    <mat-select formControlName="type" multiple  (selectionChange)="selectionChange($event.value)">
+                    <mat-option *ngFor="let comp of compList" [value]="comp.id">
+                      {{comp.earning_type_name}}
+                      </mat-option>
+                    </mat-select>
+                  
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+  
+            <div class="row mt-2 " style="width: 60% !important;"
+              *ngIf="calculationPercentage">
+              <div class="mb-4 custom-input-group">
+                <label for="bonusPercentage" class="custom-label mandatory">Enter Percentage</label>
+                <div class="custom-input-container" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                  <input matInput formControlName="calculation_percentage" type="number" class="custom-input-field"
+                    id="bonusPercentage" aria-label="Bonus Percentage">
+                  <div class="custom-addon">%</div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row mt-2" style="width: 60% !important;"
+              >
+              <div class="mb-4 custom-input-group" *ngIf="calculationFlat">
+                <label for="bonusAmount" class="custom-label mandatory">Enter Amount</label>
+                <div class="custom-input-container" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                  <input matInput formControlName="calculation_amount" type="number" class="custom-input-field"
+                    id="bonusAmount" aria-label="Bonus Amount">
+                  <div class="custom-addon">₹</div>
+                </div>
+              </div>
+            </div> -->
+            <!-- <div class="row mt-3">
+                <mat-checkbox formControlName="is_fbp_component" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Include this as a Flexible Benefit Plan component</mat-checkbox>
+                <p style="margin-left: 42px;">FBP allows your employees to personalise their salary structure by choosing how much they want to receive under each FBP component.</p>
+            </div>
+      
+              <div class="row mt-3">
+                <p class="custom-label">How do you want to handle unclaimed reimbursement?</p>
+                <div class="form-group">
+                  <mat-radio-group formControlName="unclaimed_reimbursement" class="vertical-radio-group" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                    <mat-radio-button value="encash_reimburcement_yearly">Encash unclaimed reimbursement at the end of each financial year</mat-radio-button>
+                    <mat-radio-button value="encash_reimburcement_monthly">Do not carry forward and encash unclaimed reimbursements monthly</mat-radio-button>
+                  </mat-radio-group>
+                </div>
+              </div>
+      
+            
+              <div class="row mt-3">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+                  <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-2 custom-input-group">
+                            <label for="bonusPercentage" class="custom-label mandatory">Enter Amount</label>
+                            <div class="custom-input-container">
+                              <input matInput formControlName="max_limit" type="number" class="custom-input-field" id="bonusPercentage" aria-label="Bonus Percentage" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">
+                              <div class="custom-addon">₹</div>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <p style="margin-top: 40px;">per month</p>
+                      </div>
+                  </div>
+              </div>
+              </div>
+      
+      
+              <mat-checkbox formControlName="mark_as_active" [ngClass]="{'readonly-wrapper': typeCheck === 'View'}">Mark this as Active</mat-checkbox>
+            
+  
+      
+          
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <div class="alert mt-4 alert-warning fw-bold" role="alert">
+                <p>Note: Once you associate this component with an employee, you will only be able to edit the Name in Payslip and Amount. The changes you make to Amount will apply only to new employees.</p>
+              </div>
+            </div>
+          </div> -->
+
+          <div class="mt-4 d-flex justify-content-between">
+            <button class="btn btn-danger" (click)="back()">Cancel</button>
+            <button *ngIf="typeCheck !== 'View'" class="btn btn-primary" (click)="submitForm()">{{riemburcementId && typeCheck === 'Edit' ? 'Update':'Save'}}</button>
+        </div>
+        </form>
+      </div>
+      
+
+
+</div>

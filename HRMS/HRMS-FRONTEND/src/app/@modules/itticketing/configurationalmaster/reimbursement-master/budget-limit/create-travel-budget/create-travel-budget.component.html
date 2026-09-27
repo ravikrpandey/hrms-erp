@@ -1,0 +1,171 @@
+<div class="heading_top p-3">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Travel Budget Limit
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>
+        {{ mode === 'edit' ? 'Update' : (mode === 'view' ? 'View' : 'Add') }}
+      </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<section class="job-nav right_data_all">
+  <mat-card>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form_set">
+      <div class="row">
+        <!-- Travel Type -->
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Travel Type</mat-label>
+            <mat-select formControlName="travel_type_id" placeholder="Select Type">
+              <mat-option *ngFor="let item of travelData" [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Grade -->
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 mb-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Grade</mat-label>
+            <mat-select formControlName="travel_grade_ids" multiple placeholder="Select Grade">
+              <mat-option *ngFor="let item of gradeData" [value]="item.grade_id">
+                {{ item.grade_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Conveyance Type -->
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 mb-3" *ngIf="form.get('travel_type_id')?.value">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Conveyance Type</mat-label>
+            <mat-select formControlName="travel_conveyance_ids" multiple placeholder="Select Conveyance">
+              <mat-option *ngFor="let item of conveyanceData.children" [value]="item.id">
+                {{ item.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Local Budget Limits Section -->
+      <div *ngIf="conveyanceData.name === 'Local' && form.value.localBudgetLimits?.length">
+        <h4>Local Budget Limits</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Conveyance</th>
+              <th>Budget Limit</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="localBudgetLimits">
+            <tr *ngFor="let limit of localBudgetLimits.controls; let i = index" [formGroupName]="i">
+              <td>{{ limit.get('conveyanceName')?.value }}</td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <input matInput type="tel" formControlName="budgetLimit" placeholder="Enter budget limit" />
+                  <mat-error *ngIf="form.get('budgetLimit')?.invalid && form.get('budgetLimit')?.touched">
+                    Budget Limit is required.
+                  </mat-error>
+                </mat-form-field>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Domestic Budget Limits Section -->
+      <div *ngIf="conveyanceData.name === 'Domestic'">
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Local Conveyance Max Limit</mat-label>
+          <input matInput type="text" formControlName="local_max_limit" />
+        </mat-form-field>
+
+        <h4>Domestic Budget Limits</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>City</th>
+              <th>Budget Limit</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody formArrayName="domesticBudgetLimits">
+            <tr *ngFor="let limit of domesticBudgetLimits.controls; let i = index" [formGroupName]="i">
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="state_id" >
+                    <mat-option *ngFor="let state of presentStateData" [value]="state?.states_id">
+                      {{ state?.states_name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="city_id" >
+                    <mat-option *ngFor="let city of cityLists[i]" [value]="city?.city_id">
+                      {{ city?.city_name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline" class="w-100">
+                  <input matInput type="tel" formControlName="budgetLimit" placeholder="Enter budget limit"  [disabled]="mode == 'view'"/>
+                </mat-form-field>
+              </td>
+              <td>
+                <button type="button" mat-icon-button color="primary" (click)="addDomesticBudgetLimit()">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <button type="button" mat-icon-button color="warn" [disabled]="i === 0"
+                  (click)="removeDomesticBudgetLimit(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>Other Town Limit</mat-label>
+          <input matInput type="text" formControlName="other_towns" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-6 px-2">
+          <mat-label>DA Night Allowance</mat-label>
+          <input matInput type="text" formControlName="daily_allowance" />
+        </mat-form-field>
+      </div>
+
+      <!-- Submit Buttons -->
+      <!-- <div class="form-actions mt-3 d-flex justify-content-end gap-2" *ngIf="mode !== 'view'">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          {{ mode === 'edit' ? 'Update' : 'Save' }}
+        </button>
+      </div> -->
+      <div class="save-style">
+        <div class="mt-3 common_button_sub">
+          <button type="submit" [disabled]="form.invalid">
+            {{ mode === 'edit' ? 'Update' : 'Save' }}
+          </button>
+          <!-- <button class="cancel_button_y" type="button" (click)="back()">
+              Cancel
+            </button> -->
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</section>

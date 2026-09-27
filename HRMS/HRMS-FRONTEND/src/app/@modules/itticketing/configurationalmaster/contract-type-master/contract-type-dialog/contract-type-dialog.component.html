@@ -1,0 +1,61 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!departmentId?"Add Contract-Type":"Update Contract-Type"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">Contract Records</h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key"> 
+                    <p>Contact Name : </p>
+                    <!-- <p>Department: </p> -->
+                    <!-- <p>Status :</p> -->
+                </div>
+                <div class="emp_value">
+                    <p>{{departmentData?.contract_type}}</p>
+                    <!-- <p> {{departmentData?.contract_type}}</p> -->
+                    <!-- <p> {{areaData?.status}}</p> -->
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+    <fieldset  *ngIf="!view">
+        <div class="m-3" [formGroup]="departmentForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>Contract-Type Name</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Contract-Type Name</mat-label>
+                            <input matInput type="text" formControlName="contract_type" />
+                            <mat-error *ngIf="departmentForm.controls['contract_type'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="departmentForm.controls['contract_type'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!departmentId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="departmentId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

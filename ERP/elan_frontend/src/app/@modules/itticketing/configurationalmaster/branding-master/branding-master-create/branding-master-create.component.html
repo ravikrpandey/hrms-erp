@@ -1,0 +1,213 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Branding Details
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+      <span *ngIf="!id"> Create Branding </span>
+      <span *ngIf="action_type=='edit'"> Update Branding </span>
+      <span *ngIf="action_type=='view'"> View Branding </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="onBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+    <form class="form_set" [formGroup]="brandingForm">
+      <div class="row">  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" >
+              <mat-label>Customer Name</mat-label>
+                  <mat-select formControlName="customer_name">
+                    <mat-select-filter [array]="customerList" (filteredReturn)="customersFilter($event)"></mat-select-filter>
+                    <mat-option *ngFor="let name of customersName" [value]="name.id">{{name?.company_name}}-{{name?.customer_code}}</mat-option>                   
+                  </mat-select>              
+              <mat-error
+                *ngIf="brandingForm.controls['customer_name'].hasError('required')">*Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> 
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" >
+              <mat-label>Item</mat-label>
+                  <mat-select formControlName="item_id">
+                    <mat-select-filter [array]="itemList" (filteredReturn)="itemFilter($event)"></mat-select-filter>
+                    <mat-option *ngFor="let name of itemList3" [value]="name.id">{{name?.item_name}}-{{name?.item_code}}</mat-option>                   
+                  </mat-select>              
+              <mat-error
+                *ngIf="brandingForm.controls['item_id'].hasError('required')">*Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> 
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Type Of Branding</mat-label>
+              <input matInput type="text" formControlName="type_of_branding" [readonly]="action_type == 'view'" />
+              <mat-error *ngIf="brandingForm.controls['type_of_branding'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>No. Of Sides</mat-label>
+              <mat-select formControlName="branding_sides" multiple [disabled]="action_type == 'view'">
+                <mat-option value="Upper">Upper</mat-option>
+                <mat-option value="Lower">Lower</mat-option>
+                <mat-option value="Front">Front</mat-option>
+                <mat-option value="Back">Back</mat-option>
+                <mat-option value="Left">Left</mat-option>
+                <mat-option value="Right">Right</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Price Per Unit</mat-label>
+              <input matInput type="text" formControlName="price_per_unit" (keypress)="allowOnlyNumber($event)"
+                [readonly]="action_type == 'view'" />
+              <mat-error *ngIf="brandingForm.controls['price_per_unit'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+           <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>HSN Code</mat-label>
+              <mat-select  formControlName="hsn_code_id">
+                <mat-select-filter
+                  [array]="searchListHSN"
+                  (filteredReturn)="searchFilterHSN($event)"
+                ></mat-select-filter>
+                <mat-option (click)="onHSNCodeChange(data)"
+                  *ngFor="let data of hsnCodeList"
+                  [value]="data.id">
+                  {{ data?.hsn_sac_code }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>GST</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="%"
+                formControlName="gst"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>UOM</mat-label>
+              <mat-select formControlName="uom_id">
+                <mat-option *ngFor="let data of uomList" [value]="data.uom_id">
+                  {{ data?.uom_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="position: relative">
+          <div class="form-group mb-4" *ngIf="action_type !== 'view'">
+            <input class="form-control" type="file" style="
+                padding-right: 10px;
+                height: 42px;
+                font-size: 14px;
+                padding-top: 10px;
+                border: 1px solid #9e9e9e;
+              " title="Upload Document" (change)="onChange($event)" aria-describedby="inputGroupFileAddon04"
+              accept=".jpg,.jpeg,.png, .pdf" multiple />
+
+            <a [href]="generateFileUrl(singleItem?.item_document)" *ngIf="
+                id &&
+                getFileExtension(singleItem?.item_document) !== 'png' &&
+                getFileExtension(singleItem?.item_document) !== 'jpg' &&
+                getFileExtension(singleItem?.item_document) !== 'jpeg' &&
+                getFileExtension(singleItem?.item_document) !== 'gif' &&
+                singleItem?.item_document
+              " class="viewBtn" target="_blank">View</a>
+          </div>
+        </div>
+      </div>
+
+      
+
+      <div
+        *ngIf="(existingFiles.length > 0 || previewUrls.length > 0) && (action_type === 'view' || action_type === 'edit')">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>S.no</th>
+              <th>Preview</th>
+              <th *ngIf="action_type !== 'view'">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let file of existingFiles; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <i class="fa fa-eye" style="font-size: 20px; color: #007bff; cursor: pointer;"
+                  (click)="seePreview(file)"></i>
+                <span style="margin-left: 8px;">
+                  {{ isImage(file) ? "Preview Image" : "Preview PDF" }}
+                </span>
+              </td>
+              <td *ngIf="action_type !== 'view'">
+                <i class="fa fa-trash text-danger" style="cursor:pointer;" (click)="removeExistingFile(i)"></i>
+              </td>
+            </tr>
+
+            <tr *ngFor="let preview of previewUrls; let j = index">
+              <td>{{ existingFiles.length + j + 1 }}</td>
+              <td>
+                <i class="fa fa-eye" style="font-size: 20px; color: #007bff; cursor: pointer;"
+                  (click)="seePreview(preview)"></i>
+                <span style="margin-left: 8px;">
+                  Preview Image
+                </span>
+              </td>
+              <td *ngIf="action_type !== 'view'">
+                <i class="fa fa-trash text-danger" style="cursor:pointer;" (click)="removeNewFile(j)"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'">
+        <button (click)="onSubmit()">
+          {{ !id ? "Save" : "Update" }}
+        </button>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </div>
+</mat-card>

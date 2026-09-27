@@ -1,0 +1,149 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            Admin
+            <span class="employee_2" *ngIf="!viewDetails"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color: #858586"></i>
+                {{qualityId?'Update Quality':'Add Quality'}} </span>
+            <span class="employee_2" *ngIf="viewDetails=='view'"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color: #858586"></i>
+                View Quality </span>
+        </div>
+    </div>
+    <!-- <mat-card> -->
+    <div class="form_head mt-3">
+        <h3 *ngIf="!viewDetails"> {{qualityId?'Update Quality':'Add Quality'}}</h3>
+        <h3 *ngIf="viewDetails=='view'">View Quality</h3>
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <fieldset [disabled]="viewDetails=='view'">
+        <form [formGroup]="AddNewForm">
+            <div>
+                <div class="row mt-4 mx-3">
+                 
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Work Station Name</mat-label>
+                                <mat-select formControlName="work_station_id">
+                                    <mat-option *ngFor="let data of getAllWorkStationData"
+                                        [value]="data.id">{{data.name_of_workstation}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="AddNewForm.get('work_station_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="">
+                            <mat-label>Select Product Category</mat-label>
+                            <mat-select  formControlName="product_category_id" (selectionChange)="getAllActiveProduct($event)">
+                              <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="AddNewForm.get('cetegory')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                   
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Select Product Name</mat-label>
+                            <mat-select formControlName="product_id" (selectionChange)="getProductItem($event)">
+                              <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="AddNewForm.get('product_id')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group ">
+                        <mat-form-field appearance="outline" class="">
+                          <mat-label>  Product Variant Name</mat-label>
+                          <input type="text" matInput formControlName="product_variant" readonly />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                </div>
+                
+
+                <div class="row mt-3 mx-1 mb-3">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">S.NO</th>
+                                <th scope="col">Quality Parameter</th>
+                                <th scope="col">Value</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="quality_parameter_detail">
+                            <tr *ngFor="let roleFieled of itemsFormArray.quality_parameter_detail['controls']; let i = index"
+                                [formGroupName]="i">
+                                <td class="inpBox">
+                                    {{i+1}}
+                                </td>
+                                <td class="inpBox">
+                                    <div class="form-group text-center ">
+                                        <mat-form-field appearance="outline" style="width: 40vw">
+                                            <mat-label>Quality Parameter</mat-label>
+                                            <input matInput formControlName="quality_parameter" />
+                                            <mat-error
+                                                *ngIf="roleFieled.controls['quality_parameter'].hasError('required')">
+                                                Quality Parameter is Required.
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="roleFieled.controls['quality_parameter'].hasError('leadingSpaces')">
+                                                *No leading spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td class="inpBox">
+                                    <div class="form-group text-center">
+                                        <mat-form-field appearance="outline" style="width: 15vw">
+                                            <mat-label>Value</mat-label>
+                                            <input type="text" matInput formControlName="value" />
+                                            <mat-error
+                                                *ngIf="roleFieled.controls['value'].hasError('required')">
+                                                Value is Required.
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="roleFieled.controls['value'].hasError('leadingSpaces')">
+                                                *No leading spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="edit_del" [ngClass]="viewDetails=='view'?'readonly-select':''">
+                                        <mat-icon matTooltip="Add Quality" (click)="addItem()">add_circle</mat-icon>
+                                        <ng-container *ngIf="i+1!==1">
+                                            <mat-icon matTooltip="Delete Quality"
+                                                (click)="removeItem(i)">delete_circle</mat-icon>
+                                        </ng-container>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </fieldset>
+    <div class="submit_btn" *ngIf="viewDetails!=='view'">
+        <button mat-raised-button color="primary" (click)="ngSubmitQuality();">
+            {{qualityId?'Update':'Submit'}}
+        </button>
+        <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+    </div>
+
+
+    <!-- </mat-card> -->
+</section>

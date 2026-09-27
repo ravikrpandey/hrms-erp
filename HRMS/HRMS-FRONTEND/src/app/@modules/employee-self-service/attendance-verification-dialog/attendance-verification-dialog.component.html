@@ -1,0 +1,278 @@
+<div class="attendance-dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-title-group">
+      <div class="header-icon-wrap" [class.out-mode]="entryType === 'OUT'">
+        <i class="fa fa-user-check"></i>
+      </div>
+      <div>
+        <h2 class="dialog-title">Attendance Verification</h2>
+        <p class="dialog-subtitle">Biometric Face & Location Geofence</p>
+      </div>
+    </div>
+    
+    <div class="header-badges">
+      <span class="punch-type-badge" [class.badge-in]="entryType === 'IN'" [class.badge-out]="entryType === 'OUT'">
+        <i class="fa" [class.fa-sign-in-alt]="entryType === 'IN'" [class.fa-sign-out-alt]="entryType === 'OUT'"></i>
+        CHECK-{{ entryType }}
+      </span>
+      <button type="button" class="btn-dialog-close" (click)="close()" [disabled]="isVerifying || isEnrolling" title="Close">
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="dialog-body">
+    <div class="scanner-viewport" *ngIf="!verificationSuccess">
+      <video #videoElement autoplay playsinline muted class="camera-stream"></video>
+      <canvas #canvasElement style="display: none;"></canvas>
+
+      <div
+        class="biometric-reticle"
+        [class.ready]="cameraReady"
+        [class.face-aligned]="cameraReady && challengeCompleted && !isVerifying"
+        [class.challenge-active]="cameraReady && isFaceAligned && !challengeCompleted && !isVerifying"
+        [class.face-misaligned]="cameraReady && !isFaceAligned && !challengeCompleted && !isVerifying"
+      >
+        <div class="reticle-oval"></div>
+        <div class="corner-bracket top-left"></div>
+        <div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div>
+        <div class="corner-bracket bottom-right"></div>
+
+        <div class="reticle-status-badge" *ngIf="cameraReady && !isVerifying && !isEnrolling && !isFallbackSubmitting">
+          <span class="status-pill status-misaligned" *ngIf="!isFaceAligned && !challengeCompleted">
+            <i class="fa fa-crosshairs"></i> Center Face in Oval
+          </span>
+
+          <span class="status-pill status-challenge" *ngIf="isFaceAligned && !challengeCompleted">
+            <i class="fa fa-sync-alt fa-spin" *ngIf="turnPhase === 'TURNED'"></i>
+            <i class="fa fa-user-check" *ngIf="turnPhase !== 'TURNED'"></i>
+            <span>{{ turnPhase === 'TURNED' ? '👉 Return to CENTER' : (currentChallenge === 'BLINK' ? '👁️ BLINK EYES' : (currentChallenge === 'TURN_LEFT' ? '👉 TURN HEAD LEFT' : '👈 TURN HEAD RIGHT')) }}</span>
+          </span>
+
+          <span class="status-pill status-live-passed" *ngIf="challengeCompleted">
+            <i class="fa fa-check-circle"></i> Live Face Verified
+          </span>
+        </div>
+      </div>
+
+      <div class="hud-top-bar">
+        <div class="hud-pill live-pill" *ngIf="cameraReady">
+          <span class="pulse-dot"></span>
+          <span>LIVE CAM</span>
+        </div>
+
+        <div class="hud-pill gps-pill" [class.gps-ok]="gpsAcquired" [class.gps-err]="gpsError" (click)="gpsError ? requestLocation() : null">
+          <i class="fa fa-spinner fa-spin" *ngIf="gpsLoading"></i>
+          <i class="fa fa-location-arrow" *ngIf="!gpsLoading && gpsAcquired && accuracy && accuracy <= 500"></i>
+          <i class="fa fa-desktop" *ngIf="!gpsLoading && gpsAcquired && (!accuracy || accuracy > 500)"></i>
+          <i class="fa fa-exclamation-triangle" *ngIf="!gpsLoading && gpsError"></i>
+          <span *ngIf="gpsLoading">Acquiring Location...</span>
+          <span *ngIf="!gpsLoading && gpsAcquired && accuracy && accuracy <= 500">GPS: &plusmn;{{ accuracy }}m</span>
+          <span *ngIf="!gpsLoading && gpsAcquired && (!accuracy || accuracy > 500)">Workstation Verified</span>
+          <span *ngIf="!gpsLoading && gpsError">Location Retry</span>
+        </div>
+      </div>
+
+      <div
+        class="hud-bottom-hint"
+        [class.hint-aligned]="challengeCompleted"
+        [class.hint-challenge]="isFaceAligned && !challengeCompleted"
+        [class.hint-misaligned]="!isFaceAligned && !challengeCompleted"
+        *ngIf="cameraReady && !isVerifying && !isEnrolling && !isFallbackSubmitting"
+      >
+        <ng-container *ngIf="!isFaceAligned && !challengeCompleted">
+          <i class="fa fa-crosshairs text-danger"></i>
+          <span>Position face inside the center oval to begin</span>
+        </ng-container>
+
+        <ng-container *ngIf="isFaceAligned && !challengeCompleted">
+          <i class="fa fa-shield-alt text-primary"></i>
+          <span class="fw-bold">{{ challengeInstruction }}</span>
+          <button type="button" class="btn-switch-action" (click)="switchChallenge()" title="Switch Action (Turn/Blink)">
+            <i class="fa fa-sync-alt"></i>
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="challengeCompleted">
+          <i class="fa fa-check-circle text-success"></i>
+          <span>Live Face Verified! Click button below to Check-{{ entryType }}</span>
+        </ng-container>
+      </div>
+
+      <div class="hud-bottom-hint verifying" *ngIf="isVerifying">
+        <i class="fa fa-spinner fa-spin"></i>
+        <span>📸 Verifying face biometrics &amp; location...</span>
+      </div>
+
+      <div class="hud-bottom-hint enrolling" *ngIf="isEnrolling">
+        <i class="fa fa-camera fa-spin"></i>
+        <span>📸 Hold still! Enrolling face template...</span>
+      </div>
+
+      <div class="hud-bottom-hint fallback-submitting" *ngIf="isFallbackSubmitting">
+        <i class="fa fa-camera-retro fa-spin"></i>
+        <span>📸 Hold still! Capturing live selfie...</span>
+      </div>
+
+      <div class="camera-fallback" *ngIf="!cameraReady && !cameraError">
+        <i class="fa fa-circle-notch fa-spin fallback-spinner"></i>
+        <p>Connecting to secure camera...</p>
+      </div>
+
+      <div class="camera-fallback error-state" *ngIf="cameraError">
+        <i class="fa fa-video-slash error-icon"></i>
+        <p class="fallback-error-title">Camera Unavailable</p>
+        <p class="fallback-error-desc">{{ cameraError }}</p>
+        <button type="button" class="btn-retry" (click)="startCamera()">
+          <i class="fa fa-redo"></i> Try Again
+        </button>
+      </div>
+    </div>
+
+    <div class="success-viewport" *ngIf="verificationSuccess">
+      <div class="success-badge-wrap">
+        <i class="fa fa-check-circle success-check-icon"></i>
+      </div>
+      <h3 class="success-title">Checked {{ entryType }} Verified!</h3>
+      <p class="success-subtitle">{{ successMessage }}</p>
+
+      <div class="employee-id-card" *ngIf="employeeName || successData?.employee_name">
+        <div class="emp-avatar">
+          <i class="fa fa-user-circle"></i>
+        </div>
+        <div class="emp-info">
+          <div class="emp-name">{{ successData?.employee_name || employeeName }}</div>
+          <div class="emp-code" *ngIf="successData?.employee_code || employeeCode">
+            <span class="code-badge"><i class="fa fa-id-badge"></i> {{ successData?.employee_code || employeeCode }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="telemetry-card" *ngIf="successData">
+        <div class="telemetry-row" *ngIf="successData.att_checktime">
+          <span class="label"><i class="fa fa-clock"></i> Punch Time:</span>
+          <span class="value font-semibold text-primary">{{ successData.att_checktime }}</span>
+        </div>
+        <div class="telemetry-row" *ngIf="successData.face?.match_score">
+          <span class="label"><i class="fa fa-user-check"></i> Face Match:</span>
+          <span class="value text-success">{{ (successData.face.match_score * 100) | number:'1.0-1' }}% Confidence</span>
+        </div>
+        <div class="telemetry-row" *ngIf="successData.punch_mode === 'FALLBACK_LIVE_PHOTO'">
+          <span class="label"><i class="fa fa-camera"></i> Punch Mode:</span>
+          <span class="value text-warning">Live Selfie Fallback</span>
+        </div>
+        <div class="telemetry-row" *ngIf="successData.location">
+          <span class="label"><i class="fa fa-map-marker-alt"></i> Geofence:</span>
+          <span class="value text-success" *ngIf="successData.location.is_wfh">WFH Approved</span>
+          <span class="value text-success" *ngIf="!successData.location.is_wfh">
+            Verified ({{ successData.location.calculated_distance_meters || successData.distance_meters || 0 }}m)
+          </span>
+        </div>
+      </div>
+
+      <div class="auto-close-countdown mt-2 mb-1">
+        <small class="text-muted"><i class="fa fa-info-circle"></i> Closing automatically in 5 seconds...</small>
+      </div>
+
+      <button type="button" class="btn-success-close" (click)="closeSuccessImmediate()">
+        <i class="fa fa-check"></i> Done (Close Now)
+      </button>
+    </div>
+
+    <div class="error-alert-box" *ngIf="verificationError && !verificationSuccess">
+      <i class="fa fa-exclamation-triangle"></i>
+      <div class="error-text">
+        <div class="error-message">
+          <strong>Verification Notice:</strong> {{ verificationError }}
+        </div>
+
+        <div class="fallback-banner-wrap mt-2" *ngIf="canFallback">
+          <div class="fallback-hint mb-1">
+            <i class="fa fa-shield-alt me-1"></i>
+            Unable to verify biometric face? You can capture a live selfie and proceed.
+          </div>
+          <button
+            type="button"
+            class="btn-fallback-banner"
+            (click)="proceedWithFallback()"
+            [disabled]="!cameraReady || isFallbackSubmitting || isVerifying || isEnrolling"
+          >
+            <i class="fa fa-spinner fa-spin me-1" *ngIf="isFallbackSubmitting"></i>
+            <i class="fa fa-camera-retro me-1" *ngIf="!isFallbackSubmitting"></i>
+            <span>{{ isFallbackSubmitting ? 'Recording Live Selfie Punch...' : '📸 Capture Live Photo & Check-' + entryType + ' (Fallback Mode)' }}</span>
+          </button>
+        </div>
+
+        <div class="error-actions mt-2" *ngIf="isNotEnrolled">
+          <button
+            type="button"
+            class="btn-enroll-banner"
+            (click)="enrollFace()"
+            [disabled]="!cameraReady || isEnrolling || isVerifying || isFallbackSubmitting"
+          >
+            <i class="fa fa-spinner fa-spin" *ngIf="isEnrolling"></i>
+            <i class="fa fa-camera" *ngIf="!isEnrolling"></i>
+            <span>{{ isEnrolling ? 'Enrolling Face...' : '👉 Click Here to Enroll My Face' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-footer" *ngIf="!verificationSuccess">
+    <div class="footer-left">
+      <button type="button" class="btn-cancel" (click)="close()" [disabled]="isVerifying || isEnrolling || isFallbackSubmitting">
+        Cancel
+      </button>
+    </div>
+
+    <div class="footer-right">
+      <button
+        type="button"
+        class="btn-action btn-fallback"
+        *ngIf="canFallback"
+        (click)="proceedWithFallback()"
+        [disabled]="!cameraReady || isFallbackSubmitting || isVerifying || isEnrolling"
+        title="Capture live photo and punch in fallback mode"
+      >
+        <i class="fa fa-spinner fa-spin" *ngIf="isFallbackSubmitting"></i>
+        <i class="fa fa-camera-retro" *ngIf="!isFallbackSubmitting"></i>
+        <span>{{ isFallbackSubmitting ? 'Recording...' : 'Live Selfie Punch' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-action btn-enroll btn-enroll-primary"
+        *ngIf="isNotEnrolled"
+        (click)="enrollFace()"
+        [disabled]="!cameraReady || isEnrolling || isVerifying || isFallbackSubmitting"
+        title="Register your biometric face"
+      >
+        <i class="fa fa-spinner fa-spin" *ngIf="isEnrolling"></i>
+        <i class="fa fa-camera" *ngIf="!isEnrolling"></i>
+        <span>{{ isEnrolling ? 'Enrolling Face...' : 'Enroll My Face' }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-action btn-punch"
+        [class.btn-punch-in]="entryType === 'IN'"
+        [class.btn-punch-out]="entryType === 'OUT'"
+        [class.btn-punch-dimmed]="isNotEnrolled"
+        [class.btn-punch-ready]="cameraReady && challengeCompleted && !isVerifying"
+        [class.btn-punch-awaiting]="cameraReady && !challengeCompleted && !isVerifying"
+        (click)="captureAndVerify()"
+        [disabled]="!cameraReady || !challengeCompleted || isVerifying || isEnrolling || isFallbackSubmitting"
+        [title]="!challengeCompleted ? 'Real face challenge required: ' + challengeInstruction : 'Click to Check-' + entryType"
+      >
+        <i class="fa fa-spinner fa-spin" *ngIf="isVerifying"></i>
+        <i class="fa fa-fingerprint" *ngIf="!isVerifying && challengeCompleted"></i>
+        <i class="fa fa-lock" *ngIf="!isVerifying && !challengeCompleted"></i>
+        <span *ngIf="!isVerifying && challengeCompleted">Verify &amp; Check-{{ entryType }}</span>
+        <span *ngIf="!isVerifying && !challengeCompleted">{{ challengeInstruction }}</span>
+        <span *ngIf="isVerifying">Verifying Face...</span>
+      </button>
+    </div>
+  </div>
+</div>

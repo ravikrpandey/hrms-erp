@@ -1,0 +1,672 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Entity</h1>
+    <p>
+      Entity Master<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+      </i><span *ngIf="viewMode">View Entity</span><span *ngIf="id && !viewMode">Update Entity</span><span
+        *ngIf="!id">Add Entity</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <mat-card>
+    <div class="form_basic">
+      <!-- shiftMasterForm -->
+      <form class="form_set" [formGroup]="EntityForm">
+        <h2 style="color: #00a1b1">Basic Details</h2>
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Company Name</mat-label>
+                <mat-select formControlName="company_id" (selectionChange)="countrySelect($event.value, 'company')">
+                  <app-search-filter [array]="companyList" [placeholder]="'Search by company name'"
+                    [searchFields]="['company_name']"
+                    (filteredReturn)="companyNamefilter = $event.data"></app-search-filter>
+                  <!-- <mat-select-filter [array]="CompanyVar" (filteredReturn)="companyFilter($event)"></mat-select-filter> -->
+                  <mat-option *ngFor="let company of companyNamefilter" [value]="company.id">{{ company.company_name
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="EntityForm.controls['company_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Country</mat-label>
+                <mat-select formControlName="country_id" (selectionChange)="countrySelect($event.value, 'country')">
+                  <app-search-filter [array]="countryList" [placeholder]="'Search by country name'"
+                    [searchFields]="['countryss_name']" (filteredReturn)="filterCountryList = $event.data">
+                  </app-search-filter>
+                  <mat-option *ngFor="let country of filterCountryList" [value]="country.countryss_id">
+                    {{ country.countryss_name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="EntityForm.controls['country_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- State -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select formControlName="state_id">
+                  <app-search-filter [array]="stateList" [placeholder]="'Search by state name'"
+                    [searchFields]="['states_name']" (filteredReturn)="filterStateList = $event.data">
+                  </app-search-filter>
+                  <mat-option *ngFor="let state of filterStateList" [value]="state?.states_id">
+                    {{ state?.states_name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="EntityForm.controls['state_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Branch Location</mat-label>
+                <mat-select formControlName="branch_id" (selectionChange)="countrySelect($event.value, 'branch')">
+                  <app-search-filter [array]="branchList" [placeholder]="'Search by company name'"
+                    [searchFields]="['branch_name']"
+                    (filteredReturn)="filterBranchlist = $event.data"></app-search-filter>
+                  <!-- <mat-select-filter [array]="branchVar1"
+                                        (filteredReturn)="branchFilter($event)"></mat-select-filter> -->
+                  <mat-option *ngFor="let branch of filterBranchlist" [value]="branch?.id">{{ branch?.branch_name
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="EntityForm.controls['branch_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Address</mat-label>
+                <textarea matInput formControlName="address" placeholder="Enter full address" rows="3">
+                </textarea>
+                <mat-error *ngIf="EntityForm.controls['address'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Zip Code</mat-label>
+                <input matInput type="text" formControlName="zip_code" placeholder="Enter zip code" maxlength="10" />
+                <mat-error *ngIf="EntityForm.controls['zip_code'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <br />
+
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Currency</mat-label>
+                <mat-select formControlName="currency_id" (selectionChange)="currencySelect($event)">
+                  <mat-option *ngFor="let currency of getCurrencyData" [value]="currency.Currency_Type">
+                    ({{ currency.Currency_Type }}) ({{ currency.symbols }})
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    EntityForm.controls['currency_id'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Entity</mat-label>
+                <!-- [readonly]="viewMode" -->
+                <input matInput type="text" placeholder="entity name" formControlName="entity_name" />
+                <mat-error *ngIf="
+                    EntityForm.controls['entity_name'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+
+                <!-- <mat-error *ngIf="EntityForm.controls['entity_name'].hasError('pattern' )">
+                                    Invalid Entity Name!
+                                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Employee Code Prefix</mat-label>
+                <input [readonly]="viewMode" matInput type="text" formControlName="employee_code_prefix" />
+                <mat-error *ngIf="
+                    EntityForm.controls['employee_code_prefix'].hasError(
+                      'required'
+                    )
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <br />
+        </div>
+
+        <br />
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Employer Name</mat-label>
+                <input [readonly]="viewMode" matInput type="text" formControlName="employer_name" />
+                <mat-error *ngIf="
+                    EntityForm.controls['employer_name'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <br />
+
+        <br />
+        <h2 style="color: #00a1b1">Logos</h2>
+        <div class="row align-items-center">
+          <!-- Company Logo Upload -->
+          <div *ngIf="!viewMode" class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label class="form-label fw-bold">Company Logo</label>
+              <input type="file" accept=".png, .jpg, .jpeg" (change)="onChangeCompanyLogo($event)" class="form-control"
+                title="CHOOSE LOGO" />
+              <mat-error *ngIf="
+            EntityForm.get('company_logo')?.hasError('required') &&
+            (EntityForm.get('company_logo')?.touched || EntityForm.get('company_logo')?.dirty)
+          ">
+                File is required
+              </mat-error>
+            </div>
+          </div>
+          
+          <!-- Company Logo Preview -->
+          <div *ngIf="companyLogoUrl" class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+            <p>Company Logo</p>
+            <img class="img" [src]="companyLogoUrl" alt="Company Logo" />
+          </div>
+
+          <!-- Signature Logo Upload -->
+          <div *ngIf="!viewMode" class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <label class="form-label fw-bold">Signature Logo</label>
+              <input type="file" accept=".png, .jpg, .jpeg" (change)="onChangeSignatureLogo($event)"
+                class="form-control" title="CHOOSE SIGNATURE LOGO" />
+              <mat-error *ngIf="
+                  EntityForm.controls['signature_logo'].hasError('required')
+                ">
+                File is required
+              </mat-error>
+            </div>
+          </div>
+
+          <!-- Signature Logo Preview -->
+          <div *ngIf="signatureLogoUrl" class="col-xxl-3 col-lg-3 col-md-6 col-sm-6 col-12">
+            <p>Signature Logo</p>
+            <img class="img" [src]="signatureLogoUrl" alt="Signature Logo" />
+          </div>
+        </div>
+
+        <!-- //taxation starts here// -->
+        <div *ngIf="selectedCountry">
+          <h2 style="color: #00a1b1; margin-top: 15px">Taxation Details</h2>
+          <div class="row" *ngIf="selectedCountry?.country_code !== 'IN'">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Tax Registration Number</mat-label>
+                  <input [readonly]="viewMode" matInput type="text" formControlName="tax_registeration_number" />
+                  <mat-error *ngIf="
+                      EntityForm.controls['tax_registeration_number'].hasError(
+                        'required'
+                      )
+                    ">
+                    Tax Registration Number is Required.
+                  </mat-error>
+                  <mat-error *ngIf="
+                      EntityForm.controls['tax_registeration_number'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                    *No leading spaces!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Registered Office</mat-label>
+                  <input [readonly]="viewMode" matInput type="text" formControlName="registered_office" />
+                  <mat-error *ngIf="
+                      EntityForm.controls['registered_office'].hasError(
+                        'required'
+                      )
+                    ">
+                    Tax Registered Office is Required.
+                  </mat-error>
+                  <mat-error *ngIf="
+                      EntityForm.controls['registered_office'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                    *No leading spaces!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="selectedCountry?.country_code == 'IN'">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>PF No.</mat-label>
+                  <input [readonly]="viewMode" matInput type="text" formControlName="pf"
+                    placeholder="XXYYY0000000XXX0000000" />
+                  <mat-error *ngIf="EntityForm.controls['pf'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="EntityForm.controls['pf'].hasError('pattern')">
+                    PF Number must be in XXYYY0000000XXX0000000 format!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>ESIC No.</mat-label>
+                  <input matInput type="text" formControlName="esic" placeholder="00-00-000000-000-0000" />
+                  <mat-error *ngIf="
+                      EntityForm.controls['esic'].hasError('required') &&
+                      (EntityForm.controls['esic'].touched ||
+                        EntityForm.controls['esic'].dirty)
+                    ">
+                    ESIC number is required!
+                  </mat-error>
+                  <mat-error *ngIf="
+                      EntityForm.controls['esic'].hasError('pattern')">
+                    Invalid ESI Number must be in 00-00-000000-000-0000 format!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>TAN</mat-label>
+                  <input matInput type="text" formControlName="tan" placeholder="ABCD12345E" />
+                  <mat-error *ngIf="EntityForm.controls['tan'].hasError('required')">
+                    TAN is required!
+                  </mat-error>
+                  <mat-error *ngIf="EntityForm.controls['tan'].hasError('pattern')">
+                    TAN must be in ABCD12345E format!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>PAN</mat-label>
+                  <input matInput type="text" maxlength="10" formControlName="pan" placeholder="ABCDE1234F" />
+                  <mat-error *ngIf="EntityForm.controls['pan'].hasError('required')">
+                    PAN is required!
+                  </mat-error>
+                  <mat-error *ngIf="EntityForm.controls['pan'].hasError('pattern')">
+                    PAN must be in ABCDE1234F format!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>LIN</mat-label>
+                  <input matInput type="text" formControlName="lin" placeholder="1000000000001234" />
+                  <mat-error *ngIf="EntityForm.controls['lin'].hasError('required')">
+                    LIN is required!
+                  </mat-error>
+                  <mat-error *ngIf="EntityForm.controls['lin'].hasError('pattern')">
+                    LIN must be 11 digits!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>GST</mat-label>
+                  <input matInput type="text" maxlength="15" formControlName="gst" placeholder="11AAAAA1111A1Z1" />
+                  <mat-error *ngIf="EntityForm.controls['gst'].hasError('required')">
+                    GST number is required!
+                  </mat-error>
+                  <mat-error *ngIf="EntityForm.controls['gst'].hasError('pattern')">
+                    GST must be in 11AAAAA1111A1Z1 format!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Registration Certificate No.</mat-label>
+                  <input [readonly]="viewMode" matInput type="text" formControlName="registration_certificate"
+                    autocomplete="off" />
+                  <mat-error *ngIf="
+                      EntityForm.controls['registration_certificate'].hasError(
+                        'required'
+                      )
+                    ">
+                    This field is required
+                  </mat-error>
+                  <!-- <mat-error *ngIf="EntityForm.controls['username'].hasError('pattern' )">
+                                    Invalid Username
+                                </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br />
+        <!-- //Taxation Ends Here// -->
+        <h2 style="color: #00a1b1">SMTP Details</h2>
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>SMTP Server Address</mat-label>
+                <input [readonly]="viewMode" matInput type="text" formControlName="smtp_server_address" />
+                <mat-error *ngIf="
+                    EntityForm.controls['smtp_server_address'].hasError(
+                      'required'
+                    )
+                  ">
+                  SMTP Server Address is Required.
+                </mat-error>
+                <mat-error *ngIf="
+                    EntityForm.controls['smtp_server_address'].hasError(
+                      'pattern'
+                    )
+                  ">
+                  Invalid SMTP Server Address!
+                </mat-error>
+                <mat-error *ngIf="
+                    EntityForm.controls['smtp_server_address'].hasError(
+                      'leadingSpaces'
+                    )
+                  ">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>SMTP Port No</mat-label>
+                <input [readonly]="viewMode" matInput type="number" formControlName="smtp_port_no" />
+                <mat-error *ngIf="
+                    EntityForm.controls['smtp_port_no'].hasError('required')
+                  ">
+                  SMTP Port No is Required.
+                </mat-error>
+                <mat-error *ngIf="
+                    EntityForm.controls['smtp_port_no'].hasError('pattern')
+                  ">
+                  Invalid SMTP Port No!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Email Id</mat-label>
+                <input [readonly]="viewMode" matInput type="text" formControlName="username" autocomplete="off" />
+                <mat-error *ngIf="EntityForm.get('username')?.hasError('email')">
+                  Please enter a valid email
+                </mat-error>
+                <mat-error *ngIf="EntityForm.controls['username'].hasError('required')">
+                  Username is required
+                </mat-error>
+                <mat-error *ngIf="
+                    EntityForm.controls['username'].hasError('leadingSpaces')
+                  ">
+                  *No leading spaces!
+                </mat-error>
+                <!-- <mat-error *ngIf="EntityForm.controls['username'].hasError('pattern' )">
+                                    Invalid Username
+                                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input [type]="hide ? 'password' : 'text'" matInput [readonly]="viewMode" autocomplete="new-password"
+                  formControlName="password" />
+                <!-- <button mat-icon-button matSuffix (click)="hide = !hide"
+                                    [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide" type="button">
+                                    <mat-icon>{{ hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+                                </button> -->
+
+                <mat-error *ngIf="EntityForm.controls['password'].hasError('required')">
+                  Password is required
+                </mat-error>
+                <mat-error *ngIf="EntityForm.controls['password'].hasError('pattern')">
+                  Invalid Password
+                </mat-error>
+                <!-- <mat-error *ngIf="EntityForm.controls['password'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="color: #00a1b1">Stake Holders</h2>
+        <div class="row m-3" style="overflow: scroll">
+          <table class="border">
+            <thead>
+              <tr class="border">
+                <th class="border p-2 text-center">S No.</th>
+                <th class="border p-2 text-center">Name</th>
+                <th class="border p-2 text-center">Designation</th>
+                <th class="border p-2 text-center">Contact No</th>
+                <th class="border p-2 text-center">Email ID</th>
+                <th *ngIf="!viewMode" class="border p-2 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="stake_holder_form">
+              <tr *ngFor="
+                  let stakeHolderRow of stakeHoldersFormArray.controls;
+                  let i = index
+                " [formGroupName]="i">
+                <td>
+                  <div class="form-group-name-cat center">
+                    <div>{{ i + 1 }}</div>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select' : ''">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Name</mat-label>
+                      <input matInput type="text" formControlName="stakeholder_name" [readonly]="viewMode" />
+                      <!-- <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('stakeholder_name')?.hasError('required')">
+                                                Invalid!
+                                            </mat-error> -->
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('stakeholder_name')
+                            ?.hasError('leadingSpaces')
+                        ">
+                        Invalid!
+                      </mat-error>
+                      <!-- <mat-error *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('name')?.hasError('pattern')">
+                                            Invalid Username
+                                        </mat-error> -->
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select' : ''">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Designation</mat-label>
+                      <input matInput type="text" formControlName="designation" [readonly]="viewMode" />
+                      <!-- <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('designation')?.hasError('required')">
+                                                Invalid!
+                                            </mat-error> -->
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('designation')
+                            ?.hasError('leadingSpaces')
+                        ">
+                        Invalid!
+                      </mat-error>
+                      <!-- <mat-error *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('designation')?.hasError('pattern')">
+                                            Invalid Designation
+                                        </mat-error> -->
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select' : ''">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Contact No</mat-label>
+                      <input matInput type="number" (input)="updateContactNo($event, i)" formControlName="contact_no"
+                        [readonly]="viewMode" minlength="5" maxlength="15" />
+                      <!-- <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('required')">
+                                                Invalid!
+                                            </mat-error> -->
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('contact_no')
+                            ?.hasError('maxlength')
+                        ">
+                        allowed maxlength is 10!
+                      </mat-error>
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('contact_no')
+                            ?.hasError('minlength')
+                        ">
+                        allowed minlength is 5!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select' : ''">
+                    <mat-form-field appearance="outline">
+                      <mat-label>Email ID</mat-label>
+                      <input matInput type="text" formControlName="email_id" [readonly]="viewMode" />
+                      <!-- <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('email_id')?.hasError('required')">
+                                                Invalid!
+                                            </mat-error> -->
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('email_id')
+                            ?.hasError('pattern')
+                        ">
+                        Invalid Email
+                      </mat-error>
+                      <mat-error *ngIf="
+                          EntityForm.get('stake_holder_form')
+                            ?.get(i.toString())
+                            ?.get('email_id')
+                            ?.hasError('leadingSpaces')
+                        ">
+                        Invalid!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td *ngIf="!viewMode">
+                  <div class="edit_del flexRow" [ngClass]="viewMode ? 'readonly-select' : ''">
+                    <div (click)="addStakeHoldersRow()">
+                      <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                    </div>
+                    <div>
+                      <ng-container *ngIf="i + 1 !== 1">
+                        <mat-icon matTooltip="delete Item" (click)="removeStakeHoldersRow(i)">delete_circle</mat-icon>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+                <br />
+                <br />
+                <br />
+                <br />
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mt-3" align="end">
+          <button *ngIf="!id" (click)="onSubmitForm()" mat-raised-button color="primary">
+            Submit
+          </button>
+          <button *ngIf="id && mode == 'edit'" (click)="onSubmitForm()" mat-raised-button color="primary">
+            Update
+          </button>
+
+          <!-- <button (click)="updateForm($event)" mat-raised-button color="primary">
+                        Update
+                    </button> -->
+          <button *ngIf="mode != 'view'" mat-raised-button color="warn" class="mx-3" (click)="back()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</section>

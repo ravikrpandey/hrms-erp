@@ -1,0 +1,29 @@
+<div class="addmodelCRM">
+  <h3 mat-dialog-title class="popHead">Add Bulk Entries Excel Setup <button style="float:right;margin-top:15px;color:white" mat-button mat-dialog-close>Close</button></h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <form class="form_set" [formGroup]="fileFormSetupObj" >
+        <div class="form-group">
+          <mat-label>Upload File <span class="alertspan">*</span></mat-label>
+              <input class="form-control" type="file" style="padding-right: 19%" title="CHOOSE FILE" #fileInput
+                (change)="onChange($event)" formControlName="file"/>
+                <mat-error *ngIf="fileFormSetupObj.controls['file'].hasError('required' ) && (fileFormSetupObj.controls['file'].dirty || fileFormSetupObj.controls['file'].touched)">
+                  File is required
+              </mat-error>
+        </div>
+        <br/>
+        <br/>
+        <div class="col-md-12">
+          <button mat-raised-button color="primary" (click)="generateExcel()" style="float: left; margin-top: 9px;"
+         >
+            Download Excel Sheet
+          </button>
+          <button mat-raised-button color="primary" (click)="saveDetails()" style="float: right; margin-top: 9px;"
+          >
+             Submit
+           </button>
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+</div>

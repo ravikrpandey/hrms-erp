@@ -1,0 +1,196 @@
+<div class="heading_top">
+  <div class="page-title" style="width: 90% !important;">
+    <h1>Employee & Access Management</h1>
+    <div class="tabs">
+      <div style="width: 30%;"><b>Employee Login History</b></div>
+      <div style="width: 30%;"><b>User Name: </b>{{userName}}</div>
+      <div style="width: 40%;" class="dateMonth">
+        <div *ngIf="selectedTab == 0 || selectedTab == 1">
+            <label style="padding: 16px;"><b>Select Date</b></label>
+            <input
+                matInput
+                [matDatepicker]="picker"
+                placeholder="Select Date"
+                [(ngModel)]="selectedDate"
+                [min]="minDate"
+                [max]="maxDate"
+                (dateChange)="dailyLoginHistory($event)"
+                readonly>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </div>
+        <div *ngIf="selectedTab == 2">
+            <label style="padding: 10px;"><b>Select Month</b></label>
+            <input type="month"
+            [min]="minMonth"
+            [max]="maxMonth"
+            [(ngModel)]="selectedMonth"
+            (change)="filterMonthlyData()">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="add_button">
+    <button routerLink="../" type="button">Back To List</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- ================= TAB ================= -->
+  <mat-tab-group [(selectedIndex)]="selectedTab">
+
+    <!-- ================= DAILY LOGIN HISTORY TAB ================= -->
+    <mat-tab label="Daily Login History">
+      <div class="fixed-height-table">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>S.N.</th>
+              <th>Login Time</th>
+              <th>Logout Time</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="dailySessions && dailySessions!.length > 0; else noData1">
+            <tr *ngFor="let s of dailySessions; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ s.login_time }}</td>
+              <td>{{ s.logout_time }}</td>
+              <td>{{ s.session_duration }}</td>
+            </tr>
+          </tbody>
+          <ng-template #noData1>
+            <tbody>
+              <tr>
+                <td colspan="4" style="text-align:center; padding:10px;">
+                  No Data Found
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </mat-tab>
+
+    <!-- ================= DAILY PAGE VISIT TAB ================= -->
+    <mat-tab label="Daily Page Visit History">
+      <div class="fixed-height-table">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>S.N.</th>
+              <th>Page Name</th>
+              <th>Visit Time</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="dailyPages && dailyPages!.length > 0; else noData2">
+            <tr *ngFor="let p of dailyPages; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ p.page_name }}</td>
+              <td>{{ p.time }}</td>
+            </tr>
+          </tbody>
+          <ng-template #noData2>
+            <tbody>
+              <tr>
+                <td colspan="3" style="text-align:center; padding:10px;">
+                  No Data Found
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </mat-tab>
+
+    <!-- ================= MONTHLY LOGIN/PAGE TAB ================= -->
+    <mat-tab label="Monthly History">
+      <div class="fixed-height-table">
+        <table class="history-table">
+          <thead>
+          <tr>
+          <th>S.N.</th>
+          <th>Date</th>
+          <th>Total Login Sessions</th>
+          <th>Total Duration</th>
+          <th>Total Pages</th>
+          <th>Action</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="monthlyData && monthlyData!.length > 0; else noData3">
+          <tr *ngFor="let m of monthlyData; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ m.date | date:'d MMM yyyy' }}</td>
+          <td>{{ m.totalSessions }}</td>
+          <td>{{ m.totalDuration }}</td>
+          <td>{{ m.totalPages }}</td>
+          <td>
+            <button class="btn-view" (click)="openPopup(m)">
+              View
+            </button>
+          </td>
+        </tr>
+        </tbody>
+        <ng-template #noData3>
+            <tbody>
+              <tr>
+                <td colspan="5" style="text-align:center; padding:10px;">
+                  No Data Found
+                </td>
+              </tr>
+            </tbody>
+          </ng-template>
+        </table>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+  <!-- ================= POPUP ================= -->
+  <div class="overlay" (click)="closePopup()" *ngIf="isPopupOpen"></div>
+  <div class="custom-modal" *ngIf="isPopupOpen" (click)="$event.stopPropagation()">
+    <button class="close-btn closebtn" (click)="closePopup()">✖</button>
+    <h2 class="heading">{{ popupData?.date | date:'d MMM yyyy' }} History</h2>
+
+    <h3 class="heading">Session History</h3>
+    <table class="table">
+      <thead>
+          <tr>
+            <th>S.N.</th>
+            <th>Login</th>
+            <th>Logout</th>
+            <th>Duration</th>
+          </tr>
+      </thead>
+
+      <tbody class="limit-body">
+          <tr *ngFor="let s of popupData.sessions; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ s.login }}</td>
+            <td>{{ s.logout }}</td>
+            <td>{{ s.duration }}</td>
+          </tr>
+      </tbody>
+    </table>
+
+    <h3 class="heading">Page Visit History</h3>
+    <table class="table">
+      <thead>
+          <tr>
+            <th>S.N.</th>
+            <th>Page</th>
+            <th>Time</th>
+          </tr>
+      </thead>
+
+      <tbody class="limit-body">
+          <tr *ngFor="let p of popupData.pages; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ p.page }}</td>
+            <td>{{ p.time }}</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+ 
+</div>

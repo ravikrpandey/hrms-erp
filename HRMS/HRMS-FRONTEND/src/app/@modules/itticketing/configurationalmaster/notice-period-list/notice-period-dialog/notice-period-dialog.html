@@ -1,0 +1,92 @@
+<ng-container *ngIf="visible=='visible'">
+    <h3 mat-dialog-title class="popHead">Notice Period Record</h3>
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <div class="emp_key">
+                <p>Notice Period Days :</p>
+                <p>Probation Period Days :</p>
+                <p> Can Buy Out? :</p>
+                <p> Can Waive Out? :</p>
+                <p>Status :</p>
+            </div>
+            <div class="emp_value">
+                <p>{{ singleGrade?.confirm_notice_days }}</p>
+                <p>{{ singleGrade?.probation_notice_days }}</p>
+                <p>{{ singleGrade?.can_buy_out }}</p>
+                <p>{{ singleGrade?.can_waive_out }}</p>
+                <p>{{ singleGrade?.status }}</p>
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close mat-raised-button color="primary">
+            Close
+        </button>
+    </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="add_notice_period=='add_notice_period' || editNoticePeriod=='edit'">
+    <form [formGroup]="noticeperiodForm">
+        <h3 mat-dialog-title class="popHead">Notice Period</h3>
+        <mat-dialog-content class="mat-typography">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" class="mt-2">
+                            <mat-label>Notice Period Days</mat-label>
+                            <input matInput type="text" formControlName="confirm_notice_days" />
+                            <mat-error *ngIf="noticeperiodForm.controls['confirm_notice_days'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error
+                                *ngIf="noticeperiodForm.controls['confirm_notice_days'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" class="mt-2">
+                            <mat-label>Probation Period Days</mat-label>
+                            <input matInput type="text" formControlName="probation_notice_days" />
+                            <mat-error *ngIf="noticeperiodForm.controls['probation_notice_days'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                            <mat-error
+                                *ngIf="noticeperiodForm.controls['probation_notice_days'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-checkbox class="example-margin" formControlName="can_buy_out"
+                            (change)="onCheckboxChange($event)">
+                            Can Buy Out?
+                        </mat-checkbox>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-checkbox class="example-margin" formControlName="can_waive_out"
+                            (change)="onCheckboxChange1($event)">
+                            Can Waive Out?
+                        </mat-checkbox>
+                    </div>
+                </div>
+
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-raised-button color="primary" (click)="ngSubmitEmp(noticeperiodForm.value)">
+                {{ editNoticePeriod=== 'edit' ? 'Update' : 'Submit' }}
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </form>
+</ng-container>

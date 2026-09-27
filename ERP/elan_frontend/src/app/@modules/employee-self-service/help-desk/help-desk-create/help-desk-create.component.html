@@ -1,0 +1,201 @@
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>ESS</h1>
+    <p>Help Desk <i class="fa fa-angle-right" aria-hidden="true">
+      </i><span> Create Help Desk </span></p>
+    </div>
+    <div class="add_button">
+      <!-- <button routerLink="../achievement" type="button">List</button> -->
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+  </div>
+  
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Create Help Desk</h3>
+    </div>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="helpDiskForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Requester</mat-label>
+
+                <mat-select formControlName="requester" >
+                  <mat-select-filter [array]="asignvariables" (filteredReturn)="asignFilter($event)"></mat-select-filter>
+
+                  <mat-option
+                    *ngFor="let spoc of asignData"
+                    [value]="spoc.employee_id"
+                    >{{ spoc.first_name }} {{spoc.last_name}} {{spoc.employee_code}}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <!-- <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Requester</mat-label>
+                <input readonly matInput type="text" formControlName="requester" />
+                <mat-error *ngIf="helpDiskForm.invalid || helpDiskForm.controls.touched">
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('required')">Requester is Required</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('minlength')">This field accepted minimum 5 length</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('maxlength')">This field accepted maximum 10 length</span>
+                </mat-error>
+              </mat-form-field>
+            </div> -->
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Subject</mat-label>
+                <input matInput type="text" formControlName="subject" />
+                <!-- <mat-error *ngIf="helpDiskForm.controls.invalid && helpDiskForm.controls.touched">
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('required')">Subject is Required</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('minlength')">This field accepted minimum 5 length</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('maxlength')">This field accepted maximum 10 length</span>
+                </mat-error> -->
+                <mat-error *ngIf="helpDiskForm.controls['subject'].hasError('required')">
+                  Subject is Required.
+                </mat-error>
+                <mat-error *ngIf="helpDiskForm.controls['subject'].hasError('minlength')">
+                  This field accepted minimum 2 length.
+                </mat-error>
+                <mat-error *ngIf="helpDiskForm.controls['subject'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Assignee</mat-label>
+                <mat-select formControlName="assignee">
+                    <mat-select-filter [array]="assignees" (filteredReturn)="assignFilter($event)"></mat-select-filter>
+                  <mat-option *ngFor="let data of propertyManager" [value]="data">{{data}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="helpDiskForm.controls['assignee'].hasError('required')">
+                  Assignee is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+      
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Filed Title</mat-label>
+                <mat-select formControlName="field_title">
+                  <mat-option value="mr">Mr</mat-option>
+                  <mat-option value="mrs">Mrs</mat-option>
+                </mat-select>
+                <mat-error *ngIf="helpDiskForm.controls['field_title'].hasError('required')">
+                  Filed Title is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Request For</mat-label>
+                <mat-select formControlName="request_for">
+                  <mat-option value="admin">Admin</mat-option>
+                  <mat-option value="it">IT</mat-option>
+                     <mat-option value="opration">Opration</mat-option>
+                  <mat-option value="maintain">Mantainance</mat-option>
+                </mat-select>
+                <mat-error *ngIf="helpDiskForm.controls['request_for'].hasError('required')">
+                  Request For is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Priority</mat-label>
+                <mat-select formControlName="priority">
+                  <mat-option value="high">High</mat-option>
+                  <mat-option value="medium">Medium</mat-option>
+                  <mat-option value="low">Low</mat-option>
+                </mat-select>
+                <mat-error *ngIf="helpDiskForm.controls['priority'].hasError('required')">
+                  Priority For is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+   
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Request No</mat-label>
+                <input matInput type="text" formControlName="request_no" />
+                <!-- <mat-error *ngIf="helpDiskForm.controls.invalid && helpDiskForm.controls.touched">
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('required')">Subject is Required</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('minlength')">This field accepted minimum 5 length</span>
+                  <span *ngIf="helpDiskForm.controls['requester'].hasError('maxlength')">This field accepted maximum 10 length</span>
+                </mat-error> -->
+                <mat-error *ngIf="helpDiskForm.controls['request_no'].hasError('required')">
+                  Request No is Required.
+                </mat-error>
+                <mat-error *ngIf="helpDiskForm.controls['request_no'].hasError('minlength')">
+                  This field accepted minimum 4 length.
+                </mat-error>
+                <mat-error *ngIf="helpDiskForm.controls['request_no'].hasError('maxlength')">
+                  This field accepted maximum 10 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+       
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status1">
+                  <mat-option value="new">New</mat-option>
+                  <mat-option value="open">Open</mat-option>
+                  <mat-option value="pendig">Pending</mat-option>
+                  <mat-option value="solved">Solved</mat-option>
+                </mat-select>
+                <mat-error *ngIf="helpDiskForm.controls['status1'].hasError('required')">
+                  Status No is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+                
+                <input matInput (keydown)="changedText()" type="text" formControlName="description" [attr.disabled]="words >100 ? '' : null" (keydown)="wordCounter()" #text id="wmd-input" name="post-text" class="wmd-input s-input bar0 js-post-body-field processed" data-post-type-id="2" cols="92" rows="15" tabindex="101" data-min-length="" oncopy="return false;" onpaste="return false;" oncut="return false;"/>
+              </mat-form-field>
+            </div>
+            <span class="warn_text" *ngIf="extraWords">Please enter within the text limit: 50</span>
+          </div>
+
+        </div>
+        <div class="common_button_sub">
+          <button *ngIf="!employeId" [disabled]="extraWords" (click)="onSubmitForm()" >
+            Save
+          </button>
+
+          <button *ngIf="employeId" (click)="updateForm($event)">
+            Update
+          </button>
+          <button class="cancel_button_y" (click)="back()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>

@@ -1,0 +1,409 @@
+<div class="container-fluid">
+  <div class="row g-4" *ngIf="!selectedTravelId">
+    <form [formGroup]="form" class="row g-3" *ngIf="employees.length > 0">
+      <!-- Radio group for self/other -->
+      <div class="col-md-4">
+        <mat-radio-group
+          formControlName="type"
+          class="d-flex align-items-center mb-2"
+        >
+          <mat-radio-button value="self" class="me-3">Self</mat-radio-button>
+          <mat-radio-button value="other">Other</mat-radio-button>
+        </mat-radio-group>
+      </div>
+
+      <!-- Employee selector -->
+      <div class="col-md-8">
+        <app-mat-form-select-filter
+          *ngIf="form.get('type')?.value === 'other'"
+          id="employeeSelect"
+          formControlName="employee_id"
+          key="employee_id"
+          [items]="employees"
+          [displayKey]="['first_name', 'last_name']"
+          placeholder="Search employee"
+          aria-describedby="employeeHelp"
+        ></app-mat-form-select-filter>
+      </div>
+    </form>
+    <!-- Last Month -->
+    <div class="col-12 col-md-6" *ngIf="isRM">
+      <div class="card shadow-sm">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Last Month ({{ getMonthYear(lastMonth) }})</h5>
+        </div>
+        <div class="card-body p-0">
+          <form [formGroup]="form">
+            <div formArrayName="lmPlans" class="table-responsive">
+              <table class="table table-hover table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Day</th>
+                    <th scope="col">Planned City</th>
+                    <th scope="col">Actual City</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="let plan of lmPlans.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <tr
+                      *ngIf="
+                        plan.get('plan_city')?.value ||
+                        plan.get('actual_city')?.value
+                      "
+                      [ngClass]="{
+                        'bg-yellow':
+                          plan.get('plan_city')?.value &&
+                          plan.get('actual_city')?.value &&
+                          plan.get('plan_city')?.value !==
+                            plan.get('actual_city')?.value
+                      }"
+                    >
+                      <td>
+                        {{ plan.get("date")?.value | date : "mediumDate" }}
+                      </td>
+                      <td>
+                        {{ plan.get("day")?.value }}
+                        <span
+                          *ngIf="plan.get('holiday')?.value?.holiday_name"
+                          class="badge bg-warning text-dark ms-2"
+                          [title]="plan.get('holiday')?.value?.holiday_name"
+                        >
+                          {{ plan.get("holiday")?.value?.holiday_name }}
+                        </span>
+                      </td>
+                      <td>{{ plan.get("plan_city")?.value || "-" }}</td>
+
+                      <td>
+                        <ng-container
+                          *ngIf="plan.get('actual_city')?.value; else noCity"
+                        >
+                          <span>
+                            {{ plan.get("actual_city")?.value }}
+                            <span
+                              class="text-muted"
+                              role="button"
+                              *ngIf="plan.get('travel_id')?.value"
+                              (click)="
+                                showTheTravelRequest(
+                                  plan.get('travel_id')?.value
+                                )
+                              "
+                            >
+                              {{
+                                plan.get("travel_name")?.value || "View Details"
+                              }}
+                            </span>
+                          </span>
+                        </ng-container>
+                        <ng-template #noCity>-</ng-template>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="hasVisibleLmPlans()">
+                    <td colspan="4" class="text-end fw-bold pe-3">
+                      Deviation: {{ noOfLMDeviation }}
+                    </td>
+                  </tr>
+                  <tr *ngIf="lmPlans.length === 0 || !hasVisibleLmPlans()">
+                    <td colspan="4" class="text-center text-muted py-3">
+                      No travel plans available for last month.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- This Month -->
+    <div class="{{ isRM ? 'col-12 col-md-6' : 'col-12' }}">
+      <div class="card shadow-sm">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h5 class="mb-0">Current Selected Month ({{ getMonthYear(thisMonth) }})</h5>
+
+          <div class="d-flex gap-2 align-items-center">
+            <button mat-raised-button (click)="onChangeMonth()">
+              {{
+                currentMonthType === "current"
+                  ? "Show Next Month"
+                  : "Back to Current Month"
+              }}
+            </button>
+
+            <span class="badge bg-light text-dark">{{
+              planTM ? planTM?.status : "PENDING"
+            }}</span>
+            <button
+              mat-raised-button
+              color=""
+              type="button"
+              (click)="onDownloadCSV()"
+            >
+              <mat-icon class="mr-2">file_download</mat-icon>
+              Export
+            </button>
+            <button
+              *ngIf="
+                !isRM &&
+                tmPlans.controls.length > 0 &&
+                planTM?.status !== 'APPROVED'
+              "
+              mat-raised-button
+              color="primary"
+              (click)="saveChanges()"
+              [disabled]="form.invalid"
+              ngbTooltip="Save your changes"
+            >
+              Save Changes
+            </button>
+            <button
+              *ngIf="
+                isRM &&
+                planTM &&
+                tmPlans.controls.length > 0 &&
+                planTM?.status !== 'APPROVED'
+              "
+              mat-raised-button
+              color="primary"
+              (click)="approvePlan()"
+              [disabled]="form.invalid"
+              ngbTooltip="Approve this month's plan"
+            >
+              Approve
+            </button>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <!-- Loading State -->
+          <div
+            *ngIf="isLoading"
+            class="d-flex flex-column justify-content-center align-items-center p-4"
+          >
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 mb-0 text-muted">Fetching travel plans...</p>
+          </div>
+
+          <!-- Form Content -->
+          <form [formGroup]="form" *ngIf="!isLoading">
+            <div formArrayName="tmPlans" class="table-responsive">
+              <table class="table table-hover table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Day</th>
+                    <th scope="col">Planned State</th>
+                    <th scope="col">Planned City</th>
+                    <th
+                      scope="col"
+                      *ngIf="isRM || planTM?.status === 'APPROVED'"
+                    >
+                      Actual City
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container
+                    *ngFor="let plan of tmPlans.controls; let i = index"
+                    [formGroupName]="i"
+                  >
+                    <tr
+                      *ngIf="
+                        (!isRM && planTM?.status !== 'APPROVED') ||
+                        (isRM &&
+                          planTM?.status === 'APPROVED' &&
+                          (plan.get('plan_city')?.value ||
+                            plan.get('actual_city')?.value)) ||
+                        (isRM &&
+                          planTM?.status !== 'APPROVED' &&
+                          (plan.get('plan_city')?.value ||
+                            plan.get('actual_city')?.value)) ||
+                        (!isRM &&
+                          planTM?.status === 'APPROVED' &&
+                          (plan.get('plan_city')?.value ||
+                            plan.get('actual_city')?.value))
+                      "
+                      [ngClass]="{
+                        'bg-yellow':
+                          plan.get('plan_city')?.value &&
+                          plan.get('actual_city')?.value &&
+                          plan.get('plan_city')?.value !==
+                            plan.get('actual_city')?.value
+                      }"
+                    >
+                      <td>
+                        {{ plan.get("date")?.value | date : "mediumDate" }}
+                      </td>
+                      <td>
+                        {{ plan.get("day")?.value }}
+                        <span
+                          *ngIf="plan.get('holiday')?.value?.holiday_name"
+                          class="badge bg-warning text-dark ms-2"
+                          [title]="plan.get('holiday')?.value?.holiday_name"
+                        >
+                          {{ plan.get("holiday")?.value?.holiday_name }}
+                        </span>
+                      </td>
+                      <td>
+                        <ng-container
+                          *ngIf="
+                            !isRM && planTM?.status !== 'APPROVED';
+                            else displayPlanState
+                          "
+                        >
+                          <app-mat-form-select-filter
+                            *ngIf="states.length > 0"
+                            id="plan_state_id"
+                            formControlName="plan_state_id"
+                            key="states_id"
+                            [items]="states"
+                            [displayKey]="['states_name']"
+                            placeholder="Search state"
+                            aria-describedby="plan_state_id"
+                          ></app-mat-form-select-filter>
+                        </ng-container>
+                      </td>
+                      <td>
+                        <ng-container
+                          *ngIf="
+                            !isRM && planTM?.status !== 'APPROVED';
+                            else displayPlanCity
+                          "
+                        >
+                          <app-mat-form-select-filter
+                            *ngIf="tmPlanCities[i]?.length > 0"
+                            id="plan_city_id"
+                            formControlName="plan_city_id"
+                            key="city_id"
+                            [items]="tmPlanCities[i]"
+                            [displayKey]="['city_name']"
+                            placeholder="Search city"
+                            aria-describedby="plan_city_id"
+                          ></app-mat-form-select-filter>
+                          <!-- <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Planned City</mat-label>
+                            <mat-select
+                              formControlName="plan_city_id"
+                              [placeholder]="'Select a city'"
+                            >
+                              <mat-form-field>
+                                <input
+                                  matInput
+                                  [formControl]="itemFilterCtrl"
+                                  type="search"
+                                  placeholder="Search"
+                                />
+                              </mat-form-field>
+                              <mat-option
+                                *ngFor="let item of filteredItems | async"
+                                [value]="item.city_id"
+                              >
+                                {{
+                                  item.city_name +
+                                    "-" +
+                                    item?.MASTER_STATE?.states_name
+                                }}
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field> -->
+                          <div
+                            *ngIf="
+                              plan.get('plan_city_id')?.touched &&
+                              plan.get('plan_city_id')?.invalid
+                            "
+                            class="invalid-feedback"
+                          >
+                            Please select a planned city.
+                          </div>
+                        </ng-container>
+                        <ng-template #displayPlanState>
+                          <span>{{
+                            plan.get("plan_state")?.value || "-"
+                          }}</span>
+                        </ng-template>
+                        <ng-template #displayPlanCity>
+                          <span>{{ plan.get("plan_city")?.value || "-" }}</span>
+                        </ng-template>
+                      </td>
+                      <td>
+                        <ng-container
+                          *ngIf="
+                            !isRM && planTM?.status !== 'APPROVED';
+                            else displayActualCity
+                          "
+                        >
+                        </ng-container>
+                        <ng-template #displayActualCity>
+                          <ng-container
+                            *ngIf="plan.get('actual_city')?.value; else noCity"
+                          >
+                            <span>
+                              {{ plan.get("actual_city")?.value }}
+                              <span
+                                class="text-muted"
+                                role="button"
+                                *ngIf="plan.get('travel_id')?.value"
+                                (click)="
+                                  showTheTravelRequest(
+                                    plan.get('travel_id')?.value
+                                  )
+                                "
+                              >
+                                {{
+                                  plan.get("travel_name")?.value ||
+                                    "View Details"
+                                }}
+                              </span>
+                            </span>
+                          </ng-container>
+                          <ng-template #noCity>-</ng-template>
+                        </ng-template>
+                      </td>
+                    </tr>
+                  </ng-container>
+                  <tr *ngIf="hasVisibleTmPlans()">
+                    <td colspan="5" class="text-end fw-bold pe-3">
+                      Deviation: {{ noOfTMDeviation }}
+                    </td>
+                  </tr>
+                  <tr *ngIf="tmPlans.length === 0 || !hasVisibleTmPlans()">
+                    <td colspan="4" class="text-center text-muted py-3">
+                      No travel plans added for this month.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="selectedTravelId">
+    <div class="d-flex justify-content-end mb-3">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="selectedTravelId = null"
+      >
+        Switch to Plan
+      </button>
+    </div>
+
+    <app-dash-create-travel-request
+      [travelReqid]="selectedTravelId"
+      [typeCheck]="'view'"
+    ></app-dash-create-travel-request>
+  </div>
+</div>

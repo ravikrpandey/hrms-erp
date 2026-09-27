@@ -1,0 +1,125 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead">{{!allowanceid?"Add Allowance":"Update Allowance"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead"> Allowance Record</h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography ">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Allowance Name :</p>
+                    <p>Domestic Allowance : </p>
+                    <p>International Allowance :</p>
+                    <p>Status :</p>
+                    <!-- <p>Employee Name :</p> -->
+                </div>
+                <div class="emp_value">
+                    <p>{{allownceData?.allowance_name}}</p>
+                    <p> {{allownceData?.domestic_allowance }}</p>
+                    <p> {{allownceData?.international_allowance}}</p>
+                    <p> {{allownceData?.status}}</p>
+                    <!-- <p> {{allownceData?.HRMS_REGISTERED_USER.first_name + allownceData?.HRMS_REGISTERED_USER.last_name}} -->
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button mat-dialog-close class="cancel_button_y">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+    <fieldset *ngIf="!view">
+        <div class="m-3 mt-4" [formGroup]="AllowanceForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>Allownace Name </mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Allowance Name</mat-label>
+                            <input matInput type="text" formControlName="allowance_name" />
+                            <mat-error *ngIf="AllowanceForm.controls['allowance_name'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="AllowanceForm.controls['allowance_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>Domestic Allowance </mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>Domestic Allowance</mat-label>
+                            <input matInput type="number" formControlName="Domestic_Allowance"
+                                (keypress)="onKeyPress($event)" />
+                            <mat-error *ngIf="AllowanceForm.controls['Domestic_Allowance'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="AllowanceForm.controls['Domestic_Allowance'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>International Allowance</mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <!-- <p>Department Name</p> -->
+                        <mat-form-field appearance="outline">
+                            <mat-label>International Allowance</mat-label>
+                            <input matInput type="number" formControlName="International_Allowance"
+                                (keypress)="onKeyPress($event)" />
+                            <mat-error *ngIf="AllowanceForm.controls['International_Allowance'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error
+                                *ngIf="AllowanceForm.controls['International_Allowance'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-12">
+                    <label>Are you sure for taxable amount</label>
+                    <mat-checkbox title="Save for emergency contact" class="example-margin"
+                        formControlName="amount_type" (change)="onCheckboxChange($event)"></mat-checkbox>
+                </div>
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                    <mat-label>Employees </mat-label>
+                </div>
+                <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12 mb-4">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Employees</mat-label>
+                        <mat-select  formControlName="employee_id">
+                            <mat-option *ngFor="let employees of allemp" [value]="employees.employee_id">{{employees.first_name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="AllowanceForm.controls['employee_id'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <mat-dialog-actions *ngIf="!view" class="common_button_sub" align="end">
+            <button *ngIf="!allowanceid" (click)="onSubmitForm()">
+                Submit
+            </button>
+            <button *ngIf="allowanceid" (click)="onUpdateForm()">
+                Update
+            </button>
+            <button mat-dialog-close class="cancel_button_y">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

@@ -1,0 +1,53 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-6">
+      <p style="font-weight: 600;">Customer Status: {{this.profileData?.data_status =='Approve' ? 'Approved' : this.profileData?.data_status}}</p>
+    </div>
+    <div class="col-6 status_css" >
+      <!-- <p>Customer Status: {{this.profileData?.data_status =='Approve' ? 'Approved' : this.profileData?.data_status}}</p> -->
+    </div>
+  </div>
+  <div class="row" *ngIf="approvalData?.employee_ids">
+    <div class="col-6">
+      <h2>Company Merge Request List</h2>
+    </div>
+  </div>
+ 
+  <mat-form-field appearance="outline" class="w-100" *ngIf="approvalData?.employee_ids">
+    <mat-label>Select Merge Company</mat-label>
+    <mat-select
+      multiple
+      [(value)]="selectedCustomers"
+      [disabled]="pendingCustomers.length === 0"
+    >
+      <mat-option *ngFor="let customer of pendingCustomers" [value]="customer">
+        {{ customer.company_name }} ({{ customer.customer_code }})
+      </mat-option>
+    </mat-select>
+    <mat-hint *ngIf="pendingCustomers.length === 0"
+      >No pending company available.</mat-hint
+    >
+  </mat-form-field>
+  
+  <div class="row" *ngIf="approvalData?.approval_option === 'without_document'" >
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="approvalData?.employee_ids">
+      <div class="bypass" style="display: flex; align-items: center;">
+        <span>Bypass all information & documents details?</span>
+        <mat-checkbox (change)="onBypassChange($event)" class="example-margin" style="margin-left: 10px;" ></mat-checkbox>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="remarksOpen">
+      <div class="form-group mb-4" *ngIf="approvalData?.employee_ids">
+          <mat-form-field appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <input matInput type="text" [(ngModel)]="remarks"/>
+          </mat-form-field>
+        </div>
+    </div>
+  </div>
+
+  <!-- Only show the Approve button if parentStatus is not 'Approve' -->
+  <div class="text-end mt-3" style="margin-bottom: 10px;">
+    <button mat-raised-button color="primary" (click)="approveSelectedCustomers()">{{this.profileData?.data_status =='Approve' ? 'Merge Customer' : 'Approve & Merge Customer'}}</button>
+  </div>
+</div>

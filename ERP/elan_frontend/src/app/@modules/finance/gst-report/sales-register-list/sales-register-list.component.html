@@ -1,0 +1,109 @@
+<div class="heading_top py-3">
+    <div class="page-title">
+        <h1>Sales Register Report</h1>
+        <p><i class="fa fa-angle-right" aria-hidden="true" style="color:#063178"></i>
+            <span>GST Report</span> / <span>Sales Register Report</span>
+        </p>
+    </div>
+    <div class="add_button" *ngIf="false">
+        <button type="button" (click)="addNewForm()"><i class="fa fa-plus"></i> Add New</button>
+    </div>
+</div>
+
+<div class="right_data_all">
+    <div class="currency-display mb-2" *ngIf="currencyData">
+        <div class="alert alert-info" role="alert" style="padding: 8px 15px; margin-bottom: 10px;">
+            <i class="fa fa-info-circle"></i> 
+            <strong>Currency:</strong> {{currencyCode}} 
+            <span class="badge bg-primary ms-2">1 {{currencyCode}} = {{1/currencyRate | number:'1.2-4'}} INR</span>
+            <span class="ms-3"><strong>Symbol:</strong> {{currencySymbol}}</span>
+        </div>
+    </div>
+
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <label for="page-size" class="me-2">Rows per page:</label>
+            <select id="page-size" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div class="employee_2" align="end">
+            <div class="search-container">
+                <i class="fa fa-search search-icon"></i>
+                <input type="text" class="form-control" id="filter-text-box" 
+                    (input)="onFilterTextBoxChanged()" placeholder="Search..." 
+                    style="padding-left: 35px; width: 300px;">
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-cards mb-3" *ngIf="rowData && rowData.length > 0">
+        <div class="row g-2">
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <h6 class="card-title text-muted mb-0">Total Invoices</h6>
+                        <h5 class="mb-0">{{rowData.length}}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <h6 class="card-title text-muted mb-0">Total Value</h6>
+                        <h5 class="mb-0">{{formatCurrency(getTotalValue())}}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <h6 class="card-title text-muted mb-0">Total Taxable Value</h6>
+                        <h5 class="mb-0">{{formatCurrency(getTotalTaxable())}}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="card bg-light">
+                    <div class="card-body py-2">
+                        <h6 class="card-title text-muted mb-0">Total GST</h6>
+                        <h5 class="mb-0">{{formatCurrency(getTotalGST())}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ag_grid">
+        <ag-grid-angular 
+            [rowClass]="rowClass" 
+            class="ag-theme-alpine" 
+            style="width: 100%; height: 550px;"
+            [columnDefs]="columnDefs" 
+            [pagination]="true" 
+            [paginationPageSize]="10"
+            [rowData]="rowData"
+            (gridReady)="onGridReady($event)" 
+            [gridOptions]="gridOptions"
+            [enableCellTextSelection]="true"
+            [ensureDomOrder]="true">
+        </ag-grid-angular>
+    </div>
+
+    <div class="footer-info mt-3 text-muted" style="font-size: 12px;">
+        <div class="row">
+            <div class="col-md-6">
+                <i class="fa fa-info-circle"></i> All amounts are displayed in <strong>{{currencyCode}}</strong> 
+                ({{currencySymbol}}) as per selected currency.
+            </div>
+            <div class="col-md-6 text-end">
+                <span>Last updated: {{currentDate | date:'medium'}}</span>
+            </div>
+        </div>
+    </div>
+</div>

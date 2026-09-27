@@ -1,0 +1,26 @@
+<div class="edd-del">
+  <mat-icon matTooltip="View" class="viewButton" (click)="view($event)"
+    >visibility</mat-icon
+  >
+  <mat-icon
+    matTooltip="Edit"
+    class="editButton"
+    *ngIf="status == 'PENDING' && !hideEditIcon"
+    (click)="edit($event)"
+    >edit</mat-icon
+  >
+  <mat-icon
+    matTooltip="Delete"
+    class="deleteButton"
+    *ngIf="status == 'PENDING' && !hideDeleteIcon"
+    (click)="deleteQuotation()"
+    >delete</mat-icon
+  >
+  <mat-icon
+    matTooltip="Add Proforma"
+    (click)="navigateToCreateProformas()"
+    *ngIf="status == 'APPROVED' && proforma_created == false"
+    class="add-icon"
+    >add_circle</mat-icon
+  >
+</div>

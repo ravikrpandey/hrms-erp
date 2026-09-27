@@ -1,0 +1,43 @@
+<div class="section">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">
+    Proposal Version Details
+  </h3>
+
+  <section>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Version Number</th>
+            <th>Created Date</th>
+            <th>Follow up Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container>
+            <tr *ngFor="let data of rowData; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ data?.version }}</td>
+              <td>{{ data?.createdAt }}</td>
+              <td>{{ data?.follow_up_date }}</td>
+              <td>
+                <mat-icon class="view_icon" role="button" (click)="viewProposal(data)"
+                  >visibility</mat-icon
+                >
+                <!-- <mat-icon class="download_icon">download</mat-icon> -->
+                <!-- <mat-icon class="" *ngIf="data.is_so_created_any_version===0" (click)="sendProposal(data)">arrow_forward</mat-icon> -->
+                <mat-icon matTooltip="PI Send" role="button" class="" *ngIf="data.pi_status === null && i === 0" (click)="sendPermonceInvoice(data)" >label_important</mat-icon>
+
+                <mat-icon matTooltip="Schedule" role="button" (click)="open(data)" >watch_later</mat-icon>
+                  <mat-icon role="button" matTooltip="Download PDF" color="primary" (click)="downloadPDF(data)" >download</mat-icon>
+                  <mat-icon matTooltip="Send Mail" (click)="emailSend()" class="mx-2">email</mat-icon>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>

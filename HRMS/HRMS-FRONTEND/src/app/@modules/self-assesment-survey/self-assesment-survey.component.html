@@ -1,0 +1,23 @@
+<app-pageheading pagename="Self Assessment Survey"></app-pageheading>
+
+<div class="filter-sec mt-20  mb-4">
+  <app-dynamic-search (filterTextChange)="onFilterTextBoxChanged($event)"></app-dynamic-search>
+
+  <div class="display-flex gap-2-percent">
+    <app-button
+      type="button"
+      btn="addbuton"
+      btnClass="fillBlue"
+      text="Create Survey"
+      (click)="goToCreateSurvey()"
+    ></app-button>
+  </div>
+</div>
+
+<app-tableview
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  [pagination]="true"
+  (gridReadyEvent)="onGridReady($event)"
+  [paginationPageSize]="10"
+></app-tableview>

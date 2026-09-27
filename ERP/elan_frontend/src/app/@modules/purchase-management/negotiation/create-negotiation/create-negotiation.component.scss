@@ -1,0 +1,179 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+.section-container {
+  border: none;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+
+  .section-header {
+    background: #00644d;
+    padding: 1rem 1.5rem;
+
+    h3 {
+      color: #fff;
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0;
+
+  &.bordered {
+    padding: 0.75rem;
+    background: #fff;
+    border: 1px solid #e0e6ed;
+    border-radius: 8px;
+  }
+
+  .detail-label {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .detail-value {
+    font-size: 1rem;
+    color: #1e293b;
+    font-weight: 500;
+
+    &.highlight {
+      color: #063178;
+      font-weight: 700;
+    }
+  }
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    padding: 1rem;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+  }
+
+  tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    font-size: 0.95rem;
+  }
+
+  .level-header {
+    td {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: #063178;
+      font-size: 0.9rem;
+      padding: 0.75rem 1rem;
+    }
+  }
+
+  tr:hover:not(.level-header) td {
+    background-color: #f8fafc;
+  }
+}
+
+.product-img-wrapper {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(6, 49, 120, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+
+    mat-icon {
+      color: #fff;
+      font-size: 20px;
+    }
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.1);
+    }
+    .overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.dense-form-field {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+  }
+}
+
+.btn-negotiate {
+  padding: 0.75rem 2.5rem !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.bg-light {
+  background-color: #f8fafc !important;
+}
+
+@media (max-width: 768px) {
+  .section-container {
+    .row {
+      padding: 1rem !important;
+    }
+  }
+}

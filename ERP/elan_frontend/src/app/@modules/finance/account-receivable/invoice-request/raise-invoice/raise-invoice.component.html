@@ -1,0 +1,2249 @@
+<mat-card>
+    <div class="section">
+      <div class="main">
+        <div class="employee"></div>
+        <div class="msater-nav">
+          <a href="">Account Recievable<mat-icon>keyboard_arrow_right</mat-icon></a>
+          <a routerLink="../">Send to E-Invoice </a>
+        </div>
+        <div class="updatetitle">Send to E-Invoice </div>
+        <div class="apply-btn">
+         </div>
+
+         <form class="form_set" [formGroup]="leadForm">
+         <section class="job-nav">
+          <div class="section">
+            <mat-card>
+              <div class="row form_head">
+                <h3>Invoice Varification</h3>
+              </div>
+
+              <div class="form_basic">
+
+<div class="row">
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">GST Number</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="gst_number" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">Br Number</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="br_number" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">Email</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="email_copy" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">Address1</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="street_address" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">Address2</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="address2" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <p class="file-tag">Work Order</p>
+      <mat-form-field appearance="outline">
+        <input matInput type="text" formControlName="workOrder_no" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag">WO Verified On</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="wo_verified_on" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag">WO Verify by</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="wo_verify_by" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag">WO Verification Status</p>
+                      <mat-form-field appearance="outline">
+                        <mat-select formControlName="wo_verification_status">
+                          <mat-option value="verification_complete">Verification Completed</mat-option>
+                          <mat-option value="verification_incomplete">Verification In-Completed</mat-option>
+                        </mat-select>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="">First Name</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="first_name">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+               
+                      <p>Audit Start Date :</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput [matDatepicker]="dp6" (click)="dp6.open()"
+                          formControlName="audit_start_date" />
+                        <mat-datepicker-toggle matSuffix [for]="dp6"></mat-datepicker-toggle>
+                        <mat-datepicker #dp6></mat-datepicker>
+                        <!-- <mat-error *ngIf="
+                      leadForm.controls['quote_prepared_date'].hasError(
+                        'required'
+                      )
+                    ">
+                          This field is required!
+                        </mat-error> -->
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                  
+                      <p>Audit End Date :</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput [matDatepicker]="dp7" (click)="dp7.open()"
+                          formControlName="audit_end_date" />
+
+                        <mat-datepicker-toggle matSuffix [for]="dp7"></mat-datepicker-toggle>
+                        <mat-datepicker #dp7></mat-datepicker>
+                        <!-- <mat-error *ngIf="
+                      leadForm.controls['quote_prepared_date'].hasError(
+                        'required'
+                      )
+                    ">
+                          This field is required!
+                        </mat-error> -->
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+               
+                <div class="row">
+                  
+
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+             
+                      <p class="file-tag">ICT Date :</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput [matDatepicker]="dp8" (click)="dp8.open()"
+                          formControlName="ICT_Date" />
+
+                        <mat-datepicker-toggle matSuffix [for]="dp8"></mat-datepicker-toggle>
+                        <mat-datepicker #dp8></mat-datepicker>
+                     
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag">Associated Company</p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="associatedCompany" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag"> BR Number </p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="BrNumber" />
+                      </mat-form-field>
+                    </div>
+                  </div> -->
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <p class="file-tag">Credit Days </p>
+                      <mat-form-field appearance="outline">
+                        <input matInput type="text" formControlName="creditDay" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                 </div>
+                  <!-- <div class="row">
+
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <div class="form-group">
+                       
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="row">
+                    
+                    
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag"> Email </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="email" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag"> Designation </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="jobTitle" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">First Name</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="firstName" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                   
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag"> City </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="city" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag"> State </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="state" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag"> Mobile Number </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="Mob_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Street Address</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="streetAddress" />
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Address Line 2 </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="addressLine" />
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                    
+                  </div>
+                  <div class="row">
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">GST Number</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="gstNumber" />
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Credit Days </p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="creditDay" />
+                        </mat-form-field>
+                      </div>
+                    </div> -->
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="upload-btn">
+                        <!-- <br><br>
+                        <button class="favorite styled" (click)="submitForm()">
+                          Update Verifier Comments
+                        </button> -->
+                        <!-- <button class="cancel-btn" (click)="reject()">Reject</button> -->
+
+                      </div>
+                    </div>
+                  </div> 
+                  <table class="table table-bordered" id="itemTable">
+                          <thead>
+                            <tr>
+                              <th>Sr. No.</th>
+                              <th>Item Description</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Unit Price</th>
+                              <th>Net Amount</th>
+                              <!-- <th style="cursor: pointer;">Select Line Items</th> -->
+                            </tr>
+                          </thead>
+                          <tbody class="invoice_line">
+                            <tr *ngFor="let data of !manual_id ?brNumberData : item_details;index as i">
+                              <td>{{i+1}}</td>
+                              <td>{{data?.item_description ||data.item_discription}}</td>
+                              <td>{{data?.quantity}}</td>
+                              <td>{{data?.unit}}</td>
+                              <td>{{data?.unitPrice}}</td>
+                              <td>{{data?.netAmount||data?.net_amount}}</td>
+                            </tr>     
+                          </tbody>
+                  
+                        </table>
+                  <div class="row" style="padding: 10px 0;">
+                     
+                 
+                    </div>
+                 <div class="row">
+                  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12"></div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                           <span style="font-size: 16px;
+                           font-weight: 500;">Total Net Amount : <span>{{totalNetAmount ||total_amount}}</span></span>
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                
+                     
+                    <div class="row form_head">
+                      <h3>List Of Expense</h3>
+                    </div>
+      
+                    <div class="form_basic" >
+                      <div class="table" *ngIf="noExpenseData">
+                        <thead>
+                          <tr>
+                            <th>S.No</th>
+                            <th>Employee Name</th>
+                            <th>TO Number</th>
+                            <th>Expense Type</th>
+                            <th>Expense Report Status</th>
+                            <th>BR Number</th>
+                            <th>Task Order</th>
+                            <th>Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of getListExpenseList; index as i">
+                            <td>{{i+1}}</td>
+                            <td>{{item.expense_name}}</td>
+                            <td>{{item.task_order}}</td>
+                            <td>{{item.expense_type}}</td>
+                            <td>{{item.expense_report_no}}</td>
+                            <th>{{item.brNumber}}</th>
+                            <th class="tasklink" (click)="pdfGenerate()" matTooltip="Task Order File(Pdf Generate)">{{item.taskOrdersNum}}</th>
+                            <td>{{item.finalAmount}}</td>
+      
+                          </tr>
+                        </tbody>
+                      </div>
+
+                      <div class="row" *ngIf="!noExpenseData">
+                        <p class="no_expense">No Expense For This Br Number</p>
+                      </div>
+                    </div>
+
+                    <div class="row form_head">
+                      <h3>Site Details</h3>
+                    </div>
+ 
+                    <div class="form_basic">
+                      <table class="table w3-table w3-striped w3-border">
+                        <thead>
+                          <tr>
+                            <th>Billing Site</th>
+                            <th>Delivery Site</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{this.billingSite}}</td>
+                            <td>{{this.billingSiteDeliver}}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    
+
+                    <div class="row" *ngIf="resonFiled">
+                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                          <p class="file-tag">Reason</p>
+                          <mat-form-field appearance="outline">
+                            <input matInput type="text" formControlName="reason" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      </div>
+                    <div class="row">
+                      <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12"></div>
+                      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        <div class="upload-btn">
+                          <br><br>
+                          <button class="favorite styled" (click)="Approved()">
+                          Approve
+                          </button>
+                          <!-- <button class="cancel-btn" (click)="reject()">Reject</button> -->
+                        </div>
+                      </div>
+  
+                      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="!resonFiled">
+                        <div class="upload-btn">
+                          <br><br>
+                          <button class="cancel-btn" (click)="rejectCopy()">
+                          Reject
+                          </button>
+                          <!-- <button class="cancel-btn" (click)="reject()">Reject</button> -->
+                        </div>
+                      </div>
+
+                      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="resonFiled">
+                        <div class="upload-btn">
+                          <br><br>
+                          <button class="cancel-btn" (click)="rejectRecivable()">
+                          Save
+                          </button>
+                          <!-- <button class="cancel-btn" (click)="reject()">Reject</button> -->
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <!-- <div class="row" *ngIf="resonFiled">
+                      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                          <p class="file-tag">Reason</p>
+                          <mat-form-field appearance="outline">
+                            <input matInput type="text" formControlName="reason" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      </div>
+              
+<div class="row" *ngIf="resonFiled">
+  <div class="col-xxl-10 col-lg-10 col-md-10 col-sm-10 col-12"></div>
+
+  <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+    <div class="upload-btn">
+      <br><br>
+      <button class="favorite styled" (click)="rejectRecivable()">
+      Save
+      </button>
+      
+    </div>
+  </div>
+</div> -->
+
+
+                </div>
+              
+
+
+
+              
+            </mat-card>
+          </div>
+        </section>
+</form>
+
+
+
+
+
+
+        <!-- <form class="form_set" [formGroup]="leadForm">
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+
+                  <h3>Send to E-Invoice </h3>
+                </div>
+  
+                <div class="form_basic">
+                  Customer Type
+                  <input formControlName="customer_type" (click)="customerTypeNew()" checked="checked" type="radio"
+                    name="customer_type" value="New User" id="red" style="margin: 0 5px 0 4%" />New
+                  <input formControlName="customer_type" (click)="customerType()" type="radio" name="customer_type"
+                    value="Existing User" id="blue" style="margin: 0 5px 4% 4%" />Existing Customer
+                  <span style="margin-left: 10%">Multiple Site Audit</span>
+                  <input formControlName="site_audit" (click)="siteAuditNew()" checked="checked" type="radio"
+                    name="site_audit" value="Yes" id="red" style="margin: 0 5px 0 4%" />Yes
+                  <input formControlName="site_audit" (click)="siteAudit()" type="radio" name="site_audit" value="No"
+                    id="blue" style="margin: 0 5px 4% 4%" />No
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group" *ngIf="cutomerType">
+                        <p>Associated Company</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          <mat-select formControlName="associated_company">
+                            <mat-option value="Elite Mindz Technology">Elite Mindz Technology</mat-option>
+                            <mat-option value="DQS Pvt Ltd">DQS Pvt Ltd</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div class="form-group" *ngIf="!cutomerType">
+                        <p>Associated Company</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          <input matInput type="text" formControlName="associated_company" />
+                          <mat-error *ngIf="
+                              leadForm.controls['associated_company'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Segment</p>
+                        <mat-form-field appearance="outline" >                        
+                        <mat-select formControlName="segment">
+                          <mat-option *ngFor="let item of segmentList" [value]="item.segment_id">{{ item.segment_name
+                            }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="
+                              leadForm.controls['segment'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Certificate Type</p>
+                        <mat-form-field appearance="outline" >
+                          <mat-select formControlName="certificate_type">
+                           <mat-option *ngFor="let item of certificateList" [value]="item.certificate_type_id">{{
+                              item.certificate_type_name }}</mat-option>  
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row" *ngIf="cutomerType">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>BR No.</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+
+                          <input matInput type="text" formControlName="br_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
+                  </div>
+  
+                  <div class="row" *ngIf="cutomerType">
+                    <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                      <div class="form-group">
+                        Do you want to Create New Location/Site -
+                        {{ this.singleLeadData.br_number }}
+                        <input formControlName="br_number" checked="checked" type="radio" name="br_number" value="yes"
+                          id="red" style="margin: 0 5px 0 4%" />Yes
+                        <input formControlName="br_number" type="radio" name="br_number" value="no" id="blue"
+                          style="margin: 0 5px 4% 4%" />No
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>First Name</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                    
+                          <input matInput type="text" formControlName="first_name" />
+                          <mat-error *ngIf="
+                              leadForm.controls['first_name'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Last Name</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                         
+                          <input matInput type="text" formControlName="last_name" />
+                          <mat-error *ngIf="
+                              leadForm.controls['last_name'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Email ID</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                         
+                          <input matInput type="email" formControlName="email" />
+                          <mat-error *ngIf="
+                              leadForm.controls['email'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                          <mat-error *ngIf="leadForm.controls['email'].errors?.['pattern']">Please enter valid
+                            email</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Job Title</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                        
+                          <input matInput type="text" formControlName="job_title" />
+                          <mat-error *ngIf="
+                              leadForm.controls['job_title'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Street Address</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                        
+                          <input matInput type="text" formControlName="street_address" />
+                          <mat-error *ngIf="
+                              leadForm.controls['street_address'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Address Line 2</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                        
+                          <input matInput type="text" formControlName="address2" />
+                          <mat-error *ngIf="
+                              leadForm.controls['address2'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Country&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline" readonly>
+                          
+                          <mat-select formControlName="country" (selectionChange)="getCountryID($event)">
+                            <mat-option
+                              *ngFor="let item of countryList"
+                              [value]="item.countryss_id"
+                              >{{ item.countryss_name }}</mat-option> 
+                          
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['country'].hasError('required')
+                            "
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>State&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline">
+                     
+                          <mat-select formControlName="state" (selectionChange)="getStateID($event)">
+                            <mat-option
+                              *ngFor="let item of stateList"
+                              [value]="item.states_id"
+                              >{{ item.states_name }}</mat-option>
+                           
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['state'].hasError('required')
+                            "
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>City&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline" readonly>
+                     
+                          <mat-select formControlName="city" (selectionChange)="getPinCode($event)">
+                            <mat-option
+                              *ngFor="let item of cityList"
+                              [value]="item.city_id"
+                              >{{ item.city_name }}</mat-option>
+                       
+                          </mat-select>
+                          <mat-error
+                            *ngIf="leadForm.controls['city'].hasError('required')"
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group" *ngIf="!pinCodeTrue">
+                        <p>Postal Code</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="postal_code">
+                            <mat-option
+                              *ngFor="let item of pinCodeList"
+                              [value]="item.pincode_name"
+                              >{{ item.pincode_name }}</mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['postal_code'].hasError(
+                                'pattern'
+                              )
+                            "
+                          >
+                           Postal Code must be 6 digit*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="form-group" *ngIf="pinCodeTrue">
+                        <p>Postal Code</p>
+                        <mat-form-field appearance="outline">
+                          <input
+                            matInput
+                            type="text"
+                            formControlName="postal_code"
+                          />
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['postal_code'].hasError(
+                                'pattern'
+                              )
+                            "
+                          >
+                           Postal Code must be 5-6 digits..*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Region&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline" readonly>
+                          <mat-select formControlName="region">
+                            <mat-option *ngFor="let item of regionSList" [value]="item.new_region_id">{{
+                              item.new_region_name }}</mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['region'].hasError('required')
+                            "
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Regional Business Head&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline" readonly>
+                 
+                          <mat-select formControlName="regional_bussiness_lead">
+                            <mat-option *ngFor="let item of regionalbheadList"
+                              [value]="item.new_regional_business_head_id">{{ item.first_name }}</mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls[
+                                'regional_bussiness_lead'
+                              ].hasError('required')
+                            "
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Global Managing Director</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          
+                          <input matInput type="text" formControlName="global_managing_director" />
+                          <mat-error *ngIf="
+                              leadForm.controls[
+                                'global_managing_director'
+                              ].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Global Manager Sales&nbsp;<span class="form_required">*</span></p>
+                        <mat-form-field appearance="outline" readonly>
+         
+                          <mat-select formControlName="global_manager_sales">
+                            <mat-option *ngFor="let item of globalMsalesList"
+                              [value]="item.new_global_manager_sales_id">{{ item.first_name }}</mat-option>
+                          </mat-select>
+                          <mat-error
+                            *ngIf="
+                              leadForm.controls['global_manager_sales'].hasError(
+                                'required'
+                              )
+                            "
+                          >
+                           Required*
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Website URL</p>
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                     
+                          <input matInput type="text" formControlName="website_url" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Phone Number</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          
+                          <input matInput type="text" formControlName="phone_number" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Mobile Number</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                      
+                          <input matInput type="text" formControlName="mobile_number" />
+                          <mat-error *ngIf="
+                              leadForm.controls['mobile_number'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                          <mat-error *ngIf="  leadForm.controls['mobile_number'].errors?.['pattern']">Mobile number is not
+                            10 digit</mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"></div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Lead Source Details</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>DQS Contact Source</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                        
+                          <mat-select formControlName="dqs_contact_source">
+                            <mat-option value="Cold Calling">Cold Calling</mat-option>
+                            <mat-option value="Relationship Sales Manager">Relationship Sales Manager</mat-option>
+                            <mat-option value="Recomendation Auditor">Recomendation Auditor</mat-option>
+                            <mat-option value="Recomendation Consultancy(Channel Partner)">Recomendation
+                              Consultancy(Channel
+                              Partner)</mat-option>
+                            <mat-option value="DQS Customer Referral">DQS Customer Referral</mat-option>
+                            <mat-option value="Marketing Campaign">Marketing Campaign</mat-option>
+                            <mat-option value="Event">Event</mat-option>
+                            <mat-option value="Social Selling">Social Selling</mat-option>
+                            <mat-option value="DQS Employee Referral">DQS Employee Referral</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['dqs_contact_source'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Lead Created By</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="lead_created_by_name" />
+                          <mat-error *ngIf="
+                              leadForm.controls['lead_created_by_name'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Lead Created Date</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput readonly [matDatepicker]="dp" (click)="dp.open()"
+                            formControlName="lead_created_date" />
+  
+                          <mat-datepicker-toggle matSuffix  [for]="dp"></mat-datepicker-toggle>
+                          <mat-datepicker #dp></mat-datepicker>
+                          <mat-error *ngIf="
+                              leadForm.controls['lead_created_date'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Requirement Details</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Categories</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <mat-select formControlName="categories">
+                            <mat-option *ngFor="let item of CategorySList" [value]="item.new_category_master_id">{{
+                              item.new_category_master_name }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Standard/Program/Assessment</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                       
+                          <mat-select formControlName="standard_program_assement">
+                            <mat-option
+                              *ngFor="let item of assesmentList"
+                              [value]="item.product_master_id"
+                              >{{ item.product_master_name }}</mat-option>
+                            </mat-select>
+  
+                          <mat-error *ngIf="
+                              leadForm.controls[
+                                'standard_program_assement'
+                              ].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Remarks</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="remarks" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Lead Validation</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Remarks</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="lead_validate_remarks" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Validated By</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <mat-select formControlName="validated_by">
+                            <mat-option *ngFor="let item of allAchievement" [value]="item.first_name">{{ item.first_name
+                              }}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['validated_by'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Lead Validated Date</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput readonly [matDatepicker]="dp2" (click)="dp2.open()"
+                            formControlName="lead_validated_date" />
+  
+                          <mat-datepicker-toggle matSuffix [for]="dp2" ></mat-datepicker-toggle>
+                          <mat-datepicker #dp2></mat-datepicker>
+                          <mat-error *ngIf="
+                              leadForm.controls['lead_validated_date'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Company Additional Details</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Industry Sector</p>
+                        <mat-form-field appearance="outline" >
+                          <input matInput type="text" formControlName="industry_sector" />
+                          <mat-error *ngIf="
+                              leadForm.controls['industry_sector'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Customer Category</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                       
+                          <mat-select formControlName="customer_category">
+                            <mat-option value="Pvt Ltd">Pvt Ltd</mat-option>
+                            <mat-option value="Public Ltd">Public Ltd</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['customer_category'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Employee Count</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput min="1" type="number"
+                            formControlName="employee_count" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Customer Sales Executive</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="customer_sales_executive" />
+                          <mat-error *ngIf="
+                              leadForm.controls[
+                                'customer_sales_executive'
+                              ].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Assign Opportunity to</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="assigned_to" />
+                          <mat-error *ngIf="
+                              leadForm.controls['assigned_to'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+  
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group" *ngIf="nonCertt">
+                        <p>Non-Cert Type</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+               
+                          <mat-select formControlName="non_cert_type">
+                            <mat-option value="Open House">Open House</mat-option>
+                            <mat-option value="In House">In House</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['non_cert_type'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Opportunity Type</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          <mat-select formControlName="opportunity_type" required>
+                            <mat-option value="Certification - New Audit (RA)">Certification - New Audit (RA)</mat-option>
+                            <mat-option value="Certification - Audit (TRA)">Certification - Audit (TRA)</mat-option>
+                            <mat-option value="KSC - Facilitation">KSC - Facilitation</mat-option>
+                            <mat-option value="KSC - GAP Assessment">KSC - GAP Assessment</mat-option>
+                            <mat-option value="KSC - Special Assessment">KSC - Special Assessment</mat-option>
+                            <mat-option value="KSC - Training">KSC - Training</mat-option>
+                            <mat-option value="Certification - Inter Company">Certification - Inter Company</mat-option>
+                            <mat-option value="Existing Opportunity - Migration">Existing Opportunity - Migration</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Opportunity Ref No</p>
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          <input matInput type="text" formControlName="opportunity_ref" />
+                          <mat-error *ngIf="
+                              leadForm.controls['opportunity_ref'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Product Request</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="product_request" />
+                          <mat-error *ngIf="
+                              leadForm.controls['product_request'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>GST Applicable</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="gst_applicable" />
+                          <mat-error *ngIf="
+                              leadForm.controls['gst_applicable'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="unreg">
+                      <div class="form-group">
+                        <p>URD Number</p>
+                        <mat-form-field appearance="outline" readonly>
+                          <input
+                            matInput
+                            maxlength="15"
+                            type="text"
+                            formControlName="urd_number"
+                            oninput="this.value = this.value.toUpperCase()"
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="(gstreg&&gstvalidation)">
+                      <div class="form-group">
+                        <p>GST Number</p>
+                        <mat-form-field appearance="outline" readonly>
+                          <input
+                            matInput
+                            maxlength="15"
+                            type="text"
+                            formControlName="gst_number"
+                            oninput="this.value = this.value.toUpperCase()"
+                          />
+                        </mat-form-field>
+                        <mat-error
+                          *ngIf="
+                            leadForm.controls['gst_number'].hasError('pattern')
+                          "
+                        >
+                          GST Number is Invalid
+                        </mat-error>
+                      </div>
+                    </div>
+                  </div>
+               
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <p>Assesment Period</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="assessment_period">
+                            <mat-option value="Annual" (click)="annualFunc()">Annual</mat-option>
+                            <mat-option value="Semi-Annual" (click)="annualSemiFunc()">Semi-Annual</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['assessment_period'].hasError(
+                                'required'
+                              )
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="form-group">
+                        <p>Select Stage</p>
+                        <mat-form-field appearance="outline" *ngIf="semiAnnual">
+                         <mat-select formControlName="stage">
+                            <mat-option value="S1">S1</mat-option>
+                            <mat-option value="S2">S2</mat-option>
+                            <mat-option value="CA1">CA1</mat-option>
+                            <mat-option value="CA2">CA2</mat-option>
+                            <mat-option value="TRA">TRA</mat-option>
+                            <mat-option value="Desk Review">Desk Review</mat-option>
+                            <mat-option value="PE">PE</mat-option>
+                            <mat-option value="TF">TF</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['stage'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" *ngIf="!semiAnnual">
+                        
+                          <mat-select formControlName="stage">
+                            <mat-option value="BCA 3">BCA 3</mat-option>
+                            <mat-option value="BCA 4">BCA 4</mat-option>
+                            <mat-option value="BCA 5">BCA 5</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['stage'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p>EA Code</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select #eacodeselect multiple formControlName="ea_code">
+                            <div class="select-all">
+                              <mat-checkbox [(ngModel)]="allSelectedCode" [ngModelOptions]="{ standalone: true }"
+                                (change)="toggleAllCodeSelect()">Select All</mat-checkbox>
+                            </div>
+                            <mat-option (click)="optionEaCode()" *ngFor="let item of eaCodeList"
+                              [value]="item.ea_code_name">{{ item.ea_code_name }}</mat-option>
+                          </mat-select>
+                          <mat-error *ngIf="
+                              leadForm.controls['ea_code'].hasError('required')
+                            ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                      <div class="form-group">
+                        <p>No of Mandays</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="no_of_mandays" />
+                          <mat-error *ngIf="
+                            leadForm.controls['no_of_mandays'].hasError('required')
+                          ">
+                            This field is required!
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                      <div class="form-group">
+                        <mat-icon class="add-man" (click)="addStage()"></mat-icon>
+                      </div>
+                      <div class="form-group">
+                        <mat-icon class="add-man" (click)="addStage()">add_circle</mat-icon>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group stage-table">
+                        <div class="head-table">
+                          <h4 class="head-stage">
+                            Stage
+                          </h4>
+                          <h4 class="head-stage right">
+                            No of Mandays
+                          </h4>
+                        </div>
+                        <div *ngFor="let item of this.stageData" class="data_right_all">
+                          <h1>
+                            {{ item.stage }} <span>{{ item.noOfMandays }}</span>
+                          </h1>
+                          <hr>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Additional Site Details</h3>
+                </div>
+  
+                <div class="form_basic">
+  
+  
+                  <div class="row">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <div class="form-group">
+                        <p>Billing Site</p>
+                        <input formControlName="billing_site" type="checkbox" id="billing_site" class="bill-name"
+                          name="billing_site" value="Self" (change)="typeChange1(singleLeadData,$event)" />
+                        <label for="billing_site" class="bill-site"> {{this.singleLeadData?.br_number}}/
+                          {{this.singleLeadData?.associated_company + " - " +
+                          this.singleLeadData?.customer_category}}/{{this.singleLeadData?.state}}/{{this.singleLeadData?.region}}</label><br>
+                      </div>
+                    </div>
+                  </div>
+                
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group stage-table">
+                      <div class="head-table">
+                        <h4 class="head-stage">
+                          Stage
+                        </h4>
+                        <h4 class="head-stage right">
+                          No of Mandays
+                        </h4>
+  
+                      </div>
+                      <div *ngFor="let item of this.stageData" class="data_right_all">
+                        <div style="display: flex;justify-content: space-between;align-items: center;">
+                          <span class="row-val">
+                            {{ item.stage }}
+                          </span>
+                          <span class="row-val">
+                            <span style="margin-right: 12px;">{{ item.noOfMandays }}</span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+              </mat-card>
+            </div>
+          </section>
+  
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Documents Required</h3>
+                </div>
+  
+                <div class="form_basic">
+                  <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Contact Review Form</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <input formControlName="contact_review_form" id="file" type="file" multiple class="form-control"
+                          (change)="fileInputChange($event)" />
+                      </div>
+  
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group" *ngIf="this.singleLeadData?.contact_review_form">
+                        <button class="view-doc" (click)="viewDocReview()">
+                          View
+                        </button>
+                        <button class="view-doc down" (click)="downloadContact($event)">
+                          Download
+                        </button>
+                        <p class="version_count">V{{singleLeadData?.contactFile_count}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">GST File</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <input formControlName="gst_file" id="file" type="file" multiple class="form-control"
+                          (change)="fileInputChangeOne($event)" />
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <button class="view-doc" (click)="viewDocGST()">
+                          View
+                        </button>
+                        <button class="view-doc down" (click)="downloadGst($event)">
+                          Download
+                        </button>
+                        <p class="version_count">V{{singleLeadData?.gstFile_count}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Company Logo File</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <input formControlName="company_logo" id="file" type="file" multiple class="form-control"
+                          (change)="fileInputChangeTwo($event)" />
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <button class="view-doc" (click)="viewDocLogo()">
+                          View
+                        </button>
+                        <button class="view-doc down" (click)="downloadLogo($event)">
+                          Download
+                        </button>
+                        <p class="version_count">V{{singleLeadData?.companyFile_count}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Basic Form</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <input formControlName="basic_form" id="file" type="file" multiple class="form-control"
+                          (change)="fileInputChangeThree($event)" />
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <button class="view-doc" (click)="viewDocBasic()">
+                          View
+                        </button>
+                        <button class="view-doc down" (click)="downloadBasic($event)">
+                          Download
+                        </button>
+                        <p class="version_count">V{{singleLeadData?.basicFile_count}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Others</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <input formControlName="other_file" id="file" type="file" multiple class="form-control"
+                          (change)="fileInputChangeFour($event)" />
+                      </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <div class="form-group">
+                        <button class="view-doc" (click)="viewDocOther()">
+                          View
+                        </button>
+                        <button class="view-doc down" (click)="downloadOther($event)">
+                          Download
+                        </button>
+                        <p class="version_count">V{{singleLeadData?.otherFile_count}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Remarks</p>
+                        <mat-form-field appearance="outline"  class="readonly-wrapper">
+                          <input matInput type="text" formControlName="document_remark" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Select Approver</p>
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="approver_name_l1Id" (selectionChange)="selectApprover($event)">
+                             <mat-option *ngFor="let item of allAchievement" [value]="item.employee_id">{{ item.first_name
+                              }}</mat-option>
+  
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+          <section class="job-nav">
+            <div class="section">
+              <mat-card>
+                <div class="row form_head">
+                  <h3>Other Expenses</h3>
+                </div>
+  
+                <div class="form_basic">       
+                  <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Travel & Other Expenses</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="travel_expence" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        <p class="file-tag">Other Expenses</p>
+                        <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="other_expence" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                          <p class="file-tag">Remark</p>
+                          <mat-form-field appearance="outline">
+                            <input matInput type="text" formControlName="account_remark" />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </section>
+          <div class="upload-btn">
+            <button class="cancel-btn" (click)="reject()">Reject</button>
+             <button class="favorite styled" (click)="submitForm()">
+           Raise Invoice
+            </button>
+           
+          </div>
+        </form>
+  
+   -->
+
+
+
+
+
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="pdf-content">
+    <div class="container" id="dashboard" #dashboard style="padding: 20px 35px;">
+    <div class="row">
+      <div class="invoice-title">
+        <h2></h2>
+        <h3 class="pull-right" >
+          <img align="right" src="../../../../../../assets/icons/DQS_logo.png" alt="" width="15%">
+        </h3>
+      </div>
+    </div>
+      <div class="row">
+        <p align="left" style="color: rgb(8, 8, 156);">DQS India | 5th Floor Anjaneya Techno Park 147 HAL Airport Road
+          Kodihalli Bengaluru -560017</p>
+      </div>
+
+      <div class="row" style="padding: 40px 0 0 0;">
+        <div class="col-md-12">
+          <p align="center" style="font-size: 16px; font-weight: 500;">Task Order Details</p>
+        </div>
+      </div>
+
+    <div class="row">
+       <div class="col-md-6">
+        <address>
+          <div class="to">
+            <strong>To:</strong>
+            <span>{{singleLeadData?.first_name}}</span>
+          </div>
+        <div class="acc_no">
+            <strong>Vendor Acc No:</strong>
+            <span>0011202</span>
+          </div>
+         </address>
+       </div>
+       <div class="col-md-6" >
+        <address align="right">
+          <div class="to">
+            <strong>Task Order No:</strong>
+            <span>{{singleLeadData?.taskOrder_no}}</span>
+          </div>
+        <div class="acc_no">
+            <strong>Work Order No:</strong>
+            <span>{{singleLeadData?.workOrder_no}}</span>
+          </div>
+         </address>
+       </div>
+    </div>
+
+    <div class="">
+  <strong>Note:</strong>
+  <span>
+    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Laudantium
+     consequatur aut odio explicabo enim est soluta rem ratione eaque voluptatem excepturi nihil
+    maiores repellendus eligendi consequuntur, accusantium tenetur saepe
+     laborum. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      Repudiandae at, deleniti expedita, dolore suscipit qui obcaecati
+      deserunt libero dolorum rem amet corrupti,
+     modi ipsum facilis quis facere eius? Quam, molestias.
+  </span>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-md-6">
+        <p>BR Number:<span>{{singleLeadData?.br_number}}</span></p>
+        <p>Company Name:{{singleLeadData?.associated_company}}</p>
+        <p>Address:{{singleLeadData?.address2}}</p>
+        <p>City:{{singleLeadData?.city}}, State:{{singleLeadData?.state}}, Country:{{singleLeadData?.country}}</p>
+        <p>Pin Code:{{singleLeadData?.postal_code}}</p>
+        <p>Phone No:{{singleLeadData?.phone_number }}</p>
+      </div>
+      <div class="col-md-6">
+        <p>Contact person Details:<span>{{singleLeadData?.first_name}} {{singleLeadData?.last_name}}</span></p>
+        <p>Email:{{singleLeadData?.email}}</p>
+        <p>Phone Number:{{singleLeadData?.phone_number}}</p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <p>Program Name:{{singleLeadData?.standard_program_assement}}</p>
+      <p>Audit Type:{{singleLeadData?.certificate_type}}</p>
+      <p>Audit Duration:21 feb 2023 To 22 feb 2034</p>
+    </div>?
+
+  <div class="row">
+    <p align="center" style="font-size: 15px; font-weight: 500;">Audit Spread</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Date Of Audit</th>
+          <th>Br Number</th>
+          <th>Location</th>
+
+
+        </tr>
+  </thead>
+      <tbody>
+        <tr>
+          <td>{{singleLeadData?.first_name}}</td>
+          <td>{{singleLeadData?.job_title}}</td>
+          <td>{{singleLeadData?.training_start_date}}</td>
+          <td>{{singleLeadData?.br_number}}</td>
+          <td>{{singleLeadData?.city}},{{singleLeadData?.state}},{{singleLeadData?.country}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <p>Bililable/Non-Bililable:</p><span>{{singleLeadData?.expense_category}}</span>
+    <p>Special Instructions:</p><span>Onsite Audit</span>
+  </div>
+
+  <footer style="padding: 60px 0;">
+    <div class="row">
+      <div class="col-md-4">
+      <strong>DQS India</strong>
+        <p>{{singleLeadData?.associated_company}}</p>
+      </div>
+      <div class="col-md-4">
+        <p>{{singleLeadData?.address2}}</p>
+        <p>{{singleLeadData?.city}},{{singleLeadData?.state}},{{singleLeadData?.country}}</p>
+      </div>
+      <div class="col-md-4">
+        <p>Email:{{singleLeadData?.email}}</p>
+        <p>Phone Number:{{singleLeadData?.phone_number }}</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </div>
+    </div>
+  </footer>
+
+    </div>
+  </div>
+
+  <!-- invoice Ui -->
+  <div class="pdf-content">
+    <div class="container" id="dashboard" #dashboard style="padding: 20px 35px;">
+      <div class="row">
+        <div class="invoice-title">
+          <h2></h2>
+          <h3 class="pull-right" >
+            <img align="right" src="../../../../../../assets/icons/DQS_logo.png" alt="" width="15%">
+          </h3>
+        </div>
+      </div>
+    
+      <div class="row pt-5">
+        <p align="left" style="color: rgb(8, 8, 156);">DQS India | South Wing Vaishnavi Tech Park Sarjapur Main Road Bengaluru – 560102</p>
+      </div>
+
+<div class="row">
+  <p> <b>To,</b></p>
+  <div class="col-md-6">
+<div class="com_name">
+  <p><b>JAIN NARROW FABRICS PVT. LTD.</b></p>
+  <p>Plpot No. – 114
+  <span>Phase -5</span></p>
+  
+  <p>Sector – 53, 
+  <span> HSIIDC, Kundli</span></p>
+
+  <p>Sonepat, Haryana</p>
+  <p>India, PIN - 131028</p>
+  <p>Place of Supply - Haryana, Code - 06</p>
+  <p>GSTIN: 06AAFCJ0259A1Z3</p>
+  <p>Kind Attn: <span ><b>Mr. Mukesh JAIN</b></span></p>
+  <p>Director</p>
+  <p>Mobile: +91-9810083744</p>
+  <p>Email: info@reachelastic.com</p>
+</div>
+  </div>
+  <div class="col-md-6">
+<div class="tax_invoice">
+  <p style="text-align: center; font-weight: 500; font-size: 18px;">TAX INVOICE</p>
+  <table id="customers">
+    <tr>
+        <td class="head_task">Invoice No</td>
+        <td >INV0022301IND</td>
+    </tr>
+    <tr>
+        <td class="head_task">Date:</td>
+        <td>05-MAY-2023</td>
+     </tr>
+     <tr>
+         <td class="head_task">Work Order No:</td>
+         <td>WO-0025673IND</td>
+      </tr>
+      <tr>
+       <td class="head_task">Business Relationship No:</td>
+       <td>50257900</td>
+    </tr>
+    <tr>
+      <td class="head_task">Customer Order Ref:</td>
+      <td>50257900</td>
+   </tr><tr>
+    <td class="head_task">Payment Terms: </td>
+    <td>20 Days</td>
+ </tr><tr>
+  <td class="head_task">GSTIN:</td>
+  <td>29AAACU9924E1Z3</td>
+</tr>
+<tr>
+  <td class="head_task">Category:</td>
+  <td>B2B</td>
+</tr>
+<tr>
+  <td class="head_task">Service Acounting Code:</td>
+  <td>998346 - Technical testing
+    and analysis services</td>
+</tr>
+<!-- <p style="text-align: center;">Please mention invoice ref., deduction and
+  TAN details along with payments</p> -->
+</table>
+<p style="text-align: center; padding: 10px 0;">Please mention invoice ref., deduction and<br>
+  TAN details along with payments</p>
+</div>
+  </div>
+</div>
+
+<div class="row">
+  <p> Standard: SMETA 6.1 – 2 Pillar | Stage: S2/RA | Audit Duration 12-Nov-2022 to 12-Nov-2022 </p>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+<p>Description</p>
+<p>System Assessment / Stage 2</p>
+<p>Audit Fee</p>
+  </div>
+  <div class="col-md-3 text_end">
+<p>Quantity</p>
+<p>2.5</p>
+  </div>
+  <div class="col-md-3 text_end">
+<p>Unit</p>
+<p>Mandays</p>
+  </div>
+  <div class="col-md-3 text_end">
+<p>Amount</p>
+<p>75,000.00 INR</p>
+  </div>
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-3 text_end">
+<p>Taxable Amount</p>
+<p>CGST @ 0</p>
+<p>SGST @ 0%</p>
+<p>IGST @18%</p>
+<p>Round Off (-)</p>
+
+  </div>
+  <div class="col-md-3 text_end">
+<p>75,000.00 INR</p>
+<p>0.00 IN</p>
+<p>0.00 IN</p>
+<p>13,500.00 INR</p>
+<p>0.00 IN</p>
+
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+
+  </div>
+  <div class="col-md-6 text_end">
+<p ><b>Invoice Amount Payable By 25-May-2023 (Due Date)</b></p>
+<p ><b>Amount Payable After Due Date 25-May-2023*</b></p>
+<p ><b>* Late fee charges inclusive of 18% GS</b></p>
+  </div>
+  <div class="col-md-3 text_end">
+<p>88,500.00</p>
+<p>94,400.00</p>
+  </div>
+</div>
+
+<div class="row">
+<p><b>Indian Rupees( Eighty Eight Thousand Five Hundred Only.)</b></p>
+<p><b>DQS India shall receive TDS certificate deducted for this invoice by July 2023 end failing which TDS amount shall be payable by you by 15th
+  August 2023</b></p>
+</div>
+
+<div class="row">
+  <p>1. As stipulated in Section 31 of the CGST Act, 2017, this invoice is authenticated with Digital Signature Certificate (DSC) by DQS India authorised
+    signatory and is valid for availing input tax credit and releasing payment to us. In case you require a printout of invoice, you can print this invoice at your
+    end. However, if you would like DQS India to send you hard copy of this invoice in the given form, please send your specific request to email id 
+    <b>Requestprint.India@dqs.de</b> by providing invoice and your address details. DQS India will courier hard copy of invoice to you within 3 working days at
+    an extra cost of INR 1000 + GST @ 18%.
+    </p>
+
+    <p><b>2. Our Bank Details: </b></p>
+
+    <p>HDFC Bank Limited, Airport Road Branch, Golden Enclave, Bengaluru - 560 017 Account Name: Deutsch Quality Systems (India) Private Limited 
+      Account Number: 00758630000138 SWIFT Number: HDFCINBB IFSC Code: HDFC0000075</p>
+
+      <p>3. email us payment advice to <b>Paymentadvise.India@dqs.de</b></p>
+
+      <p>4. Tax Deduction at Source (TDS) u/s 194J is applicability is as follows.
+        <p><b>Assessment/Audit and Certification Services : 2% (as technical services) </b></p>
+        <p><b>  Training and DQS-Nxt Services : 10% </b></p>
+      
+</div>
+
+
+
+<div class="row pt-5">
+  <p>5. email us TDS Certificate / Withholding Tax Certificate to <b>tdscert.india@dqs.de</b> In case of failure to provide the certificate/s the amount would be
+    treated as dues and stand recoverable as mentioned above.
+    </p>
+    <p>6. Acknowledgment for LUT: Application Reference Number (ARN) - AD290423000651H</p>
+</div>
+
+<div class="row pt-3">
+  <div class="col-3 mt-2" >
+<p>For Deutsch Quality Systems (India) Private Limited,
+</p>
+  </div>
+  <div class="col-4 mt-2">
+    <div class="design_box">
+      <p>Micro,Medium And Small Interprises</p>
+      <p>Devlopment Act,2006</p>
+      <p>Udyog Aadhaar Regn. No. KR03E0036364</p>
+    </div>
+  
+  </div>
+  <div class="col-5">
+    <table class="table table-bordered">
+      <thead>
+        <tr  class="size_table">
+          <th>Finacial Year(FY)/(Assessment Year(AY))</th>
+          <th>ITR Acknowledgment No</th>
+          <th>Date Of Filling ITR</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="size_table">
+          <td>2019-20/(2020-21)</td>
+          <td>862060154564895</td>
+          <td>21-12-2020</td>
+        </tr>
+        <tr  class="size_table">
+          <td>2020-21/(2021-22)</td>
+          <td>1245684756471789</td>
+          <td>02-02-2022</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="row">
+  <p>Prasad Khanapur<br>
+    Head-Finance & Accounts</p>
+</div>
+      
+<div class="row">
+  <p class="link_dqs">Online Payment Facility<br> 
+    <a href="#"> www.DQS-india.in/payment/</a>
+   </p>
+</div>
+
+
+<div class="row pt-4">
+  <p class="info_dqs"><u>Information To Customer On Changes To Invoicing and Collection Process Due To Corporate Governance
+    Expectations</u> </p>
+</div>
+
+
+<div class="row">
+  <p>
+    1. Digitally or electronically signed invoices are permitted under Rule 46 of the CGST Rules, 2017 & Notification No.
+74/2018 – Central Tax Dated 31 December, 2018.</p>
+<p>2. The payment against invoice issued to your organisation shall be payable within due date mentioned on the face of
+  invoice. Any delay in releasing payment to DQS India shall attract late fee charges, payable along with payment of
+  respective invoice.</p>
+  <p>
+    3. If you need a printout of invoice, we shall arrange to courier the same at an additional cost of INR 1000 + GST @ 18%.
+
+  </p>
+<p>
+  4.To enable us to manage your account without difficulty, it is mandatory for you to issue <b>PAYMENT ADVISE</b> for each of
+the payment made to DQS India.
+</p>
+<p>
+  5. Tax Deduction at Source (TDS) certificates for the amount deducted against DQS India shall be emailed to
+  tdscert@dqs-india.in within the period indicated on the face of respective invoice. Any failure to issue TDS certificates for
+  the amount shall be treated as dues payable immediately to DQS India.
+</p>
+
+<p>6. In case of default in making payment by you for the invoice and/or issue of TDS certificates which are overdue, as per
+  DQS India credit policy, your account will attract applicability of following dunning process:</p>
+
+</div>
+
+<div class="row pt-4">
+  <p style="font-weight: 500; font-size: 16px;">Dunning Process</p>
+</div>
+
+<div class="row">
+  <table class="table-bordered table">
+<tbody class="font_design">
+  <tr>
+    <td>For example</td>
+    <td>All Dates</td>
+    <td>1st Dunning Letter</td>
+    <td>2st Dunning Letter</td>
+    <td>Final Dunning Letter</td>
+  </tr>
+  <tr>
+    <td>Invoice date</td>
+    <td>1-Nov-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>Payment date</td>
+    <td>1-Nov-18</td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+
+  <tr>
+    <td>Dunning Letter Issue Date </td>
+    <td></td>
+    <td>1-Dec-18 </td>
+    <td>11-Dec-18 </td>
+    <td>21-Dec-18
+    </td>
+  </tr>
+
+  <tr>
+    <td>Implication of Dunning Letter</td>
+    <td></td>
+    <td>- Down grading of
+      credit rating and
+      putting all furture
+      delivers against
+      100% advance,<br>
+      - Demand
+      payment release
+      within 7 days of
+      issue of dunning
+      letter.</td>
+    <td>- Customer shall
+      pay INR 20,000
+      as charges for the
+      default in not
+      releasing payment
+      and/or issuing
+      TDS certificates.<br>
+      - Initiating
+      suspension of
+      certificates, if any.</td>
+    <td>- To withdraw
+      certificate<br>
+      - To refer matter to
+      legal counsel for
+      initiating legal
+      proceedings for
+      recovery.
+      
+    </td>
+  </tr>
+</tbody>
+  </table>
+</div>
+
+<div class="row pt-5">
+  <div class="col-3 foot_style">
+<span><b>DQS India</b></span>
+<p>Deutsch Quality Systems (India) Private Limited</p>
+<p>Managing Director & CEO</p>
+<p>Dr. Murugan Kandasamy</p>
+  </div>
+  <div class="col-3 foot_style">
+<p>Ground Floor, South Wing</p>
+<p>Vaishnavi Tech Park</p>
+<p>Sy.No.16/1 and 17/2, Bellandur Gate</p>
+<p>Sarjapur Main Road, Ambalipura</p>
+<p>Bengaluru – 560102 Karnataka</p>
+<p>India</p>
+  </div>
+  <div class="col-2 foot_style">
+<p>Phone +91 80 6661 6500</p>
+<p>Fax +91 80 6661 6530</p>
+<p>customerservice.india@dqs.de</p>
+<p>www.dqsglobal.com</p>
+  </div>
+  <div class="col-2 foot_style">
+<p>Registered in India</p>
+<p>PAN : AAACU9924E</p>
+<p>IEC: 0709000014</p>
+<p>CIN: U74140KA2008FTC046448</p>
+<p>GSTIN: 29AAACU9924E1Z3</p>
+<p>MSME(Udyog Aadhar)</p>
+<p>Regn.No.: KR03E0036364</p>
+  </div>
+  <div class="col-2 iqnet_icon foot_style">
+<p style="color: #00338c;">DQS is a Member o</p>
+<img src="../../../../../../assets/icons/iqnet_dqs.png">
+  </div>
+</div>
+
+
+
+    </div>
+
+
+      </div>
+
+
+

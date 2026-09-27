@@ -1,0 +1,61 @@
+<h3 mat-dialog-title class="popHead">Branch Setup Record</h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography">
+    <div class="cotain">
+        <div class="emp_key">
+            <p>S.No:</p>
+            <p>Branch Name:</p>
+            <p>Branch Code:</p>
+            <p>GST No.:</p>
+            <p>Contact Person Name:</p>
+            <p>Contact No.:</p>
+            <p>Alt Contact No.:</p>
+            <p>Email Id:</p>
+            <p>Alt Email Id:</p>
+            <p>Country:</p>
+            <p>State:</p>
+            <p>City:</p>
+            <p>Pin Code:</p>
+            <p>Address:</p>
+            <p>Geofence Coordinates:</p>
+            <p>Geofence Radius:</p>
+            <p>Geofence Status:</p>
+        </div>
+        <div class="emp_value">
+            <p>{{singleBranchSetupData?.id}}</p>
+            <p>{{singleBranchSetupData?.branch_name}}</p>
+            <p>{{singleBranchSetupData?.branch_code}}</p>
+            <p>{{singleBranchSetupData?.branch_gstnumber}}</p>
+            <p>{{singleBranchSetupData?.branch_contact_person_name}}</p>
+            <p>{{singleBranchSetupData?.branch_contact_no}}</p>
+            <p>{{singleBranchSetupData?.branch_alt_contact_no}}</p>
+            <p>{{singleBranchSetupData?.branch_email}}</p>
+            <p>{{singleBranchSetupData?.branch_alt_email}}</p>
+            <p>{{singleBranchSetupData?.countryss_name}}</p>
+            <p>{{singleBranchSetupData?.states_name}}</p>
+            <p>{{singleBranchSetupData?.city_name}}</p>
+            <p>{{singleBranchSetupData?.branch_pin_code}}</p>
+            <p>{{singleBranchSetupData?.branch_address}}</p>
+            <p>
+                <ng-container *ngIf="singleBranchSetupData?.latitude && singleBranchSetupData?.longitude; else noCoords">
+                    📍 {{singleBranchSetupData?.latitude}}, {{singleBranchSetupData?.longitude}}
+                </ng-container>
+                <ng-template #noCoords>
+                    <span class="text-muted">Not Configured</span>
+                </ng-template>
+            </p>
+            <p>{{singleBranchSetupData?.geofence_radius_meters ? singleBranchSetupData?.geofence_radius_meters + ' m' : '150 m'}}</p>
+            <p>
+                <span class="badge" [ngClass]="singleBranchSetupData?.is_geofence_active !== false ? 'bg-success text-white' : 'bg-secondary text-white'" style="padding: 3px 8px; border-radius: 4px; font-size: 11px;">
+                    {{singleBranchSetupData?.is_geofence_active !== false ? 'Active' : 'Disabled'}}
+                </span>
+            </p>
+        </div>
+    </div>
+
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>

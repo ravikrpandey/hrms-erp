@@ -1,0 +1,36 @@
+<app-wrapper [title]="'Configurational Master'" [subTitle]="'Quotation Master'" [subheading]="'Term Of Unloading'"
+    [showActions]="true" [isBack]="true">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group row">
+            <div class="col-6 px-2">
+                <mat-form-field appearance="outline" class="col-12 px-2">
+                    <mat-label>Select Category</mat-label>
+                    <mat-select formControlName="type" placeholder="Select Type">
+                        <mat-option *ngFor="let item of typeList" [value]="item">{{
+                            item
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="col-6 px-2">
+                <mat-form-field appearance="outline" class="col-12 px-2">
+                    <mat-label>Delivery Term</mat-label>
+                    <input matInput id="delivery_term" type="text" formControlName="delivery_term"
+                        placeholder="Enter Delivery Term" />
+                </mat-form-field>
+            </div>
+            <div class="col-6 px-2">
+                <mat-form-field appearance="outline" class="col-12 px-2">
+                    <mat-label>Unloading</mat-label>
+                    <input matInput id="unloading" type="text" formControlName="unloading"
+                        placeholder="Enter Unloading" />
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-actions mt-3 d-flex justify-content-end gap-2" *ngIf="mode !== 'view'">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+                {{ mode === "edit" ? "Update" : "Save" }}
+            </button>
+        </div>
+    </form>
+</app-wrapper>

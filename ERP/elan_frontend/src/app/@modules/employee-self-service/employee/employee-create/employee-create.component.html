@@ -1,0 +1,61 @@
+<div class="ess-container">
+  <!-- ─── Profile Header Banner ─────────────────────────────────────── -->
+  <div class="profile-banner">
+    <div class="banner-overlay"></div>
+    <div class="profile-header-content">
+      <div class="profile-main-info">
+        <div class="avatar-wrapper">
+          <img [src]="loginUserDetails?.employee_photo ? (baseUrl + '/' + loginUserDetails?.employee_photo) : imagePath"
+            alt="Profile Photo" class="profile-avatar" (error)="onImageError($event)" />
+          <div class="status-indicator online"></div>
+        </div>
+        <div class="text-info">
+          <h1>{{loginUserDetails?.first_name}} {{loginUserDetails?.last_name}}</h1>
+          <p class="emp-code">
+            <mat-icon>fingerprint</mat-icon> {{loginUserDetails?.employee_code}}
+          </p>
+          <div class="quick-contact">
+            <span><mat-icon>email</mat-icon> {{loginUserDetails?.employee_official_email}}</span>
+            <span><mat-icon>phone</mat-icon> {{loginUserDetails?.contact_number}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button mat-stroked-button class="back-btn" routerLink="/master/ess/dashboard"
+          *ngIf="(title !='BASIC-DETAILS')">
+          <mat-icon>arrow_back</mat-icon> Back
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Navigation Tabs ───────────────────────────────────────────── -->
+  <div class="nav-tabs-container">
+    <nav class="profile-tabs">
+      <a class="tab-pill" [routerLink]="['basic-details']" routerLinkActive="active"
+        (click)="goToBasicDetails('BASIC-DETAILS')">
+        <mat-icon>badge</mat-icon> <span>Basic</span>
+      </a>
+      <!-- <a class="tab-pill" [routerLink]="['personal-details']" routerLinkActive="active" (click)="goToPersonalDetails('PERSONAL DETAILS')">
+        <mat-icon>person</mat-icon> <span>Personal</span>
+      </a>
+      <a class="tab-pill" [routerLink]="['salary-details']" routerLinkActive="active" (click)="goToSalaryDetails('SALARY DETAILS')">
+        <mat-icon>payments</mat-icon> <span>Salary</span>
+      </a>
+      <a class="tab-pill" [routerLink]="['payment-details']" routerLinkActive="active" (click)="goToPaymentDetails('PAYMENT DETAILS')">
+        <mat-icon>account_balance</mat-icon> <span>Payment</span>
+      </a>
+      <a class="tab-pill" [routerLink]="['document-details']" routerLinkActive="active" (click)="goToDocumentDetails('DOCUMENT DETAILS')">
+        <mat-icon>folder_shared</mat-icon> <span>Documents</span>
+      </a>
+      <a class="tab-pill" [routerLink]="['contract-details']" routerLinkActive="active" (click)="goToContractDetails('CONTRACT DETAILS')">
+        <mat-icon>history_edu</mat-icon> <span>Contract</span>
+      </a> -->
+    </nav>
+  </div>
+
+  <!-- ─── Sub-Content Area ─────────────────────────────────────────── -->
+  <div class="profile-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

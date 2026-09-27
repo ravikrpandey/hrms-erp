@@ -1,0 +1,65 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Workflow</h1>
+    <p>Create Customer Approval Workflow</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="approvalform" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <label class="d-block mb-2"><strong>Approval Option</strong></label>
+            <mat-radio-group formControlName="approval_option" (change)="onApprovalOptionChange($event.value)">
+              <mat-radio-button value="with_document" class="me-3">
+                With Document
+              </mat-radio-button>
+              <mat-radio-button value="without_document">
+                Without Document
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <!-- Employee Dropdown -->
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Select Employees</mat-label>
+              <mat-select formControlName="employee_ids" multiple>
+
+                <ngx-mat-select-search [formControl]="employeeFilterCtrl" placeholderLabel="Search employees..."
+                  noEntriesFoundLabel="No results"></ngx-mat-select-search>
+                <mat-option *ngFor="let emp of filteredEmployees | async" [value]="emp.employee_id">
+                  {{ emp.full_name }}
+                </mat-option>
+              </mat-select>
+
+              <mat-error *ngIf="approvalform.get('employee_ids')?.hasError('required') && submitted">
+                Please select at least one employee
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="mt-3 common_button_sub">
+        <!-- <button type="submit" [disabled]="approvalform.invalid">Save</button> -->
+        <button type="submit">{{ mode === 'edit' ? 'Update' : 'Save' }}</button>
+        <!-- <button class="cancel_button_y" type="button" (click)="goBack()">
+          Cancel
+        </button> -->
+      </div>
+    </form>
+  </div>
+</section>

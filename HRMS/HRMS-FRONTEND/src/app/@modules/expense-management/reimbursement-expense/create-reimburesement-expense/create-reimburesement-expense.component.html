@@ -1,0 +1,347 @@
+<!-- <app-wrapper
+  [title]="'Expense Management'"
+  [subTitle]="'Reimbursement Expense'"
+  [subheading]="'Create Reimbursement Expense'"
+  [showActions]="true"
+  [isBack]="true" -->
+>
+  <div class="right_data_all">
+    <mat-card style="box-shadow: none">
+      <div class="heading_neo"> 
+        <h3>Create Reimbursement Expense</h3>
+      </div>
+      <!-- {{otherExpenseForm.value | json}} -->
+      <div class="form_basic mb-0"> 
+        <div class="right_data_all">
+          <form [formGroup]="otherExpenseForm">
+            <!-- First Row: Month + Description + Add Button -->
+            <div class="row mt-3 align-items-center">
+              <!-- Expense Month -->
+              <div class="col-md-4 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <input
+                    matInput
+                    [matDatepicker]="dp2"
+                    formControlName="current_date"
+                    [min]="monthsAgo"
+                    [max]="today"
+                    placeholder="Select a Month"
+                    readonly
+                    (click)="dp2.open()"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="dp2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker
+                    #dp2
+                    startView="year"
+                    (monthSelected)="selectMonth($event, dp2)"
+                    panelClass="month-picker"
+                    [startAt]="today"
+                    [touchUi]="true"
+                  >
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+              <!-- Expense Description -->
+              <!-- <div class="col-md-4 mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Expense Name</mat-label>
+                  <input matInput formControlName="expense_name" required />
+                </mat-form-field>
+              </div> -->
+
+              <!-- Add Button -->
+              <div class="col-md-2 col-6 mb-3 align-items-center justify-content-end">
+                <button
+                  class="mx-2"
+                  type="button"
+                  mat-raised-button
+                  color="primary"
+                  (click)="showAllDetails = !showAllDetails"
+                >
+                  <i
+                    class="bi"
+                    [ngClass]="{
+                      'bi-eye': !showAllDetails,
+                      'bi-eye-slash': showAllDetails
+                    }"
+                  ></i>
+                  {{ showAllDetails ? "Hide All Budgets" : "Show All Budgets" }}
+                </button>
+              </div>
+              <div
+                class="col-md-2 col-6 mb-3 align-items-center justify-content-end"
+                *ngIf="typeCheck !== 'view'"
+              >
+                <button
+                  type="button"
+                  mat-raised-button
+                  color="primary"
+                  (click)="addExpense()"
+                >
+                  <mat-icon>add</mat-icon> Add Expense
+                </button>
+              </div>
+            </div>
+
+            <!-- Expense List -->
+            <div
+              *ngIf="otherExpenseForm.get('current_date')?.value"
+              formArrayName="expense_data"
+            >
+              <div
+                class="row border p-3 mb-3"
+                *ngFor="let control of expenseData.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <!-- Conveyance Type -->
+                <div class="col-md-3 mb-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Reimburse Type</mat-label>
+                    <mat-select formControlName="conveyance_type_id" required>
+                      <mat-option
+                        *ngFor="let conveyance of conveyanceData"
+                        [value]="conveyance.travel_type_id"
+                      >
+                        {{ conveyance.travelType.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+
+                <!-- Travel Range -->
+                <div class="col-md-3 mb-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Expense Description</mat-label>
+                    <input
+                      type="text"
+                      matInput
+                      formControlName="expense_name"
+                      required
+                    />
+                  </mat-form-field>
+                </div>
+
+                <!-- Expense Amount -->
+                <div class="col-md-3 mb-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Expense Amount</mat-label>
+                    <input
+                      matInput
+                      type="number"
+                      formControlName="expense_amount"
+                      required
+                    />
+                  </mat-form-field>
+                </div>
+
+                <!-- Expense Date -->
+                <div class="col-md-3 mb-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Expense Date</mat-label>
+                    <input
+                      matInput
+                      [matDatepicker]="expDate"
+                      formControlName="expense_date"
+                      required
+                      [min]="expenseMinDate"
+                      [max]="expenseMaxDate"
+                      (click)="expDate.open()"
+                      readonly
+                    />
+                    <mat-datepicker-toggle
+                      matSuffix
+                      [for]="expDate"
+                    ></mat-datepicker-toggle>
+                    <mat-datepicker #expDate></mat-datepicker>
+                  </mat-form-field>
+                </div>
+
+                <!-- File Upload -->
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex flex-wrap align-items-center">
+                    <input
+                      class="form-control"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.pdf"
+                      (change)="onChange($event, i)"
+                      style="max-width: 250px"
+                    />
+
+                    <ng-container
+                      *ngFor="
+                        let doc of getExpenseDocumentData(i).controls;
+                        let j = index
+                      "
+                      [formGroupName]="j"
+                    >
+                      <div class="d-flex align-items-center me-3">
+                        <a
+                          role="button"
+                          [href]="
+                            fileUrl + '/uploaded_files/' + doc.get('url')?.value
+                          "
+                          target="_blank"
+                          class="ms-2"
+                          >View</a
+                        >
+                        <div
+                          role="button"
+                          class="ms-2"
+                          (click)="removeFileInput(i, j)"
+                        >
+                          <mat-icon matTooltip="Remove File" class="closeButton"
+                            >remove_circle</mat-icon
+                          >
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                <!-- Remark -->
+                <div class="col-md-4 mb-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Remark</mat-label>
+                    <input matInput formControlName="remark" />
+                  </mat-form-field>
+                </div>
+                <!-- Delete Button -->
+                <!-- Delete Button -->
+                <div
+                  class="col-md-2 mb-3 d-flex align-items-center justify-content-end"
+                  *ngIf="typeCheck !== 'view'"
+                >
+                  <button
+                    type="button"
+                    mat-raised-button
+                    color="warn"
+                    (click)="deleteExpense(i)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!-- Local Capping Details -->
+            <div class="container-fluid py-4" *ngIf="showAllDetails">
+              <div class="card shadow-sm mb-4" *ngIf="conveyanceData">
+                <div class="card-header">
+                  <h5 class="card-title mb-0">
+                    <i class="bi bi-wallet2 me-2"></i>
+                    Reimbursement Budget Limit
+                  </h5>
+                </div>
+
+                <div class="card-body">
+                  <!-- Local Budget Limits Table -->
+                  <div class="table-section">
+                    <div class="table-responsive">
+                      <table
+                        class="table table-hover table-striped align-middle"
+                      >
+                        <thead class="table-dark">
+                          <tr>
+                            <th scope="col" class="fw-semibold">
+                              <i class="bi bi-flag me-1"></i>Reimburse Type
+                            </th>
+                            <th scope="col" class="fw-semibold">
+                              <i class="bi bi-currency-dollar me-1"></i>Limit/PM
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            *ngFor="let item of conveyanceData; let j = index"
+                            class="table-row-hover"
+                          >
+                            <td class="fw-medium">
+                              {{ item.travelType?.name || "—" }}
+                            </td>
+                            <td class="text-end fw-semibold">
+                              <span
+                                class="badge bg-light text-dark border"
+                                [class.bg-success]="item.budgetLimit > 1000"
+                              >
+                                {{ item.reimbursementsBudgets[0].budget_limit }}
+                                Rs./PM
+                              </span>
+                            </td>
+                          </tr>
+                          <tr
+                            *ngIf="
+                              !conveyanceData || conveyanceData.length === 0
+                            "
+                          >
+                            <td colspan="3" class="text-center text-muted py-4">
+                              <i
+                                class="bi bi-inbox fs-1 d-block mb-2 opacity-50"
+                              ></i>
+                              No Reimbursement budget limits configured
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Empty State -->
+              <div
+                *ngIf="!conveyanceData || conveyanceData.length === 0"
+                class="text-center py-5"
+              >
+                <i class="bi bi-wallet-fill fs-1 text-muted mb-3"></i>
+                <h4 class="text-muted">No Budget Data Available</h4>
+              </div>
+            </div>
+            <!-- Submit / Update / Proceed / Close Buttons -->
+            <div class="text-end mt-4 common_button_sub">
+              <button
+                type="submit"
+                *ngIf="
+                  !isReadonlyType() &&
+                  typeCheck !== 'edit' &&
+                  typeCheck !== 'process-approval' &&
+                  typeCheck !== 'view'
+                "
+                (click)="submitForm()"
+              >
+                Save Draft
+              </button>
+              <button
+                type="button"
+                *ngIf="typeCheck === 'edit' && isdraftValid"
+                (click)="update(false)"
+                [disabled]="isSubmitting"
+              >
+                Update Draft
+              </button>
+              <button
+                type="button"
+                *ngIf="typeCheck === 'edit' && isButtonShow"
+                (click)="update(true)"
+              >
+                Submit for Approval
+              </button>
+              <button
+                *ngIf="typeCheck === 'process-approval'"
+                mat-raised-button
+                color="warn"
+                (click)="proceed()"
+              >
+                Proceed
+              </button>
+
+              <button class="cancel_button_y ms-2" mat-button (click)="close()">
+                Close
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+<!-- </app-wrapper> -->

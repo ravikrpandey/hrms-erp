@@ -1,0 +1,289 @@
+<ng-container>
+    <div class="section" style="padding: 35px;">
+  
+      <div class="row form_head">
+        <h3>PR Details</h3>
+      </div>
+      <div class="row details">
+        <div class="col-md-6">
+          <table id="customers">
+           
+            <tr>
+              <td class="head_task">Negotiation No</td>
+              <td class="tasklinks" class="tasklink" 
+                >
+               {{details_pr?.procurement_id|| "-"}}
+              </td>
+            </tr>
+            <tr>
+              <td class="head_task">Department</td>
+              <td>{{details_pr?.department || "-"}}</td>
+            </tr>
+            <tr>
+              <td class="head_task">Created Date</td>
+              <td>{{details_pr?.createdAt | date: 'dd-MM-yyyy' || "-"}}</td>
+            </tr>
+            
+            
+           
+          </table>
+        </div>
+        <div class="col-md-6">
+          <table id="customers">
+            <tr>
+              <td class="head_task">Created By</td>
+              <td>"test"</td>
+            </tr>
+            <tr>
+              <td class="head_task">Type/Capex||OPEX</td>
+              <td>opex</td>
+            </tr>
+<!--            
+            <tr>
+              <td class="head_task">File Download</td>
+              <td>
+                <a href="{{fileBind}}" download target="_blank">
+                  <mat-icon class="imgEmp">
+  
+                    download</mat-icon>
+                </a>
+              </td>
+            </tr> -->
+          </table>
+        </div>
+        </div>
+      <div style="padding: 35px 0;">
+        
+          <div class="row form_head">
+            <h3>SEND Negotiation</h3>
+          </div>
+          <div class="form_basic">
+            <form class="" [formGroup]="createPrForm" style="padding: 0 12px;">
+              <div class="row" style="overflow-y: auto;">
+              
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th class="wide-column" style="width: 300px !important;">Image</th>
+                        <th >Item Name</th>
+                        <th >Item Code</th>
+                        <th >Unit</th>
+                        <th >Priority</th>
+                        <th >MVP</th>
+                        <th>Target Amount</th>
+<th>Gst Type</th>
+                        <!-- <th *ngIf="!id" >Action</th> -->
+                        <th >Price /unit</th>
+                        <th>GST Type</th>
+                        <th >SGST</th>
+                        <th >CGST</th>
+                        <th >IGST</th>
+                        <th >Delivery Charges</th>
+                        <th >Additional Charges</th>
+                        <th >Currency</th>
+                        <th >Totel Amount</th>
+                        <th>Action</th>
+  
+                      </tr>
+                    </thead>
+                 
+                    <tbody>
+                        <tr  *ngFor="let control of CF_3.rfpArray.controls; let i = index" [formGroup]="control">
+                          <td>
+                            <img style="width: 100%;" [src]="control?.get('item_document')?.value">
+                          </td>
+                          <td>{{ control?.get('item_name')?.value  }}</td>
+                          <td>{{ control.get('item_code')?.value }}</td>
+                          <td>{{ control.get('product_quantity')?.value }}</td>
+                          <td>{{ control.get('priority')?.value }}</td>
+                          <td>{{ control.get('mvp_product')?.value }}</td>
+                          <td>{{ control.get('target_amount')?.value }}</td>
+                          <td>{{ control.get('gst_Type')?.value }}</td>
+
+
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline" style="width: 10vw">
+                                <input matInput type="number" formControlName="price_amt" #amount (keyup)="keyUpPrice(amount.value,control,i)" />
+                              </mat-form-field>
+                            </div>
+                          </td>
+                        
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline">
+                                <mat-select formControlName="gst_Type" (selectionChange)="gstType(control,i)">
+                                  <mat-option [value]="'CGST/SGST'">CGST/SGST</mat-option>
+                                  <mat-option [value]="'IGST'">IGST</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <!-- {{control.value.gst_Type}} -->
+                              <mat-form-field appearance="outline" style="width: 10vw"  [ngClass]="control.value.gst_Type === 'IGST'?'disabled_input':''">
+                                <input matInput formControlName="sgst" type="number"  [attr.disabled]="control.value.gst_Type !== 'IGST'" (keyup)="keyUpPrice(sgst.value,control,i)"
+                               >
+                              </mat-form-field>
+                              
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline" style="width: 10vw" [ngClass]="control.value.gst_Type === 'IGST'?'disabled_input':''">
+                                <input matInput formControlName="cgst"  type="number" #sgst (keyup)="keyUpPrice(sgst.value,control,i)"
+                                [disabled]="isFieldDisabled(control, 'cgst')"
+                                />
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline" style="width: 10vw" [ngClass]="control.value.gst_Type === 'CGST/SGST'?'disabled_input':''">
+                                <input  matInput formControlName="igst"  type="number" value="0" #sgst (keyup)="keyUpPrice(sgst.value,control,i)" />
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline" style="width: 10vw">
+                                <input matInput type="number" formControlName="delivery_charges" #sgst (keyup)="keyUpPrice(sgst.value,control,i)"/>
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput type="number" formControlName="additional_charges" #sgst (keyup)="keyUpPrice(sgst.value,control,i)" />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline" style="width: 10vw" >
+                              <mat-select formControlName="currency"  (selectionChange)="currencySele($event,i,control)" #sgst (keyup)="keyUpPrice(sgst.value,control,i)">
+                                <mat-option [value]="currency?.Currency_Type" *ngFor="let currency of currencyData">{{ currency.Currency_Type}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </td>
+                          <!-- <td>{{totelAmount}}</td> -->
+                          <td>
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                              <input matInput type="number" formControlName="totelAmount" readonly/>
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-icon  matTooltip="Clear Value" (click)="remove(i)">clear</mat-icon>
+                          </td>
+                        </tr>
+                  
+
+
+                      <!-- <tr>
+                        <td colspan="14"></td>
+                        <td>
+                          <div class="row">
+                          <div class="col-6">
+                            <p style="font-size: 16px;
+                          font-weight: 500;">Total = </p>
+                          </div>
+                          <div class="col-4">
+                            <p style="font-size: 16px;
+                          font-weight: 500;">{{totalAmountPrice || 0}}</p>
+                          </div>
+                        </div>
+                        </td>
+                      </tr> -->
+                    </tbody>
+  
+                    
+                  
+                  </table>
+                  
+              </div>
+            </form>
+              <br />
+            
+              <br>
+              <ng-container *ngIf="role == 'Negotiation'">
+                <div class="row mx-3">
+                  <div class="form_head">
+                    <h3>Previous Quotations Details</h3>
+                  </div>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Price /unit</th>
+                        <th scope="col">SGST</th>
+                        <th scope="col">CGST</th>
+                        <th scope="col">IGST</th>
+                        <th scope="col">Delivery Charges</th>
+                        <th scope="col">Additional Charges</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Remark</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>{{previousQuoteData.price_amt}}</td>
+                        <td>{{previousQuoteData.sgst}}</td>
+                        <td>{{previousQuoteData.cgst}}</td>
+                        <td>{{previousQuoteData.igst}}</td>
+                        <td>{{previousQuoteData.delivery_charges}}</td>
+                        <td>{{previousQuoteData.additional_charges}}</td>
+                        <td> {{previousQuoteData.currency}}</td>
+                        <td>{{previousQuoteData.vendor_remarks}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+      
+                </div>
+              </ng-container>
+              <br><br>
+              <!-- <h2 style="text-align: center;">Link will expire on {{endData}}</h2> -->
+              <div class="form_basic">
+                <form class="" [formGroup]="createPrForm">
+             
+    
+              <div class="" align="center">
+                <button style="padding: 20px 30px;" mat-raised-button color="primary" class="mx-3" (click)="fireNegotiate()">
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+          </div>
+        
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #other>
+  
+    <div class="expired">
+      <div class="content">
+        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           viewBox="0 0 464 390.4" style="enable-background:new 0 0 464 390.4;" xml:space="preserve">
+      
+        <circle class="st0" cx="126" cy="175.4" r="12"/>
+        <circle class="st0" cx="339" cy="175.4" r="12"/>
+        <circle class="st1" cx="232.5" cy="170.9" r="106.5"/>
+        <path class="st2" d="M126,164.4c0,0,4.5-15.4,10.5-19.6c0,0,31,0,65-26.5c0,0,110,85.9,176-30.8c0,0-33,28.6-116-41.4
+          c0,0-131-16.2-135.5,106V164.4z"/>
+        <path class="st2" d="M339,164.4c0,0,6.2-13.3-8.2-32.4l-6.3,3.9C324.5,135.9,333.5,142.9,339,164.4z"/>
+        <path class="st2" d="M247.8,45.3c0,0,47.7-5.3,76.7,53.7L247.8,45.3z"/>
+        <circle class="st2" cx="192" cy="175.4" r="9"/>
+        <circle class="st2" cx="271" cy="175.4" r="9"/>
+        <path class="st4" d="M101.4,390.1c22.1-106.8,75.7-114.1,137.1-114.1c61.4,0,104,18.8,130.1,114.1
+          C368.7,390.6,101.3,390.6,101.4,390.1z"/>
+      
+        <circle id="path" class="st3 uhoh" cx="234.5" cy="230.5" r="20"/>
+        <path class="st3 smile" d="M191,214.4c-1.1-1.5,38.6,49.3,83,0"/>
+        </svg>
+      
+        <div class="message">
+          <h1>Oops, this link is expired</h1>
+          <p>This URL is not valid anymore.</p>
+          <p><a href="mailto:zynoindia.erp@gmail.com">zynoindia.erp@gmail.com</a> to request for a new one.</p>
+        </div>
+      </div>
+    
+    </div>
+  </ng-template>

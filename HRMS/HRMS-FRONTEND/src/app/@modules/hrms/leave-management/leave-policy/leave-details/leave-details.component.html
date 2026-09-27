@@ -1,0 +1,219 @@
+<!-- <pre>{{ leaveForm.value | json }}</pre> -->
+
+<div class="heading_neo mt-3">
+  <h3>Policy Details</h3>
+</div>
+
+<form [formGroup]="leaveForm" (ngSubmit)="onSubmitForm()">
+  <div class="form_sePo formBorder">
+    <div class="row mt-3">
+      <!-- For addMode-->
+      <div *ngIf="pageMode === 'addMode'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Leave Name <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <mat-select formControlName="leaveName">
+              <app-search-filter [array]="leavesMaster" [placeholder]="'Search by entity name'"
+                [searchFields]="['leave_name','leave_code']" (filteredReturn)="filterLeavemaster = $event.data">
+              </app-search-filter>
+              <mat-option *ngFor="let leave of filterLeavemaster" [value]="leave.id">{{ leave.leave_name }} -{{
+                leave.leave_code }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                formControls['leaveName'].invalid &&
+                formControls['leaveName'].touched
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- For viewMode -->
+      <div *ngIf="pageMode === 'viewMode' || pageMode === 'editMode'"
+        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Leave Name <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <input matInput class="input_font" readonly formControlName="leaveInputName" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div *ngIf="pageMode === 'addMode' || pageMode === 'editMode'"
+        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Type <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <mat-select formControlName="leaveType">
+              <mat-option *ngFor="let type of leaveTypes" [value]="type">{{
+                type
+                }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+                formControls['leaveType'].invalid &&
+                formControls['leaveType'].touched
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div *ngIf="pageMode === 'viewMode'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Type <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <input matInput class="input_font" readonly formControlName="leaveType" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group" [ngClass]="mode ? 'readonly-select' : ''">
+          <mat-label>Start Date <span class="alertspan">*</span></mat-label>
+          <mat-form-field readonly>
+            <input matInput [matDatepicker]="sp" [readonly]="true" (click)="sp.open()" [min]="now" class="input_font"
+              formControlName="startDate" (dateChange)="onDateChange($event)" />
+            <mat-datepicker-toggle matSuffix [for]="sp"></mat-datepicker-toggle>
+            <mat-datepicker #sp></mat-datepicker>
+            <mat-error *ngIf="
+                formControls['startDate'].invalid &&
+                formControls['startDate'].touched
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-label>Start Date <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <input type="text" class="input_font" matInput formControlName="startDate" placeholder="Start date" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="isQuotaAllotedMonthly">
+            <span style="margin-top: 2rem">Is quota alloted monthly ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="isQuotaAllotedMonthly">
+            <span style="margin-top: 2rem">Is quota alloted monthly ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="onceInServiceLeave">
+            <span style="margin-top: 2rem">Once-in-Service Leave</span>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="onceInServiceLeave">
+            <span style="margin-top: 2rem">Once-in-Service Leave</span>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="includeWeekendHoliday">
+            <span style="margin-top: 2rem">Include weekend/holiday ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="includeWeekendHoliday">
+            <span style="margin-top: 2rem">Include weekend/holiday ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="isApplAftrProb">
+            <span style="margin-top: 2rem">Is applicable after probation ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="isApplAftrProb">
+            <span style="margin-top: 2rem">Is applicable after probation ?</span>
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="pageMode === 'addMode' || pageMode === 'editMode'">
+        <div class="form-group">
+          <mat-checkbox style="margin-top: 2rem" color="primary" formControlName="policyValidity" [checked]="checkBox"
+            (change)="onPolicyValidityChange($event)">
+            <span style="margin-top: 2rem">Policy Validity</span>
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="
+          !formControls['policyValidity'].value &&
+          (pageMode === 'addMode' || pageMode === 'editMode')
+        ">
+        <div class="form-group" [ngClass]="mode ? 'readonly-select' : ''">
+          <mat-label>End Date</mat-label>
+          <mat-form-field readonly>
+            <input matInput [matDatepicker]="dp" [readonly]="true" (click)="dp.open()"
+              (dateChange)="onDateChange2($event)" [min]="min" class="input_font" formControlName="endDate" />
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+
+            <mat-error *ngIf="
+                formControls['endDate'].invalid &&
+                formControls['endDate'].touched
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngIf="!formControls['policyValidity'].value && pageMode === 'viewMode'">
+        <div class="form-group">
+          <mat-label>End Date <span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <input matInput class="input_font" readonly formControlName="endDate" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 common_button_sub mt-2" style="display: flex; justify-content: flex-end">
+    <button *ngIf="!showUpdateButton && this.pageMode !== 'viewMode'" [disabled]="
+        leaveForm.invalid ||
+        (!formControls['policyValidity'].value && !isEndDateTouched)
+      " type="submit">
+      Add
+    </button>
+    <button *ngIf="showUpdateButton && this.pageMode !== 'viewMode'" type="submit">
+      Update
+    </button>
+  </div>
+</form>

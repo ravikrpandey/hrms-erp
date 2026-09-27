@@ -1,0 +1,222 @@
+<!-- <div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>
+      Resignation Request
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+      </i><span> New Request</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="../">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div> -->
+<section class="right_data_all pt-4 pb-5">
+  <div class="heading_neo">
+    <div class="section-bar mb-3">Basic Details</div>
+  </div>
+  <mat-card>
+    <form class="form_set" [formGroup]="requestNewPositionForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Name </mat-label>
+            <input type="text" matInput formControlName="employee_name"
+              [value]="this.dataObj?.first_name + ' ' + this.dataObj?.last_name" [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Employee Code</mat-label>
+            <input type="text" matInput formControlName="employee_code" [value]="this.dataObj?.employee_code"
+              [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Joining Date</mat-label>
+            <input [max]="maxDate" [min]="minDate" matInput type="text" formControlName="joining_date"
+              [value]="this.dataObj?.start_working_date" [readonly]="disable" />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Location </mat-label>
+            <input type="text" matInput formControlName="job_location" [value]="this.dataObj?.primary_branch_name"
+              [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Department </mat-label>
+            <input type="text" matInput formControlName="department" [value]="this.dataObj?.department_name"
+              [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Reporting management Name </mat-label>
+            <input type="text" matInput formControlName="manager" [value]="this.dataObj?.reporting_manager"
+              [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="paramsData !== 'view' && paramsData !== 'approval'"
+          class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Date</mat-label>
+            <input [max]="maxDate" [min]="minDate" matInput type="text" [value]="todayDate" [readonly]="disable" />
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4"
+          *ngIf="paramsData === 'view' || paramsData === 'approval'">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Date</mat-label>
+            <input [max]="maxDate" [min]="minDate" matInput type="date" formControlName="resign_date" />
+          </mat-form-field>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-label>Gratuity </mat-label>
+            <input type="text" matInput formControlName="gratuity" readonly />
+          </mat-form-field>
+        </div> -->
+      </div>
+
+
+      <div class="row">
+        <div class="section-bar mb-3">Resignation Details</div>
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4">
+          <textarea matInput name="reason" rows="2"
+            class="mat-mdc-input-element file-input ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored"
+            id="mat-input-26" placeholder="Reason for Leaving" formControlName="reason" [ngClass]="{
+              'readonly-wrapper': paramsData === 'view',
+              'approval-wrapper': paramsData === 'approval'
+            }">
+          </textarea>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{
+              'readonly-wrapper': paramsData === 'view',
+              'approval-wrapper': paramsData === 'approval'
+            }">
+            <mat-label>Notice Period </mat-label>
+            <input type="text" matInput formControlName="notice_period" />
+            <mat-error *ngIf="
+                requestNewPositionForm.controls['notice_period'].hasError(
+                  'leadingSpaces'
+                )
+              ">
+              *No leading spaces!
+            </mat-error>
+            <mat-error *ngIf="
+                requestNewPositionForm
+                  .get('notice_period')
+                  ?.hasError('required')
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{
+              'readonly-wrapper': paramsData === 'view',
+              'approval-wrapper': paramsData === 'approval'
+            }">
+            <mat-label>Last Working Day</mat-label>
+            <input [matDatepicker]="dp" (click)="dp.open()" [max]="maxDate" [min]="minDate" matInput type="text"
+              formControlName="last_working_day" />
+            <mat-datepicker-toggle matSuffix [for]="dp"
+              [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+            <mat-error *ngIf="
+                requestNewPositionForm
+                  .get('last_working_day')
+                  ?.hasError('required')
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-checkbox name="book_advance_status" id="mat-mdc-checkbox-1" [checked]="isCheckboxChecked"
+            (change)="onCheckboxChange($event)" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+            <label class="abc" for="mat-mdc-checkbox-1">Notice Adjust from Leave</label>
+          </mat-checkbox>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+          <mat-form-field appearance="outline" [ngClass]="{
+              'readonly-wrapper': paramsData === 'view',
+              'approval-wrapper': paramsData === 'approval'
+            }">
+            <mat-label>Total Paid Leaves </mat-label>
+            <input type="text" matInput formControlName="paid_leaves" />
+            <mat-error *ngIf="
+                requestNewPositionForm.controls['paid_leaves'].hasError(
+                  'leadingSpaces'
+                )
+              ">
+              *No leading spaces!
+            </mat-error>
+            <mat-error *ngIf="
+                requestNewPositionForm.get('paid_leaves')?.hasError('required')
+              ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div> -->
+      </div>
+
+
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4">
+          <textarea matInput name="remarks" rows="2"
+            class="mat-mdc-input-element file-input ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored"
+            id="mat-input-26" placeholder="Remarks" formControlName="remarks" [ngClass]="{
+              'readonly-wrapper': paramsData === 'view',
+              'approval-wrapper': paramsData === 'approval'
+            }">
+          </textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-4">
+          <textarea matInput name="remarks_manager" rows="2"
+            class="mat-mdc-input-element file-input ng-untouched ng-pristine ng-valid cdk-text-field-autofill-monitored"
+            id="mat-input-26" placeholder="Approver Remarks" formControlName="remarks_manager"
+            [ngClass]="{ 'readonly-wrapper': paramsData === 'view' }">
+            <mat-error *ngIf="requestNewPositionForm.get('remarks_manager')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </textarea>
+        </div>
+      </div>
+
+      <div class="row m-3" *ngIf="paramsData !== 'view'">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="common_button_sub">
+            <button (click)="updatePrRemarkApprove($event)">Approved</button>
+
+            <button class="cancel_button_y" (click)="updatePrRemarkReject($event)">
+              Rejected
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</section>

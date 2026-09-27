@@ -1,0 +1,182 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>My Project</span></p>
+    </div>
+    <div class="add_button">  
+      <button class="backBtn" (click)="backBtn()" ><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+  
+  <div class="right_data_all">
+    <div>
+      <mat-card>
+        <div class="row form_head">
+          <h3>Project Details</h3>
+        </div>
+        <div class="form_basic mb-0" >
+          <fieldset [disabled]="true">
+          <form class="form_set" [formGroup]="addProjectForm">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Project Code</mat-label>
+                    <input matInput formControlName="project_code"  />
+                    <mat-error *ngIf="addProjectForm.controls['project_code']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline"  >
+                    <mat-label>Client Name</mat-label>
+                    <input matInput type="text" formControlName="client_name" readonly />
+                    <mat-error *ngIf="addProjectForm.controls['client_name']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" [ngClass]="'readonly-wrapper'">
+                    <mat-label>Project Name</mat-label>
+                    <input matInput type="text" formControlName="project_name" [readonly] />
+                    <mat-error *ngIf="addProjectForm.controls['project_name']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" >
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startPicker" formControlName="start_date" />
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                    <mat-error *ngIf="addProjectForm.controls['start_date']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+  
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" >
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endPicker" formControlName="end_date"  />
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                    <mat-error *ngIf="addProjectForm.controls['end_date']?.hasError('required')">
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" >
+                    <mat-label>Project Head</mat-label>
+                    <input matInput  formControlName="project_head">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-form-field appearance="outline" >
+                    <mat-label>Project Manager</mat-label>
+                    <input matInput  formControlName="project_manager">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="form-group ckEditor mb-4">
+                <div class="form-group attach_file">
+                  <ckeditor #editer id="ckediter" formControlName = "description" (ready)="onEditorReady(editer)" ></ckeditor>
+                </div>
+              </div>
+
+              <!-- Milestone table -->
+              <div class="table-responsive">
+                <h3>Milestones</h3>
+                <form [formGroup]="addMilestoneTable">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%;">S.No</th>
+                        <th style="width: 65%;">Milestones</th>
+                        <th style="width: 20%;">End Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of arrayData; index as i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{item.milestone}}</td>
+                        <td>{{item.end_date | date: 'dd/MM/yyyy' }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+              <!-- Team Member Table -->
+
+              <div class="table-responsive">
+                <h3>Team Member</h3>
+                <form [formGroup]="teamMemberDataForm">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%;">S.No</th>
+                        <th style="width: 65%;">Employee Name</th>
+                        <th style="width: 20%;">Employee Code</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of teamMembers; index as i">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.code }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </form>
+              </div>
+            </div>
+          </form>
+          </fieldset>
+        </div>
+            <div class="form-group attach_file mt-4">
+              <mat-label class="mx-4">Attachments</mat-label>
+              
+              <div *ngIf="uploadedDocuments?.length; else noDocuments">
+                <ul style="list-style: none;">
+                  <li *ngFor="let doc of uploadedDocuments">
+                    <div>
+                      <button style="background-color: #00644d;" (click)="downloadFile(doc.id)" class="btn btn-primary ml-2">
+                        Download <i class="material-icons">download</i>
+                      </button>
+                      <span>{{ doc.file }}</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <ng-template #noDocuments>
+                <p class="text-muted">No documents available</p>
+              </ng-template>
+            </div>
+      </mat-card>
+    </div>
+  </div>
+  
+
+
+

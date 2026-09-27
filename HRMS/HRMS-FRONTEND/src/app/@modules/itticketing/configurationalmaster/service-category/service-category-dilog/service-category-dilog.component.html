@@ -1,0 +1,76 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!service_categoryId?"Add Service Category":"Update Service Category"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Service Category</h3>
+    <fieldset>
+        <div class="m-3" [formGroup]="ServiceCategoryForm">
+
+
+            <!-- <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <p>Service Category Code</p>
+                    <mat-form-field appearance="outline" readonly>
+                        <input matInput type="text" formControlName="service_category_code" />
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_code'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_code'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div> -->
+
+            
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Service Category Name</mat-label>
+                        <input matInput type="text" formControlName="service_category_name"  [readonly]="view === 'view'" />
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Description</mat-label>
+                        <input matInput type="text" formControlName="service_category_description"  [readonly]="view === 'view'"/>
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_description'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="ServiceCategoryForm.controls['service_category_description'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="view">
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+            
+        </mat-dialog-actions>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!service_categoryId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="service_categoryId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+            
+        </mat-dialog-actions>
+    </fieldset>
+</div>

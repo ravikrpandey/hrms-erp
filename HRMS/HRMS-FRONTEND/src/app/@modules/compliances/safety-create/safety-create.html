@@ -1,0 +1,129 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Compliances</h1>
+        <p>Safety<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+            </i><span>{{ id && actionType === 'edit' ? 'Update' : actionType === 'view' ? 'View' : 'Add' }}</span></p>
+    </div>
+</div>
+<mat-card>
+    <div class="form_basic">
+        <form class="form_set" [formGroup]="safetyhForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Branch</mat-label>
+                            <mat-select formControlName="branch_name">
+                                <app-search-filter [array]="locations" [placeholder]="'Search by location'"
+                                    [searchFields]="['branch_name']" (filteredReturn)="filterBylocation($event)">
+                                </app-search-filter>
+                                <mat-option *ngFor="let location of filterbybranchname"
+                                    [value]="location.id">{{location.branch_name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Date Of Inspection</mat-label>
+                            <input matInput [matDatepicker]="startPicker" formControlName="date_of_inspec" />
+                            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startPicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Department Inspected</mat-label>
+                            <mat-select formControlName="department_list" [(ngModel)]="selectedDepartment" multiple>
+                                <mat-select-filter [array]="departments"
+                                    (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                                <mat-checkbox class="check" [checked]="isAllSelectDepartment"
+                                    (click)="selectAllDepartment($event)">Select
+                                    All</mat-checkbox>
+                                <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                                    {{department?.department_name }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" [ngClass]="{'disable-pointer-events': disableField}">
+                            <mat-label>Inspected By</mat-label>
+                            <mat-select formControlName="employee_ids">
+                                <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                                    {{ item?.first_name }} {{ item?.middle_name || '' }} {{ item?.last_name }} {{
+                                    item?.employee_code }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Supervisor Present</mat-label>
+                            <input matInput type="text" formControlName="supervisor" />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div formArrayName="checklist" class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-3">
+                    <div class="row form_head">
+                        <h3>Safety Conditions Inspection Checklist <span style="color:red">*</span></h3>
+                    </div>
+
+                    <table border="1" cellpadding="10" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Checkpoint</th>
+                                <th class="px-3">Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let item of checklistFormArray.controls; let i = index" [formGroupName]="i">
+                                <td>{{ item.value.checkpoint }}</td>
+                                <td>
+                                    <label class="radio-cell">
+                                        <input type="radio" formControlName="status" value="Yes" /> Yes
+                                    </label>
+                                    <label class="radio-cell">
+                                        <input type="radio" formControlName="status" value="No" /> No
+                                    </label>
+                                    <label class="radio-cell">
+                                        <input type="radio" formControlName="status" value="NA" /> NA
+                                    </label>
+
+                                    <div *ngIf="item.get('status')?.invalid && item.get('status')?.touched"
+                                        style="color:red;font-size:12px;">
+                                        Status is required.
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" formControlName="remarks" placeholder="Enter remarks"
+                                        style="width: 100%;" />
+                                    <div *ngIf="item.get('remarks')?.invalid && item.get('remarks')?.touched"
+                                        style="color:red;font-size:12px;">
+                                        Remarks is required.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="common_button_sub">
+                    <button (click)="onSubmitForm()" *ngIf="actionType !== 'view'">
+                        {{ actionType === 'edit' ? 'Update' : 'Submit' }}
+                    </button>
+                    <button class="cancel_button_y" (click)="back()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</mat-card>

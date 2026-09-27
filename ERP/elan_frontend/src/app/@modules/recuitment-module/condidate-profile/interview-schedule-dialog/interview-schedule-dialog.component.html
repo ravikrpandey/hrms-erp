@@ -1,0 +1,73 @@
+<ng-container>
+  <h3 mat-dialog-title class="popHead"> Schedule Interview</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <form [formGroup]="interviewScheduleForm">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group mb-2">
+              <mat-label>Round <span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="interview_round">
+                  <mat-option *ngFor="let round of roundList" [value]="round">{{round}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="interviewScheduleForm.controls['interview_round'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mb-2">
+              <mat-label>Interviewer Name <span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="selectedEmployee" multiple>
+                  <!-- <mat-select-filter [array]="employees" (filteredReturn)="employeeFilter($event)"></mat-select-filter> -->
+                  <mat-option *ngFor="let item of reporting_manager_list" [value]="item?.employee_id">
+                    {{item?.first_name + ' ' + item?.last_name + ' ' + item?.employee_code}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="interviewScheduleForm.controls['selectedEmployee'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mb-2">
+              <mat-label>Date <span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline" readonly>
+                <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="interview_date" readonly
+                  [matDatepickerFilter]="disablePreviousDates" />
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+                <mat-error *ngIf="interviewScheduleForm.controls['interview_date'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group mb-2">
+              <mat-label>Time <span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput name="selected_time_B" [format]=24 formControlName="interview_time"
+                  [ngxMatTimepicker]="pickerA" readonly />
+                <mat-icon matSuffix (click)="pickerA.open()"> watch_later </mat-icon>
+                <mat-error *ngIf="interviewScheduleForm.controls['interview_time'].hasError('required')">
+                  *Required!
+                </mat-error>
+              </mat-form-field>
+              <ngx-mat-timepicker color="accent" #pickerA></ngx-mat-timepicker>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="common_button_sub">
+    <button (click)="handleSubmit()">Create</button>
+    <button mat-dialog-close class="cancel_button_y">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>

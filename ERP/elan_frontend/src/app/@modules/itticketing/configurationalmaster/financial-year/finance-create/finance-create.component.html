@@ -1,0 +1,145 @@
+  
+  
+  <div class="deparment-dialoge">
+    <h3 *ngIf="action!=='view'" mat-dialog-title class="popHead">{{btnValue}}</h3>
+    <h3 *ngIf="action =='view'" mat-dialog-title class="popHead"> Financial Year record</h3>
+    <ng-container *ngIf="action == 'view'">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Finance Year :</p>
+                    <p>Start Date</p>
+                    <p>End Date</p>
+                    <p>Status :</p>
+                </div>
+                <div class="emp_value">
+                    <p> {{financeYearData?.data.financial_year}} </p>
+                    <p> {{financeYearData?.data.status }} </p>
+                    <p> {{financeYearData.data.year_start_date }} </p>
+                    <p> {{financeYearData.data.year_end_date }} </p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub mb-3">
+            <button  mat-dialog-close class="cancel_button_y">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+</div>
+<!-- currect code  -->
+<ng-container *ngIf="action!=='view'">
+    <mat-dialog-content class="mat-typography">
+        <div class="">
+            <form [formGroup]="FinancialYear">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Financial Year </mat-label>
+                        <input matInput matNativeControl formControlName="financial_year" placeholder="Enter Financial Year" />
+                        <mat-error *ngIf="FinancialYear.controls['financial_year'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="FinancialYear.controls['financial_year'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+               <div class="form-group">
+    <mat-label>Start Date <span class="alertspan">*</span></mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput 
+             [matDatepicker]="dpStart"
+             (dateChange)="onStartDateChange($event)"
+             formControlName="year_start_date"
+             readonly
+             (click)="dpStart.open()" />
+      <mat-datepicker-toggle matSuffix [for]="dpStart"></mat-datepicker-toggle>
+      <mat-datepicker #dpStart></mat-datepicker>
+
+      <mat-error *ngIf="FinancialYear.controls['year_start_date'].hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- End Date -->
+  <div class="form-group">
+    <mat-label>End Date <span class="alertspan">*</span></mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput 
+             [matDatepicker]="dpEnd"
+             [min]="minEndDate"
+             (dateChange)="onEndDateChange($event)"
+             formControlName="year_end_date"
+             readonly
+             (click)="dpEnd.open()" />
+      <mat-datepicker-toggle matSuffix [for]="dpEnd"></mat-datepicker-toggle>
+      <mat-datepicker #dpEnd></mat-datepicker>
+
+      <mat-error *ngIf="FinancialYear.controls['year_end_date'].hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Checkbox -->
+  <div class="form-group mt-3">
+    <mat-checkbox formControlName="is_add_date">
+      Maintain additional Date
+    </mat-checkbox>
+  </div>
+
+  <!-- Additional From Date -->
+  <div *ngIf="FinancialYear.get('is_add_date')?.value" class="form-group">
+    <mat-label>Additional (From Date)</mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput 
+             [matDatepicker]="dpAddStart"
+             [min]="minAddStartDate"
+             (dateChange)="onAddStartDateChange($event)"
+             formControlName="add_start_date"
+             readonly
+             (click)="dpAddStart.open()" />
+      <mat-datepicker-toggle matSuffix [for]="dpAddStart"></mat-datepicker-toggle>
+      <mat-datepicker #dpAddStart></mat-datepicker>
+
+      <mat-error *ngIf="FinancialYear.controls['add_start_date'].hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <!-- Additional To Date -->
+  <div *ngIf="FinancialYear.get('is_add_date')?.value" class="form-group">
+    <mat-label>Additional (To Date)</mat-label>
+    <mat-form-field appearance="outline">
+      <input matInput 
+             [matDatepicker]="dpAddEnd"
+             [min]="minAddEndDate"
+             formControlName="add_end_date"
+             readonly
+             (click)="dpAddEnd.open()" />
+      <mat-datepicker-toggle matSuffix [for]="dpAddEnd"></mat-datepicker-toggle>
+      <mat-datepicker #dpAddEnd></mat-datepicker>
+
+      <mat-error *ngIf="FinancialYear.controls['add_end_date'].hasError('required')">
+        This field is required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+
+            </form>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions class="common_button_sub mb-3" align="end">
+        <button    *ngIf="!action"  (click)="ngSubmitFinancialYear()" >
+            Submit
+        </button>
+        <button *ngIf="action" (click)="onUpdateFinanceYear()" >
+            Update
+        </button>
+        <button  mat-dialog-close class="cancel_button_y" style="float: right">
+            Close
+        </button>
+    </mat-dialog-actions>
+
+</ng-container>

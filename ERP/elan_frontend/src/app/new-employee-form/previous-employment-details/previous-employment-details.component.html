@@ -1,0 +1,142 @@
+<div class="section">
+    <div class="personalDetails pt-5">
+        <mat-card>
+          <div class="row form_head">
+            <h3>PREVIOUS EMPLOYER DETAILS</h3>
+          </div>
+          <form [formGroup]="previousEmpForm">
+          <div class="form_basic">
+            <div class="table px-3" style="width: 100%;">
+              <thead>
+                <tr class="row">
+                  <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    Company Name
+                  </th>
+                  <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                    Position
+                  </th>
+                  <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    Form Date
+                  </th>
+                  <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    To Date
+                  </th>
+                  <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                    Last Drawn Salary (k)
+                  </th>
+                  <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                    Reason Of Leaving
+                  </th>
+                  <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                    Location
+                  </th>
+                  <th class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12 py-2">
+                    <button mat-raised-button color="warn" (click)="addRowEmploy()">
+                      Add
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container formArrayName="previous_employement_details" *ngFor="
+                    let control_2 of CF_1.previous_employement_details['controls'];
+                    index as i
+                  ">
+                  <tr class="row" [formGroup]="control_2">
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <input type="text" maxlength="50" formControlName="company_name" class="form-control" />
+                    </td>
+                    <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                      <input type="text" maxlength="30" formControlName="position" class="form-control" />
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <!-- <input type="date" formControlName="from_date" class="form-control" /> -->
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Form Date</mat-label>
+                          <input
+                            matInput
+                            [matDatepicker]="dp"
+                            (click)="dp.open()"
+                            formControlName="from_date"
+                            [max]="maxDate" 
+                            (dateChange)="fromDate($event)"
+                          />
+  
+                          <mat-datepicker-toggle
+                            matSuffix
+                            [for]="dp"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #dp></mat-datepicker>
+                          <!-- <mat-error
+                            *ngIf="
+                              jobDetailsForm.controls['startDate'].hasError(
+                                'required'
+                              )
+                            "
+                          >
+                            This field is Required!
+                          </mat-error> -->
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <!-- <input type="date" formControlName="to_date" class="form-control" /> -->
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>To Date</mat-label>
+                          <input
+                            matInput
+                            [matDatepicker]="picker2"
+                            (click)="picker2.open()"
+                            formControlName="to_date"
+                            [max]="maxDate" [min]="FromDate || minDate"  (dateChange)="ToDate($event)"
+                          />
+                          <mat-datepicker-toggle
+                            matIconSuffix
+                            [for]="picker2"
+                          ></mat-datepicker-toggle>
+                          <mat-datepicker #picker2></mat-datepicker>
+                          <!-- <mat-error
+                            *ngIf="
+                              jobDetailsForm.controls['endDate'].hasError(
+                                'required'
+                              )
+                            "
+                          >
+                            This field is Required!
+                          </mat-error> -->
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1">
+                      <input type="number" min="0" maxlength="5" formControlName="last_drawn_salary" class="form-control" />
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <input type="text" maxlength="50" formControlName="reson_of_leaving" class="form-control" />
+                    </td>
+                    <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                      <input type="text" maxlength="20" formControlName="location" class="form-control" />
+                    </td>
+                    <td class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12" style="
+                        text-align: center;
+                        color: #858586;
+                        cursor: pointer;
+                      ">
+                      <i class="material-icons" (click)="deleteEmployerRows(i)">delete</i>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </div>
+          </div>
+        </form>
+        </mat-card>
+      </div>
+      
+      <div class="mt-3" align="end">
+        <button mat-raised-button color="primary" (click)="submit()" class="mx-3">
+          {{employee_ids ? 'Update & Next' :'Save & Next'}}
+        </button>
+      </div>
+</div>

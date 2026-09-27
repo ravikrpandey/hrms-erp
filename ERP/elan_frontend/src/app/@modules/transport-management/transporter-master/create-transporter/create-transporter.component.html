@@ -1,0 +1,217 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>Transporter Registartion</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="createForm">
+      <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let field of formFields">
+          <div class="form-group mb-4">
+          <ng-container>
+
+  <!-- Checkbox -->
+  <mat-checkbox
+    *ngIf="field.type === 'checkbox'"
+    [formControlName]="field.name">
+
+    {{ field.label }}
+
+  </mat-checkbox>
+
+
+  <!-- Select -->
+  <mat-form-field
+    appearance="outline"
+    class="full-width"
+    *ngIf="field.type === 'select'">
+
+    <mat-label>{{ field.label }}</mat-label>
+
+    <mat-select [formControlName]="field.name">
+
+      <mat-option
+        *ngFor="let option of getOptions(field.name)"
+        [value]="option.value">
+
+        {{ option.label }}
+
+      </mat-option>
+
+    </mat-select>
+
+    <mat-error
+      *ngIf="field.required && createForm.controls[field.name].hasError('required')">
+
+      This field is required!
+
+    </mat-error>
+
+  </mat-form-field>
+
+
+
+  <!-- Text / Number / Textarea -->
+  <mat-form-field
+    appearance="outline"
+    class="full-width"
+    *ngIf="field.type !== 'select' && field.type !== 'checkbox'">
+
+
+    <mat-label>{{ field.label }}</mat-label>
+
+
+    <input
+      *ngIf="field.type !== 'textarea'"
+      matInput
+      [type]="field.type"
+      [formControlName]="field.name">
+
+
+    <textarea
+      *ngIf="field.type === 'textarea'"
+      matInput
+      [formControlName]="field.name">
+    </textarea>
+
+
+    <mat-error
+      *ngIf="field.required && createForm.controls[field.name].hasError('required')">
+
+      This field is required!
+
+    </mat-error>
+
+
+  </mat-form-field>
+
+
+</ng-container>
+          </div>
+        </div>
+
+
+
+
+
+
+      </div>
+ <div class="">
+    <div >
+      <mat-card>
+        <div class="row form_head">
+          <h3>TDS Section</h3>
+        </div>
+        <div class="form_set">
+
+          <div class="table-responsive col-12 mt-2">
+            <table class="table table-bordered" formArrayName="tdsList">
+              <thead>
+                <tr>
+                  <th>TDS Section</th>
+                  <th>Nature</th>
+                  <th>Nature Of Transaction</th>
+                  <th>TDS Threshold Limit</th>
+                  <th>Max Threshold Limit</th>
+                  <th>TDS Rate (%)</th>
+
+                  <th  >Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let group of tdsList.controls; let i = index" [formGroupName]="i">
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>TDS Section</mat-label>
+
+                      <mat-select formControlName="tds_id">
+                          <mat-option *ngFor="let value of tdsData"
+                              [value]="value.id"  (click)="getTdsById(value,i)" >{{value?.section}}</mat-option>
+                      </mat-select>
+
+                  </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Nature</mat-label>
+
+                       <input matInput value="" formControlName="nature" readonly>
+
+                  </mat-form-field>
+                    </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Nature Of Transaction</mat-label>
+
+                      <mat-select formControlName="nature_id">
+                          <mat-option *ngFor="let value of natureData[i]"
+                              [value]="value.id"  (click)="getNatureData(value,i)" >{{value?.nature_of_transaction}}</mat-option>
+                      </mat-select>
+
+                  </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>TDS Threshold Limit</mat-label>
+
+                       <input matInput value="" formControlName="threshold_limit" readonly>
+
+                  </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Max Threshold Limit</mat-label>
+
+                         <input matInput value="" formControlName="maximum_amount" readonly>
+
+                    </mat-form-field>
+                      </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>TDS Rate (%)</mat-label>
+
+                        <input matInput value="" formControlName="tds_rate" readonly>
+
+                    </mat-form-field>
+                    </td>
+                  <td  >
+
+                    <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="tdsList.length>1">delete</mat-icon>
+                    <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+
+
+
+
+
+    </div>
+        </mat-card>
+        </div>
+        </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub" *ngIf="status!='View'">
+          <button (click)="submitForm()">
+            Submit
+          </button>
+        </div>
+      </div>
+
+    </form>
+
+
+
+
+
+  </div>
+</div>

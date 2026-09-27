@@ -1,0 +1,103 @@
+<div class="heading_top">
+    <div class="row">
+        <div class="col-md-6 ">
+            <h1>REPORTS</h1>
+            <p>
+                Attendance Reports <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+                <span> Late-In Reports</span>
+            </p>
+        </div>
+        <div class="page-title-container">
+            <input type="text" class="form-control search-box" id="filter-text-box" #input placeholder="Search"
+                (input)="onFilterTextBoxChanged()" />
+            <span class="icon_img" (click)="exportToExcel()" matTooltip="Download" style="cursor: pointer">
+                <img src="assets/icons/top3.png" alt="Export" />
+            </span>
+        </div>
+    </div>
+</div>
+<div class="right_data_all pt-3">
+    <mat-card>
+        <mat-card-content>
+            <div class="row">
+                <div class="col-12 col-sm-3">
+                    <mat-form-field appearance="outline" style="width: 100%">
+                        <mat-label>Entity</mat-label>
+                        <mat-select multiple [value]="entity_id">
+
+                            <!-- Custom Filter Component -->
+                            <app-search-filter [array]="entityList" [placeholder]="'Search by entity name'"
+                                [searchFields]="['entity_name']" (filteredReturn)="handleFilteredEntities($event)">
+                            </app-search-filter>
+
+                            <!-- Select All Checkbox -->
+                            <mat-checkbox (change)="selectAll($event)" [checked]="isAllSelect">
+                                Select All
+                            </mat-checkbox>
+
+                            <!-- Render options based on full list, but hide unfiltered -->
+                            <mat-option *ngFor="let item of entityList" [value]="item.entity_id"
+                                [hidden]="!filteredEntityIds.has(item.entity_id)">
+                                {{ item.entity_name }}
+
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="!entity_id || entity_id.length === 0">*Required!</mat-error>
+                    </mat-form-field>
+
+                </div>
+                <div class="col-12 col-sm-3">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Department</mat-label>
+                        <mat-select [(ngModel)]="selectedDepartment">
+                            <app-search-filter [array]="departmentdata" [placeholder]="'Search by department name'"
+                                [searchFields]="['department_name']" (filteredReturn)="filterDepartment = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let dept of filterDepartment" [value]="dept?.dept_id">
+                                {{ dept?.department_name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-12 col-sm-2">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>From Date *</mat-label>
+                        <input matInput [matDatepicker]="fromPicker" [(ngModel)]="from_date">
+                        <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #fromPicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error *ngIf="formSubmitted && !from_date">*Required!</mat-error>
+                </div>
+
+
+                <div class="col-12 col-sm-2">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>To Date *</mat-label>
+                        <input matInput [matDatepicker]="toPicker" [(ngModel)]="to_date">
+                        <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #toPicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-error *ngIf="formSubmitted && !to_date">*Required!</mat-error>
+                </div>
+
+                <div class="col-12 col-sm-2" style="margin-top: 10px;">
+                    <button (click)="triggerExport()" class="download-button">
+                        Search
+                    </button>
+                </div>
+
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+</div>
+
+
+<div class="ag_grid ag_final_dat tableGroup">
+    <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+        [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10 [rowData]="rowData"
+        (gridReady)="onGridReady($event)" [rowClass]="rowClass">
+    </ag-grid-angular>
+</div>

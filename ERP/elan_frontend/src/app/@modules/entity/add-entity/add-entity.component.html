@@ -1,0 +1,665 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Entity</h1>
+        <p>Entity Master<i class="fa fa-angle-right" aria-hidden="true"
+                style="color:#858586">
+            </i><span *ngIf="viewMode">View Entity</span><span
+                *ngIf="id && !viewMode">Update Entity</span><span
+                *ngIf="!id">Add Entity</span></p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i
+                class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+</div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <!-- shiftMasterForm -->
+            <form class="" [formGroup]="EntityForm">
+                <div class="heading_neo">
+                    <h3>Basic Details</h3>
+                </div>
+                <div class="formBasicArea">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Entity Name</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text" formControlName="entity_name" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['entity_name'].hasError('required')">
+                                    Entity Name is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['entity_name'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Tax Registration Number</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="tax_registeration_number" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['tax_registeration_number'].hasError('required')">
+                                    Tax Registration Number is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['tax_registeration_number'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Registered Office</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="registered_office" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['registered_office'].hasError('required')">
+                                    Tax Registered Office is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['registered_office'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Employee Prefix</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="employee_prefix" oninput="this.value = this.value.toUpperCase()"/>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['employee_prefix'].hasError('required')">
+                                    Employee prefix is Required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> 
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>CIN</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="cin" oninput="this.value = this.value.toUpperCase()"/>
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>PAN</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="pan" oninput="this.value = this.value.toUpperCase()"/>
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>TAN</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="tan" oninput="this.value = this.value.toUpperCase()"/>
+                                
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>ESI</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="esi" oninput="this.value = this.value.toUpperCase()"/>                               
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>PF</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="pf" oninput="this.value = this.value.toUpperCase()"/>
+                            </mat-form-field>
+                        </div>
+                    </div> 
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>MSME Certificate No.</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="msme_certificate" oninput="this.value = this.value.toUpperCase()"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>MSME Category</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="msme_category" oninput="this.value = this.value.toUpperCase()"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Branch</mat-label>
+                                <mat-select formControlName="branch_id" multiple [disabled]="viewMode">
+                                    <mat-option *ngFor="let branch of branchList" [value]="branch.id">
+                                        {{branch.branch_name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="EntityForm.controls['branch_id']?.hasError('required')">
+                                    Branch is Required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="!viewMode"
+                        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                        <input (change)="onChange($event)" class="form-control"
+                            type="file" accept=".png, .jpg, .jpeg"
+                            style="padding-right: 19%;
+                            font-size: 14px;
+                            height: 40px;
+                            padding-top: 9px;" title="Choose Loho"
+                            #fileInput
+                            formControlName="logo" />
+                        <mat-error
+                            *ngIf="EntityForm.controls['logo'].hasError('required' ) && (mode != 'view' && mode != 'edit')  && (EntityForm.controls['logo'].dirty || EntityForm.controls['logo'].touched)">
+                            File is required
+                        </mat-error>
+                        <mat-error
+                            *ngIf="EntityForm.controls['logo'].hasError('acceptTypes')  && (mode != 'view' && mode != 'edit')">
+                            Only Image files are allowed
+                        </mat-error>
+                    </div>
+                    <div *ngIf="viewMode || id"
+                        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <p>Uploaded Image</p>
+                        <img class="img" [src]="img" />
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mb-3">
+                            <mat-form-field appearance="outline">
+                                <mat-label>GST No.</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="gst_in" oninput="this.value = this.value.toUpperCase()"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="heading_neo">
+                <h3>Maintain Hierarchy</h3>
+              </div>
+              <div class="row p-3 mt-2">
+
+              <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>Is Group: </mat-label>
+                    <mat-select formControlName="is_group"  (selectionChange)="IsGroupData($event)">
+                      <mat-option value="YES">Yes</mat-option>
+                      <mat-option value="NO">No</mat-option>
+                    </mat-select>
+
+                    <mat-error *ngIf="EntityForm.get('is_group')?.hasError('required')" class="error-message">
+                      * Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div *ngIf="mode !== 'view'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>Parent Entity Name</mat-label>
+                    <mat-select #select2 formControlName="parent_entity_id" name="parent_entity_name">
+                      <mat-option *ngFor="let data of isGroupDatalist" [value]="data.id">{{data.entity_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              </div>
+              <div class="heading_neo">
+                <h3>Maintain financial Year & Address</h3>
+              </div>
+
+               <div class="row">
+                  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline" style="margin-top: 10px;" [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>Fianancial Year</mat-label>
+                    <mat-select #select2 formControlName="financial_id" name="financial_year" multiple >
+                      <mat-option *ngFor="let data of rowData" [value]="data.id">{{data.financial_year}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline" style="margin-top: 10px;" [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>Country</mat-label>
+                    <mat-select #select2 formControlName="country_id" name="country_id" (selectionChange)="getStateById($event)" >
+                      <mat-option *ngFor="let data of getAllCountryData" [value]="data.countryss_id">{{data.countryss_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline" style="margin-top: 10px;" [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>State</mat-label>
+                    <mat-select #select2 formControlName="state_id" name="state_id"  (selectionChange)="getCityById($event)" >
+                      <mat-option *ngFor="let data of getActiveStateData" [value]="data.states_id">{{data.states_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline" style="margin-top: 10px;" [ngClass]="{'readonly-wrapper': false}">
+                    <mat-label>City</mat-label>
+                    <mat-select #select2 formControlName="city_id" name="city_id"  >
+                      <mat-option *ngFor="let data of getActiveCityId" [value]="data.city_id">{{data.city_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+               </div>
+
+            <div class="heading_neo">
+                <h3>SMTP Details</h3>
+            </div>
+            <div class="formBasicArea">
+                <div class="row">
+                    <div
+                        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>SMTP Server Address</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text"
+                                    formControlName="smtp_server_address" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['smtp_server_address'].hasError('required')">
+                                    SMTP Server Address is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['smtp_server_address'].hasError('pattern' ) && !EntityForm.controls['smtp_server_address'].hasError('leadingSpaces')">
+                                    Invalid SMTP Server Address!
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['smtp_server_address'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div
+                        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>SMTP Port No</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="number"
+                                    formControlName="smtp_port_no" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['smtp_port_no'].hasError('required')">
+                                    SMTP Port No is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['smtp_port_no'].hasError('pattern' )">
+                                    Invalid SMTP Port No!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div
+                        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6 mb-3">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text" formControlName="username" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['username'].hasError('required')">
+                                    Username is required
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['username'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-6">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Password</mat-label>
+                                <input [readonly]="viewMode" matInput
+                                    type="text" formControlName="password" />
+                                <mat-error
+                                    *ngIf="EntityForm.controls['password'].hasError('required')">
+                                    Password is required
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="EntityForm.controls['password'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                
+                <div class="heading_neo">
+                    <h3>Stake Holders</h3>
+                </div>
+                <div class="formBasicArea">
+                <div class="row">
+                    <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th >S No.</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Contact No.</th>
+                                <th>Email ID</th>
+                                <th *ngIf="!viewMode">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="stake_holder_form">
+                            <tr
+                                *ngFor="let stakeHolderRow of stakeHoldersFormArray.controls; let i = index"
+                                [formGroupName]="i">
+                                <td>
+                                    <div class="form-group-name-cat center">
+                                        <div>{{i+1}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat"
+                                        [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Name</mat-label>
+                                            <input matInput type="text"
+                                                formControlName="stakeholder_name"
+                                                [readonly]="viewMode" />
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('stakeholder_name')?.hasError('required') && !EntityForm.get('stake_holder_form')?.get(i.toString())?.get('stakeholder_name')?.hasError('leadingSpaces')">
+                                                Require!
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('stakeholder_name')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat"
+                                        [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Position</mat-label>
+                                            <input matInput type="text"
+                                                formControlName="designation"
+                                                [readonly]="viewMode" />
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('designation')?.hasError('required')">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('designation')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat addCoding"
+                                        [ngClass]="viewMode ? 'readonly-select':''">
+                                            <mat-form-field class="country-codes" appearance="outline">
+                                              <mat-select formControlName="country_code" (selectionChange)="onCountryCodeChange($event.value,i)">
+                                                <mat-select-filter [array]="codes[i]" (filteredReturn)="codeSearch($event,i)"></mat-select-filter>
+                                                <mat-option *ngFor="let countryCode of countryCodeList[i]"
+                                                  [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                                              </mat-select>
+                                            </mat-form-field>
+                                        <mat-form-field appearance="outline" style="width:200px">
+                                            <mat-label>Contact No</mat-label>
+                                            <input matInput type="number"
+                                                (input)="updateContactNo($event,i)"
+                                                formControlName="contact_no"
+                                                [readonly]="viewMode"
+                                                 />
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('required') ">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('maxlength')">
+                                                allowed maxlength is 10!
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('minlength') && !EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('required')">
+                                                allowed minlength is 10!
+                                            </mat-error>
+                                            <mat-error
+                                            *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('exactLength') && !EntityForm.get('stake_holder_form')?.get(i.toString())?.get('contact_no')?.hasError('required')">
+                                            Exact length should be 10!
+                                        </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat"
+                                        [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Email ID</mat-label>
+                                            <input matInput type="text"
+                                                formControlName="email_id"
+                                                [readonly]="viewMode" />
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('email_id')?.hasError('required')">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('email_id')?.hasError('pattern') && !EntityForm.get('stake_holder_form')?.get(i.toString())?.get('email_id')?.hasError('leadingSpaces')">
+                                                Invalid Email
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="EntityForm.get('stake_holder_form')?.get(i.toString())?.get('email_id')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td *ngIf="!viewMode">
+                                    <div class="edit_del flexRow"
+                                        [ngClass]="viewMode ? 'readonly-select':''">
+                                        <div (click)="addStakeHoldersRow()">
+                                            <mat-icon
+                                                matTooltip="Add Item">add_circle</mat-icon>
+                                        </div>
+                                        <div>
+                                            <ng-container *ngIf="i+1!==1">
+                                                <mat-icon
+                                                    matTooltip="delete Item"
+                                                    (click)="removeStakeHoldersRow(i)">delete_circle</mat-icon>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </td>
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                </div>
+
+                <div class="heading_neo">
+                    <h3>Management Details</h3>
+                </div>
+                <div class="formBasicArea">
+                <div class="row">
+                    <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>S No.</th>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Contact No.</th>
+                                <th>Email ID</th>
+                                <th *ngIf="!viewMode">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="management_form">
+                            <tr *ngFor="let mgRow of managementFormArray.controls; let i = index" [formGroupName]="i">
+                                <td>
+                                    <div class="form-group-name-cat center">
+                                        <div>{{i+1}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Name</mat-label>
+                                            <input matInput type="text" formControlName="mg_name" [readonly]="viewMode" />
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_name')?.hasError('required') && !EntityForm.get('management_form')?.get(i.toString())?.get('mg_name')?.hasError('leadingSpaces')">
+                                                Require!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_name')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Position</mat-label>
+                                            <input matInput type="text" formControlName="mg_designation" [readonly]="viewMode" />
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_designation')?.hasError('required')">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_designation')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat addCoding" [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field class="country-codes" appearance="outline">
+                                            <mat-select formControlName="mg_country_code" (selectionChange)="onManagementCountryCodeChange($event.value,i)">
+                                                <mat-select-filter [array]="managementCodes[i]" (filteredReturn)="managementCodeSearch($event,i)"></mat-select-filter>
+                                                <mat-option *ngFor="let countryCode of managementCountryCodeList[i]" [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <mat-form-field appearance="outline" style="width:200px">
+                                            <mat-label>Contact No</mat-label>
+                                            <input matInput type="number" (input)="updateManagementContactNo($event,i)" formControlName="mg_contact_no" [readonly]="viewMode" />
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('required')">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('maxlength')">
+                                                allowed maxlength is 10!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('minlength') && !EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('required')">
+                                                allowed minlength is 10!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('exactLength') && !EntityForm.get('management_form')?.get(i.toString())?.get('mg_contact_no')?.hasError('required')">
+                                                Exact length should be 10!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group-name-cat" [ngClass]="viewMode ? 'readonly-select':''">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Email ID</mat-label>
+                                            <input matInput type="text" formControlName="mg_email_id" [readonly]="viewMode" />
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_email_id')?.hasError('required')">
+                                                Required!
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_email_id')?.hasError('pattern') && !EntityForm.get('management_form')?.get(i.toString())?.get('mg_email_id')?.hasError('leadingSpaces')">
+                                                Invalid Email
+                                            </mat-error>
+                                            <mat-error *ngIf="EntityForm.get('management_form')?.get(i.toString())?.get('mg_email_id')?.hasError('leadingSpaces')">
+                                                No Leading Spaces!
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </td>
+                                <td *ngIf="!viewMode">
+                                    <div class="edit_del flexRow" [ngClass]="viewMode ? 'readonly-select':''">
+                                        <div (click)="addManagementRow()">
+                                            <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                                        </div>
+                                        <div>
+                                            <ng-container *ngIf="i+1!==1">
+                                                <mat-icon matTooltip="delete Item" (click)="removeManagementRow(i)">delete_circle</mat-icon>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+                
+
+                <div class="common_button_sub mt-4" align="end" >
+                    <button *ngIf="!id" (click)="onSubmitForm()">
+                        Submit
+                    </button>
+                    <button *ngIf="id && mode=='edit'" (click)="onSubmitForm()">
+                        Update
+                    </button>
+                    <button *ngIf="mode != 'view'"
+                    class="cancel_button_y" (click)="back()">Cancel</button>
+                </div>
+                </div>
+            </form>
+
+        </div>
+    </mat-card>
+</section>

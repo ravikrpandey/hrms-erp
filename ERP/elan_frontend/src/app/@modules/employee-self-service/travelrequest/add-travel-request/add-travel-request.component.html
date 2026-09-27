@@ -1,0 +1,25 @@
+<app-wrapper
+  [title]="'ESS'"
+  [subTitle]="'Travel Request List'"
+  [subheading]="
+    Type === 'view'
+      ? 'View Travel Request'
+      : Type === 'edit'
+      ? 'Edit Travel Request'
+      : Type === 'approvalprocess'
+      ? 'Approval-Process'
+      : Type === 'bookadvance'
+      ? 'Book Advance Travel Request'
+      : Type === 'upload'
+      ? 'Upload Travel Documents'
+      : 'Create Travel Request'
+  "
+  [showActions]="true"
+  [isBack]="true"
+>
+  <app-dash-create-travel-request
+    [travelReqid]="this.travereqid"
+    [typeCheck]="Type"
+    (dialogClose)="close()"
+  ></app-dash-create-travel-request>
+</app-wrapper>

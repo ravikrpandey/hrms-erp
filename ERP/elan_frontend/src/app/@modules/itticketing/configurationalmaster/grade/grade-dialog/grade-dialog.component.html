@@ -1,0 +1,86 @@
+<ng-container *ngIf="visible=='visible'">
+  <h3 mat-dialog-title class="popHead">Grade Record</h3>
+<mat-dialog-content class="mat-typography">
+  <div class="cotain">
+    <div class="emp_key">
+      <p>S.NO. :</p>
+      <p>Grade :</p>
+      <p>Status :</p>
+    </div>
+    <div class="emp_value" *ngFor="let data of singleGrade">
+      <p>{{ data?.grade_id }}</p>
+      <p>{{ data?.grade_name }}</p>
+      <p>{{ data?.status }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close mat-raised-button color="primary">
+    Close
+  </button>
+</mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="add_grade=='add_grade'">
+  <form [formGroup]="gradeForm">
+    <h3 mat-dialog-title class="popHead">Grade</h3>
+    <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+        <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+          <div class="form-group row">
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Grade</mat-label>
+              <input matInput type="text" formControlName="grade_name" />
+              <mat-error *ngIf="gradeForm.controls['grade_name'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="gradeForm.controls['grade_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-raised-button color="primary" (click)="ngSubmitEmp(gradeForm.value)">
+        Submit
+      </button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </form>
+</ng-container>
+
+<ng-container *ngIf="editGrade=='edit'">
+  <form [formGroup]="gradeForm">
+    <h3 mat-dialog-title class="popHead">Grade</h3>
+    <mat-dialog-content class="mat-typography">
+      <div class="cotain">
+        <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-6 col-12">
+          <div class="form-group row">
+            <!-- <p>Grade Name</p> -->
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Grade</mat-label>
+              <input matInput type="text" formControlName="grade_name" />
+              <mat-error *ngIf="gradeForm.controls['grade_name'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="gradeForm.controls['grade_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-raised-button color="primary" (click)="ngSubmitEmp(gradeForm.value)">
+        Update
+      </button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </form>
+</ng-container>

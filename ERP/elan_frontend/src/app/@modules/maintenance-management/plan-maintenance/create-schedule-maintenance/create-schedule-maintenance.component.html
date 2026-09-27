@@ -1,0 +1,530 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Maintenance Management</h1>
+    <p>Create Schedule Maintenance </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+  <div class="right_data_all">
+
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="createSchedualForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>WorkStation Name</mat-label>
+              <mat-select formControlName="workstation_id" >
+                  <mat-option *ngFor="let state of getAllWorkStation"
+                      [value]="state?.id">{{ state?.name_of_workstation }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['workstation_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Asset Tag Id</mat-label>
+              <mat-select formControlName="asset_tag_id" (selectionChange)="changeAssetdata($event)">
+                  <mat-option *ngFor="let state of TagIdData"
+                      [value]="state?.id">{{ state?.asset_tagId }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['asset_tag_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Asset Name</mat-label>
+              <input matInput type="text" formControlName="asset_name" maxlength="30" readOnly/>
+              <mat-error *ngIf="createSchedualForm.controls['asset_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Under AMC</mat-label>
+              <mat-select formControlName="amc" placeholder="" >
+                <mat-option [value]="0">NO</mat-option>
+                <mat-option [value]="1">YES</mat-option>
+
+            </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['amc'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Maintenance Type</mat-label>
+              <mat-select formControlName="maintenance_type" placeholder="INHOUSE || VENDOR" (selectionChange)="changeMaintenance($event)">
+                <mat-option value="VENDOR">VENDOR</mat-option>
+                <mat-option value="INHOUSE">INHOUSE</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['maintenance_type'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="type=='VENDOR'">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Vendor Name</mat-label>
+              <mat-select formControlName="vendor_id" >
+                  <mat-option *ngFor="let state of VendorData"
+                      [value]="state?.id">{{ state?.vendor_name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['vendor_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Priority</mat-label>
+              <mat-select formControlName="priority" placeholder="Low || Medium || High" >
+                <mat-option value="Low">Low</mat-option>
+                <mat-option value="Medium">Medium</mat-option>
+                <mat-option value="High">High</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['priority'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Frequency</mat-label>
+              <mat-select formControlName="frequency" placeholder="One Time || Monthly || Quarterly || Yearly" >
+                <mat-option value="One Time">One Time</mat-option>
+                <mat-option value="Monthly">Monthly</mat-option>
+                <mat-option value="Quarterly">Quarterly</mat-option>
+                <mat-option value="Yearly">Yearly</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createSchedualForm.controls['frequency'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="start_date"
+                (dateChange)="setMinEndDate($event.value)" />
+
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="picker1" formControlName="end_date" [min]="minEndDate" />
+
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-label>Remark</mat-label>
+
+          <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d; padding:5px 10px;"
+            rows="3" maxlength="200" formControlName="remark"
+            [ngModel]="createSchedualForm.controls['remark'].value">
+          </textarea>
+          <mat-error *ngIf="
+          createSchedualForm.controls['remark'].hasError('required')
+        ">
+            This field is Required!
+          </mat-error>
+          <mat-error *ngIf="
+          createSchedualForm.controls['remark'].hasError('leadingSpaces')
+        ">
+            No leading spaces!
+          </mat-error>
+        </div>
+      </div>
+      <div class="row">
+        <div
+        class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        *ngFor="let file of fileArray; let i = index"
+        style="padding: 15px 10px; display: flex; align-items: center"
+      >
+        <div
+          style="
+            margin-right: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          "
+        >
+          <div (click)="addFileInput(i)" style="cursor: pointer">
+            <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+          </div>
+          <div (click)="removeFileInput(i)" style="cursor: pointer">
+            <mat-icon matTooltip="Remove Item">remove_circle</mat-icon>
+          </div>
+        </div>
+        <div style="position: relative; flex-grow: 1">
+          <input
+            class="form-control"
+            type="file"
+            title="Upload Document"
+            accept=".jpg,.jpeg,.png,.pdf"
+            (change)="onChangefile($event, i)"
+            style="
+              width: 100%;
+              padding-right: 10px;
+              height: 42px;
+              padding-top: 10px;
+              font-size: 14px;
+            "
+          />
+          <img
+            *ngIf="file.imagePath"
+            [src]="file.imagePath"
+            (click)="openFileInNewTab(file.url)"
+            style="
+              width: 30px;
+              height: 30px;
+              position: absolute;
+              top: 5px;
+              right: 5px;
+              cursor: pointer;
+            "
+          />
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" >
+        <div class="form-group">
+
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <input
+              type="checkbox"
+              id="partRequiredCheckbox"
+              style="font-size: 25px;"
+              class="form-check-input"
+              (input)="changevalue()"
+              [(ngModel)]="approval_require"
+              [ngModelOptions]="{standalone: true}"
+            />
+            <label for="partRequiredCheckbox" class="form-check-label" style="margin-bottom: -5px;">
+              Approval Required
+            </label>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="approval_require == true">
+        <div class="d-flex">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee Name</mat-label>
+            <mat-select formControlName="emp_id" >
+              <mat-option *ngFor=" let item of employeeList" [value]="item?.employee_id">
+                {{item?.first_name + ' ' + item?.last_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" >
+      <div class="form-group">
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input
+          [(ngModel)]="item_require"
+            type="checkbox"
+            id="partRequiredCheckbox"
+            style="font-size: 25px;"
+            class="form-check-input"
+            (input)="changeItem()"
+            [ngModelOptions]="{standalone: true}" />
+          <label for="partRequiredCheckbox" class="form-check-label" style="margin-bottom: -5px;">
+            Item Required
+          </label>
+        </div>
+
+
+      </div>
+    </div>
+
+    <br>
+    <br>
+    <div class="form_table" *ngIf="item_require==true">
+      <mat-card>
+        <div class="tab_table table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Item Category</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th >Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="productDetailList"
+                *ngFor="let control of CF_1.productDetailList['controls']; let i = index">
+                <tr [formGroup]="control">
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Select Item Category</mat-label>
+                      <mat-select formControlName="category_id"
+                        (selectionChange)="selectCateGory($event,i)">
+                        <mat-option  *ngFor="let data of cetegory" [value]="data.id"
+                         >{{data.asset_category_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Select Item</mat-label>
+                      <mat-select formControlName="item_id"
+                        >
+                        <mat-option  *ngFor="let item of productData[i]"
+                          [value]="item?.id">{{item?.item_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Quantity</mat-label>
+                      <input matInput type="number" formControlName="quantity" maxlength="30"/>
+                    </mat-form-field>
+                  </td>
+                  <td >
+                    <span *ngIf="!control?.controls?.isDisabled"
+                      style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                      <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                        aria-hidden="true"></i></span>
+                    <span style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                      <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                        style="margin-top:5px; margin-left: 10px!important;"></i></span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+
+      </mat-card>
+    </div>
+
+<div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" >
+  <div class="form-group">
+
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <input
+    [(ngModel)]="asset_require"
+        type="checkbox"
+        id="partRequiredCheckbox"
+        style="font-size: 25px;"
+        class="form-check-input"
+        (input)="changeAsset()"
+        [ngModelOptions]="{standalone: true}" />
+      <label for="partRequiredCheckbox" class="form-check-label" style="margin-bottom: -5px;">
+        Asset Required
+      </label>
+    </div>
+
+
+  </div>
+</div>
+<br>
+<br>
+<div class="form_table" *ngIf="asset_require==true">
+  <mat-card>
+    <div class="tab_table table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Asset Category</th>
+            <th>Asset Name</th>
+            <th>Quantity</th>
+            <th >Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container formArrayName="assetDetailList"
+            *ngFor="let control of CF_2.assetDetailList['controls']; let i = index">
+            <tr [formGroup]="control">
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Asset Category</mat-label>
+                  <mat-select formControlName="asset_category_id"
+                    (selectionChange)="selectAssetCateGory($event,i)">
+                    <mat-option  *ngFor="let data of cetegory" [value]="data.id"
+                     >{{data.asset_category_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Asset </mat-label>
+                  <mat-select formControlName="asset_id"
+                    >
+                    <mat-option  *ngFor="let item of AssetData[i]"
+                      [value]="item?.id">{{item?.item_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field appearance="outline">
+                  <mat-label>Quantity</mat-label>
+                  <input matInput type="number" formControlName="quantity" maxlength="30"/>
+                </mat-form-field>
+              </td>
+              <td >
+                <span *ngIf="!control?.controls?.isDisabled"
+                  style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                  <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow1(i, control)"
+                    aria-hidden="true"></i></span>
+                <span style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                  <i class="fa fa-plus-circle" (click)="addrow1()" aria-hidden="true"
+                    style="margin-top:5px; margin-left: 10px!important;"></i></span>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+
+  </mat-card>
+</div>
+<br>
+
+ <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" *ngIf="status=='edit'">
+          <div class="form-group">
+            <mat-label>Status Remark</mat-label>
+
+            <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d; padding:5px 10px;"
+              rows="3" maxlength="200" formControlName="status_remark"
+              [ngModel]="createSchedualForm.controls['status_remark'].value">
+            </textarea>
+            <mat-error *ngIf="
+            createSchedualForm.controls['status_remark'].hasError('required')
+          ">
+              This field is Required!
+            </mat-error>
+            <mat-error *ngIf="
+            createSchedualForm.controls['status_remark'].hasError('leadingSpaces')
+          ">
+              No leading spaces!
+            </mat-error>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="status == 'edit' || status == 'update'">
+          <div class="d-flex align-items-center justify-content-between">
+            <mat-form-field appearance="outline" class="flex-grow-1">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="status" (selectionChange)="selectChange('status')">
+                <mat-option *ngFor="let item of AllStatus" [value]="item?.id">
+                  {{ item?.status_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="floating-icon" *ngIf="status=='edit'">
+              <button mat-icon-button aria-label="Floating Action" (click)="openDialog($event)">
+                <img src="../../../../../assets/chat.png">
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12"  *ngIf=" status === 'view'">
+          <div class="form-group" *ngIf=" status === 'update'">
+            <mat-label>Approver Remark</mat-label>
+
+            <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d; padding:5px 10px;"
+              rows="3" maxlength="200" formControlName="approver_remark"
+              [ngModel]="createSchedualForm.controls['approver_remark'].value">
+            </textarea>
+            <mat-error *ngIf="
+            createSchedualForm.controls['approver_remark'].hasError('required')
+          ">
+              This field is Required!
+            </mat-error>
+            <mat-error *ngIf="
+            createSchedualForm.controls['approver_remark'].hasError('leadingSpaces')
+          ">
+              No leading spaces!
+            </mat-error>
+          </div>
+        </div>
+        <div class="container mt-5" *ngIf="closed.length">
+          <!-- <h2 class="text-center mb-4">Workstation Maintenance Table</h2> -->
+          <table class="table table-striped table-bordered">
+              <thead class="table-dark">
+                  <tr>
+                      <th>S.No</th>
+                      <th>Workstation Name</th>
+                      <th>Maintenance Type</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let x of closed;let i =index;">
+                      <td>{{i+1}}</td>
+                      <td>{{x?.name_of_workstation}}</td>
+                      <td>{{x?.maintenance}}</td>
+                  </tr>
+
+              </tbody>
+          </table>
+      </div>
+
+      <div class="common_button_sub"  *ngIf=" status != 'update'">
+        <button (click)="onSubmitForm()" *ngIf="status!='view'" >
+          {{id?'Update':'Submit'}}
+        </button>
+        <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+      </div>
+      <div class="common_button_sub" *ngIf="status=='update'">
+        <button (click)="updateStatus('APPROVED')"  >
+          Approve
+        </button>
+        <button class="cancel_button_y" (click)="updateStatus('REJECTED')">Reject</button>
+      </div>
+    </form>
+  </div>
+</div>

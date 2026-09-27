@@ -1,0 +1,60 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Employment & Assignment</h3>
+    </div>
+    <form class="form_set formBorder" [formGroup]="employmentform">
+      <div class="form_sePo">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Employment Type <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="employment_type">
+                  <mat-option value="Full-time">Full-time</mat-option>
+                  <mat-option value="Contract">Contract</mat-option>
+                  <mat-option value="Vendor">Vendor</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+            <div class="form-group">
+              <mat-label>Vendor/Agency Name</mat-label>
+              <mat-form-field>
+                <input matInput type="text"  formControlName="vendor_agency_name"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Date of Joining <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" type="text" formControlName="date_of_joining">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Experience (Years of Driving) <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="number" min="0" formControlName="experience_years">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="action_type!='view'">
+            <div class="common_button_sub">
+              <button (click)="onSubmitForm()">Save & Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

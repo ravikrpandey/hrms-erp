@@ -1,0 +1,130 @@
+<ng-container *ngIf="visible=='visible'">
+  <h3 mat-dialog-title class="popHead">Leave Type Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>S.NO. :</p>
+        <p>Leave Type :</p>
+        <p>Status :</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ singleLeave?.leave_id }}</p>
+        <p>{{ singleLeave?.leave_type }}</p>
+        <p>{{ singleLeave?.status }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="editData=='edit'">
+  <h3 mat-dialog-title class="popHead">Leave Type</h3>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="leaveTypeform">
+      <div class="form-group row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Leave Type</mat-label>
+            <input matInput type="text" formControlName="leave_type" />
+            <mat-error *ngIf="leaveTypeform.controls['leave_type'].hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error *ngIf="leaveTypeform.controls['leave_type'].hasError('leadingSpaces')">
+            *No leading spaces!
+          </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-1">
+            <mat-label>Carry Forward</mat-label>
+            <mat-select formControlName="is_carry_forward" (selectionChange)="getVal($event)">
+                <mat-option value="true">Yes</mat-option>
+                <mat-option value="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="leaveTypeform.get('is_carry_forward')?.hasError('required')">
+                *Required!
+            </mat-error>
+        </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Total Leave Days</mat-label>
+            <input matInput type="number" formControlName="number_of_leave" />
+            <mat-error *ngIf="leaveTypeform.controls['number_of_leave'].hasError('required')">
+            *Required!
+          </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"  (click)="submitData(leaveTypeform.value)" >
+      Update
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="addLeave_type=='add_leave'">
+  <h3 mat-dialog-title class="popHead">Leave Type</h3>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="leaveTypeform">
+      <div class="form-group row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Leave Type</mat-label>
+            <input matInput type="text" formControlName="leave_type" />
+            <mat-error *ngIf="leaveTypeform.controls['leave_type'].hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error *ngIf="leaveTypeform.controls['leave_type'].hasError('leadingSpaces')">
+            *No leading spaces!
+          </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-1">
+            <mat-label>Carry Forward</mat-label>
+            <mat-select formControlName="is_carry_forward" (selectionChange)="getVal($event)">
+                <mat-option value="true">Yes</mat-option>
+                <mat-option value="false">No</mat-option>
+            </mat-select>
+            <mat-error *ngIf="leaveTypeform.get('is_carry_forward')?.hasError('required')">
+                *Required!
+            </mat-error>
+        </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Total Leave Days</mat-label>
+            <input matInput type="number" formControlName="number_of_leave" />
+            <mat-error *ngIf="leaveTypeform.controls['number_of_leave'].hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error *ngIf="leaveTypeform.controls['number_of_leave'].hasError('leadingSpaces')">
+            *No leading spaces!
+          </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"  (click)="submitData(leaveTypeform.value)" >
+      Submit
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>

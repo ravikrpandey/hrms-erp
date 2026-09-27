@@ -1,0 +1,103 @@
+<!-- Main Sidebar Container -->
+
+<aside [ngClass]="{'manage-sidebar':farward}" class="left_nav_bar" id="sidebar" [class.collapsed]="collapsed">
+    <div></div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <!-- Sidebar Menu -->
+        <nav>
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <mat-card *ngIf="farward" (click)="collapsed = !collapsed" (click)="fun()" style="margin: 0 auto; width: 25px; height: 25px; border-radius: 50%;margin-bottom: 4px;
+                    cursor:pointer">
+                    <div class="icon">
+                        <mat-icon class="collapseIcon minus" style="margin: 0 auto">arrow_forward</mat-icon>
+                    </div>
+                </mat-card>
+            </ul>
+        </nav>
+
+    </div>
+
+
+    <!-- new sidebar start -->
+    <nav class="left_sidebar">
+        <div class="nav_bar new_menu_left">
+            <ul>
+                <li [ngClass]="dashboardActive ? 'active_sidebar_menu' : ''"  >
+                    <a href="master/ess/dashboard">
+                        <span><i class="fas fa-home"></i>
+                            <h4>Dashboard </h4>
+                        </span></a>
+                    <ul *ngIf="dashboardActive" class="sub_menu_n" style="background-color: white;">
+                        <li>
+                            <span class="active_sidebar_menu">
+                                <i class="fas fa-home"></i> Dashboard
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+                <li *ngFor="let nav of sidebarList; let i = index">
+                    <span routerLinkActive="active" (click)="openMenu(nav); toggelLeft(nav?.isActive);"
+                        [ngClass]="nav?.isActive ? 'active_sidebar_menu' : ''">
+                        <div class="ADsdsv">
+                            <i [class]="nav.menuIcon"  [matTooltip]="nav.menuName" [class]="nav.menuIcon" class="addicon"></i>
+                            <h4>{{nav.menuName}}</h4>
+                        </div>
+                        <i class="fa-angle-down fas icon_arrow_do"></i>
+                    </span>
+                    <ul *ngIf="nav?.isActive" class="sub_menu_n">
+                       
+                        <li *ngFor="let subNav of nav.superModules; let j = index">
+                            <span (click)="openSubMenu(subNav); goInToPage(subNav); toggelLeft(subNav?.isActive);"
+                                [ngClass]="subNav?.isActive ? 'active_sidebar_menu' : ''">
+                                <mat-icon>{{subNav.menu_masters_icon}}</mat-icon>{{subNav.menu_master_name}}
+                            </span>
+ 
+                            <ul *ngIf="subNav?.isActive" class="submenu_inner">
+                                <li *ngFor="let subSubMenu of subNav.HRMS_RBAC_SUBMENU_MASTER; let k = index">
+                                    <span routerLinkActive="activ" (click)="openSubSubMenuPage(subSubMenu);"
+                                        [ngClass]="subSubMenu?.isActive ? 'active_sidebar_menu' : ''">
+                                        <i class="fa-dot-circle fas"></i> {{subSubMenu.submenu_master_name}}
+                                    </span>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- new sidebar end -->
+
+    <!-- Switch to ERP bottom menu item -->
+    <div class="sidebar_bottom_action">
+        <div class="nav_bar new_menu_left">
+            <ul>
+                <li class="switch_erp_item">
+                    <span (click)="switchToErp()" [matTooltip]="'Switch to ERP'" class="switch_erp_btn">
+                        <div class="ADsdsv">
+                            <i class="fas fa-external-link-alt addicon switch_erp_icon"></i>
+                            <h4>Switch to ERP</h4>
+                        </div>
+                    </span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- <div class="expandBtn cursor">
+        <span id="sidebarCollapse" class="fixArrow">
+            <mat-card style="border-radius: 50%;cursor:pointer" [class.fa-expand]="collapsed"
+                (click)="collapsed = !collapsed && (farward = true)">
+                <mat-icon class="collapseIcon plus">arrow_back</mat-icon>
+            </mat-card>
+        </span>
+    </div> -->
+</aside>
+
+<!-- 
+<div class="side-mini-panel">
+    <div class="nav-small-title">Dashbaord</div>
+    <div class="side-mini-nav">
+        xry
+    </div>
+</div> -->

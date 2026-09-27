@@ -1,0 +1,325 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+
+    <form class="pDetails" [formGroup]="paymentForm">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+        [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+        <div class="form-group">
+          <mat-label>Attached With Payroll<span class="alertspan">*</span></mat-label>
+          <mat-radio-group name="categorys" color="primary" formControlName="attached_with_payroll"
+            [ngClass]="{'readonly-wrapper': action_type === 'view'}">
+            <mat-radio-button value="MAIN">
+              MAIN</mat-radio-button>
+            <mat-radio-button value="ALTERNATE">
+              ALTERNATE</mat-radio-button>
+          </mat-radio-group>
+        </div>
+      </div>
+      <div>
+        <div class="heading_neo">
+          <h3>Payment Details</h3>
+        </div>
+        <div class="form_sePo">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Bank Name<span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="bank_id">
+                    <app-search-filter [array]="allBanks" [placeholder]="'Search by bank name'"
+                      [searchFields]="['bank_name']" (filteredReturn)="banknamefilter = $event.data">
+                    </app-search-filter>
+                    <mat-option *ngFor="let bank of banknamefilter" [value]="bank.id">{{ bank.bank_name }}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="paymentForm.controls['bank_id'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Account Holder Name<span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="employee_name_in_bank" [value]="
+                    paymentForm.controls['employee_name_in_bank'].value | titlecase
+                  " />
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['employee_name_in_bank'].hasError('pattern')">
+                    Please enter a valid Name
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Bank Address<span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="bank_address" />
+                  <mat-error *ngIf="paymentForm.controls['bank_address'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['bank_address'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Account No<span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="number" maxlength="16" formControlName="account_number" />
+                  <mat-error *ngIf="paymentForm.controls['account_number'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['account_number'].hasError('pattern')">
+                    Enter a valid 11-16-digit ACCOUNT number!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Re-enter Account No<span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="number" maxlength="16" formControlName="re_enter_account_no" />
+                  <mat-error *ngIf="paymentForm.controls['re_enter_account_no'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>IFSC Code</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input type="text" matInput formControlName="ifsc_code" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['ifsc_code'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <!-- <div class="form-group">
+              <mat-label>bank_district_name </mat-label>
+              <mat-form-field appearance="outline">
+              
+                <input matInput type="text" formControlName="bank_district_name" />
+                <mat-error *ngIf="paymentForm.controls['bank_district_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="paymentForm.controls['bank_district_name'].hasError('leadingSpaces')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div> -->
+              <div class="form-group">
+                <mat-label>IBAN Number </mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="iban_number" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['iban_number'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+                  <mat-error *ngIf="paymentForm.controls['iban_number'].hasError('leadingSpaces')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Swift Code </mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="swift_code" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['swift_code'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group fileWithViewImg">
+                <mat-label>Document</mat-label>
+                <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                  (change)="uploadDoc($event, 'payment')" accept=".png, .jpg, .jpeg" />
+                <img *ngIf="bank_document" [src]="baseUrl + '/' + bank_document" alt class="fileViewImage"
+                  (click)="viewImg('payment')">
+              </div>
+            </div>
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-radio name="categorys" color="primary" formControlName="attached_with_payroll"
+                  [ngClass]="{'readonly-wrapper': action_type === 'view'}">
+                  <mat-radio-button value="MAIN" [checked]="true">Attached with payroll</mat-radio-button>
+                </mat-radio>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="heading_neo">
+          <h3>Alternate Bank Details</h3>
+        </div>
+        <div class="form_sePo">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Bank Name</mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="alt_bank_id">
+                    <app-search-filter [array]="allBanks" [placeholder]="'Search by bank name'"
+                      [searchFields]="['bank_name']" (filteredReturn)="alterNateBanknamefilter = $event.data">
+                    </app-search-filter>
+                    <mat-option *ngFor="let bank of alterNateBanknamefilter" [value]="bank.id">{{ bank.bank_name }}</mat-option>
+                  </mat-select>
+                  <!-- <mat-error *ngIf="paymentForm.controls['alt_bank_id'].hasError('required')">
+                    This field is required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Account Holder Name</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="alt_account_holdname" [value]="
+                    paymentForm.controls['alt_account_holdname'].value | titlecase
+                  " />
+                  <!-- <mat-error *ngIf="paymentForm.controls['alt_account_holdname'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['alt_account_holdname'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['alt_account_holdname'].hasError('pattern')">
+                    Please enter a valid Name
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Bank Address</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="alt_bank_address" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['alt_bank_address'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['alt_bank_address'].hasError('leadingSpaces')">
+                    No leading Spaces!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Account No</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="number" maxlength="16" formControlName="alt_account_number" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['alt_account_number'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="paymentForm.controls['alt_account_number'].hasError('pattern')">
+                    Enter a valid 11-16-digit ACCOUNT number!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>Re-enter Account No</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="number" maxlength="16" formControlName="alt_re_enter_number" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['alt_re_enter_number'].hasError('required')">
+                    This field is required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-label>IFSC Code</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input type="text" matInput formControlName="alt_IFSC_code" />
+                  <!-- <mat-error *ngIf="paymentForm.controls['ifsc_code'].hasError('required')">
+                  This field is required!
+                </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group fileWithViewImg">
+                <mat-label>Alternate Document</mat-label>
+                <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                  (change)="uploadDoc($event, 'alternate')" accept=".png, .jpg, .jpeg" />
+                <img *ngIf="alt_bank_document" [src]="baseUrl + '/' + alt_bank_document" alt class="fileViewImage"
+                  (click)="viewImg('alt_bank_document')">
+              </div>
+            </div>
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+              <div class="form-group">
+                <mat-radio name="categorys" color="primary" formControlName="attached_with_payroll"
+                  [ngClass]="{'readonly-wrapper': action_type === 'view'}">
+                  <mat-radio-button value="ALTERNATE">
+                    Attached with payroll</mat-radio-button>
+                </mat-radio>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <div [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+        <div class="common_button_sub" *ngIf="!action_type">
+          <button *ngIf="paymentForm.disable" papp-document-details (click)="onCreate()">
+            Save & Next
+          </button>
+          <button class="cancel_button_y" (click)="Skip()">
+            Skip
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

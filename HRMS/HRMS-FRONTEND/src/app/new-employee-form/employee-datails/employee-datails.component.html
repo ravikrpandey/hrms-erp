@@ -1,0 +1,310 @@
+<section>
+  <div>
+    <mat-card>
+      <div class="row form_head">
+        <h3>BASIC DETAILS</h3>
+      </div>
+
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="basicForm">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" readonly>
+                  <mat-label>Mr./Mrs</mat-label>
+                  <mat-select formControlName="title">
+                    <mat-option value="Mr">Mr</mat-option>
+                    <mat-option value="Mrs">Mrs</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="basicForm.controls['title'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Official Email Id</mat-label>
+                  <input matInput type="email"  style="text-transform:lowercase"
+                  formControlName="personal_email" />
+
+                </mat-form-field>
+              </div>
+            </div> -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Employee Code</mat-label>
+                  <input matInput type="text" formControlName="employee_code" />
+                </mat-form-field>
+              </div>
+            </div> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
+                  <input matInput maxlength="30" type="text" formControlName="first_name"
+                    [value]="basicForm.controls['first_name'].value | titlecase" />
+                  <mat-error *ngIf="
+                      basicForm.controls['first_name'].hasError('required')
+                    ">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="
+                      basicForm.controls['first_name'].hasError('minlength')
+                    ">
+                    Minimum 1 character is required!
+                  </mat-error>
+                  <mat-error *ngIf="
+                      basicForm.controls['first_name'].hasError('maxlength')
+                    ">
+                    Accepts only 20 characters.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Middle Name</mat-label>
+                  <input matInput type="text" maxlength="10" formControlName="middle_name" [value]="
+                      basicForm.controls['middle_name'].value | titlecase" />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+        
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput type="text" maxlength="30" formControlName="last_name"
+                    [value]="basicForm.controls['last_name'].value | titlecase" />
+                  <mat-error *ngIf="basicForm.controls['last_name'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                  <mat-error *ngIf="
+                      basicForm.controls['last_name'].hasError('minlength')
+                    ">
+                    Minimum 1 characters required!
+                  </mat-error>
+                  <mat-error *ngIf="
+                      basicForm.controls['last_name'].hasError('maxlength')
+                    ">
+                    Accepts only 20 characters.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Personal Email Id</mat-label>
+                  <input matInput type="text" style="text-transform:lowercase"
+                  formControlName="employee_official_email" />
+                  <mat-error *ngIf="
+                  basicForm.controls['employee_official_email'].hasError('required')
+                ">
+                    Personal Email Id is Required.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div> 
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Gender</mat-label>
+                  <mat-select formControlName="gender">
+                    <mat-option value="male">Male</mat-option>
+                    <mat-option value="female">Female</mat-option>
+                    <mat-option value="transgender">Other</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="basicForm.controls['gender'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Segment</mat-label>
+                   <mat-select formControlName="segment_suv"  (selectionChange)="getRegion($event)">
+                    <mat-option
+                      *ngFor="let item of segmentList"
+                      [value]="item.segment_name"
+                      >{{ item.segment_name }}</mat-option>
+                   </mat-select>
+                  <mat-error *ngIf="
+                      basicForm.controls['segment_suv'].hasError('required')
+                    ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Designation</mat-label>
+                  <mat-select formControlName="designation">
+                    <mat-option *ngFor="let desi of getAllDesignation"
+                      [value]="desi.designation_name">{{desi.designation_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Date Of Birth</mat-label>
+                  <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date_of_birth"
+                    [max]="max" />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                  <mat-error *ngIf="
+                  basicForm.controls['date_of_birth'].hasError('required')
+                ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+              <mat-form-field appearance="outline" readonly>
+                  <mat-label>Country</mat-label>
+                  <mat-select #productselect formControlName="country" required (selectionChange)="optionEaCode($event)">
+                    <mat-select-filter [array]="variables" (filteredReturn)="productFilter($event)"  ></mat-select-filter>
+                     <mat-option                  
+                          *ngFor="let country of checkData"
+                          [value]="country.countryss_id"
+                          >{{country.countryss_name}}</mat-option>
+                  </mat-select>
+
+                </mat-form-field>
+              
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>State</mat-label>
+                  <mat-select  (selectionChange)="stateChange($event)" formControlName="state" >
+                    <mat-select-filter [array]="stateVaribles" (filteredReturn)="stateFilter($event)"  ></mat-select-filter>
+                    <mat-option *ngFor="let state of datas" [value]="state.states_id">{{state.states_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>City</mat-label>
+                  <mat-select formControlName="city">
+                    <mat-select-filter [array]="cityVaribles" (filteredReturn)="cityFilter($event)"  ></mat-select-filter>
+                    <mat-option *ngFor="let city of dataCity" [value]="city.city_id">{{city.city_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Region</mat-label>
+                  <mat-select formControlName="region" *ngIf="!show_region">
+                   <mat-option *ngFor="let item of regionSList" [value]="item.new_region_name"
+                    >{{ item.new_region_name }}</mat-option>
+                  </mat-select>
+                    <!-- shows when get by id call  -->
+                  <input *ngIf="show_region"
+                  matInput maxlength="30" type="text" formControlName="region"
+                  [value]="basicForm.controls['region'].value | titlecase" />
+
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <input class="form-control" type="file" style="padding-right: 19%" (change)="onChange($event)"
+                  formControlName="employee_photo" placeholder="Employee Photo" />
+                <img [src]="imagePath?imagePath:getData?.employee_photo" *ngIf="imagePath || getData?.employee_photo || singleData?.file_document "
+                  alt="emp image" class="imgEmp" (click)="seePreview(getData?.employee_photo || singleData?.file_document, imagePath)" />
+                  <span class="file_upload">Note: Upload(.jpg, .jpeg, .png)</span>
+               </div>
+            </div>
+            <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <input
+                    matInput
+                    type="text" min="1"
+                    tabindex="-1"
+                    readonly
+                    formControlName="mobile_code"
+                  />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Mobile No</mat-label>
+                  <input matInput type="text" formControlName="mobile_number" />
+                  <mat-error *ngIf="basicForm.controls['mobile_number'].hasError('required')"> This field is required</mat-error>
+                  <mat-error *ngIf=" basicForm.controls['mobile_number'].hasError('pattern')">  It is not a valid mobile number</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Date Of Joining</mat-label>
+                  <input matInput [matDatepicker]="dj" (click)="dj.open()" formControlName="date_of_joining"
+                   />
+                  <mat-datepicker-toggle matSuffix [for]="dj"></mat-datepicker-toggle>
+                  <mat-datepicker #dj></mat-datepicker>
+                  <!-- <mat-error *ngIf="
+                  basicForm.controls['date_of_birth'].hasError('required')
+                ">
+                    This field is required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3" align="end">
+            <button (click)="onSubmitForm()" mat-raised-button color="primary" class="mx-3">
+              {{employee_ids ? 'Update & Next' :'Save & Next'}}
+            </button>
+
+            <button mat-raised-button color="warn" (click)="back()">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-card>
+  </div>
+</section>
+
+
+<div *ngIf="loader"  class="loader-wrapper">
+  <div class="loader"></div>
+  <p class="loading-text">Please wait...</p>
+</div>

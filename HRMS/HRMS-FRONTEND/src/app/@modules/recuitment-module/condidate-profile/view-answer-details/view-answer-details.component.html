@@ -1,0 +1,57 @@
+<div class="section">
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>HRMS</h1>
+      <p>Recruitment Candidate Answer<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>Candidate Answer Details</span></p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+  </div>
+
+  <div class="right_data_all">
+    <mat-card class="mb-4 p-3 mt-3">
+      <div class="basic_details basicInfos">
+        <h2>Basic Details</h2>
+        <div class="row">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Candidate Name</h5>
+            <p>{{basicDetails?.first_name}} {{basicDetails?.last_name}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Contact No</h5>
+            <p>+{{basicDetails?.country_code}} {{basicDetails?.contact_number}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Email ID</h5>
+            <p>{{basicDetails?.email}}</p>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <h5>Percentage</h5>
+            <p>{{basicDetails?.selected_percentage}} % ({{basicDetails?.selection_status}})</p>
+          </div>
+        </div>
+      </div>
+
+      <h2>Answer Details</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th style="width: 5%">S.No.</th>
+            <th style="width: 35%">Question</th>
+            <th>Answer</th>
+            <th>Candidate Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let value of dataList; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{value?.question}}</td>
+            <td>{{value?.answer}}</td>
+            <td>{{value?.selection_answer}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card>
+  </div>

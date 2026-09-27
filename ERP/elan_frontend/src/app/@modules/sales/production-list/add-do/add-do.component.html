@@ -1,0 +1,476 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales</h1>
+    <p>
+      Sales Order List
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #363636">
+      </i><span> Delivery Order </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" routerLink="/master/sales/sales-order-list">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="addDoform">
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>DO Date</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-label>DO Date</mat-label>
+              <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="do_date" />
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp></mat-datepicker>
+              <mat-error *ngIf="addDoform.get('do_date')?.hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Customer Name</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Customer Name</mat-label>
+              <input matInput type="text" formControlName="customer_name" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Sales Order Number</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Sales Order Number</mat-label>
+              <input matInput type="text" formControlName="proposal_no" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Trans Type</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="trans_type_id">
+                <mat-option *ngFor="let item of transTypeList" [value]="item?.id">
+                  {{ item?.code }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="addDoform.controls['trans_type_id'].hasError('required')">
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Billing Branch</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="branch_id" (selectionChange)="checkApplicableGst()">
+                <mat-option *ngFor="let item of branchList" [value]="item?.id">
+                  {{ item?.branch_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="addDoform.controls['branch_id'].hasError('required')">
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>State</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="state_id" (selectionChange)="stateChange($event)">
+                <mat-select-filter [array]="states1" (filteredReturn)="stateSearch1($event)"></mat-select-filter>
+                <mat-option *ngFor="let state of stateList" [value]="state?.states_id">{{ state?.states_name
+                  }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="addDoform.controls['state_id'].hasError('required')">
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Billing Address</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Billing Address</mat-label>
+              <input matInput type="text" formControlName="billing_address" />
+              <mat-error *ngIf="addDoform.get('billing_address')?.hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-label>Shipping Address</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Shipping Address</mat-label>
+              <input matInput type="text" formControlName="shipping_address" />
+              <mat-error *ngIf="addDoform.get('shipping_address')?.hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>DO Number</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>DO Number</mat-label>
+              <input matInput type="text" formControlName="order_number" />
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- 
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label style="margin-bottom: 3px">Attach File</mat-label>
+            <input
+              type="file"
+              class="form-control"
+              (change)="uploadDoc($event)"
+              style="
+                font-size: 13px;
+                height: 42px;
+                padding-top: 11px;
+                color: #929292;
+                padding-left: 10px;
+              "
+            />
+          </div>
+        </div> -->
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Company Name</mat-label>
+            <mat-form-field appearance="outline" class="mt-1">
+              <mat-label>Company Name</mat-label>
+              <input matInput type="text" formControlName="company_name" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <!-- product details start here -->
+      <div class="form_table">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Product Category</th>
+                  <th>Product Name</th>
+                  <th>Product Varient</th>
+                  <th>Product Code</th>
+                  <th>Product Description</th>
+                  <th>UOM</th>
+                  <th>Proposed Qty</th>
+                  <th>Delivered Qty</th>
+                  <th>Remaining Qty</th>
+                  <th>Qty</th>
+                  <th>HSN Code</th>
+                  <th>Price Per Unit</th>
+                  <th *ngIf="
+                      isSameState &&
+                      addDoform.get('branch_id')?.value &&
+                        addDoform.get('state_id')?.value
+                    ">
+                    CGST (%)
+                  </th>
+                  <th *ngIf="
+                      isSameState &&
+                      addDoform.get('branch_id')?.value &&
+                        addDoform.get('state_id')?.value
+                    ">
+                    SGST (%)
+                  </th>
+                  <th *ngIf="
+                      !isSameState &&
+                      addDoform.get('branch_id')?.value &&
+                        addDoform.get('state_id')?.value
+                    ">
+                    IGST (%)
+                  </th>
+                  <!-- <th>Maximum Discount (%)</th> -->
+                  <!-- <th
+                    *ngIf="
+                      getAllProductDetails[0]?.discount_approved ||
+                      getAllProductDetails[0]?.discount_request
+                    "
+                  >
+                    Discount Required
+                  </th>
+                  <th
+                    *ngIf="
+                      getAllProductDetails[0]?.discount_approved ||
+                      getAllProductDetails[0]?.discount_request
+                    "
+                  >
+                    Discount Approved
+                  </th> -->
+                  <!-- <th  >Action</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container formArrayName="productDetailList" *ngFor="
+                    let control of CF_1.productDetailList['controls'];
+                    let i = index
+                  ">
+                  <tr [formGroup]="control">
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Product Category</mat-label>
+                        <mat-select formControlName="product_category_id"
+                          (selectionChange)="getAllActiveProduct($event, i)">
+                          <mat-option [disabled]="formDisabled" *ngFor="let data of cetegory" [value]="data.id">{{
+                            data.category_name }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Product</mat-label>
+                        <mat-select formControlName="product_master_id"
+                          (selectionChange)="getAllProductVariant($event, i)">
+                          <mat-option [disabled]="formDisabled" *ngFor="let item of productData[i]"
+                            [value]="item?.id">{{ item?.product_name }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <mat-label>Select Varient</mat-label>
+                        <mat-select formControlName="variant_id">
+                          <mat-option [disabled]="formDisabled" *ngFor="let item of productVariantData[i]"
+                            [value]="item?.id">{{ item?.variant_name }}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Product Code</mat-label>
+                          <input matInput maxlength="30" formControlName="product_code" class="form-control"
+                            [readonly]="true" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Product Description</mat-label>
+                          <input matInput type="text" maxlength="200" formControlName="product_description"
+                            class="form-control" [readonly]="true" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Uom</mat-label>
+                          <input matInput type="text" maxlength="100" formControlName="uom_name" class="form-control"
+                            [readonly]="true" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Proposed Quantity</mat-label>
+                          <input matInput readonly type="text" maxlength="5" formControlName="proposed_quantity"
+                            class="form-control" (keypress)="keyPress($event)" (ngModelChange)="productColculation()" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Delivered Quantity</mat-label>
+                          <input matInput readonly type="text" maxlength="5" formControlName="delivered_qty"
+                            class="form-control" (keypress)="keyPress($event)" (ngModelChange)="productColculation()" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Remaining Quantity</mat-label>
+                          <input matInput readonly type="text" maxlength="5" formControlName="remaining_quantity"
+                            class="form-control" (keypress)="keyPress($event)" (ngModelChange)="productColculation()" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Quantity</mat-label>
+                          <input matInput type="text" maxlength="5" formControlName="qty" class="form-control"
+                            (keypress)="qtyCheck($event, i)" (ngModelChange)="productColculation()" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>HSN Code</mat-label>
+                          <mat-select formControlName="hsn_code_id">
+                            <mat-option *ngFor="let data of hsnCodeList" [value]="data.id">{{ data?.hsn_sac_code
+                              }}</mat-option>
+                          </mat-select>
+                          <!-- <mat-error *ngIf="
+                            proposalForm.controls['hsn_code_id'].hasError(
+                                'required'
+                              )
+                            ">
+                            HSN Code is Required.
+                          </mat-error> -->
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Price</mat-label>
+                          <input matInput type="text" maxlength="5" formControlName="price_per_unit"
+                            class="form-control" (ngModelChange)="productColculation()" (keypress)="keyPress($event)" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+
+                    <td *ngIf="
+                        isSameState &&
+                        addDoform.get('branch_id')?.value &&
+                          addDoform.get('state_id')?.value
+                      ">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>CGST</mat-label>
+                          <input matInput [readonly]="formDisabled" type="text" maxlength="30" formControlName="cgst" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td *ngIf="
+                        isSameState &&
+                        addDoform.get('branch_id')?.value &&
+                          addDoform.get('state_id')?.value
+                      ">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>SGST</mat-label>
+                          <input matInput [readonly]="formDisabled" type="text" maxlength="30" formControlName="sgst" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td *ngIf="
+                        !isSameState &&
+                        addDoform.get('branch_id')?.value &&
+                          addDoform.get('state_id')?.value
+                      ">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline">
+                          <mat-label>IGST</mat-label>
+                          <input matInput [readonly]="formDisabled" type="text" maxlength="30" formControlName="igst" />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <!-- <td>
+                      <input
+                        readonly="true"
+                        type="text"
+                        maxlength="5"
+                        formControlName="maximum_discount"
+                        class="form-control"
+                        (keypress)="keyPress($event)"
+                        (ngModelChange)="productColculation()"
+                        style="width: fit-content"
+                      />
+                    </td> -->
+                    <!-- <td
+                      *ngIf="
+                        getAllProductDetails[0]?.discount_approved ||
+                        getAllProductDetails[0]?.discount_request
+                      "
+                    >
+                      <input
+                        readonly="true"
+                        type="text"
+                        maxlength="5"
+                        formControlName="discount_request"
+                        (keypress)="keyPress($event)"
+                        (ngModelChange)="productColculation()"
+                        class="form-control"
+                        style="width: fit-content"
+                      />
+                    </td> -->
+                    <!-- <td
+                      *ngIf="
+                        getAllProductDetails[0]?.discount_approved ||
+                        getAllProductDetails[0]?.discount_request
+                      "
+                    >
+                      <input
+                        type="text"
+                        maxlength="5"
+                        formControlName="discount_approved"
+                        (keypress)="keyPress($event)"
+                        (ngModelChange)="productColculation()"
+                        class="form-control"
+                        style="width: fit-content"
+                      />
+                    </td> -->
+                    <!-- <td  >
+                                        <span *ngIf="!control?.controls?.isDisabled"
+                                          style="color: #063178; cursor: pointer;font-size: 20px;">
+                                          <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                                            aria-hidden="true"></i></span>
+                                        <span style="color: #063178; cursor: pointer;font-size: 20px;">
+                                          <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                                            style="margin-top:5px; margin-left: 10px!important;"></i></span>
+                                      </td> -->
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </mat-card>
+      </div>
+
+      <div>
+        <div class="row mt-3">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Notes</mat-label>
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Notes</mat-label>
+                <input matInput type="text" formControlName="notes" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Terms & Conditions</mat-label>
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Terms & Conditions</mat-label>
+                <input matInput type="text" formControlName="terms_and_conditions" />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 common_button_sub">
+          <button (click)="ngSubmitform(addDoform.value)">Save</button>
+          <button class="cancel_button_y">Cancel</button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+</section>

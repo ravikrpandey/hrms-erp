@@ -1,0 +1,103 @@
+<div class="right_data_all">
+    <div class="heading_neo mt-4">
+      <h3>Add Item Amount</h3>
+    </div>
+    <form class="form_basic mb-0" [formGroup]="productForm">
+        <!-- <table class="table table-borderd">
+          <thead>
+            <tr>
+              <th>S. No.</th>
+              <th>Item Category</th>
+              <th>Item Sub Category</th>
+              <th>Item Name</th>
+              <th>Discunt 1</th>
+              <th>Discunt 2</th>
+              <th>Discunt 3</th>
+              <th>Final Amount</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of itemData; index as i">
+<td>{{i + 1 }}</td>
+<td>{{item?.category_id}}</td>
+<td>{{item?.subcategory_id}}</td>
+
+
+            </tr>
+          </tbody>
+          <tbody formArrayName="products">
+            <tr *ngFor="let group of productArray.controls; let i = index" [formGroupName]="i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ rowData[i]?.product_name }}</td>
+              <td>{{ rowData[i]?.product_code }}</td>
+              <td>{{ rowData[i]?.MASTER_PRODUCT_CATEGORY?.category_name }}</td>
+              <td>{{ rowData[i]?.MASTER_SUB_CATEGORY?.sub_category_name }}</td>
+              <td>
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline">
+                    <input matInput type="number" formControlName="productAmount" #box (keyup)="amountDscount(box.value,i)"/>
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline">
+                    <input matInput type="number" formControlName="amountDiscount" #box (keyup)="amountDscount(box.value,i)"/>
+                  </mat-form-field>
+                </div>
+              </td>
+              <td>
+                <div class="form-group mb-4">
+                  <mat-form-field appearance="outline">
+                    <input matInput type="number" formControlName="finalAmount" />
+                  </mat-form-field>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>S. No.</th>
+              <th>Item Category</th>
+              <th>Item Sub Category</th>
+              <th>Item Name</th>
+              <th>DBP</th>
+
+              <th>Discount 1</th>
+              <th>Discount 2</th>
+              <th>Discount 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let data of itemData">
+              <ng-container *ngFor="let item of data.disList; let j = index">
+                <tr>
+                  <td>{{ getSerialNumber(data, j) }}</td>
+                  <td>{{ data.asset_category_name }}</td>
+                  <td>{{ data.sub_category_name }}</td>
+                  <td>{{ item.item_name }}</td>
+                  <td>{{ item.final_price ?? '0' }}</td>
+
+                  <td>{{ item.discount_1 ?? '0' }}</td>
+                  <td>{{ item.discount_2 ?? '0' }}</td>
+                  <td>{{ item.discount_3 ?? '0' }}</td>
+                </tr>
+              </ng-container>
+            </ng-container>
+            
+          </tbody>
+        </table>
+        <div class="dataShow">
+          <p style="text-align: center;
+          font-size: 20px;">{{mesShow}}</p>
+        </div>
+        
+        <div class="common_button_sub">
+          <!-- <button *ngIf="action_type !=='view'" (click)="onSubmitForm()" type="button">Submit</button> -->
+          <button type="button" class="cancel_button_y" (click)="cancel()">Cancel</button>
+        </div>
+      </form>
+</div>   

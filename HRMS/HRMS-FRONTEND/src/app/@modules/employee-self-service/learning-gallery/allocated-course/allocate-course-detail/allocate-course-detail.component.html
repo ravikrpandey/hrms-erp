@@ -1,0 +1,67 @@
+<ng-container>
+    <div class="header">
+        <img [src]="baseUrl + '/' + courseData?.courseDetaile?.thumbnail" alt="Assessment Image">
+        <div class="details">
+            <div class="detail-1">
+                <div>
+                    Category: <div class="input">{{request_id?courseData?.courseDetaile?.category:courseData?.allocation?.category}}</div>
+                </div>
+                <div>
+                    Name: <div class="input">{{courseData?.courseDetaile?.course_name}}</div>
+                </div>
+                <div >
+                    Status: <div [ngClass]="getStatusClass()" class="input" >{{courseData?.lastSubmissionStatus}}</div>
+                </div>
+                <div>
+                    Attempt Left: <div class="input">{{courseData?.left_attempts}}</div>
+                </div>
+                <div>
+                    Maximum Mark: <div class="input">{{courseData?.courseDetaile?.assesments[0]?.total_marks}}</div>
+                </div>
+            </div>
+            <div class="detail-2">
+                <div>
+                    Start Date: <div class="input">{{courseData?.allocation?.startDate | date: 'dd/MM/yyyy'}}</div>
+                </div>
+                <div>
+                    End Date: <div class="input">{{courseData?.allocation?.endDate | date: 'dd/MM/yyyy'}}</div>
+                </div>
+                <div>
+                    No. of Attempts: <div class="input">{{courseData?.courseDetaile?.assesments[0]?.max_attempts}}</div>
+                </div>
+                <div>
+                    Passing %: <div class="input">{{courseData?.courseDetaile?.assesments[0]?.pass_percentage}}</div>
+                </div>
+                <div>
+                    Achieve Marks: <div class="input">  {{ courseData?.courseDetaile?.assesments[0]?.submissions?.[courseData?.courseDetaile?.assesments[0]?.submissions.length - 1]?.obtained_marks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="time-adjust">
+        Assessment Time : <div> {{courseData?.courseDetaile?.assesments[0]?.assessment_time_minutes}} mins</div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S.No.</th>
+                <th>File Type</th>
+                <th>Content Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let content of courseData?.courseDetaile?.contentData; let i = index">
+                <td>{{i + 1}}</td>
+                <td>{{content?.content_file_type}}</td>
+                <td>{{content?.content_name}}</td>
+                <td class="actions">
+                    <mat-icon matTooltip="View" style="cursor: pointer;"(click)="openContent(content)">visibility</mat-icon>
+                    <mat-icon *ngIf="content?.content_file_link" (click)="openlink(content?.content_file_link)">link</mat-icon>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="start-button" *ngIf="courseData?.lastSubmissionStatus !== 'PASS'" (click)="startAssessment(courseData?.left_attempts)">Start Assessment</button>
+</ng-container>

@@ -1,0 +1,639 @@
+<!-- <pre>{{POformGroup.value | json}}</pre> -->
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Purchase Management</h1>
+    <p>
+      {{
+        status == "completed-grn" || status == "rejected-grn"
+          ? "View"
+          : "Create"
+      }}
+      GRN
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" tabindex="0" class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<section class="right_data_all pt-4">
+  <div class="heading_neo">
+    <h3>PO Details</h3>
+  </div>
+  <form [formGroup]="POformGroup">
+    <div class="form_sePo">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>PO Number</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="po_number"
+                readonly
+              />
+              <mat-error
+                *ngIf="POformGroup.get('po_number')?.hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>PO Date</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="po_date"
+                readonly
+                [value]="POformGroup.get('po_date')?.value | date: 'dd-MM-yyyy'"
+              />
+              <mat-error
+                *ngIf="POformGroup.get('po_date')?.hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Vendor Name</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="vendor_name"
+                readonly
+              />
+              <mat-error
+                *ngIf="POformGroup.get('invoice_no')?.hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Shipment Number</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="shiped_no"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>GRN Number</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="grn_number"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Budget Type</mat-label>
+                            <input type="text" matInput formControlName="po_type" />
+                        </mat-form-field>
+                    </div>
+                </div> -->
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div
+            class="form-group mb-3"
+            [ngClass]="status == 'partial-list' ? 'inp_disable' : ''"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Inward Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="pickerGRN"
+                format="DD-MM-YY"
+                formControlName="grn_date"
+                readonly
+                (click)="pickerGRN.open()"
+              />
+              <!-- <mat-error *ngIf="POformGroup.get('invoice_date')?.hasError('required')">
+                              This field is required!
+                            </mat-error> -->
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="pickerGRN"
+                *ngIf="status !== 'partial-list'"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #pickerGRN></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div
+            class="form-group mb-3"
+            [ngClass]="status == 'partial-list' ? '' : ''"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Invoice Number</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="invoice_no"
+                readonly
+              />
+              <mat-error
+                *ngIf="POformGroup.get('invoice_no')?.hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div
+            class="form-group mb-3"
+            [ngClass]="status == 'partial-list' ? 'inp_disable' : ''"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Invoice Date</mat-label>
+              <!-- <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="invoice_date"
+                                readonly (click)="picker.open()" /> -->
+              <input
+                matInput
+                format="DD-MM-YY"
+                formControlName="invoice_date"
+                readonly
+              />
+              <!-- <mat-error *ngIf="POformGroup.get('invoice_date')?.hasError('required')">
+                                This field is required!
+                            </mat-error> -->
+              <!-- <mat-datepicker-toggle matSuffix [for]="picker"
+                                *ngIf="status !== 'partial-list'"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker> -->
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div
+            class="form-group mb-3"
+            [ngClass]="status == 'partial-list' ? '' : ''"
+          >
+            <mat-form-field appearance="outline">
+              <mat-label>Advance Amount</mat-label>
+              <input
+                type="text"
+                matInput
+                formControlName="advance_amount"
+                readonly
+              />
+              <mat-error
+                *ngIf="POformGroup.get('advance_amount')?.hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+          style="position: relative"
+        >
+          <div class="form-group mb-3">
+            <input
+              class="form-control"
+              type="file"
+              style="
+                padding-right: 10px;
+                height: 42px;
+                font-size: 14px;
+                padding-top: 10px;
+                border: 1px solid #9e9e9e;
+              "
+              title="Upload Document"
+              (change)="onChange($event)"
+              aria-describedby="inputGroupFileAddon04"
+              accept=".jpg,.jpeg,.png"
+              formControlName="image"
+            />
+            <!-- <ng-container *ngIf="!singleItem?.id">
+                          <img [src]="imagePath?imagePath:id?generateImageUrl(singleItem?.item_document):''"
+                          *ngIf="imagePath || id && (getFileExtension(singleItem?.item_document) === 'jpg' || getFileExtension(singleItem?.item_document) === 'jpeg' || getFileExtension(singleItem?.item_document) === 'png' || getFileExtension(singleItem?.item_document) === 'gif')"
+                          (click)="seePreview(this.singleItem?.item_document, imagePath)" class="img" alt="Image">
+                        <a [href]="generateFileUrl(singleItem?.item_document)"
+                          *ngIf="id && getFileExtension(singleItem?.item_document) !== 'png' && getFileExtension(singleItem?.item_document) !== 'jpg' && getFileExtension(singleItem?.item_document) !== 'jpeg' && getFileExtension(singleItem?.item_document) !== 'gif' && singleItem?.item_document"
+                          class="viewBtn" target="_blank">View</a>
+                        </ng-container> -->
+            <!-- <ng-container  >
+                          <img [src]="item_document_images"   (click)="viewImage()"
+
+                          class="img" alt="Image">
+
+                        </ng-container> -->
+          </div>
+        </div>
+
+        <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12"
+        *ngIf="(closedStatus == 'OPEN' && rejectView == 'RejectAdd') || (status == 'po-list' && rejectView == 'RejectView')">
+          <div class="form-group mb-3">
+            <div class="import-actions" *ngIf="!excelMsg">
+
+              <button
+                type="button"
+                mat-stroked-button
+                color="primary"
+                class="sample-btn"
+                (click)="downloadSerialNoTemplate()"
+              >
+                <mat-icon>download</mat-icon>
+                Download Serial No. Template
+              </button>
+
+              <button
+                type="button"
+                mat-raised-button
+                color="primary"
+                class="import-btn"
+                (click)="importSerialNo()"
+              >
+                <mat-icon>upload_file</mat-icon>
+                Import
+              </button>
+
+              <input
+                #serialFileInput
+                type="file"
+                hidden
+                accept=".xlsx,.xls"
+                (change)="onFileSelected($event)"
+              />
+
+              <button
+                *ngIf="isFileImported"
+                type="button"
+                mat-raised-button
+                color="primary"
+                class="import-btn"
+                (click)="saveImportedSerialData()"
+              >
+                <mat-icon>save</mat-icon>
+                Save
+              </button>
+            </div>
+            <span style="color: green;" *ngIf="excelMsg">Excel uploaded successfully. Please click Create GRN to create the GRN.</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mt-2">
+        <p class="ItemClass">Items Details</p>
+      </div>
+      <div class="px-2 mb-5 form_basic table-responsive" style="height: auto">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <table class="table" style="width: 100%; overflow-y: scroll">
+            <thead style="text-align: center">
+              <tr style="text-align: center">
+                <th scope="col">S. No.</th>
+                <th scope="col">Item Name</th>
+                <th scope="col">Item Code</th>
+                <th scope="col">Manage By</th>
+                <th scope="col">PO QTY</th>
+                <th scope="col">Claim Qty</th>
+                <!-- <th scope="col" *ngIf="status != 'partial-list' && statusNumber != 2">
+                                    Remaining Qty
+                                </th> -->
+
+                <th scope="col">Accept QTY</th>
+
+                <!-- <th scope="col">Reject QTY</th> -->
+                <!-- <th scope="col" *ngIf="closedStatus == 'OPEN'">Rejected QTY</th> -->
+                <th scope="col">Allocated Amount</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="grnItem" style="text-align: center">
+              <tr
+                class="text-center"
+                *ngFor="let grnItem of GrnDataItem.controls; let i = index"
+                [formGroupName]="i"
+              >
+                <td>{{ i + 1 }}</td>
+
+                <td class="inp_disable">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" style="width: 10vw">
+                      <input type="text" matInput formControlName="item_name" />
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <td class="inp_disable">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" style="width: 7vw">
+                      <input type="text" matInput formControlName="item_code" />
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <td class="inp_disable">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" style="width: 7vw">
+                      <input type="text" matInput formControlName="manage_by"/>
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <td class="inp_disable">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" style="width: 5vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        formControlName="po_qty"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td class="inp_disable">
+                  <div class="form-group disableClass">
+                    <mat-form-field appearance="outline" style="width: 5vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        formControlName="claim_qty"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <!-- <td class="inp_disable" *ngIf="status != 'partial-list' && statusNumber != 2">
+                                    <div class="form-group disableClass">
+                                        <mat-form-field appearance="outline" style="width: 5vw">
+                                            <input type="number" min="0" matInput formControlName="remaining_qty" />
+                                        </mat-form-field>
+                                    </div>
+                                </td> -->
+
+                <td>
+                  <div class="form-group disableClass">
+                    <mat-form-field appearance="outline" style="width: 5vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        #box2
+                        formControlName="rcvd_qty"
+                        (keyup)="keyUpValues(box2.value, i, grnItem)"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <!-- <td>
+                  <div
+                    class="form-group"
+                    [ngClass]="
+                      grnItem.value.isQuantityEqual ||
+                      grnItem.value.manage_by === 'S.No. Only'
+                        ? 'disableClass'
+                        : ''
+                    "
+                  >
+                    <mat-form-field appearance="outline" style="width: 5vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        formControlName="reject_qty"
+                        [readonly]="grnItem.value.manage_by === 'S.No. Only'"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td> -->
+
+                <!-- <td *ngIf="closedStatus == 'OPEN'">
+                  <div class="form-group disableClass">
+                    <mat-form-field appearance="outline" style="width: 5vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        [value]="grnItem.get('final_reject')?.value"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td> -->
+                <td>
+                  <div class="form-group disableClass">
+                    <mat-form-field appearance="outline" style="width: 10vw">
+                      <input
+                        type="number"
+                        min="0"
+                        matInput
+                        #box3
+                        formControlName="total_amount"
+                      />
+                    </mat-form-field>
+                  </div>
+                </td>
+
+                <td class="edd-del d-flex">
+                  <ng-container
+                    *ngIf="
+                      !grnItem.get('receiveQty')?.value &&
+                      closedStatus != 'OPEN' &&
+                      po_status !== 'DISCARDED'
+                    "
+                  >
+                    <mat-icon
+                      class="someButton"
+                      matTooltip="Create Batch"
+                      (click)="openPopUp(grnItem, i)"
+                      [ngClass]="{
+                        'disabled-icon': grnItem?.value?.isDisabled,
+                      }"
+                    >
+                      fast_forward
+                    </mat-icon>
+                  </ng-container>
+
+                  <ng-container
+                    *ngIf="
+                      grnItem.get('receiveQty')?.value == 0 &&
+                      status === 'partial-list'
+                    "
+                  >
+                    <mat-icon
+                      class="someButton"
+                      matTooltip="Update Batch"
+                      [ngClass]="
+                        rejectView == 'RejectView' ? 'disableClass' : ''
+                      "
+                      (click)="editPartialData(grnItem, i)"
+                      >fast_forward</mat-icon
+                    >
+                  </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <div class="row g-3 mb-1">
+          <div class="col-md-3">
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">Freight Charges &nbsp;</label>
+              <span>
+                {{
+                  shippingCharges?.freight_charges ??
+                    shippingCharges?.boe_freight_charges | number: "1.2-2"
+                }}
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">
+                {{
+                  shippingCharges?.vendor_category === "Domestic"
+                    ? "Insurance Charges"
+                    : "CHA Service Charges"
+                }}
+
+                &nbsp;
+              </label>
+              <span>{{
+                shippingCharges?.cha_service_charges | number: "1.2-2"
+              }}</span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">
+                {{
+                  shippingCharges?.vendor_category === "Domestic"
+                    ? "Other Logistics Charges"
+                    : "CHA Other Charges"
+                }}
+                &nbsp;</label
+              >
+              <span>{{
+                shippingCharges?.cha_other_charges | number: "1.2-2"
+              }}</span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">
+                Loading/Unloading Charges &nbsp;
+              </label>
+
+              <span
+                >{{
+                  shippingCharges?.loading_unloading_charges | number: "1.2-2"
+                }}&nbsp;
+              </span>
+            </div>
+          </div>
+          <div
+            class="col-md-3"
+            *ngIf="shippingCharges?.vendor_category !== 'Domestic'"
+          >
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">
+                Port to Warehouse Charges &nbsp;
+              </label>
+
+              <span
+                >{{
+                  shippingCharges?.port_to_warehouse_charges | number: "1.2-2"
+                }}&nbsp;
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="col-md-3 mt-3"
+            *ngIf="shippingCharges?.vendor_category !== 'Domestic'"
+          >
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1"
+                >Insurance Charges &nbsp;</label
+              >
+              <span>{{
+                shippingCharges?.insurance_charges | number: "1.2-2"
+              }}</span>
+            </div>
+          </div>
+
+          <div
+            class="col-md-3 mt-3"
+            *ngIf="shippingCharges?.vendor_category !== 'Domestic'"
+          >
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">Duty Amount &nbsp;</label>
+              <span>{{ shippingCharges?.duty_amount | number: "1.2-2" }}</span>
+            </div>
+          </div>
+
+          <div
+            class="col-md-3 mt-3"
+            *ngIf="shippingCharges?.vendor_category !== 'Domestic'"
+          >
+            <div class="border rounded p-2 h-100">
+              <label class="fw-bold d-block mb-1">Duty Percent &nbsp;</label>
+              <span>{{ shippingCharges?.duty_percent | number: "1.2-2" }}</span>
+            </div>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="d-flex justify-content-end px-2">
+        <div class="common_button_sub">
+          <strong>Total Amount = {{ totalAmount | number: "1.2-2" }}</strong>
+        </div>
+      </div>
+
+      <div
+        class="d-flex justify-content-end px-2 -mt-3"
+        *ngIf="
+          (closedStatus == 'OPEN' && rejectView == 'RejectAdd') ||
+          (status == 'po-list' && rejectView == 'RejectView')
+        "
+      >
+        <div class="common_button_sub">
+          <button
+            (click)="onsubmitData(POformGroup.value)"
+            *ngIf="status != 'COMPLETED'"
+          >
+            Create GRN
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

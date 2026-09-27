@@ -1,0 +1,35 @@
+<mat-form-field appearance="outline" class="w-100">
+  <mat-label>{{ placeholder }}</mat-label>
+  <mat-select
+    [value]="selectedValue"
+    (selectionChange)="onSelectionChange($event.value)"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    #singleSelect
+  >
+    <!-- Search Field -->
+    <mat-form-field>
+      <input
+        matInput
+        [formControl]="itemFilterCtrl"
+        type="search"
+        placeholder="Search"
+      />
+    </mat-form-field>
+
+    <!-- Optional ngx-mat-select-search component if still used -->
+    <!-- <ngx-mat-select-search
+      [formControl]="itemFilterCtrl"
+    ></ngx-mat-select-search> -->
+
+    <!-- Items -->
+    <!-- <mat-option> None </mat-option> -->
+    <!-- Virtual Scroll for Options -->
+    <mat-option
+      *ngFor="let item of filteredItems | async"
+      [value]="key ? item[key] : item"
+    >
+      {{ getDisplayText(item) }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

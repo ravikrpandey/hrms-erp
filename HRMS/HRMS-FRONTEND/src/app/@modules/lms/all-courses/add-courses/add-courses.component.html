@@ -1,0 +1,157 @@
+<div class="heading_top">
+  <div class="page-title">
+    <p>
+      Course<i class="fa fa-angle-right" aria-hidden="true"></i><span>{{dynamicText}} Course</span>
+
+    </p>
+    <h1>{{dynamicText}} Course</h1>
+  </div>
+  <div class="back_button">
+    <button mat-stroked-button routerLink="/master/lms/course">
+      <mat-icon>keyboard_arrow_left</mat-icon> Back
+    </button>
+  </div>
+</div>
+<div class="row" >
+  <div class="b2b_d_flex" [formGroup]="courseForm" *ngIf="action_type !== 'edit' && action_type !== 'view'"  >
+    <span>Course Type :</span>
+    <mat-radio-group aria-label="Select an option" formControlName="course_type">
+      <mat-radio-button value="CommonContent" routerLink="/master/lms/course/add_course"
+        style="margin-right: 25px;">Common Content</mat-radio-button>
+      <mat-radio-button value="contentWithAssesment" (click)="clickToGoAssesment($event)"
+        style="margin-right: 25px;">Content with Assesment</mat-radio-button>
+    </mat-radio-group>
+  </div>
+</div>
+
+<div class="right_data_all">
+
+  <div class="br-box_shadow inner_control">
+
+
+    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()">
+      <div class="container1">
+        <div class="row">
+          <div class="col-sm-6 col-12" [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <div class="form-group form_group">
+              <mat-label>Course Name<span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput id="course_name" formControlName="course_name" type="text"
+                  placeholder="Course Name" required />
+                <mat-error *ngIf="courseForm.controls['course_name'].hasError('required')">First Name is
+                  Required.</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-sm-6 col-12" [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <div class="form-group form_group">
+              <mat-label>Category<span class="alertspan">*</span></mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="category" placeholder="Select Category">
+                  <app-search-filter [array]="categoryList" [placeholder]="'Search category'"
+                  [searchFields]="['category_name']" (filteredReturn)="filterCategoryList = $event.data">
+                </app-search-filter>
+                  <mat-option *ngFor="let item of filterCategoryList" [value]="item?.category_name">
+                    {{item.category_name}}
+                  </mat-option>
+
+                </mat-select>
+                <mat-error *ngIf="
+                        courseForm.controls['category'].hasError('required')
+                      ">Select Category</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+            style="padding: 15px 10px; display: flex; align-items: center;"
+            [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <!-- <div class="form-group fileWithViewImg">
+              <mat-label>Thumbnail<span class="alertspan">*</span></mat-label>
+              <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                (change)="uploadDoc($event)" formControlName="thumbnail" accept=".png, .jpg, .jpeg" />
+              <img *ngIf="thumbnail_photo" alt class="fileViewImage" [src]="baseUrl + '/' + thumbnail_photo" (click)="viewImg()">
+            </div> -->
+            <div class="em_upload">
+              <label class="file-upload">
+                  <i class="material-icons">add</i>
+                  <input autocomplete="off" type="file" style="display: none;"
+                  accept=".png, .jpg, .jpeg" formControlName="thumbnail"
+                      (change)="uploadDoc($event)" />
+              </label>
+              <a class="prview" *ngIf="thumbnail_photo">
+                  
+                  <img *ngIf="thumbnail_photo"
+                  [src]="baseUrl + '/' + thumbnail_photo"
+                      onError='src="assets/img/No_Image_Available.jpg"' alt="" (click)="viewImage(thumbnail_photo)">
+                  <!-- <img *ngIf="file_path"
+                      src="assets/loder.gif" alt="" class="lg"> -->
+                    
+              </a>
+              <!-- <span *ngIf="!isImage(file_path)">{{ file_path }}</span> -->
+          </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <button mat-raised-button color="primary" type="button" class="mb-2" *ngIf="action_type !== 'view'" (click)="addContentDialog()">+
+              Add Content</button>
+            <div class="form_basic">
+              <table class="table table-bordered text-center" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th scope="col">S.No</th>
+                    <th scope="col">File Type</th>
+                    <th scope="col">Content Name</th>
+                    <th scope="col">File</th>
+                    <th scope="col">Link</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let content of contentData; let i = index">
+                    <td>{{ i+1 }}</td>
+                    <td>{{ content.content_file_type }}</td>
+                    <td>{{ content.content_name }}</td>
+                    <td><span *ngIf="content.content_file_path">
+                      <a style="color: blue" [href]="baseUrl + '/' + content.content_file_path" target="_blank"> {{ content.content_file_path }} </a>
+                    </span>
+                    
+                    
+                    </td>
+                    <td>
+                      <span *ngIf="content.content_file_link">
+                      <a style="color: blue" [href]="content.content_file_link" target="_blank" ><mat-icon>link</mat-icon> {{ content.content_file_link }} </a>
+                    </span>
+                    </td>
+                    <td *ngIf="action_type !== 'view'">
+                      <!-- <button mat-icon-button color="primary" type="button" (click)="viewContent(i)" class="clickable">
+                        <mat-icon>visibility</mat-icon>
+                      </button> -->
+                      <button mat-icon-button color="primary" type="button" (click)="editContent(i)">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" type="button" (click)="removeContent(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                    <td *ngIf="action_type == 'view'">
+                      <button mat-icon-button color="accent" type="button" (click)="viewContent(i)">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="btn_submit mt-4" *ngIf="action_type !== 'view'">
+          <button class="btn logo-color-btn" type="submit">{{dynamicbutton}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

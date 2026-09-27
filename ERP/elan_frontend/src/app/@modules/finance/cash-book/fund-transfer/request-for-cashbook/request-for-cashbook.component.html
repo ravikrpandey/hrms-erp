@@ -1,0 +1,192 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting</h1>
+    <p>Fund Transfer<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span>Fund Request For Cash Book</span></p>
+  </div>
+
+  <p>
+    Request Number
+    <i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"> </i
+    ><span> {{ fundTransferCode }} </span>
+  </p>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+  </div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_head">
+            <h3>Cash Book</h3>
+        </div>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="requestCashBookform">
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Request Date</mat-label>
+                            <mat-form-field appearance="outline">
+                            <!-- <mat-label>Request Date</mat-label> -->
+                            <input matInput [matDatepicker]="dp5" (click)="dp5.open()" formControlName="request_date"/>
+                            <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                            <mat-datepicker #dp5></mat-datepicker>
+                            </mat-form-field>
+                            <mat-error *ngIf="requestCashBookform.controls['request_date'].hasError('required') && requestCashBookform.controls['request_date'].touched">
+                                This field is required!
+                            </mat-error>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Amount For Request</mat-label>
+                            <mat-form-field appearance="outline">
+                                <!-- <mat-label>Amount For Request</mat-label> -->
+                                <input matInput type="text" formControlName="amount_for_request" (keypress)="($event.charCode >= 48 && $event.charCode < 58)"/>
+                            </mat-form-field>
+                            <mat-error *ngIf="requestCashBookform.controls['amount_for_request'].hasError('required') && requestCashBookform.controls['amount_for_request'].touched">
+                                This field is required!
+                            </mat-error>
+                            <mat-error *ngIf="requestCashBookform.get('amount_for_request')?.hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label> Approving Department</mat-label>
+                            <mat-form-field appearance="outline">
+                                <!-- <mat-label>Approving Department</mat-label> -->
+                                <input matInput type="text" formControlName="department_name" readonly/>
+                            </mat-form-field>
+                            <mat-error *ngIf="requestCashBookform.controls['department_name'].hasError('required') && requestCashBookform.controls['department_name'].touched">
+                                This field is required!
+                            </mat-error>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Expense Type</mat-label>
+                            <mat-form-field appearance="outline">
+                                <!-- <mat-label>Select an option</mat-label> -->
+                                <mat-select formControlName="expense_type" (valueChange)="selectedOption($event)">
+                                  <mat-option [value]="null">None</mat-option>
+                                  <mat-option value="cap-ex">Cap-Ex</mat-option>
+                                  <mat-option value="op-ex">Op-Ex</mat-option>
+                                </mat-select>
+                                <button mat-icon-button *ngIf="closeIcon" matSuffix (click)="clear($event)">
+                                  <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                            <mat-error *ngIf="requestCashBookform.controls['expense_type'].hasError('required') && requestCashBookform.controls['expense_type'].touched">
+                                This field is required!
+                            </mat-error>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Require By</mat-label>
+                            <mat-form-field appearance="outline">
+                           
+                            <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="require_by"/>
+                            <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                            <mat-datepicker #dp4></mat-datepicker>
+                            </mat-form-field>
+                            <mat-error *ngIf="requestCashBookform.controls['require_by'].hasError('required') && requestCashBookform.controls['require_by'].touched">
+                                This field is required!
+                            </mat-error>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Reason</mat-label>
+                            <mat-form-field appearance="outline">
+                               
+                                <input matInput type="text" formControlName="reason"/>
+                                <mat-error *ngIf="requestCashBookform.get('reason')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Remark</mat-label>
+                            <mat-form-field appearance="outline">
+                              
+                                <input matInput type="text" formControlName="remark"/>
+                                <mat-error *ngIf="requestCashBookform.get('remark')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                        <mat-label>Upload Document</mat-label>
+                        <input class="form-control" type="file"
+                          multiple="true" style="padding-right: 5%; height:40px; font-size:14px; padding-top:8px;" title="Choose File"
+                          #fileInput (change)="onChange($event)" formControlName="file" />
+
+                        <!-- <div *ngIf="requestCashBookform.get('file')?.invalid && requestCashBookform.get('file')?.touched">
+                          <small class="text-danger">
+                            File is required.
+                          </small>
+                        </div> -->
+                      </div>
+                </div>
+
+                <div *ngIf="!isView && !edit" class="common_button_sub">
+                    <button (click)="onSubmit()">
+                      Send For Approval
+                    </button>
+                    <button class="cancel_button_y" (click)="goBack()">Discard</button>
+                  </div>
+            </form>
+
+            <div *ngIf="view == 'proceed'" class="heading_neo mt-2">
+                <h3>Add Remarks</h3>
+              </div>
+              <form *ngIf="view == 'proceed'" [formGroup]="remarksFormGroup">
+                <div class="formBorder">
+                  <div class="form_sePo">
+                    <div class="row">
+                      <div *ngIf="view == 'proceed'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label>Remarks</mat-label>
+                          <mat-form-field>
+                            <input
+                              matInput
+                              formControlName="remarks_for_approval"
+                              maxlength="30"
+                              type="text"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      </div>
+            
+            
+                      </div>
+                      </div>
+            
+                      <div
+                      
+                      class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12"
+                    >
+                      <div class="common_button_sub mt-4">
+                        <button type="button" (click)="approved()">Approve</button>
+                        <button type="button" (click)="rejected()">Reject</button>
+                      </div>
+                    </div>
+            </form>
+            
+
+
+        </div>
+    </mat-card>
+</section>

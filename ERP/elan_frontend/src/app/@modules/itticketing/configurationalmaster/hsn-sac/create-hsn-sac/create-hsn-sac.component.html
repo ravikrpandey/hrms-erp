@@ -1,0 +1,203 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Configurational Master</h1>
+      <p>
+        HSN/SAC
+        <span class="employee_2" *ngIf="!form_id"
+          ><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+          </i>
+          Create
+        </span>
+        <span class="employee_2" *ngIf="view == 'edit'"
+          ><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+          </i>
+          Update
+        </span>
+        <span class="employee_2" *ngIf="view == 'view'"
+          ><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+          </i>
+          View
+        </span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+  </div>
+  
+  <mat-card>
+    <div class="form_basic mb-0">
+      <!-- helpDiskForm -->
+      <form class="form_set" [formGroup]="hsnSacForm">
+        <div class="row css_set">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <!-- <mat-label>Type: </mat-label> -->
+                  <mat-form-field appearance="outline" class="mt-1">
+                      <mat-label>Select Type</mat-label>
+                      <mat-select formControlName="code_type">
+                        <!-- <mat-option>None</mat-option> -->
+                        <!-- <mat-option [value]="null">None</mat-option> -->
+                        <mat-option value="HSN">HSN</mat-option>
+                        <mat-option value="SAC">SAC</mat-option>
+                      </mat-select>
+                      <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('balance_must_be')?.value" matSuffix (click)="clearBalanceType()">close</mat-icon> -->
+      
+                    </mat-form-field>
+              </div>
+      </div>
+          
+          <div *ngIf="hsnSacForm.get('code_type')?.value == 'HSN' " class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>HSN Code</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="hsn_sac_code"
+                />
+               
+              </mat-form-field>
+            </div>
+          </div>
+
+
+          <div *ngIf="hsnSacForm.get('code_type')?.value == 'SAC' "  class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>SAC Code</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="hsn_sac_code"
+                />
+            </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline" readonly>
+            <mat-label>GST Rate</mat-label>
+            <mat-select
+              #productselect
+              formControlName="gst_rate_id"
+             
+            >
+              <!-- <mat-select-filter
+                [array]="variables"
+                (filteredReturn)="countryFilter($event)"
+              ></mat-select-filter> -->
+              <mat-option
+                *ngFor="let data of gstRateList"
+                [value]="data.id"
+                >{{ data.value }} %</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="
+                hsnSacForm.controls['gst_rate_id'].hasError('required')
+              "
+            >
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+    </div>
+         
+        <div class="row css_set">
+
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <!-- <mat-label>Exemption: </mat-label> -->
+                  <mat-form-field appearance="outline" class="mt-1">
+                      <mat-label>Exemption</mat-label>
+                      <mat-select formControlName="exemption">
+                        <!-- <mat-option>None</mat-option> -->
+                        <!-- <mat-option [value]="null">None</mat-option> -->
+                        <mat-option value="YES">Yes</mat-option>
+                        <mat-option value="NO">No</mat-option>
+                      </mat-select>
+                      <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="form.get('balance_must_be')?.value" matSuffix (click)="clearBalanceType()">close</mat-icon> -->
+            
+                    </mat-form-field>
+              </div>
+            </div>
+
+
+
+          <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Description</mat-label>
+  
+                <input
+                  matInput
+                  (keydown)="changedText()"
+                  type="text"
+                  formControlName="description"
+                  [attr.disabled]="words > 100 ? '' : null"
+                  (keydown)="wordCounter()"
+                  #text
+                  id="wmd-input"
+                  name="post-text"
+                  class="wmd-input s-input bar0 js-post-body-field processed"
+                  data-post-type-id="2"
+                  cols="92"
+                  rows="15"
+                  tabindex="101"
+                  data-min-length=""
+                  oncopy="return false;"
+                  onpaste="return false;"
+                  oncut="return false;"
+                />
+                <mat-error
+                  *ngIf="
+                    hsnSacForm.controls['description'].hasError(
+                      'required'
+                    )
+                  "
+                >
+                  *Required!
+                </mat-error>
+                <mat-error
+                  *ngIf="
+                    hsnSacForm.controls['description'].hasError(
+                      'leadingSpaces'
+                    )
+                  "
+                >
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <span class="warn_text" *ngIf="extraWords"
+              >Please enter within the text limit: 50</span
+            >
+          </div>
+          
+        </div>
+        <div *ngIf="view != 'view'" class="common_button_sub">
+          <button *ngIf="view != 'edit'"  (click)="onSubmitForm()">Submit</button>
+  
+          <button
+          *ngIf="view == 'edit'"
+            [disabled]="extraWords"
+            (click)="onSubmitForm()"
+          >
+            Update
+          </button>
+          <button color="warn" class="cancel_button_y" (click)="back()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  

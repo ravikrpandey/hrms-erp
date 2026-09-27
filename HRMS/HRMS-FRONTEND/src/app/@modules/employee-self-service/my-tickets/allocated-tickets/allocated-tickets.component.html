@@ -1,0 +1,21 @@
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select (change)="onPageSizeChanged()" id="page-size">
+        <option value="10" selected>10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div>
+      <input type="text" class="form-control" id="filter-text-box" #input placeholder="Search"
+        (input)="onFilterTextBoxChanged()">
+    </div>
+  </div>
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:400px;" [rowData]="rowData"
+      [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>

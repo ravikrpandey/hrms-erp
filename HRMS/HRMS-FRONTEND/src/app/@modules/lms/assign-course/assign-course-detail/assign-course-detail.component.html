@@ -1,0 +1,94 @@
+<div class="header">
+    <button mat-stroked-button color="primary" routerLink="/master/lms/assign-course">
+      <mat-icon>keyboard_arrow_left</mat-icon> Back
+    </button>
+  </div>
+<div class="form_set">
+  <div class="row">
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <input matInput [value]="courseDetail?.category" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Course Name</mat-label>
+          <input matInput [value]="courseDetail?.LMS_COURSE?.course_name" />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>StartDate</mat-label>
+          <input matInput [value]="courseDetail?.startDate | date: 'dd/MM/yyyy'" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>EndDate</mat-label>
+          <input matInput [value]="courseDetail?.endDate |  date: 'dd/MM/yyyy'" />
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <!-- <div class="employ_sube py-2">
+    <div class="employee_2" align="end">
+      <input
+          id="searchText"
+          type="text"
+          placeholder="Search by course name"
+          class="input-group form-control search-input form-control"
+          (input)="filterSupplier($event)"
+        />
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group mb-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Employee</mat-label>
+          <mat-select [(value)]="selectedEmployee" (selectionChange)="onEmployeeSelect($event)">
+  
+            <app-search-filter [array]="employees" [placeholder]="'Search employee'"
+              [searchFields]="['first_name', 'last_name', 'employee_id']"
+              (filteredReturn)="onEmployeeFilter($event.data)">
+            </app-search-filter>
+  
+            <mat-option [value]="ALL">All</mat-option>
+  
+            <mat-option *ngFor="let employee of filteredEmployees" [value]="employee.employee_id">
+              {{ employee.first_name }} {{ employee.last_name }} ({{ employee.employee_id }})
+            </mat-option>
+  
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="ag_grid">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowData]="rowData"
+      [gridOptions]="gridOptions"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

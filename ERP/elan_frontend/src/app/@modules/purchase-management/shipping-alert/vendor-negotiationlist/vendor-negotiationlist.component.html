@@ -1,0 +1,29 @@
+<div class="page-wrapper">
+    <app-vendor-top-header [vendor_id]="vendor_id_header"></app-vendor-top-header>
+
+    <div class="main">
+        <h1 class="main-heading">Negotiation List</h1>
+        <p class="main-sub">View all Negotiation, track their current status, manage vendor responses, and take quick actions for evaluation and approval.</p>
+        <form>
+            <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>
+                <mat-icon class="card-icon">handshake</mat-icon> Negotiation List
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="mat-elevation-z1 table-wrap">
+                    <div class="ag_grid">
+                <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 400px"
+                    [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="filteredData"
+                    (gridReady)="onGridReady($event)" [rowClass]="rowClass">
+                </ag-grid-angular>
+            </div>
+                </div>
+            </mat-card-content>
+            </mat-card>
+        </form>
+    </div>
+
+</div>

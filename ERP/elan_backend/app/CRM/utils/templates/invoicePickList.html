@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dispatch Pick List</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            color: #000;
+            margin: 0;
+        }
+
+        .invoice-box {
+            width: 100%;
+            border: 1px solid #000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header .logo {
+            width: 180px;
+            height: 50px;
+        }
+
+        .header .company-info {
+            text-align: center;
+            flex: 1;
+        }
+
+        .header .company-info b {
+            font-size: 16px;
+        }
+
+        .header .qr {
+            width: 100px;
+            height: 100px;
+        }
+
+        .invoice-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        /* Info Tables */
+        .info-table,
+        .billship-table,
+        .items-table,
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .info-table td,
+        .billship-table td {
+            padding: 5px;
+            vertical-align: top;
+        }
+
+        .info-table td.label,
+        .billship-table td.label {
+            font-weight: bold;
+            width: 25%;
+        }
+
+        /* Bill To / Ship To */
+        .billship-table td {
+            border: 1px solid #000;
+        }
+
+        .billship-title {
+            font-weight: bold;
+            background: #f0f0f0;
+            padding: 5px;
+            text-align: center;
+        }
+
+        /* Items Table */
+        .items-table th,
+        .items-table td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .items-table th {
+            background: #e0e0e0;
+            font-weight: bold;
+        }
+
+        .items-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .items-table td.left {
+            text-align: left;
+        }
+
+        /* Summary Table */
+        .summary-table td {
+            padding: 5px 8px;
+            font-size: 12px;
+        }
+
+        .summary-table .label {
+            text-align: right;
+            font-weight: bold;
+            width: 70%;
+        }
+
+        .summary-table .value {
+            text-align: right;
+            width: 30%;
+        }
+
+        .footer {
+            font-size: 11px;
+            line-height: 1.4;
+            margin-top: 15px;
+        }
+
+        .footer center i {
+            font-style: italic;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invoice-box">
+        <!-- Header -->
+        <div class="header">
+            <!-- <img src="{{company_logo}}" alt="Logo" class="logo"> -->
+            <div class="company-info">
+                <b>Elan Professional Appliances Pvt Ltd</b><br>
+                Khasra No.11/1, 12/5/2, Village Begampur Khatola,<br>
+                Begampur Industrial Area, Gurgaon, Haryana - 122004<br>
+                PAN: AACCE1748C
+            </div>
+            <!-- <img src="{{elanQR_logo}}" alt="QR" class="qr"> -->
+        </div>
+
+        <!-- Invoice Title -->
+        <div class="invoice-title">Dispatch Pick List</div>
+
+        <!-- Invoice Info -->
+        <table class="info-table">
+            <tr>
+                <td class="label">Vehicle Planning Code</td>
+                <td>{{planning_code}}</td>
+                <td class="label">Delivery Route</td>
+                <td>{{vehicle_root_status}}</td>
+            </tr>
+            <tr>
+                <td class="label">Transporter Name</td>
+                <td>{{tm_name}}</td>
+            </tr>
+            <tr>
+                <td class="label">Sales Order No.</td>
+                <td>{{sales_order_no}}</td>
+                <td class="label">Sales Order Date</td>
+                <td>{{sales_order_date}}</td>
+            </tr>
+            <tr>
+                <td class="label">Loading Priority</td>
+                <td>{{loading_priority}}</td>
+                <td class="label">Expected Delivery</td>
+                <td>{{expected_delivery_date}}</td>
+            </tr>
+        </table>
+
+     
+
+        <!-- Items Table -->
+        <table class="items-table">
+            <tr>
+                <th>S. No.</th>
+                <th>Description of Items</th>
+                <th>Item Code</th>
+                <th>Qty</th>
+             
+            </tr>
+            {{itemRows}}
+        </table>
+
+        <!-- Summary Table -->
+       
+
+        <!-- Footer -->
+        <div class="footer">
+            Registered Address - Unit No. 802, Tower-2, DLF Corporate Greens, Sector 74A, Gurugram - 122004, Haryana.<br>
+            CIN: U52310HR2009PTC039104, MSME Certificate No. – DL10E0001429<br>
+            Email: info@elanpro.net | Website: www.elanpro.net | Customer Care: 0124-4120261 / 262 / 263 / 26<br>
+            Please mail us at info@elanpro.net to revalidate any email request for change in our Bank A/C.<br><br>
+            <center><i>This is a computer-generated invoice and does not require a signature</i></center>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<div class="popup-container">
+    <div class="popup-header">
+        <h3>Delivery Route Map Details</h3>
+        <button mat-icon-button (click)="closePopup()"><mat-icon>close</mat-icon></button>
+    </div>
+
+    <div class="popup-body">
+        <div class="planning-card">
+            <h4>Vehicle Planning Summary</h4>
+            <div class="so-card">
+                <div class="so-badge">
+                    Vehicle Planning Code: {{ dataBind.planning_code }}
+                </div>
+                <div class="info-grid">
+                    <div><b>Transporter Name</b><span>{{ dataBind?.tm_name }}</span></div>
+                    <div><b>Delivery Route</b><span>{{ dataBind?.vehicle_root_status }}</span></div>
+                    <div><b>Vehicle Type</b><span>{{ dataBind?.vehicle_type_name }}</span></div>
+                    <div><b>Vehicle Number</b><span>{{ dataBind?.vehicle_number }}</span></div>
+                    <div><b>Driver Name</b><span>{{ dataBind?.drivername }}</span></div>
+                    <div><b>Driver Mobile No.</b><span>{{ dataBind?.mobile_number }}</span></div>
+                    <div><b>LR Number</b><span>{{ dataBind?.LR_number }}</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="planning-card">
+            <h4>SO Delivery Summary</h4>
+            <div class="so-card" *ngFor="let so of dataBind?.so_details">
+                <div class="so-header">
+                    <div class="so-badge">
+                        SO No.: {{ so?.so_number }}
+                    </div>
+                    <button mat-icon-button *ngIf="mode=='POD' && so?.dispatch_status!='APPROVED'" (click)="toggleEdit(so)">
+                        <mat-icon>{{ so?.isEdit ? 'close' : 'edit' }}</mat-icon>
+                    </button>
+                </div>
+                <div class="info-grid">
+                    <div><b>Customer Details</b>
+                        <span>
+                            {{ so?.company_name || '--' }}
+                            <span *ngIf="so?.contact_person_name || so?.mobile"> | </span>
+                            {{ so?.contact_person_name || '--' }}
+                            <span *ngIf="so?.mobile"> ({{ so?.mobile }})</span>
+                        </span>
+                    </div>
+                    <div><b>Pickup Warehouse Name</b><span>{{ so?.warehouse_name }}</span></div>
+                    <div><b>Pickup Address</b><span>{{ so?.warehouse_address }}, {{ so?.warehouse_pin }}</span></div>
+                    <div><b>Pickup Date</b><span>{{ so?.so_pick_date | date:'dd-MM-yyyy' }}</span></div>
+                    <div><b>Delivery Address</b><span>{{ so?.shipping_address }}, {{ so?.shipping_postal_address }}, {{ so?.shipping_pin_code }}</span></div>
+                    <div><b>Expected Delivery Date</b><span>{{ so?.so_delivery_date | date:'dd-MM-yyyy' }}</span></div>
+                    <div><b>Invoice No.</b><span *ngIf="!so.isEdit">{{ so?.invoice_no }}</span>
+                    <input *ngIf="so.isEdit"
+                            [(ngModel)]="so.invoice_no"
+                            required
+                            readonly
+                            class="pod-input"
+                            placeholder="Enter Invoice No">
+                    </div>
+                    <div><b>Delivered On</b><span *ngIf="!so.isEdit">{{ so?.delivered_on_date ? (so.delivered_on_date | date:'dd-MM-yyyy') : '—' }}</span>
+                    <input *ngIf="so.isEdit"
+                            type="date"
+                            [(ngModel)]="so.delivered_on_date"
+                            required
+                            class="pod-input"></div>
+                    <div><b>POD Remark</b><span *ngIf="!so.isEdit">{{ so?.pod_remark || '—' }}</span>
+                    <textarea *ngIf="so.isEdit"
+                                [(ngModel)]="so.pod_remark"
+                                required
+                                class="pod-input"
+                                rows="2" placeholder="Enter POD Remark">
+                    </textarea></div>
+                    <div><b>POD Document</b><span *ngIf="!so.isEdit && so?.file?.trim()?.length">  
+                        <a [href]="baseUrl + '/' + so?.file"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style="margin-left:6px;color:#1976d2;text-decoration:none"
+                        title="Download POD">
+                        <mat-icon style="vertical-align:middle">description</mat-icon></a>
+                    </span>
+                    <span *ngIf="!so.isEdit && !so?.file?.trim()?.length">—</span>
+                    <input *ngIf="so.isEdit"
+                    type="file"
+                    (change)="onFileSelect($event, so)"
+                    required>
+                    </div>
+                    <div><b>POD Status</b><span>{{ so?.dispatch_status }}</span></div>
+                    <div *ngIf="so.isEdit" style="width: 20%;cursor: pointer;">
+                        <button mat-raised-button color="primary" (click)="onUploadClick(so)">Upload POD</button>
+                        <div *ngIf="so.showValidationMsg" style="color:red;font-size:12px;margin-top:4px">All fields are mandatory</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

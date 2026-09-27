@@ -1,0 +1,87 @@
+<div class="section">
+    <div class="personalDetails pt-5">
+        <mat-card>
+          <div class="row form_head">
+            <h3>DOCUMENT DETAILS</h3>
+          </div>
+          <form [formGroup]="documentForm">
+          <div class="form_basic" style="width:100%;padding: 40px;">
+            <table class="table px-5" >
+                <thead>
+                    <tr class="row">
+                      <th class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        Attachment
+                      </th>
+                      <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        Document Type
+                      </th>
+                      <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                        Document Name
+                      </th>
+                      <th class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        Description
+                      </th>
+                      <th class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 py-2">
+                        <button mat-raised-button color="warn" (click)="addRow()">
+                          Add
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+              <tbody>
+                <ng-container formArrayName="Document_details" *ngFor="
+                    let control_2 of CF_1.Document_details['controls'];
+                    index as i
+                  ">
+                  <tr class="row" [formGroup]="control_2">
+                    <td class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" style="position: relative;">
+                      <input type="file" (change)="onChange($event, i)"
+                        formControlName="docs" style="padding-right: 38px;" />
+                      <img class="selctedImg" *ngIf="control_2.imagePath || control_2.value.fileImage" [src]="control_2.imagePath || control_2.value.fileImage" (click)="seeDocuments(control_2.value.ExsitDocument_file, control_2)" alt="">
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <select class="form-select" aria-label=".form-select-lg example" formControlName="document_type">
+                        <option value="PDF">PDF</option>
+                        <option value="JPEG">JPEG</option>
+                        <option value="JPG">JPG</option>
+                        <option value="DOC">DOC</option>
+                        <option value="PNG">PNG</option>
+                 
+  
+                      </select>
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <input type="text" formControlName="document_name" class="form-control" />
+                    </td>
+                    <td class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                      <input type="text" formControlName="description" class="form-control" />
+                    </td>
+                    <td class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" style="text-align: center; color: #5d6c7c;">
+                      <div class="I-center">
+                        <button class="sendBtn"  [disabled]="isSaveButtonDisabled(i) || control_2.isSend"
+                        [ngStyle]="{'background-color': control_2.isSend ? '#207806':'#5d6c7c'}"
+                        (click)="send_doc(i, control_2)" (click)="send_doc(i, control_2)">
+                          <mat-spinner *ngIf="control_2.showLoader" style="width: 18px; height:18px;"></mat-spinner>
+                          <span *ngIf="!control_2.showLoader && !control_2.value.emp_document_id "> {{"Save"}}</span></button>
+                        <i class="material-icons" (click)="deleteSingleDoc(i, control_2)"
+                          style="cursor: pointer;">delete</i>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </form>
+        </mat-card>
+      </div>
+      <div class="mt-3" align="end">
+        <button  mat-raised-button color="primary" class="mx-3" (click)="save()" >
+          Submit
+        </button>
+        <button mat-raised-button color="warn" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+
+</div>

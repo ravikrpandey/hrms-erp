@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Inward Invoice</title>
+<style>
+/* =========================================================
+   PAGE
+========================================================= */
+@page {
+    size: A4 portrait;
+    margin: 5mm;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+    width: 100%;
+    min-height: 100%;
+}
+body {
+    background: #ffffff;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+.page {
+    width: 200mm;
+    min-height: 287mm;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #000000;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+td, th {
+    border: 1px solid #000000;
+    padding: 6px 7px;
+    vertical-align: middle;
+}
+.left {
+    text-align: left !important;
+}
+.center {
+    text-align: center !important;
+}
+.right {
+    text-align: right !important;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+.top-strip {
+    height: 23px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: bold;
+    border-bottom: 0;
+}
+.top-left {
+    width: 50%;
+    text-align: left;
+}
+.top-right {
+    width: 50%;
+    text-align: right;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.header-row {
+    height: 82px;
+}
+.logo-cell {
+    width: 27%;
+    padding: 9px 10px;
+    vertical-align: middle;
+}
+.logo-img {
+    width: 125px;
+    max-height: 52px;
+    display: block;
+    object-fit: contain;
+}
+.logo-tag {
+    font-size: 8px;
+    font-style: italic;
+    margin-top: 4px;
+    white-space: nowrap;
+}
+.company-cell {
+    width: 48%;
+    padding: 7px;
+    text-align: center;
+    vertical-align: middle;
+}
+.document-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+.company-name {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.company-address {
+    font-size: 10.5px;
+    line-height: 1.5;
+}
+.header-right {
+    width: 25%;
+    padding: 8px;
+    font-size: 10.5px;
+    line-height: 1.6;
+    vertical-align: middle;
+}
+.header-right-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 3px;
+}
+.header-right-label {
+    width: 48%;
+    font-weight: bold;
+    text-align: left;
+}
+.header-right-value {
+    width: 52%;
+    text-align: left;
+    word-break: break-word;
+}
+
+/* =========================================================
+   META DETAILS
+========================================================= */
+.meta-table td {
+    height: 28px;
+    padding: 6px 7px;
+    font-size: 10.5px;
+    line-height: 1.35;
+}
+.meta-label {
+    width: 15%;
+    background: #f3f3f3;
+    font-weight: bold;
+}
+.meta-value {
+    width: 35%;
+    word-break: break-word;
+}
+
+/* =========================================================
+   BILLING / SHIPPING
+========================================================= */
+.party-table {
+    width: 100%;
+    table-layout: fixed;
+}
+.party-table td {
+    border: 1px solid #000000;
+    font-size: 10.5px;
+    padding: 6px 7px;
+    vertical-align: middle;
+    line-height: 1.4;
+}
+.party-label {
+    width: 14%;
+    background: #fafafa;
+    font-weight: bold;
+    white-space: nowrap;
+}
+.party-value {
+    width: 36%;
+    font-weight: normal;
+    word-break: break-word;
+}
+.section-title {
+    background: #eeeeee;
+    font-size: 12px !important;
+    font-weight: bold;
+    padding: 7px 8px !important;
+    height: 30px;
+    text-align: left !important;
+    vertical-align: middle !important;
+}
+.party-address {
+    height: 65px !important;
+    min-height: 65px !important;
+    vertical-align: top !important;
+    line-height: 1.55;
+}
+
+/* =========================================================
+   ITEMS TABLE
+========================================================= */
+.items-table {
+    width: 100%;
+    table-layout: fixed;
+}
+.items-table th {
+    background: #eeeeee;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 9px;
+    font-weight: bold;
+    line-height: 1.3;
+    padding: 7px 3px;
+}
+.items-table td {
+    font-size: 10.5px;
+    height: 31px;
+    padding: 6px 4px;
+    vertical-align: middle;
+}
+.items-table .description {
+    text-align: left;
+    line-height: 1.4;
+    word-break: break-word;
+}
+.items-table .number {
+    text-align: right;
+    white-space: nowrap;
+}
+.items-table .qty {
+    text-align: center;
+}
+.items-table .code {
+    text-align: center;
+    word-break: break-word;
+}
+.total-row td {
+    height: 30px;
+    background: #f3f3f3;
+    font-size: 10.5px;
+    font-weight: bold;
+    padding: 7px;
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+.summary-table td {
+    font-size: 10.5px;
+    padding: 7px 8px;
+    vertical-align: top;
+    line-height: 1.55;
+}
+.amount-words {
+    width: 56%;
+    line-height: 1.6;
+}
+.amount-summary {
+    width: 44%;
+    line-height: 1.6;
+}
+.amount-line {
+    width: 100%;
+    display: table;
+    margin-bottom: 5px;
+}
+.amount-label {
+    display: table-cell;
+    width: 65%;
+    text-align: left;
+}
+.amount-value {
+    display: table-cell;
+    width: 35%;
+    text-align: right;
+    white-space: nowrap;
+}
+.grand-total {
+    border-top: 1px solid #000;
+    font-weight: bold;
+    padding-top: 6px;
+    margin-top: 6px;
+    font-size: 11.5px;
+}
+
+/* =========================================================
+   EXTRA / TAX DETAILS
+========================================================= */
+.extra-table {
+    width: 100%;
+}
+.extra-table td {
+    font-size: 10.5px;
+    padding: 7px 8px;
+    height: 28px;
+}
+.electronic-ref {
+    width: 56%;
+}
+.gst-summary {
+    width: 44%;
+}
+
+/* =========================================================
+   SIGNATURE
+========================================================= */
+.signature-area {
+    width: 100%;
+    height: 95px;
+    position: relative;
+}
+.signature-box {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 38%;
+    height: 73px;
+    border: 1px solid #000;
+    padding: 9px;
+    font-size: 10.5px;
+}
+.signature-title {
+    font-size: 10.5px;
+    font-weight: bold;
+    margin-bottom: 28px;
+}
+.signature-label {
+    font-size: 10.5px;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.footer {
+    height: 25px;
+    padding: 6px;
+    border-top: 0;
+    text-align: center;
+    font-size: 9px;
+    vertical-align: middle;
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+@media print {
+    html, body {
+        width: 210mm;
+        height: 297mm;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+    }
+    .page {
+        width: 200mm;
+        min-height: 287mm;
+        margin: 0 auto;
+        border: 1px solid #000000;
+    }
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+<table>
+<tr>
+<td class="top-strip top-left">
+    Page : 1/1
+</td>
+<td class="top-strip top-right">
+    Original For Recipient
+</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+<table>
+<tr class="header-row">
+<td class="logo-cell">
+    <img src="{companyLogo}" alt="Company Logo" class="logo-img">
+    <div class="logo-tag">{companyTagline}</div>
+</td>
+<td class="company-cell">
+    <div class="document-title">Service Inward Invoice</div>
+    <div class="company-name">{companyName}</div>
+    <div class="company-address">
+        Unit No. {unitNo}, Floor - {floor},<br>
+        {registeredOffice}<br>
+        {companyPin}
+    </div>
+</td>
+<td class="header-right">
+    <div class="header-right-row">
+        <div class="header-right-label">Invoice No</div>
+        <div class="header-right-value">: {invoiceNumber}</div>
+    </div>
+    <div class="header-right-row">
+        <div class="header-right-label">Invoice Date</div>
+        <div class="header-right-value">: {invoiceDate}</div>
+    </div>
+    <div class="header-right-row">
+        <div class="header-right-label">Place of Supply</div>
+        <div class="header-right-value">: {placeOfSupply}</div>
+    </div>
+    <div class="header-right-row">
+        <div class="header-right-label">Due Date</div>
+        <div class="header-right-value">: {dueDate}</div>
+    </div>
+</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     BASIC DETAILS
+========================================================= -->
+<table class="meta-table">
+<tr>
+<td class="meta-label">GSTIN / UGTIN</td>
+<td class="meta-value">: {gstin}</td>
+<td class="meta-label">Transporter Name</td>
+<td class="meta-value">: {transporterName}</td>
+</tr>
+<tr>
+<td class="meta-label">Tax is payable on Reverse Charge</td>
+<td class="meta-value">: {reverseCharge}</td>
+<td class="meta-label">Transporter Doc No</td>
+<td class="meta-value">: {transporterDocNo}</td>
+</tr>
+<tr>
+<td class="meta-label">Service Inward Invoice No</td>
+<td class="meta-value">: {invoiceNumber}</td>
+<td class="meta-label">Date &amp; Time of Supply</td>
+<td class="meta-value">: {supplyDateTime}</td>
+</tr>
+<tr>
+<td class="meta-label">Invoice Date</td>
+<td class="meta-value">: {invoiceDate}</td>
+<td class="meta-label">Place of Supply</td>
+<td class="meta-value">: {placeOfSupply}</td>
+</tr>
+<tr>
+<td class="meta-label">Doc Ref No.</td>
+<td class="meta-value">: {referenceNumber}</td>
+<td class="meta-label">Doc Ref Date</td>
+<td class="meta-value">: {referenceDate}</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     BILLING + SHIPPING
+========================================================= -->
+<table class="party-table">
+<tr>
+<td colspan="2" class="section-title">Billing Details</td>
+<td colspan="2" class="section-title">Shipping Details</td>
+</tr>
+<tr>
+<td class="party-label">Party Name</td>
+<td class="party-value">{billingPartyName}</td>
+<td class="party-label">Consignee</td>
+<td class="party-value">{shippingPartyName}</td>
+</tr>
+<tr>
+<td class="party-label">Address</td>
+<td class="party-value party-address">
+    {billingAddress}<br>
+    {billingCity}, {billingState} - {billingStateCode}
+</td>
+<td class="party-label">Address</td>
+<td class="party-value party-address">
+    {shippingAddress}<br>
+    {shippingCity}, {shippingState} - {shippingStateCode}
+</td>
+</tr>
+<tr>
+<td class="party-label">State</td>
+<td class="party-value">{billingState}</td>
+<td class="party-label">State</td>
+<td class="party-value">{shippingState}</td>
+</tr>
+<tr>
+<td class="party-label">State Code</td>
+<td class="party-value">{billingStateCode}</td>
+<td class="party-label">State Code</td>
+<td class="party-value">{shippingStateCode}</td>
+</tr>
+<tr>
+<td class="party-label">GSTIN No.</td>
+<td class="party-value">{billingGstin}</td>
+<td class="party-label">GSTIN No.</td>
+<td class="party-value">{shippingGstin}</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     ITEMS
+========================================================= -->
+<table class="items-table">
+<colgroup>
+<col style="width:4%">
+<col style="width:23%">
+<col style="width:9%">
+<col style="width:6%">
+<col style="width:8%">
+<col style="width:10%">
+<col style="width:10%">
+<col style="width:7%">
+<col style="width:7.5%">
+<col style="width:7.5%">
+<col style="width:8%">
+</colgroup>
+<tr>
+<th>SNo</th>
+<th>Description of Goods / Services</th>
+<th>HSN / SAC</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Amount (₹)</th>
+<th>Taxable Amt (₹)</th>
+<th>Tax<br>Rate %</th>
+<th>CGST<br>Amount (₹)</th>
+<th>SGST<br>Amount (₹)</th>
+<th>IGST<br>Amount (₹)</th>
+</tr>
+{accounts}
+<tr class="total-row">
+<td colspan="5" class="right">Total</td>
+<td class="right">{totalAmount}</td>
+<td class="right">{taxable}</td>
+<td class="center">{totalTax}</td>
+<td class="right">{cgst}</td>
+<td class="right">{sgst}</td>
+<td class="right">{igst}</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     SUMMARY
+========================================================= -->
+<table class="summary-table">
+<tr>
+<td class="amount-words">
+<strong>Amount in Words:</strong>&nbsp;{amountInWords}
+<br><br>
+<strong>Electronic Reference No:</strong>&nbsp;{electronicReferenceNo}
+<br><br>
+<strong>Narration:</strong>&nbsp;{description}
+</td>
+<td class="amount-summary">
+<div class="amount-line">
+<span class="amount-label">Taxable Value</span>
+<span class="amount-value">₹ {taxable}</span>
+</div>
+<div class="amount-line">
+<span class="amount-label">CGST</span>
+<span class="amount-value">₹ {cgst}</span>
+</div>
+<div class="amount-line">
+<span class="amount-label">SGST</span>
+<span class="amount-value">₹ {sgst}</span>
+</div>
+<div class="amount-line">
+<span class="amount-label">IGST</span>
+<span class="amount-value">₹ {igst}</span>
+</div>
+<div class="amount-line">
+<span class="amount-label">GST Total</span>
+<span class="amount-value">₹ {gstTotal}</span>
+</div>
+<div class="amount-line">
+<span class="amount-label">TDS Amount</span>
+<span class="amount-value">₹ {tdsAmt}</span>
+</div>
+<div class="amount-line grand-total">
+<span class="amount-label">Net Payable</span>
+<span class="amount-value">₹ {net}</span>
+</div>
+</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     TDS / GST
+========================================================= -->
+<table class="extra-table">
+<tr>
+<td class="electronic-ref">
+<strong>TDS Amount:</strong> ₹ {tdsAmt}
+</td>
+<td class="gst-summary">
+<strong>GST Tax Amount:</strong> ₹ {gstTotal}
+</td>
+</tr>
+<tr>
+<td class="electronic-ref">
+<strong>TDS Rate:</strong> {tdsRate}
+</td>
+<td class="gst-summary">
+<strong>Bill Amount:</strong> ₹ {net}
+</td>
+</tr>
+</table>
+
+<!-- =========================================================
+     SIGNATURE
+========================================================= -->
+<div class="signature-area">
+<div class="signature-box">
+<div class="signature-title">For {companyName}</div>
+<div class="signature-label">Authorised Signatory</div>
+</div>
+</div>
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+<table>
+<tr>
+<td class="footer">This is a computer generated invoice. Signature not required.</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>

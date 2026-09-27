@@ -1,0 +1,269 @@
+
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting</h1>
+    <p> Bank Reconciliation <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+    </i>
+    <span>Bank Statement </span>
+</p>
+  </div>
+
+    </div>
+
+  <div class="right_data_all mt-3">
+    <form [formGroup]="bankClearanceForm" class="mt-2">
+      <div class="row">
+
+        <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+
+              <mat-form-field appearance="outline">
+                  <mat-label>Select account</mat-label>
+                  <mat-select formControlName="chart_of_account" (selectionChange)="onAccountChange($event)">
+
+                      <mat-select-filter [array]="bankAccList1"  (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                      <ng-container>
+                          <mat-option *ngFor="let data of allBankAccList"
+                              [value]="data.chart_account_id">{{data.account_name}}</mat-option>
+                      </ng-container>
+                  </mat-select>
+                  <button mat-icon-button *ngIf="bankClearanceForm.get('chart_of_account')?.value" matSuffix (click)="clearDate('chart_of_account')">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                  <!-- <mat-error *ngIf="form.get('parent_account_id')?.hasError('required')">
+                      This field is required!
+                  </mat-error> -->
+              </mat-form-field>
+      </div>
+
+
+
+
+
+        <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>From Date </mat-label>
+            <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" [max]="maxDate"
+              (dateChange)="fromDate($event)"/>
+            <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+            <mat-datepicker #dp></mat-datepicker>
+            <mat-error *ngIf="bankClearanceForm.controls['from_date'].hasError('required')">
+              This field is required!
+            </mat-error>
+            <button mat-icon-button *ngIf="bankClearanceForm.get('from_date')?.value" matSuffix (click)="clearDate('from_date')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+        <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>To Date</mat-label>
+            <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="to_date" [max]="maxDate"
+              [min]="FromDate || minDate" (dateChange)="ToDate($event)">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="bankClearanceForm.controls['to_date'].hasError('required')">
+              This field is required!
+            </mat-error>
+            <button mat-icon-button *ngIf="bankClearanceForm.get('to_date')?.value" matSuffix (click)="clearDate('to_date')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+
+
+      </div>
+    </form>
+
+
+
+
+    <div class="employ_sube py-2">
+    <div class="searchSelector">
+      <div class="employee_2" align="end">
+        <div class="customSearchbar">
+        <i class="bi bi-search"></i>
+          <input
+          type="text"
+          class="form-control border-0"
+          [(ngModel)]="searchText1"
+          placeholder="Search....."
+        />
+      </div>
+    </div>
+      </div>
+
+
+
+
+
+
+
+
+    </div>
+
+     <div class="employ_sube download_file_icon mb-2">
+      <div class="icon_add" align="end">
+
+
+        <span class="icon_img" (click)="downloadBankExcel()"
+          ><mat-icon matTooltip="Download" class="print">download</mat-icon></span
+        >
+
+
+      </div>
+    </div>
+
+    <div class="heading_neo">
+      <h3>Transaction available in Bank Statement but missing in ERP</h3>
+  </div>
+
+    <div class="row">
+
+
+
+
+      <div class="table-responsive" style="height: 370px; overflow-y: auto;">
+        <div class="table-container">
+            <table class="table table-bordered table-striped">
+                <thead class="thead-fixed">
+      <tr>
+        <th>S.No.</th>
+        <th>Value Date</th>
+        <th>Reference</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Document Number</th>
+        <th>Status</th>
+
+      </tr>
+    </thead>
+    <tbody style="border: 1px solid grey; height: 280px;">
+
+        <tr *ngFor="let data of filteredBankData(); let i = index">
+
+        <td>{{ i + 1 }}</td>
+        <td>{{data.value_date}}</td>
+        <td title="{{ data.refrence_no }}">{{ data.refrence_no }}</td>
+         <td title="{{ data.amount }}">{{ data.amount }}</td>
+        <td title="{{ data.description }}">{{ data.description }}</td>
+        <td title="{{ data.document_number }}">{{ data.document_number }}</td>
+        <td title="{{ data.reference_status }}">{{ data.reference_status }}</td>
+
+
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+
+</div>
+
+
+  <div class="mt-2">
+    <strong>Total Entries: {{ filteredBankData().length }}</strong>
+  </div>
+
+
+
+</div>
+
+
+
+
+  </div>
+
+
+
+  <div class="right_data_all">
+
+    <div class="employ_sube py-2">
+      <div class="searchSelector">
+        <div class="employee_2" align="end">
+          <div class="customSearchbar">
+          <i class="bi bi-search"></i>
+
+            <input
+            type="text"
+            [(ngModel)]="searchText1"
+            placeholder="Search....."
+            class="form-control border-0"
+          />
+        </div>
+      </div>
+
+        </div>
+
+      </div>
+
+   <div class="employ_sube download_file_icon mb-2">
+      <div class="icon_add" align="end">
+
+
+        <span class="icon_img" (click)="downloadERPExcel()"
+          ><mat-icon matTooltip="Download" class="print">download</mat-icon></span
+        >
+
+
+      </div>
+    </div>
+
+      <div class="heading_neo">
+        <h3>Transaction Available in ERP But missing in Bank Statement</h3>
+    </div>
+
+    <div class="row">
+
+
+
+
+                    <div class="table-responsive" style="height: 370px; overflow-y: auto;">
+                      <div class="table-container">
+                          <table class="table table-bordered table-striped">
+                              <thead class="thead-fixed">
+               <th>S.No.</th>
+        <th>Posting Date</th>
+        <th>Payment Document Type</th>
+        <th>Payment Document</th>
+        <th>Debit</th>
+        <th>Credit</th>
+        <th>Against Account</th>
+
+        <th>Reference</th>
+        <th>Clearance Date</th>
+                  </thead>
+                  <tbody style="border: 1px solid grey; height: 280px;">
+                    <tr *ngFor="let data of filteredERPData(); let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ data.posting_date }}</td>
+                      <td>{{ data.entry_status }}</td>
+                      <td title="{{ data.journal_no }}">{{ data.journal_no }}</td>
+                      <td>{{ data.debit || 0.00  }}</td>
+                      <td>{{ data.credit || 0.00  }}</td>
+                      <td title="{{ data.account_name }}">{{ data.account_name }}</td>
+                      <td title="{{ data.reference }}">{{ data.reference }}</td>
+                      <!-- <td>{{ data.base_amount || 0.00 | amount }}</td> -->
+                      <!-- <td>{{ data.vat_amount || 0.00 | amount }}</td> -->
+                      <!-- <td>{{ data.total_balance || 0.00 | amount }}</td> -->
+                      <td>{{ data.bank_clearance_date }}</td>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+
+        </div>
+
+ <div class="mt-2">
+    <strong>Total Entries: {{ filteredERPData().length }}</strong>
+  </div>
+
+
+    </div>
+
+
+
+
+
+</div>
+

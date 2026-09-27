@@ -1,0 +1,196 @@
+<div class="section">
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="https://www.dqsglobal.com/en-in/" target="_blank">
+                <img style="margin-left: 20px;" src="../../../assets/icons/DQS_logo.png" alt="" width="60" height="40"
+                    class="d-inline-block align-text-top">
+            </a>
+            <div>
+                <h2 class="text-primary">Registration Form</h2>
+            </div>
+        </div>
+    </nav>
+
+
+    <mat-card>
+        <div class="row form_head">
+            <h3>IRIS Internal Auditor Training Program - Online</h3>
+        </div>
+
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="registrationForm">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label> Date</mat-label>
+                                <input matInput [matDatepicker]="rd" (click)="rd.open()" formControlName="date" />
+                                <mat-datepicker-toggle matSuffix [for]="rd"></mat-datepicker-toggle>
+                                <mat-datepicker #rd></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Location </mat-label>
+                                <input matInput type="text" formControlName="location" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Select Option</mat-label>
+                                <mat-select formControlName="title">
+                                    <mat-option value="Dr.">Dr.</mat-option>
+                                    <mat-option value="Mr.">Mr.</mat-option>
+                                    <mat-option value="Ms.">Ms.</mat-option>
+                                    <mat-option value="Mrs.">Mrs.</mat-option>
+                                    <mat-option value="Prof.">Prof.</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Name </mat-label>
+                                <input matInput type="text" formControlName="name" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Designation </mat-label>
+                                <input matInput type="text" formControlName="designation" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Name of the Organization </mat-label>
+                                <input matInput type="text" formControlName="org_name" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Address of the Organization </mat-label>
+                                <input matInput type="text" formControlName="org_address" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>LandLine No.</mat-label>
+                                <input matInput type="number" formControlName="landline_number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Mobile No.</mat-label>
+                                <input matInput type="number" formControlName="mobile_number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email </mat-label>
+                                <input matInput type="email" formControlName="email" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Business Activity </mat-label>
+                                <input matInput type="text" formControlName="business_activity" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>BR Number </mat-label>
+                                <input matInput type="number" formControlName="br_number" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row form_head mb-2">
+                    <h3>Participant Details</h3>
+                </div>
+                    <div formArrayName="persons">
+                      <div *ngFor="let person of persons.controls; let i = index">
+                        <div [formGroupName]="i" class="row">
+                          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Name</mat-label>
+                              <input matInput formControlName="name" />
+                              <mat-error *ngIf="person.get('name')?.hasError('required') && person.get('name')?.touched">
+                                Name is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Designation</mat-label>
+                              <input matInput formControlName="designation" />
+                            </mat-form-field>
+                          </div>
+                          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Contact Number</mat-label>
+                              <input matInput formControlName="contactNumber" />
+                              <mat-error *ngIf="person.get('contactNumber')?.hasError('required') && person.get('contactNumber')?.touched">
+                                Contact Number is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                            <mat-form-field appearance="outline">
+                              <mat-label>Email</mat-label>
+                              <input matInput formControlName="email" />
+                              <mat-error *ngIf="person.get('email')?.hasError('required') && person.get('email')?.touched">
+                                Email is required
+                              </mat-error>
+                              <mat-error *ngIf="person.get('email')?.hasError('email') && person.get('email')?.touched">
+                                Enter a valid email address
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12">
+                            <button mat-icon-button color="primary" (click)="removePerson(i)" *ngIf="persons.length > 1">
+                              <mat-icon>remove</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" (click)="addPerson()" *ngIf="i === persons.length - 1">
+                              <mat-icon>add</mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                    <div class="text-center font-style">
+                        <p>Participation Fee: (per participant+ taxes (GST 18%)as applicable ) </p>
+                        <p> Fee includes luncheons, refreshments and complete set of documentation. It does not include
+                            the cost of accommodation and travel.</p>
+                    </div>
+                <div class="mt-4 d-flex justify-content-between">
+                    <button class="btn btn-danger">Cancel</button>
+                    <button class="btn btn-primary" (click)="submitForm()">Submit</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</div>

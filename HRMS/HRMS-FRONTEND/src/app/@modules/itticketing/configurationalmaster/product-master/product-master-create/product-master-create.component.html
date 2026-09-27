@@ -1,0 +1,189 @@
+<section class="section">
+  <div class="row head">
+    <p>Admin</p>
+  </div>
+  <div class="row py-1">
+    <div class="employee_top">Product Master
+      <span class="employee_2" *ngIf="!id"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Create </span>
+      <span class="employee_2" *ngIf="id"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Update </span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head">
+      <h3>Product Master</h3>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="productMasterForm">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Product Name</mat-label>
+                <input type="text" matInput formControlName="product_name"
+                  [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let product of filteredProducts | async" [value]="product.product_name">
+                    {{ product.product_name }}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="productMasterForm.controls['product_name'].hasError('required')">
+                  Product Name Id is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_name'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Variant Name</mat-label>
+                <input matInput type="text" formControlName="variant_name" />
+                <mat-error *ngIf="productMasterForm.controls['variant_name'].hasError('required')">
+                  Variant Name is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['variant_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['variant_name'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+            <div class="form-group  service_description">
+              <mat-form-field appearance="outline">
+                <mat-label>Product Description</mat-label>
+                <input matInput type="text" formControlName="product_description" />
+                <mat-error *ngIf="productMasterForm.controls['product_description'].hasError('required')">
+                  Product Description is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_description'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_description'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Select UOM</mat-label>
+                <mat-select formControlName="uom_id">
+                  <mat-option *ngFor="let data of getUOM_data" [value]="data.uom_id">{{data?.uom_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>MVP</mat-label>
+                <input matInput type="number" formControlName="mvp" />
+                <mat-error *ngIf="productMasterForm.controls['mvp'].hasError('required')">
+                  MVP is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['mvp'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['mvp'].hasError('negative')">
+                  This field must be positive 
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Price Per Unit</mat-label>
+                <input matInput type="number" formControlName="price_per_unit" />
+                <mat-error *ngIf="productMasterForm.controls['price_per_unit'].hasError('required')">
+                  Price Per Unit is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['price_per_unit'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['price_per_unit'].hasError('negative')">
+                  This field must be positive 
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Maximum Discount (%)</mat-label>
+                <input matInput type="number" formControlName="maximum_discount" />
+                <mat-error *ngIf="productMasterForm.controls['maximum_discount'].hasError('required')">
+                  Maximum Discount is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['maximum_discount'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['maximum_discount'].hasError('invalidRange')">
+                  Maximum Discount must be between 0 and 100.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Average Production Cost</mat-label>
+                <input matInput type="number" formControlName="average_production_cost" />
+                <mat-error *ngIf="productMasterForm.controls['average_production_cost'].hasError('required')">
+                  Average Production Cost is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['average_production_cost'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['average_production_cost'].hasError('negative')">
+                  This field must be positive 
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Product Specification</mat-label>
+                <input matInput type="text" formControlName="product_specification" />
+                <mat-error *ngIf="productMasterForm.controls['product_specification'].hasError('required')">
+                  Product Specification is Required.
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_specification'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="productMasterForm.controls['product_specification'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="!id" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button color="primary">
+            Submit
+          </button>
+          <button *ngIf="id" (click)="updateForm($event)" mat-raised-button color="primary">
+            Update
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</section>

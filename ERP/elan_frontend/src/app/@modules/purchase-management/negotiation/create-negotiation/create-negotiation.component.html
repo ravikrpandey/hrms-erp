@@ -1,0 +1,213 @@
+<app-wrapper [title]="'Purchase Management'" [subTitle]="'Negotiation'" [subheading]="'Initiate Negotiation'"
+    [showActions]="true" [isBack]="true">
+    <form [formGroup]="createPrForm">
+
+        <!-- PR & Negotiation Meta Details -->
+        <div class="section-container card">
+            <div class="section-header">
+                <h3>PR & Negotiation Details</h3>
+            </div>
+            <div class="row g-4 p-4">
+                <!-- Left Column -->
+                <div class="col-md-6">
+                    <div class="detail-group">
+                        <span class="detail-label">Nego Code</span>
+                        <span class="detail-value highlight">Nego-{{id || "-"}}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Department</span>
+                        <span class="detail-value">{{prData?.MASTER_DEPARTMENT?.department_name ||
+                            details_pr_service?.department_name || "-"}}</span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Nego Start Date</mat-label>
+                            <input matInput [matDatepicker]="dpStart" placeholder="Start Date"
+                                formControlName="start_date_nego" [max]="maxDate" [min]="minDate"
+                                (click)="dpStart.open()" />
+                            <mat-datepicker-toggle matSuffix [for]="dpStart"></mat-datepicker-toggle>
+                            <mat-datepicker #dpStart></mat-datepicker>
+                            <mat-error *ngIf="createPrForm.controls['start_date_nego'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-6">
+                    <div class="detail-group">
+                        <span class="detail-label">Created By</span>
+                        <span class="detail-value">{{createdBy || "-"}}</span>
+                    </div>
+                    <div class="detail-group">
+                        <span class="detail-label">Budget Type</span>
+                        <span class="detail-value text-capitalize">{{prData?.pr_type || details_pr_service?.pr_type ||
+                            "-"}}</span>
+                    </div>
+                    <div class="form-group mt-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Nego End Date</mat-label>
+                            <input matInput [matDatepicker]="dpEnd" placeholder="End Date"
+                                formControlName="end_date_nego" [min]="minEndDate" (click)="dpEnd.open()" />
+                            <mat-datepicker-toggle matSuffix [for]="dpEnd"></mat-datepicker-toggle>
+                            <mat-datepicker #dpEnd></mat-datepicker>
+                            <mat-error *ngIf="createPrForm.controls['end_date_nego'].hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quotations Comparison -->
+        <div class="section-container card mt-4">
+            <div class="section-header">
+                <h3>Quotation Summary</h3>
+            </div>
+            <div class="p-0 overflow-hidden">
+                <table class="table custom-table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Vendor</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- L1 -->
+                        <ng-container *ngIf="levelsOne.length > 0">
+                            <tr class="level-header">
+                                <td colspan="3">Level 1 (L1)</td>
+                            </tr>
+                            <tr *ngFor="let lev of levelsOne">
+                                <td>{{lev?.itemName || lev?.serviceName || lev?.bomName || "-"}}</td>
+                                <td>{{lev?.vendor_name || "-"}}</td>
+                                <td class="text-success fw-bold">{{lev?.price_amt | currency:'INR'}}</td>
+                            </tr>
+                        </ng-container>
+
+                        <!-- L2 -->
+                        <ng-container *ngIf="levelsTwo.length > 0">
+                            <tr class="level-header">
+                                <td colspan="3">Level 2 (L2)</td>
+                            </tr>
+                            <tr *ngFor="let lev of levelsTwo">
+                                <td>{{lev?.itemName || lev?.serviceName || lev?.bomName || "-"}}</td>
+                                <td>{{lev?.vendor_name || "-"}}</td>
+                                <td class="fw-bold">{{lev?.price_amt | currency:'INR'}}</td>
+                            </tr>
+                        </ng-container>
+
+                        <!-- L3 -->
+                        <ng-container *ngIf="levelsThree.length > 0">
+                            <tr class="level-header">
+                                <td colspan="3">Level 3 (L3)</td>
+                            </tr>
+                            <tr *ngFor="let lev of levelsThree">
+                                <td>{{lev?.itemName || lev?.serviceName || lev?.bomName || "-"}}</td>
+                                <td>{{lev?.vendor_name || "-"}}</td>
+                                <td class="fw-bold">{{lev?.price_amt | currency:'INR'}}</td>
+                            </tr>
+                        </ng-container>
+
+                        <tr *ngIf="!levelsOne.length && !levelsTwo.length && !levelsThree.length">
+                            <td colspan="3" class="text-center p-4 text-muted">No quotation data available</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Item Details & Negotiation Inputs -->
+        <div class="section-container card mt-4">
+            <div class="section-header">
+                <h3>Negotiation Inputs</h3>
+            </div>
+            <!-- {{createPrForm.value | json}} -->
+            <div class="p-0 overflow-hidden" formArrayName="items">
+                <table class="table custom-table mb-0">
+                    <thead>
+                        <tr>
+                            <th width="100">Image</th>
+                            <th>Item / Service Name</th>
+                            <th>Code</th>
+                            <th width="180">Target Price</th>
+                            <th width="300">Invite Vendors</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of procurement_requests; let i = index" [formGroupName]="i">
+                            <td class="text-center">
+                                <div class="product-img-wrapper" (click)="seePreviewTable(item?.item_document)">
+                                    <img [src]="item?.item_document" alt="Item" onerror="'./assets/No-image.png'">
+                                    <div class="overlay"><mat-icon>visibility</mat-icon></div>
+                                </div>
+                            </td>
+                            <td class="fw-medium">{{item?.product_name || item?.item_name}}</td>
+                            <td class="text-muted">{{item?.item_code || "-"}}</td>
+                            <td>
+                                <mat-form-field appearance="outline" class="dense-form-field">
+                                    <input matInput type="number" formControlName="target_price"
+                                        placeholder="Enter Price" />
+                                    <span matPrefix class="ms-2">₹&nbsp;</span>
+                                    <mat-error
+                                        *ngIf="itemsFormArray.at(i).get('target_price')?.hasError('required')">Required</mat-error>
+                                </mat-form-field>
+                            </td>
+                            <td>
+                                <mat-form-field appearance="outline" class="dense-form-field">
+                                    <mat-select multiple formControlName="vendor_nego" placeholder="Select Vendors">
+                                        <mat-option *ngFor="let vendor of item?.vendorData" [value]="vendor?.vendors">
+                                            {{vendor?.VENDOR_BASIC_DETAIL?.vendor_name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error
+                                        *ngIf="itemsFormArray.at(i).get('vendor_nego')?.hasError('required')">Select at
+                                        least one</mat-error>
+                                </mat-form-field>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Delivery Address -->
+        <div class="section-container card mt-4 bg-light" *ngIf="prData?.WAREHOUSE_MASTER">
+            <div class="section-header">
+                <h3>Delivery Information</h3>
+            </div>
+            <div class="row g-3 p-4">
+                <div class="col-md-4">
+                    <div class="detail-group bordered">
+                        <span class="detail-label">Warehouse</span>
+                        <span class="detail-value fw-bold">{{prData.WAREHOUSE_MASTER.name}}</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-group bordered">
+                        <span class="detail-label">State</span>
+                        <span class="detail-value">{{prData.WAREHOUSE_MASTER.postal_address?.State || "-"}}</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="detail-group bordered">
+                        <span class="detail-label">Delivery Address</span>
+                        <span class="detail-value">{{prData.WAREHOUSE_MASTER.address || "-"}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="footer-actions mt-5 mb-5 text-center">
+            <button mat-raised-button color="primary" class="btn-negotiate" (click)="OpenDefineDate()"
+                [disabled]="loading">
+                <mat-spinner *ngIf="loading" diameter="24" class="me-2"></mat-spinner>
+                {{ loading ? 'Processing...' : 'Start Negotiation' }}
+            </button>
+        </div>
+    </form>
+</app-wrapper>

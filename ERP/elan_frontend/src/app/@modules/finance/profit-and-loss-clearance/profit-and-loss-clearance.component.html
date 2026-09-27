@@ -1,0 +1,111 @@
+
+
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Finance</h1>
+        <p  >
+           Report<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Profit And Loss Clearance</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="back()" >
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+
+
+<div class="right_data_all d-flex justify-content-end align-items-center flex-wrap gap-3 mt-3">
+
+  <!-- Transfer to Result -->
+  <div *ngIf="showReversalButton && !isRetained" class="common_button_sub">
+    <button (click)="transferToResults($event)" class="btn-action btn-result">
+      <i class="fa fa-check-circle me-2"></i> Transfer to Result
+    </button>
+  </div>
+
+  <!-- Transfer to Retained Earning -->
+  <div *ngIf="!showReversalButton && !isRetained" class="common_button_sub">
+    <button (click)="transfer_To_Retained_Earning($event)" class="btn-action btn-retained">
+      <i class="fa fa-exchange-alt me-2"></i> Transfer to Retained Earning
+    </button>
+  </div>
+
+    <div *ngIf="!showReversalButton && !isRetained" class="common_button_sub">
+    <button (click)="transfer_To_Result_Accounts_reversal($event)" class="btn-action btn-reverse">
+      <i class="fa fa-exchange-alt me-2"></i> Reverse Clearance Entries
+    </button>
+  </div>
+
+</div>
+
+ <div class="employ_sube download_file_icon mb-2">
+      <div class="icon_add" align="end">
+
+
+        <span class="icon_img" (click)="onBtnExportDataAsExcel()"
+          ><mat-icon matTooltip="Download" class="print">download</mat-icon></span
+        >
+
+
+      </div>
+    </div>
+
+
+      <div class="heading_neo">
+        <h3>Clearance History</h3>
+    </div>
+
+    <div class="row">
+
+                    <div class="table-responsive" style="height: 370px; overflow-y: auto;">
+                      <div class="table-container">
+                          <table class="table table-bordered table-striped">
+                              <thead class="thead-fixed">
+                    <tr>
+                      <th>S.No.</th>
+                      <th>Date</th>
+                      <th>Transaction Scenario</th>
+                      <th>General ledger Account</th>
+
+<th>Account Type</th>
+<th>Nature Of Transaction</th>
+
+                      <th>Debit</th>
+                      <th>Credit</th>
+                    </tr>
+                  </thead>
+                  <tbody style="border: 1px solid grey; height: 280px;">
+                    <tr *ngFor="let data of filteredHistoryList; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td>{{ data.createdAt | date: 'yyyy-MM-dd' }}</td>
+                      <td>{{data.entry_status}}</td>
+                      <td>{{data.account_name}}</td>
+
+<td>{{data.account_type}}</td>
+<td>{{data.nature_of_transaction}}</td>
+
+                      <td>{{data.debit_amount || 0.00 }}</td>
+                      <td>{{data.credit_amount || 0.00 }}</td>
+
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+
+        </div>
+    </div>
+
+      <!-- <div class="row">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="common_button_sub">
+
+                    <button type="submit" (click)="submitData()">
+                        Submit
+                    </button>
+                    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </div>
+        </div> -->

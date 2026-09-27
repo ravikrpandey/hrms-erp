@@ -1,0 +1,68 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>
+      Attendance<i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+      </i><span> Attendance Report</span>
+    </p>
+  </div>
+</div>
+
+<div class="right_data_all pt-3">
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-12 col-sm-3">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Entity</mat-label>
+            <mat-select multiple [(ngModel)]="entity_id" (selectionChange)="checkIfAllSelected()"
+              (selectionChange)="ExportToexceldata($event.value)">
+
+              <app-search-filter [array]="entityList" [placeholder]="'Search by entity name'"
+                [searchFields]="['entity_name']" (filteredReturn)="originalEntityList =  $event.data">
+              </app-search-filter>
+
+
+              <mat-checkbox (change)="selectAll($event)" [checked]="isAllSelect">
+                Select All
+              </mat-checkbox>
+              <mat-option *ngFor="let item of originalEntityList" [value]="item?.entity_id">
+                {{ item?.entity_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!entity_id || entity_id.length === 0">*Required!</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-12 col-sm-3 col-md-3 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" style="width: 100%">
+              <mat-label>Month</mat-label>
+              <mat-select [(ngModel)]="selectedMonth" (selectionChange)="onMonthOrYearChange()">
+                <mat-option *ngFor="let month of months" [value]="month">
+                  {{ month }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="!selectedMonth"> *Required! </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-12 col-sm-3 col-md-3 col-12">
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Year</mat-label>
+            <mat-select [(ngModel)]="selectedYear" (selectionChange)="onMonthOrYearChange()">
+              <mat-option *ngFor="let year of financialYearList" [value]="year?.financial_year">
+                {{ year?.financial_year }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!selectedYear"> *Required! </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="button-container">
+        <button (click)="exportToExcel()" class="download-button">
+          Download
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

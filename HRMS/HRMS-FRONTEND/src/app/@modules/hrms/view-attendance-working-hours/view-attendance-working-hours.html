@@ -1,0 +1,74 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>HRMS</h1>
+        <p>Deduction Rules <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+            </i><span>Deduction Rule List</span></p>
+    </div>
+</div>
+
+
+<!-- Deduction rules panel (Material card + mat-table) -->
+<mat-card class="rules-card" >
+  <mat-card-title>Deduction Rules</mat-card-title>
+
+  <mat-card-content>
+    <div *ngIf="!deductionRules?.length" class="empty-text">No rules available.</div>
+    <div *ngIf="deductionRules?.length">
+   <table mat-table [dataSource]="rulesDataSource" class="mat-elevation-z1 full-width" matSort>
+
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let row; let i = index">{{ i + 1 }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="deduction_rule_name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rule Name</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="rule-name" matTooltip="{{ row.deduction_rule_name }}">{{ row.deduction_rule_name }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="no_of_occation">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>No. of Occasions</th>
+          <td mat-cell *matCellDef="let row" class="text-center">{{ row.no_of_occation ?? 0 }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="rulesDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: rulesDisplayedColumns; trackBy: trackById;"></tr>
+      </table>
+
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Controls + AG Grid -->
+<div class="content-container mat-elevation-z0">
+  <div class="controls-row">
+    <mat-form-field appearance="outline" class="page-size">
+      <mat-label>Page size</mat-label>
+      <mat-select [value]="paginationPageSize" (selectionChange)="onPageSizeChanged($event)">
+        <mat-option [value]="10">10</mat-option>
+        <mat-option [value]="100">100</mat-option>
+        <mat-option [value]="500">500</mat-option>
+        <mat-option [value]="1000">1000</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Search" #input (input)="onFilterTextBoxChanged(input.value)">
+      <button *ngIf="input.value" matSuffix mat-icon-button aria-label="Clear" (click)="onFilterTextBoxChanged('')">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+
+  </div>
+
+    <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:400px;"
+            [rowData]="rowData" [columnDefs]="columnDefs" 
+            (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+    </div>
+</div>

@@ -1,0 +1,41 @@
+<h3 mat-dialog-title class="popHead"> Add City</h3>
+<mat-dialog-content class="mat-typography">
+    <div class="">
+        <form [formGroup]="cityForm">
+            <div class="form-group mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>State Name </mat-label>
+                    <mat-select formControlName="states_id">
+                        <mat-select-filter
+                          [array]="stateList1"
+                          (filteredReturn)="stateSearch($event)"
+                        ></mat-select-filter>
+                        <mat-option *ngFor="let val of stateList" [value]="val?.states_id">
+                          {{ val?.states_name }}
+                        </mat-option>
+                      </mat-select>
+                    <mat-error *ngIf="cityForm.controls['states_id'].hasError('required')">
+                        *Required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>City Name </mat-label>
+                    <input matInput type="text" formControlName="city_name" />
+                    <mat-error *ngIf="cityForm.controls['city_name'].hasError('required')">
+                        *Required!
+                    </mat-error>
+                    <mat-error *ngIf="cityForm.controls['city_name'].hasError('leadingSpaces')">
+                        *No leading spaces!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button 
+        (click)="onSubmit(cityForm)">Save</button>
+    <button  mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>

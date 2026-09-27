@@ -1,0 +1,62 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+            Goods Inventory<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Store Item List</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+  <div class="data-container">
+    <h3>Description</h3>
+    <div class="data-row">
+      <div class="data-item">
+        <h4>Store Name :</h4>
+        <p>{{ itemList?.store_name }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Item Name :</h4>
+        <p>{{ itemList?.item_name }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Item Code :</h4>
+        <p>{{ itemList?.item_code }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Category :</h4>
+        <p>{{ itemList?.asset_category_name }}</p>
+      </div>
+      <div class="data-item">
+        <h4>Quantity : {{ totalQty }}</h4>
+      </div>
+    </div>
+  </div>
+  
+  <div class="right_data_all">
+    <div class="employ_sube py-2">
+      <div class="example-header">
+        <select id="page-size" (change)="onPageSizeChanged()">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+        <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                placeholder="Search" [(ngModel)]="searchTerm"/>
+        </div>
+    </div>
+    <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 400px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9" [rowData]="rowData"
+            (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+        </ag-grid-angular>
+    </div>
+  </div>
+  

@@ -1,0 +1,37 @@
+<div class="edd-del">
+  <mat-icon
+    *ngIf="cellValue.status == 'APPROVED'"
+    class="viewButton"
+    matTooltip="View IRN Data"
+    (click)="viewIRN()"
+    >visibility</mat-icon
+  >
+  <mat-icon
+    *ngIf="cellValue.status == 'APPROVED' && cellValue.isEwayCreated==false"
+    class="viewButton"
+    matTooltip="Generate e-Way bill"
+    (click)="generateEway($event)"
+    >receipt</mat-icon
+  >
+  <mat-icon
+    *ngIf="cellValue.status == 'APPROVED' && cellValue.isEwayCreated==false"
+    class="viewButton"
+    matTooltip="Cancel IRN"
+    (click)="cancelIRN($event,cellValue)"
+    >cancel</mat-icon
+  >
+  <mat-icon
+  *ngIf="cellValue.status == 'PENDING'"
+  class="viewButton"
+  matTooltip="Generate IRN"
+  (click)="generateIRN($event)"
+  >arrow_forward</mat-icon
+  >
+  <mat-icon
+    *ngIf="cellValue.status == 'PENDING' && cellValue.isEwayCreated==false"
+    class="viewButton"
+    matTooltip="Generate e-Way bill"
+    (click)="generateDirectEway($event)"
+    >receipt</mat-icon
+  >
+</div>

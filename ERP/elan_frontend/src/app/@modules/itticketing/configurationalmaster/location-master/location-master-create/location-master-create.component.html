@@ -1,0 +1,98 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Location Details
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+      <span *ngIf="!id"> Create Location </span>
+      <span *ngIf="action_type=='edit'"> Update Location </span>
+      <span *ngIf="action_type=='view'"> View Location </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="onBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+    <form class="form_set" [formGroup]="LocationForm">
+      <div class="row">
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Country</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="present_country_id" (selectionChange)="presentCountryChange($event)">
+                <mat-select-filter [array]="countries1" (filteredReturn)="countrySearch1($event)"></mat-select-filter>
+                <mat-option *ngFor="let country of countryList"
+                  [value]="country?.countryss_id">{{country?.countryss_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>State</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="present_state_id" (selectionChange)="presentStateChange($event)">
+                <mat-select-filter [array]="states1" (filteredReturn)="stateSearch1($event)"></mat-select-filter>
+                <mat-option *ngFor="let state of presentSteteData"
+                  [value]="state?.states_id">{{state?.states_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>City</mat-label>
+            <mat-form-field appearance="outline" >
+              <mat-select formControlName="city_id">
+                <mat-select-filter [array]="cities1" (filteredReturn)="citySearch1($event)"></mat-select-filter>
+                <mat-option *ngFor="let city of presentCityList"
+                  [value]="city?.city_id">{{city?.city_name}}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="LocationForm.controls['city_id'].hasError('required')">
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Location Code</mat-label>
+              <input matInput type="text" formControlName="location_code" />
+              <mat-error *ngIf="LocationForm.get('location_code')?.hasError('required')">
+                 This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Location Name</mat-label>
+              <input matInput type="text" formControlName="location_name" />
+              <mat-error *ngIf="LocationForm.controls['location_name'].hasError('required')">
+                 This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+      <div class="common_button_sub" align="end" *ngIf="!isView">
+        <button (click)="onSubmit()">{{action_type=='edit'?'update':'Save'}}  </button>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </div>
+</mat-card>

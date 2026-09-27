@@ -1,0 +1,166 @@
+<!-- Loader overlay -->
+<div class="loader-overlay" *ngIf="loading">
+  <div class="loader-box">
+    <div class="spinner"></div>
+    <p>Please wait...</p>
+  </div>
+</div>
+
+<div class="section">
+  <h3 class="popHead">Discount Applicable Details</h3>
+  <button class="close-btn" (click)="closeModal()">×</button>
+
+  <section>
+    <div class="p-3 table-wrapper">
+      <!-- Scrollable Table -->
+      <div class="table-scroll">
+        <table border="0" width="100%">
+          <tr>
+            <th>S.No.</th>
+            <th style="width: 90px;">Item Name</th>
+            <th style="width: 90px;">Item Code</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th style="width: 65px;">GST (%)</th>
+            <th style="width: 150px;">Discount 1</th>
+            <th style="width: 150px;">Discount 2</th>
+            <th style="width: 150px;">Discount 3</th>
+            <th>Price (Per Unit)</th>
+            <th>With GST</th>
+          </tr>
+          <tr *ngIf="!items || items.length === 0">
+          <td colspan="11">Please select atleast one item & Qty!</td>
+          </tr>
+          <ng-container *ngFor="let item of items; let i = index">
+            <tr [ngStyle]="item.promo_item ? {'background':'#83d483'} : {}">
+              <td>{{ i + 1 }}</td>
+              <td>{{ item.itemName }}</td>
+              <td>{{ item.itemCode }}</td>
+              <td>{{ item.qty }}</td>
+              <td>{{currencySign}}{{ item.dbp }}</td>
+              <td>{{ item.gst }}</td>
+              <!-- Discount 1 checkboxes -->
+              <td>
+                <input type="checkbox" [checked]="item.applyDiscount1Percent"
+                  (change)="onDiscountCheckboxChange($event,item, 'percent','applyDiscount1Percent',1)" [disabled]="item.promo_item || isViewMode || !item.discount1 || item.discount1 == 0 || item.discount1 == 0.00"> %
+                <input type="checkbox" [checked]="item.applyDiscount1Flat"
+                  (change)="onDiscountCheckboxChange($event,item, 'flat','applyDiscount1Flat',1)" [disabled]="item.promo_item || isViewMode || !item.discount1Flat || item.discount1Flat == 0 || item.discount1Flat == 0.00"> Flat
+                <input *ngIf="item.applyDiscount1Percent || (!item.applyDiscount1Percent && !item.applyDiscount1Flat && (!item.discount1Flat || item.discount1Flat == 0))"
+                  type="number" [(ngModel)]="item.discount1" (input)="calculateTotals('discount1')" [disabled]="!item.applyDiscount1Percent || isViewMode" min="0" (keypress)="blockInvalidKeys($event)" readonly>
+                <input *ngIf="item.applyDiscount1Flat || (!item.applyDiscount1Percent && !item.applyDiscount1Flat && item.discount1Flat && item.discount1Flat != 0)" 
+                  type="number" [(ngModel)]="item.discount1Flat" (input)="calculateTotals('discount1Flat')" [disabled]="!item.applyDiscount1Flat || isViewMode" [ngModelOptions]="{standalone: true}" min="0" (keypress)="blockInvalidKeys($event)" readonly>
+              </td>
+              <!-- Discount 2 checkboxes -->
+              <td>
+                <input type="checkbox" [checked]="item.applyDiscount2Percent"
+                  (change)="onDiscountCheckboxChange($event,item, 'percent','applyDiscount2Percent',2)" [disabled]="item.promo_item || isViewMode"> %
+                <input type="checkbox" [checked]="item.applyDiscount2Flat"
+                  (change)="onDiscountCheckboxChange($event,item, 'flat','applyDiscount2Flat',2)" [disabled]="item.promo_item || isViewMode"> Flat
+                <input *ngIf="item.applyDiscount2Percent || (!item.applyDiscount2Percent && !item.applyDiscount2Flat && (!item.discount2Flat || item.discount2Flat == 0))"
+                  type="number" [(ngModel)]="item.discount2" (input)="calculateTotals('discount2')" [disabled]="!item.applyDiscount2Percent || isViewMode" min="0" (keypress)="blockInvalidKeys($event)">
+                <input *ngIf="item.applyDiscount2Flat || (!item.applyDiscount2Percent && !item.applyDiscount2Flat && item.discount2Flat && item.discount2Flat != 0)"
+                  type="number" [(ngModel)]="item.discount2Flat" (input)="calculateTotals('discount2Flat')" [disabled]="!item.applyDiscount2Flat || isViewMode" [ngModelOptions]="{standalone: true}" min="0" (keypress)="blockInvalidKeys($event)">
+              </td>
+              <!-- Discount 3 checkboxes -->
+              <td>
+                <input type="checkbox" [checked]="item.applyDiscount3Percent"
+                  (change)="onDiscountCheckboxChange($event,item, 'percent','applyDiscount3Percent',3)" [disabled]="item.promo_item || isViewMode"> %
+                <input type="checkbox" [checked]="item.applyDiscount3Flat"
+                  (change)="onDiscountCheckboxChange($event,item, 'flat','applyDiscount3Flat',3)" [disabled]="item.promo_item || isViewMode"> Flat
+                <input *ngIf="item.applyDiscount3Percent || (!item.applyDiscount3Percent && !item.applyDiscount3Flat && (!item.discount3Flat || item.discount3Flat == 0))"
+                  type="number" [(ngModel)]="item.discount3" (input)="calculateTotals('discount3')" [disabled]="!item.applyDiscount3Percent || isViewMode" min="0" (keypress)="blockInvalidKeys($event)">
+                <input *ngIf="item.applyDiscount3Flat || (!item.applyDiscount3Percent && !item.applyDiscount3Flat && item.discount3Flat && item.discount3Flat != 0)"
+                  type="number" [(ngModel)]="item.discount3Flat" (input)="calculateTotals('discount3Flat')" [disabled]="!item.applyDiscount3Flat || isViewMode" [ngModelOptions]="{standalone: true}" min="0" (keypress)="blockInvalidKeys($event)">
+              </td>
+              <td>{{currencySign}}{{ (item?.totalPrice || 0) / (item?.qty || 1) | number:'1.2-2' }}</td>
+              <td>{{currencySign}}{{ item.totalWithGst | number:'1.2-2' }}</td>
+            </tr>
+
+            <!-- Error message row -->
+            <tr *ngIf="item.errorMessage">
+              <td colspan="11" class="error-message">
+                {{ item.errorMessage }}
+              </td>
+            </tr>
+
+            <!-- Sub Items -->
+            <tr *ngIf="item.subItems && item.subItems.length">
+              <td colspan="11">
+                <table border="1" width="100%">
+                  <tr>
+                    <th>Sub Item Name</th>
+                    <th>Sub Item Type</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>GST (%)</th>
+                    <th>Discount</th>
+                    <th>Price (Per Unit)</th>
+                    <th>With GST</th>
+                  </tr>
+
+                  <ng-container *ngFor="let sub of item.subItems">
+                    <tr>
+                      <td class="truncate-text" [title]="sub.subItemName">{{ sub.subItemName }}</td>
+                      <td>{{ sub.subItemType }}</td>
+                      <td>{{ sub.qty }}</td>
+                      <td>{{currencySign}}{{ sub.dbp }}</td>
+                      <td>{{ sub.gst }}</td>
+                      <td style="width: 150px;">
+                        <input type="checkbox" [checked]="sub.discountType1 === 'percent'" (change)="onDiscountTypeChange(sub, 'percent')" [disabled]="isViewMode"> %
+                        <input type="checkbox" [checked]="sub.discountType1 === 'flat'" (change)="onDiscountTypeChange(sub, 'flat')" [disabled]="isViewMode"> Flat
+                        <input type="number" [(ngModel)]="sub.discount1" [disabled]="!sub.discountType1 || isViewMode" (input)="calculateTotals()" min="0" (keypress)="blockInvalidKeys($event)">
+                      </td>
+                      <td style="width: 144px;">{{currencySign}}{{ (sub?.totalPrice || 0) / (sub?.qty || 1) | number:'1.2-2' }}</td>
+                      <td style="width: 127px;">{{currencySign}}{{ sub.totalWithGst | number:'1.2-2' }}</td>
+                    </tr>
+
+                    <!-- Subitem Error message row -->
+                    <tr *ngIf="sub.errorMessage">
+                      <td colspan="8" class="error-message">
+                        {{ sub.errorMessage }}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </table>
+              </td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
+
+      <!-- Gross Totals & Discounts Section -->
+      <div class="totals-discounts-section" *ngIf="items && items.length > 0">
+        <div class="totals-row">
+          <div class="totals-cell"><span style="font-weight: 500; color: #7f7f7f; font-size: 16px;">Gross Amount:</span> {{currencySign}}{{ grossTotal | number:'1.2-2' }}</div>
+          <div class="totals-cell"><span style="font-weight: 500; color: #7f7f7f; font-size: 16px;">GST Value:</span> {{currencySign}}{{ gstTotal | number:'1.2-2' }}</div>
+        </div>
+
+        <!-- Gross Discounts Functionality -->
+        <div class="gross-discounts">
+          <div *ngFor="let d of grossDiscounts; index as i" class="gross-discount-card">
+            <div class="gross-discount-label">
+              <div class="">
+                <label>{{ i + 1 }}. {{ d.name }}</label>
+              </div>
+              <div class="d-flex ps-3" style="gap: 5px; ">
+                <label><input type="checkbox" [checked]="d.applied && d.type === 'percent'" (change)="onGrossTypeChange(d, 'percent', $event)" [disabled]="isViewMode"> %</label>
+                <label><input type="checkbox" [checked]="d.applied && d.type === 'flat'" (change)="onGrossTypeChange(d, 'flat', $event)" [disabled]="isViewMode"> Flat</label>
+                <input type="number" class="ng-input-type" [(ngModel)]="d.value" [disabled]="!d.applied || isViewMode" (input)="calculateTotals()" min="0" (keypress)="blockInvalidKeys($event)">
+            </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="totals-row">
+          <div class="totals-cell"><span style="font-weight: 500; color: #7f7f7f; font-size: 16px;">Total Discount Amount:</span> {{currencySign}}{{ totalDiscountAmount | number:'1.2-2' }}</div>
+          <div class="totals-cell"><span style="font-weight: 500; color: #7f7f7f; font-size: 16px;">Net Basic Offer Amount:</span> {{currencySign}}{{ finalGrossAfterDisc | number:'1.2-2' }}</div>
+          <div class="totals-cell"><span style="font-weight: 500; color: #7f7f7f; font-size: 16px;">Final Offer Amount Including GST:</span> {{currencySign}}{{ finalGrandTotal | number:'1.2-2' }}</div>
+        </div>
+
+        <div class="button-container" *ngIf="!isViewMode">
+          <button class="save-btn" (click)="getSaveData()">Apply Discount</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

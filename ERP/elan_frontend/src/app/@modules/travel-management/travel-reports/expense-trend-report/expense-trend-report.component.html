@@ -1,0 +1,129 @@
+<app-travel-filters
+  [selectedMonth]="selectedMonth"
+  [selectedDepartment]="selectedDepartment"
+  [selectedEmployee]="selectedEmployee"
+  [selectedLocation]="selectedLocation"
+  [selectedYear]="selectedYear"
+  [filtersToShow]="['year', 'month']"
+  (filtersChanged)="onFiltersUpdated($event)"
+></app-travel-filters>
+
+<div class="ag_grid-container">
+  <h3 class="text-center">Expense Trend Analysis Report</h3>
+  <!-- <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 480px;" [rowData]="rowData"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)"
+            [rowClass]="rowClass">
+        </ag-grid-angular>
+    </div> -->
+  <div class="row mt-4">
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+      <div class="card gradient-card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Total Travel Expenses</h5>
+          <p class="card-text display-6">
+            {{ totalExpense?.total_expense  || 0 }}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 mb-3">
+      <div class="card gradient-card-2">
+        <div class="card-body text-center">
+          <h5 class="card-title">Total Reimbursement Amount</h5>
+          <p class="card-text display-6">
+            {{ totalExpense?.reimbursement_amount || 0 }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+      <div class="card expense-card expense-breakdown-card">
+        <div class="expense-card-body">
+          <h5 class="expense-card-title">Expense Category-wise Breakdown</h5>
+          <table
+            class="table expense-table"
+            *ngIf="categoryBreakdownData?.length > 0; else noData"
+          >
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Expense Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of categoryBreakdownData">
+                <td>{{ item.expense_type }}</td>
+                <td>{{ item.total_exp_amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <ng-template #noData>
+            <img src="../../../../../assets/notfound.png" alt="No data available" class="no-data-image">
+            <p class="text-center text-muted">No data available.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+      <div class="card expense-card spending-departments-card">
+        <div class="expense-card-body">
+          <h5 class="expense-card-title">Top Spending Departments</h5>
+          <table
+            class="table expense-table"
+            *ngIf="departmentData?.length > 0; else noData"
+          >
+            <thead>
+              <tr>
+                <th>Department</th>
+                <th>Spending</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of departmentData">
+                <td>{{ item.department }}</td>
+                <td>{{ item.total_approved_expense_amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noData>
+            <p class="text-center text-muted">No data available.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <!-- Most Frequent Expense Types -->
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 mb-3">
+      <div class="card expense-card expense-types-card">
+        <div class="expense-card-body">
+          <h5 class="expense-card-title">Most Frequent Expense Types</h5>
+          <table
+            class="table expense-table"
+            *ngIf="expenseTypeData?.length > 0; else noData"
+          >
+            <thead>
+              <tr>
+                <th>Expense Type</th>
+                <th>Frequency</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of expenseTypeData">
+                <td>{{ item.expense_type }}</td>
+                <td>{{ item.usage_count }} times</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noData>
+            <p class="text-center text-muted">No data available.</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

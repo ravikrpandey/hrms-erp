@@ -1,0 +1,30 @@
+<div class="row form_head">
+    <h3>IT Ticketing</h3>
+    <div class="searchContainer">
+        <input type="text" placeholder="Search by Raised By/Other" [(ngModel)]="searchVal" class="searchField"
+            #searchBox [disabled]="disabledSearchBox">
+        <mat-icon class="searchIcon" (click)="showSearchBox(searchBox)">search</mat-icon>
+    </div>
+</div>
+<div class="tableContainer">
+    <div class="tableHeader">
+        <span>Ticket No.</span>
+        <span>Raised By</span>
+        <span>Category</span>
+        <span>Stage</span>
+        <span>Action</span>
+    </div>
+    <!-- <span class="notFound" *ngIf="rowData?.length === 0 || (rowData | itTicketing:searchVal)?.length === 0">Record not found</span> -->
+    <mat-spinner *ngIf="showLoader" style="width: 50px; height:50px;"></mat-spinner>
+    <div class="bodyContainer">
+        <ng-container *ngFor="let data of rowData; index as i">
+            <div class="tableBody" (click)="getCellValue(data)">
+                <span>{{i+1}}</span>
+                <span>{{data?.ticket_raised_by}}</span>
+                <span>{{data?.category}}</span>
+                <span>{{data?.stage}}</span>
+                <span><button type="button" class="btn btn-primary" (click)="delete($event)"><h5 style="margin-top: -7px!important;">Resolve</h5></button></span>
+            </div>
+        </ng-container>
+    </div>
+</div>

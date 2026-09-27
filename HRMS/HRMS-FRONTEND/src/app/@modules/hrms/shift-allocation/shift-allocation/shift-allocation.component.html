@@ -1,0 +1,82 @@
+<div>
+    <div style="text-align: right">
+        <button class="btn" routerLink="/master/hrms/shift-allocation" style="background-color: #0c85c0">
+            Back
+        </button>
+    </div>
+    <h1>SHIFT ALLOCATED</h1>
+    <form [formGroup]="shiftAllocated">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Department</mat-label>
+                    <mat-select (selectionChange)="selectedDepartmentName($event.value)" formControlName="dept_id">
+                        <app-search-filter [array]="filteredDepartments" [placeholder]="'Search by department name'"
+                            [searchFields]="['department_name']"
+                            (filteredReturn)="filterthealldepartment = $event.data">
+                        </app-search-filter>
+                        <mat-option *ngFor="let dept of filterthealldepartment" [value]="dept.dept_id">
+                            {{ dept.department_name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="shiftAllocated.controls['dept_id'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Employee Name</mat-label>
+                    <mat-select formControlName="employee_id" multiple>
+                        <span *ngIf="employeeNameData.length > 0 && employeeNameData[0]?.first_name?.length > 0">
+                            <app-search-filter [array]="employeeNameData" [placeholder]="'Search by employee name'"
+                                [searchFields]="['first_name','last_name']"
+                                (filteredReturn)="filterEmployeeNameRecord = $event.data">
+                            </app-search-filter>
+                            <mat-checkbox (change)="selectAllEmployee($event)" [checked]="isAllSelect">
+                                Select All
+                            </mat-checkbox>
+                            <mat-option *ngFor="let employee of filterEmployeeNameRecord"
+                                [value]="employee.employee_id">
+                                {{ employee.first_name + ' ' + employee.last_name }}
+                            </mat-option>
+                        </span>
+                    </mat-select>
+                    <mat-error *ngIf="shiftAllocated.controls['employee_id'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+
+
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Shift Name</mat-label>
+                    <mat-select formControlName="shift_id" id="shiftSelect">
+                        <app-search-filter [array]="shiftMaster" [placeholder]="'Search by shift name'"
+                            [searchFields]="['shift_name']" (filteredReturn)="filterShiftMasterdata = $event.data">
+                        </app-search-filter>
+                        <mat-option *ngFor="let shift of filterShiftMasterdata" [value]="shift.id">
+                            {{ shift.shift_name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="shiftAllocated.controls['shift_id'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div style="text-align: center; margin-top: 20px">
+                <button *ngIf="!id" (click)="Onsubmit()" class="btn btn-primary" style="background-color: #0c85c0">
+                    Submit
+                </button>
+                <button *ngIf="id && mode !== 'view'" (click)="onUpdate()" class="btn btn-primary"
+                    style="background-color: #0c85c0">
+                    Update
+                </button>
+
+            </div>
+        </div>
+    </form>
+</div>

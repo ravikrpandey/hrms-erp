@@ -1,0 +1,196 @@
+<!-- ======================== VIEW RECORD ======================== -->
+<ng-container *ngIf="visible === 'visible'">
+    <h3 mat-dialog-title class="popHead">Asset Master Record</h3>
+
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <div class="emp_key">
+                <p>Asset Category :</p>
+                <p>Asset Subcategory :</p>
+                <p>Asset Name :</p>
+                <p>Brand :</p>
+                <p>Model :</p>
+                <p>Serial No. :</p>
+                <p>Purchase Date :</p>
+                <p>Purchase Cost :</p>
+                <p>Warranty End Date :</p>
+                <p>Remark :</p>
+                <p>Assign To :</p>
+                <p>Current Status :</p>
+                <p>Status :</p>
+            </div>
+
+            <div class="emp_value">
+                <p>{{ singleGrade?.asset_category_name }}</p>
+                <p>{{ singleGrade?.asset_subcategory_name }}</p>
+                <p>{{ singleGrade?.asset_master_name }}</p>
+                <p>{{ singleGrade?.brand }}</p>
+                <p>{{ singleGrade?.model }}</p>
+                <p>{{ singleGrade?.serial_no }}</p>
+                <p>{{ singleGrade?.purchase_date }}</p>
+                <p>{{ singleGrade?.purchase_cost }}</p>
+                <p>{{ singleGrade?.warranty_end_date }}</p>
+                <p>{{ singleGrade?.remark }}</p>
+                <p>{{ singleGrade?.assign_to || "N/A" }}</p>
+                <p>{{ singleGrade?.current_status }}</p>
+                <p>{{ singleGrade?.status }}</p>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-raised-button mat-dialog-close color="primary">
+            Close
+        </button>
+    </mat-dialog-actions>
+</ng-container>
+
+
+
+<ng-container *ngIf="add_assetmaster === 'add_assetmaster' || editAssetmaster === 'edit'">
+    <form [formGroup]="assetmasterForm" (ngSubmit)="ngSubmitEmp(assetmasterForm.value)">
+        <h3 mat-dialog-title class="popHead">Asset Master</h3>
+
+        <mat-dialog-content class="mat-typography">
+            <div class="row">
+
+                <!-- ASSET CATEGORY DROPDOWN -->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Asset Category</mat-label>
+
+                        <mat-select formControlName="asset_category_id"
+                            (selectionChange)="onCategoryChange($event.value)">
+                            <mat-option *ngFor="let category of assetcategorylist" [value]="category.asset_category_id">
+                                {{ category.asset_category_name }}
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="assetmasterForm.get('asset_category_id')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- ASSET SUBCATEGORY NAME -->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Asset Subcategory</mat-label>
+
+                        <mat-select formControlName="asset_subcategory_id">
+                            <mat-option *ngFor="let subcategory of filteredSubcategoryList"
+                                [value]="subcategory.asset_subcategory_id">
+                                {{ subcategory.asset_subcategory_name }}
+                            </mat-option>
+                        </mat-select>
+
+                        <mat-error *ngIf="assetmasterForm.get('asset_subcategory_id')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- ASSET NAME -->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Asset Name</mat-label>
+                        <input matInput type="text" formControlName="asset_master_name">
+
+                        <mat-error *ngIf="assetmasterForm.get('asset_master_name')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Brand</mat-label>
+                        <input matInput type="text" formControlName="brand">
+
+                        <mat-error *ngIf="assetmasterForm.get('brand')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Model</mat-label>
+                        <input matInput type="text" formControlName="model">
+
+                        <mat-error *ngIf="assetmasterForm.get('model')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Serial No.</mat-label>
+                        <input matInput type="number" formControlName="serial_no">
+
+                        <mat-error *ngIf="assetmasterForm.get('serial_no')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <!--- Purchase Date-->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Purchase Date</mat-label>
+                        <input matInput [matDatepicker]="startPicker" formControlName="purchase_date"
+                            (dateChange)="onStartDateChange($event)" />
+                        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #startPicker></mat-datepicker>
+                        <mat-error *ngIf="assetmasterForm.get('purchase_date')?.hasError('required')">
+                            Purchase Date is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Purchase Cost</mat-label>
+                        <input matInput type="number" formControlName="purchase_cost">
+
+                        <mat-error *ngIf="assetmasterForm.get('purchase_cost')?.hasError('required')">
+                            *This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- Warranty End Date -->
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <mat-form-field appearance="outline" class="w-100 mt-2">
+                        <mat-label>Warranty End Date</mat-label>
+                        <input matInput [matDatepicker]="endPicker" formControlName="warranty_end_date"
+                            [min]="minEndDate" />
+                        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #endPicker></mat-datepicker>
+                        <mat-error *ngIf="assetmasterForm.get('warranty_end_date')?.hasError('invalidEndDate')">
+                            Warranty End Date cannot be before Purchase Date
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group service_description">
+                        <mat-form-field appearance="outline" class="w-100 mt-2">
+                            <mat-label>Remark</mat-label>
+                            <input matInput type="text" formControlName="remark" />
+                            <mat-error *ngIf="assetmasterForm.controls['remark'].hasError('required')">
+                                *This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button mat-raised-button color="primary" type="submit">
+                {{ editAssetmaster === 'edit' ? 'Update' : 'Submit' }}
+            </button>
+
+            <button mat-raised-button color="warn" mat-dialog-close>
+                Close
+            </button>
+        </mat-dialog-actions>
+    </form>
+</ng-container>

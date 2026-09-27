@@ -1,0 +1,87 @@
+<div class="tax-master-container">
+  <h2 class="page-heading">Tax Master Calculation</h2>
+  <div class="underline"></div>
+
+  <!-- Surcharge Section -->
+  <h4 class="subheading">Surcharge:</h4>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <div formArrayName="surchargeRows" class="table-wrap">
+      <table class="surcharge-table">
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Threshold <span class="mandatory">*</span></th>
+            <th>Rate (%) <span class="mandatory">*</span></th>
+            <th>Remarks</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let row of surchargeRows.controls; let i = index" [formGroupName]="i">
+            <td class="center">{{ i + 1 }}</td>
+
+            <td>
+              <mat-form-field appearance="outline" class="full">
+                <input matInput formControlName="threshold" placeholder="Enter threshold" type="number" />
+              </mat-form-field>
+              <div class="error" *ngIf="row.get('threshold')?.touched && row.get('threshold')?.invalid">Required</div>
+            </td>
+
+            <td>
+              <mat-form-field appearance="outline" class="full">
+                <input matInput formControlName="rate" placeholder="Enter rate" type="number" step="0.01" />
+              </mat-form-field>
+              <div class="error" *ngIf="row.get('rate')?.touched && row.get('rate')?.invalid">Required</div>
+            </td>
+
+            <td>
+              <mat-form-field appearance="outline" class="full">
+                <input matInput formControlName="remarks" placeholder="Remarks (optional)" />
+              </mat-form-field>
+            </td>
+
+            <td class="action-cell">
+              <button mat-icon-button color="primary" type="button" (click)="addRow()" title="Add row">
+                <mat-icon>add_circle</mat-icon>
+              </button>
+
+              <!-- show remove when more than 1 row -->
+              <button mat-icon-button color="warn" type="button" (click)="removeRow(i)" [disabled]="surchargeRows.length === 1" title="Remove row">
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Configuration Section -->
+    <h4 class="subheading mt-4">Configuration</h4>
+
+    <div class="config-row">
+      <mat-form-field appearance="outline" class="config-field">
+        <mat-label>Cess Rate (%)</mat-label>
+        <input matInput formControlName="cess_rate" type="number" step="0.01" placeholder="Enter cess rate" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="config-field">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="ACTIVE">ACTIVE</mat-option>
+          <mat-option value="INACTIVE">INACTIVE</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Buttons -->
+    <div class="actions">
+      <button mat-raised-button color="primary" type="submit">
+        {{ recordId ? 'Update' : 'Save' }}
+      </button>
+    </div>
+
+  </form>
+</div>

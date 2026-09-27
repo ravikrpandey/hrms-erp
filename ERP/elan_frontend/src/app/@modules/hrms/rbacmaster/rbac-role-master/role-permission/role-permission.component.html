@@ -1,0 +1,207 @@
+<app-wrapper
+  [title]="'Assign Permissions to Role: ' + data.role_master_name"
+  [showActions]="true"
+  [actions]="[
+    { label: '', icon: 'close', color: 'danger', callback: onClose() },
+  ]"
+>
+  <div class="permission-container">
+    <!-- Header with Actions -->
+    <div class="permission-header">
+      <div class="header-actions">
+        <button class="btn btn-sm btn-outline-primary" (click)="expandAll()">
+          <mat-icon>expand_all</mat-icon> Expand All
+        </button>
+        <button
+          class="btn btn-sm btn-outline-secondary ms-2"
+          (click)="collapseAll()"
+        >
+          <mat-icon>collapse_all</mat-icon> Collapse All
+        </button>
+        <button class="btn btn-sm btn-outline-danger ms-2" (click)="clearAll()">
+          <mat-icon>close</mat-icon> Clear All
+        </button>
+      </div>
+
+      <div class="permission-legend">
+        <span class="legend-item"> <mat-icon>visibility</mat-icon> Read</span>
+        <span class="legend-item"> <mat-icon>edit</mat-icon> Write</span>
+        <span class="legend-item"> <mat-icon>delete</mat-icon> Delete</span>
+      </div>
+    </div>
+
+    <!-- Permission Tree -->
+    <div class="permission-tree">
+      <div
+        *ngFor="let module of moduleList; let i = index"
+        class="module-wrapper"
+      >
+        <mat-expansion-panel
+          [expanded]="module.expanded"
+          [disabled]="!module.children?.length"
+          class="module-panel"
+        >
+          <mat-expansion-panel-header class="module-header">
+            <mat-panel-title class="module-title">
+              <div class="module-checkbox-wrapper">
+                <mat-checkbox
+                  [(ngModel)]="module.selected"
+                  (change)="toggleAll(module)"
+                  (click)="$event.stopPropagation()"
+                  class="module-checkbox"
+                >
+                  <span class="module-name">
+                    <i class="bi bi-folder2-open me-2"></i>
+                    {{ module.name }}
+                  </span>
+                </mat-checkbox>
+                <span
+                  class="badge bg-secondary ms-2"
+                  *ngIf="module.children?.length"
+                >
+                  {{ module.children?.length }} items
+                </span>
+              </div>
+            </mat-panel-title>
+
+            <mat-panel-description class="module-permissions">
+              <!-- <div class="permission-badges">
+                <span
+                  class="permission-badge read"
+                  [class.active]="module.read"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </span>
+                <span
+                  class="permission-badge write"
+                  [class.active]="module.write"
+                >
+                  <mat-icon>edit</mat-icon>
+                </span>
+                <span
+                  class="permission-badge delete"
+                  [class.active]="module.remove"
+                >
+                  <mat-icon>delete</mat-icon>
+                </span>
+              </div> -->
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!-- LEVEL 1 CHILDREN -->
+          <div class="level-1-container">
+            <div *ngFor="let menu of module.children" class="menu-wrapper">
+              <mat-expansion-panel
+                [expanded]="menu.expanded"
+                [disabled]="!menu.children?.length"
+                class="menu-panel"
+              >
+                <mat-expansion-panel-header class="menu-header">
+                  <mat-panel-title class="menu-title">
+                    <div class="menu-checkbox-wrapper">
+                      <mat-checkbox
+                        [(ngModel)]="menu.selected"
+                        (change)="toggleChildren(module, menu)"
+                        (click)="$event.stopPropagation()"
+                        class="menu-checkbox"
+                      >
+                        <span class="menu-name">
+                          <i class="bi bi-file-earmark me-2"></i>
+                          {{ menu.name }}
+                        </span>
+                      </mat-checkbox>
+                      <span
+                        class="badge bg-light text-dark ms-2"
+                        *ngIf="menu.children?.length"
+                      >
+                        {{ menu.children?.length }}
+                      </span>
+                    </div>
+                  </mat-panel-title>
+
+                  <mat-panel-description class="menu-permissions">
+                    <div class="permission-checkboxes">
+                      <mat-checkbox
+                        [(ngModel)]="menu.read"
+                        (click)="$event.stopPropagation()"
+                        class="permission-check read-check"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </mat-checkbox>
+                      <mat-checkbox
+                        [(ngModel)]="menu.write"
+                        (click)="$event.stopPropagation()"
+                        class="permission-check write-check"
+                      >
+                        <i class="bi bi-pencil"></i>
+                      </mat-checkbox>
+                      <mat-checkbox
+                        [(ngModel)]="menu.remove"
+                        (click)="$event.stopPropagation()"
+                        class="permission-check delete-check"
+                      >
+                        <i class="bi bi-trash"></i>
+                      </mat-checkbox>
+                    </div>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <!-- LEVEL 2 CHILDREN -->
+                <div class="level-2-container">
+                  <div *ngFor="let child of menu.children" class="child-item">
+                    <div class="child-content">
+                      <mat-checkbox
+                        [(ngModel)]="child.selected"
+                        (change)="updateParentStatus(module, menu, child)"
+                        class="child-checkbox"
+                      >
+                        <span class="child-name">
+                          <i class="bi bi-dot"></i>
+                          {{ child.name }}
+                        </span>
+                      </mat-checkbox>
+
+                      <div class="child-permissions">
+                        <mat-checkbox
+                          [(ngModel)]="child.read"
+                          class="permission-check read-check"
+                          [disabled]="!child.selected"
+                        >
+                          <i class="bi bi-eye"></i>
+                        </mat-checkbox>
+                        <mat-checkbox
+                          [(ngModel)]="child.write"
+                          class="permission-check write-check"
+                          [disabled]="!child.selected"
+                        >
+                          <i class="bi bi-pencil"></i>
+                        </mat-checkbox>
+                        <mat-checkbox
+                          [(ngModel)]="child.remove"
+                          class="permission-check delete-check"
+                          [disabled]="!child.selected"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="permission-footer">
+      <button class="btn btn-light" (click)="onClose()()">
+        <i class="bi bi-x-circle me-2"></i>Cancel
+      </button>
+      <button class="btn btn-success" (click)="savePermissions()">
+        <i class="bi bi-check-circle me-2"></i>Save Permissions
+      </button>
+    </div>
+  </div>
+</app-wrapper>

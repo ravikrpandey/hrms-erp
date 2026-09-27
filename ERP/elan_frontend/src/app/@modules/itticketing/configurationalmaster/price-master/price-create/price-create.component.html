@@ -1,0 +1,258 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Configurational Master</h1>
+      <p>
+        Price Master
+        <i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #858586"
+        ></i>
+        <span *ngIf="!id"> Create Price Master  </span>
+        <span *ngIf="action_type=='edit'"> Update Price Master </span>
+        <span *ngIf="action_type=='view'"> View Price Master </span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="onBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+  </div>
+  
+  <mat-card style="box-shadow: none">
+    <div class="mb-0">
+      <form class="form_set" [formGroup]="createForm">
+        <div class="row">
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Price Type</mat-label>
+                <input matInput type="text" formControlName="price_type" [readonly]="action_type=='view'" />
+                <mat-error
+                  *ngIf="createForm.controls['price_type'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Customer Type</mat-label>
+                    <mat-select formControlName="customer_type" *ngIf="action_type!='view'" (selectionChange)="customerChange($event)">
+                      <mat-option *ngFor="let customer of customerTypes" [value]="customer.id">{{customer?.customer_type_name}}</mat-option>
+                      <!-- <mat-option value="Vendor">Vendor</mat-option> -->
+                    </mat-select>
+                <input *ngIf="action_type=='view'" matInput type="text" formControlName="customer_type_view" [readonly]="action_type=='view'" />
+                <mat-error
+                  *ngIf="createForm.controls['customer_type'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Customer Name</mat-label>
+                    <mat-select formControlName="customer_name" *ngIf="action_type!='view'">
+                      <mat-select-filter [array]="customerList" (filteredReturn)="customersFilter($event)"></mat-select-filter>
+                      <mat-option *ngFor="let name of customersName" [value]="name.id">{{name?.company_name}}-{{name?.customer_code}}</mat-option>
+                     
+                    </mat-select>
+                <input *ngIf="action_type=='view'" matInput type="text" formControlName="customer_name_view" [readonly]="action_type=='view'" />
+                <mat-error
+                  *ngIf="createForm.controls['customer_type'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Item Category</mat-label>
+              <mat-select formControlName="category_id" (valueChange)="getSubCategory($event)">
+                <mat-option *ngFor="let category of categoryList" [value]="category.id">{{ category.asset_category_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Item Sub Category</mat-label>
+              <mat-select formControlName="sub_category_id" (selectionChange)="getAllActiveProduct($event)" *ngIf="action_type!='view'">
+                <mat-option   *ngFor="let sub of subCategoryList" [value]="sub.id">{{ sub.sub_category_name }}</mat-option>
+              </mat-select>
+              <input *ngIf="action_type=='view'" matInput type="text" formControlName="sub_category_name" [readonly]="action_type=='view'" />
+
+            </mat-form-field>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Discount Flat</mat-label>
+                <input matInput type="text" formControlName="discount_flat_type" [readonly]="action_type=='view'" maxlength="5" (keydown)="onKeyChange($event)"/>
+                <mat-error
+                  *ngIf="createForm.controls['discount_flat_type'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline" >
+                <mat-label>Discount (%)</mat-label>
+                <input matInput type="text" formControlName="discount_percent" [readonly]="action_type=='view'" maxlength="2" (keydown)="onKeyChange($event)"/>
+                <mat-error
+                  *ngIf="createForm.controls['discount_percent'].hasError('required')">*Required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+<!-- Table for FormArray: itemList -->
+<div class="table-responsive col-12 mt-4">
+  <table class="table table-bordered" formArrayName="itemList">
+    <thead>
+      <tr>
+        <!-- <th>Category</th> -->
+        <th>Item Name</th>
+        <th>DBP Value</th>
+        <th>Discount 1</th>
+        <th>Discount 2</th>
+        <th>Discount 3</th>
+        <th>Final Value</th>
+        <th *ngIf="action_type !== 'view'">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let group of itemList.controls; let i = index" [formGroupName]="i">
+      
+        <td>
+          <mat-form-field appearance="outline">
+            <!-- <mat-label>Select Item</mat-label> -->
+           
+            <input matInput formControlName="product_name" readonly placeholder="Item Name"/>
+
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput placeholder="Enter DBP value" type="number" formControlName="dbp_price" #box (keyup)="keyUpPrice(box.value,i,group,'dbp')" />
+          </mat-form-field>
+          <p style="margin-bottom: -10px;margin-top: -10px;font-weight: 600;">Min: {{ group.get('minimumValue')?.value || 0 }} - Max: {{ group.get('maximumValue')?.value || 0 }}</p>
+
+        </td> 
+<!-- Discount 1 -->
+<td>
+  <div class="discount-toggle">
+    <div class="discount-inline">
+      <mat-radio-group 
+        (change)="toggleDiscountType(i, 'discount1', $event.value)" 
+        [value]="group.get('discount1Type')?.value"
+        class="radio-inline">
+
+        <mat-radio-button value="percentage">%</mat-radio-button>
+        <mat-radio-button value="flat">Flat</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount1Type')?.value === 'percentage'">
+        <input matInput placeholder="%" type="number"
+          formControlName="discount_one"
+          (keyup)="keyUpPrice($event, i, group, 'discount1')"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount1Type')?.value === 'flat'">
+        <input matInput placeholder="Flat" type="number"
+          formControlName="discount1Flat"
+          (keyup)="keyUpPrice($event, i, group, 'discount1Flat')"/>
+      </mat-form-field>
+    </div>
+  </div>
+</td>
+
+<!-- Discount 2 -->
+<td>
+  <div class="discount-toggle">
+    <div class="discount-inline">
+      <mat-radio-group 
+        (change)="toggleDiscountType(i, 'discount2', $event.value)" 
+        [value]="group.get('discount2Type')?.value"
+        class="radio-inline">
+
+        <mat-radio-button value="percentage">%</mat-radio-button>
+        <mat-radio-button value="flat">Flat</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount2Type')?.value === 'percentage'">
+        <input matInput placeholder="%" type="number"
+          formControlName="discount_two"
+          (keyup)="keyUpPrice($event, i, group, 'discount2')"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount2Type')?.value === 'flat'">
+        <input matInput placeholder="Flat" type="number"
+          formControlName="discount2Flat"
+          (keyup)="keyUpPrice($event, i, group, 'discount2Flat')"/>
+      </mat-form-field>
+    </div>
+  </div>
+</td>
+
+<!-- Discount 3 -->
+<td>
+  <div class="discount-toggle">
+    <div class="discount-inline">
+      <mat-radio-group 
+        (change)="toggleDiscountType(i, 'discount3', $event.value)" 
+        [value]="group.get('discount3Type')?.value"
+        class="radio-inline">
+
+        <mat-radio-button value="percentage">%</mat-radio-button>
+        <mat-radio-button value="flat">Flat</mat-radio-button>
+      </mat-radio-group>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount3Type')?.value === 'percentage'">
+        <input matInput placeholder="%" type="number"
+          formControlName="discount_three"
+          (keyup)="keyUpPrice($event, i, group, 'discount3')"/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="discount-input" *ngIf="group.get('discount3Type')?.value === 'flat'">
+        <input matInput placeholder="Flat" type="number"
+          formControlName="discount3Flat"
+          (keyup)="keyUpPrice($event, i, group, 'discount3Flat')"/>
+      </mat-form-field>
+    </div>
+  </div>
+</td>
+
+
+
+        <td>
+          <mat-form-field appearance="outline" class="w-100">
+            <input matInput  formControlName="final_price" />
+          </mat-form-field>
+        </td>
+        <td *ngIf="action_type !== 'view'">
+          <mat-icon matTooltip="Remove Item" (click)="removeItem(i)" *ngIf="itemList.length>1" style="cursor: pointer;">delete</mat-icon>
+          <!-- <mat-icon matTooltip="Add Item" (click)="addItem()" class="pointer">add_circle</mat-icon> -->
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+        <div class="common_button_sub" align="end" *ngIf="action_type !== 'view'" style="margin-top: 10px;">
+          <button (click)="onSubmit()">
+            {{ !id ? "Save" : "Update" }}
+          </button>
+          <!-- <button class="cancel_button_y" routerLink="../">Cancel</button> -->
+        </div>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+  

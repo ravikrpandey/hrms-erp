@@ -1,0 +1,284 @@
+<mat-accordion class="custom-accordion">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <div class="header-container">
+        <div class="title-with-icon">
+          <mat-icon class="plus-icon">add</mat-icon>
+          Total Income From House Property
+        </div>
+        <mat-form-field appearance="outline" class="amount-input">
+          <input matInput placeholder="0.00" [value]="dataSource[0].amount | number:'1.2-2'" readonly>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel-header>
+
+    <div class="table-container">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 bordered-table">
+        <ng-container matColumnDef="sno">
+          <th mat-header-cell *matHeaderCellDef> S.No. </th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ getAlphabet(i) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="particular">
+          <th mat-header-cell *matHeaderCellDef> Particular </th>
+          <td mat-cell *matCellDef="let element">
+            <span [innerHTML]="element.particular"></span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Amount </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.amount | number:'1.2-2' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<!-- Self-Occupied Property Section -->
+<div class="accordion-wrapper">
+  <mat-accordion class="custom-accordion">
+    <mat-expansion-panel [expanded]="true" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-title-bold">
+          Income from Self-Occupied Property
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSourceSelf" class="mat-elevation-z2 bordered-table">
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+            <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="particular">
+            <th mat-header-cell *matHeaderCellDef> Particular </th>
+            <td mat-cell *matCellDef="let element"> {{ element.particular }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="eligible">
+            <th mat-header-cell *matHeaderCellDef> Eligible Amount </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field appearance="outline" class="amount-input">
+                <input matInput type="number" [(ngModel)]="element.eligible" (ngModelChange)="updateSelfOccupied()">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef> Amount </th>
+            <td mat-cell *matCellDef="let element">
+              <mat-form-field appearance="outline" class="amount-input">
+                <input matInput type="number" [(ngModel)]="element.amount" (ngModelChange)="updateSelfOccupied()">
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="document">
+            <th mat-header-cell *matHeaderCellDef> Document </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <input type="file" (change)="uploadDocument($event, 'self', i)">
+              <button *ngIf="element.document" mat-button color="primary" (click)="viewImage(element.document)">
+                View
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="['sno', 'particular', 'eligible', 'amount', 'document']"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['sno', 'particular', 'eligible', 'amount', 'document'];"></tr>
+        </table>
+      </div>
+
+      <div class="lender-inputs mt-2">
+        <div class="input-group">
+          <label for="lenderName">Lender's Name:</label>
+          <mat-form-field appearance="outline" class="input-field">
+            <input matInput id="lenderName" [(ngModel)]="lenderName">
+          </mat-form-field>
+        </div>
+
+        <div class="input-group">
+          <label for="lenderPan">Lender's PAN:</label>
+          <mat-form-field appearance="outline" class="input-field">
+            <input matInput id="lenderPan" [(ngModel)]="lenderPan">
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<!-- Let-Out Properties Section -->
+<div class="accordion-wrapper mt-2">
+  <mat-accordion class="custom-accordion">
+    <mat-expansion-panel *ngFor="let property of letOutProperties; let i = index" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-title-bold">
+          Income from Let-out Property {{ i + 1 }}
+        </mat-panel-title>
+        <span class="ml-auto mx-2 my-2">
+          <button mat-stroked-button color="warn" (click)="removeLetOutProperty(i)">Delete</button>
+        </span>
+      </mat-expansion-panel-header>
+
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>#</th>
+            <th>Particulars</th>
+            <th>Amount</th>
+            <th>Document</th>
+          </tr>
+
+          <tr *ngFor="let row of property.rows; let ri = index">
+            <td>{{ ri + 1 }}</td>
+            <td>{{ row.particular }}</td>
+            <td *ngIf="row.showInput">
+              <mat-form-field appearance="outline" class="amount-input">
+                <input matInput type="number" [(ngModel)]="row.value" (ngModelChange)="calculateLetOutProperty(property)">
+              </mat-form-field>
+            </td>
+            <td *ngIf="!row.showInput">{{ row.value | number:'1.2-2' }}</td>
+            <td>
+              <input *ngIf="row.showInput" type="file" (change)="uploadDocument($event, 'letOutRow', i, ri)">
+              <button *ngIf="row.document" mat-button color="primary" (click)="viewImage(row.document)">
+                View
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="mt-2">
+        <label>Upload Property Document:</label>
+        <input type="file" (change)="uploadDocument($event, 'letOut', i)">
+        <button *ngIf="property.document" mat-button color="primary" (click)="viewImage(property.document)">
+          View
+        </button>
+      </div>
+
+      <div class="lender-inputs mt-2">
+        <div class="input-group">
+          <label for="lenderName-{{i}}">Lender's Name:</label>
+          <mat-form-field appearance="outline" class="input-field">
+            <input matInput id="lenderName-{{i}}" [(ngModel)]="property.lenderName">
+          </mat-form-field>
+        </div>
+
+        <div class="input-group">
+          <label for="lenderPan-{{i}}">Lender's PAN:</label>
+          <mat-form-field appearance="outline" class="input-field">
+            <input matInput id="lenderPan-{{i}}" [(ngModel)]="property.lenderPan">
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="mt-2">
+    <button mat-raised-button color="primary" (click)="addLetOutProperty()">Add Let-out Property</button>
+  </div>
+</div>
+
+<!-- Other Income Section -->
+<div class="accordion-wrapper">
+  <mat-accordion class="custom-accordion" multi>
+    <mat-expansion-panel class="non-closable-panel" [expanded]="true" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-title-bold">
+          Other Income
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>S.No</th>
+            <th>Particulars</th>
+            <th>Amount</th>
+            <th>Document</th>
+          </tr>
+
+          <tr *ngFor="let row of otherRows; let oi = index">
+            <td>{{ oi + 1 }}</td>
+            <td>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput placeholder="Enter Particular" [(ngModel)]="row.particular">
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput type="number" placeholder="Enter Amount" [(ngModel)]="row.amount">
+              </mat-form-field>
+            </td>
+            <td>
+              <input type="file" (change)="uploadDocument($event, 'other', oi)">
+              <button *ngIf="row.document" mat-button color="primary" (click)="viewImage(row.document)">
+                View
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<!-- TCS/TDS Deduction Section -->
+<div class="accordion-wrapper">
+  <mat-accordion class="custom-accordion" multi>
+    <mat-expansion-panel class="non-closable-panel" [expanded]="true" hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title class="accordion-title-bold">
+          TCS/TDS Deduction
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>S.No</th>
+            <th>Particulars</th>
+            <th>Amount</th>
+            <th>Document</th>
+          </tr>
+
+          <tr *ngFor="let row of deductionRows; let di = index">
+            <td>{{ di + 1 }}</td>
+            <td>{{ row.particular }}</td>
+            <td>
+              <mat-form-field appearance="outline" class="full-width">
+                <input matInput type="number" placeholder="Enter Amount" [(ngModel)]="row.amount">
+              </mat-form-field>
+            </td>
+            <td>
+              <input type="file" (change)="uploadDocument($event, 'deduction', di)">
+              <button *ngIf="row.document" mat-button color="primary" (click)="viewImage(row.document)">
+                View
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="mt-3">
+        <mat-form-field appearance="outline" class="full-width">
+          <textarea matInput placeholder="Enter Remarks" [(ngModel)]="remarks" rows="3"></textarea>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<!-- Submit Button -->
+<div class="mt-2">
+  <button mat-raised-button color="primary" (click)="submitAllData()">Submit</button>
+</div>

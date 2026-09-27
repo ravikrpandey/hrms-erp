@@ -1,0 +1,361 @@
+<app-wrapper
+  [title]="'Purchase Management'"
+  [subTitle]="'Negotiation'"
+  [subheading]="'Close Negotiation'"
+  [showActions]="true"
+  [isBack]="true"
+>
+  <div class="form_basic">
+    <!-- PR & Basic Details Section -->
+    <mat-card class="mb-4 shadow-sm">
+      <mat-card-header class="custom-card-header">
+        <mat-card-title>PR Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-3">
+        <div class="row">
+          <div class="col-md-6 border-end">
+            <table class="details-table w-100">
+              <tr>
+                <td class="label">Negotiate No.</td>
+                <td class="value highlight">
+                  <strong>{{
+                    prResponse?.vendor_details?.negotiation_code || "-"
+                  }}</strong>
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Department</td>
+                <td class="value">
+                  {{ prData?.MASTER_DEPARTMENT?.department_name || "-" }}
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Created Date</td>
+                <td class="value">
+                  {{ prData?.createdAt | date: "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Negotiation Start Date</td>
+                <td class="value">
+                  {{ negotiationData?.start_date_nego | date: "dd-MM-yyyy" }}
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="col-md-6">
+            <table class="details-table w-100">
+              <tr>
+                <td class="label">Created By</td>
+                <td class="value">{{ prResponse?.result }}</td>
+              </tr>
+              <tr>
+                <td class="label">Budget Type</td>
+                <td class="value">
+                  <span class="badge bg-light text-dark">{{
+                    prData?.pr_type
+                  }}</span>
+                </td>
+              </tr>
+              <tr>
+                <td class="label">Negotiation End Date</td>
+                <td class="value">
+                  {{ negotiationData?.end_date_nego | date: "dd-MM-yyyy" }}
+                </td>
+              </tr>
+              <tr *ngIf="negotiationData?.stop_nego_date">
+                <td class="label">Negotiation Close Date</td>
+                <td class="value text-success font-weight-bold">
+                  {{ negotiationData?.stop_nego_date | date: "dd-MM-yyyy" }}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Item Details Section -->
+    <mat-card class="mb-4 shadow-sm">
+      <mat-card-header class="custom-card-header">
+        <mat-card-title>Item Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 custom-table">
+            <thead class="bg-light">
+              <tr>
+                <th class="text-center">Item Image</th>
+                <th>Item Name</th>
+                <th>Item Code</th>
+                <th class="text-center">Priority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of procurement_requests">
+                <td class="text-center">
+                  <div class="img-container">
+                    <img
+                      [src]="generateImageUrl(item?.item_document)"
+                      class="clickable-img thumb-img"
+                      (click)="productOpen(item?.item_document)"
+                    />
+                  </div>
+                </td>
+                <td>
+                  <strong>{{ item?.product_name || item?.item_name }}</strong>
+                </td>
+                <td>
+                  <code>{{ item?.item_code }}</code>
+                </td>
+                <td class="text-center">
+                  <span>{{ item?.priority }}</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Delivery Address Section -->
+    <mat-card class="mb-4 shadow-sm" *ngIf="prData?.WAREHOUSE_MASTER">
+      <mat-card-header class="custom-card-header">
+        <mat-card-title>Delivery Address</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-3">
+        <div class="row">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Warehouse Name</mat-label>
+              <input
+                matInput
+                [value]="prData?.WAREHOUSE_MASTER?.name"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>State</mat-label>
+              <input
+                matInput
+                [value]="prData?.WAREHOUSE_MASTER?.postal_address?.State"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Address</mat-label>
+              <input
+                matInput
+                [value]="prData?.WAREHOUSE_MASTER?.address"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Quotations Ranking Section -->
+    <mat-card class="mb-4 shadow-sm">
+      <mat-card-header class="custom-card-header text-center">
+        <mat-card-title class="w-100"
+          >Quotations Comparison (L1, L2, L3)</mat-card-title
+        >
+      </mat-card-header>
+      <mat-card-content class="p-0">
+        <div class="table-responsive">
+          <table class="table table-bordered mb-0 custom-table text-center">
+            <thead class="bg-light">
+              <tr>
+                <th>Item Name</th>
+                <th>Vendor Name</th>
+                <th>Delivery Charges</th>
+                <th>Additional Charges</th>
+                <th>Tax IGST</th>
+                <th>Currency</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Level 1 -->
+              <ng-container *ngIf="levelsOne.length">
+                <tr class="level-header l1-header">
+                  <td colspan="7">Level L1 (Lowest Quotes)</td>
+                </tr>
+                <tr *ngFor="let lev of levelsOne">
+                  <td>
+                    {{
+                      lev?.itemName || lev?.serviceName || lev?.bomName || "-"
+                    }}
+                  </td>
+                  <td class="vendor-name-cell">
+                    {{ lev?.vendor_name || "-" }}
+                  </td>
+                  <td>{{ lev?.delivery_charges || "-" }}</td>
+                  <td>{{ lev?.additional_charges || "-" }}</td>
+                  <td>{{ lev?.igst || "-" }}</td>
+                  <td>{{ lev?.currency_type || "-" }}</td>
+                  <td class="price-cell">{{ lev?.price_amt || "-" }}</td>
+                </tr>
+              </ng-container>
+
+              <!-- Level 2 -->
+              <ng-container *ngIf="levelsTwo.length">
+                <tr class="level-header l2-header">
+                  <td colspan="7">Level L2</td>
+                </tr>
+                <tr *ngFor="let lev of levelsTwo">
+                  <td>
+                    {{
+                      lev?.itemName || lev?.serviceName || lev?.bomName || "-"
+                    }}
+                  </td>
+                  <td class="vendor-name-cell">
+                    {{ lev?.vendor_name || "-" }}
+                  </td>
+                  <td>{{ lev?.delivery_charges || "-" }}</td>
+                  <td>{{ lev?.additional_charges || "-" }}</td>
+                  <td>{{ lev?.igst || "-" }}</td>
+                  <td>{{ lev?.currency_type || "-" }}</td>
+                  <td class="price-cell">{{ lev?.price_amt || "-" }}</td>
+                </tr>
+              </ng-container>
+
+              <!-- Level 3 -->
+              <ng-container *ngIf="levelsThree.length">
+                <tr class="level-header l3-header">
+                  <td colspan="7">Level L3</td>
+                </tr>
+                <tr *ngFor="let lev of levelsThree">
+                  <td>
+                    {{
+                      lev?.itemName || lev?.serviceName || lev?.bomName || "-"
+                    }}
+                  </td>
+                  <td class="vendor-name-cell">
+                    {{ lev?.vendor_name || "-" }}
+                  </td>
+                  <td>{{ lev?.delivery_charges || "-" }}</td>
+                  <td>{{ lev?.additional_charges || "-" }}</td>
+                  <td>{{ lev?.igst || "-" }}</td>
+                  <td>{{ lev?.currency_type || "-" }}</td>
+                  <td class="price-cell">{{ lev?.price_amt || "-" }}</td>
+                </tr>
+              </ng-container>
+
+              <tr
+                *ngIf="
+                  !levelsOne.length && !levelsTwo.length && !levelsThree.length
+                "
+              >
+                <td colspan="7" class="text-muted p-4">
+                  No quotation data available.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Selection Section -->
+    <mat-card class="mb-4 shadow-sm" *ngIf="!renegoStart">
+      <mat-card-header class="custom-card-header">
+        <mat-card-title>Quotations Approval Selection</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="p-0">
+        <div class="table-responsive">
+          <table class="table table-bordered mb-0 selection-table">
+            <thead class="bg-light text-center">
+              <tr>
+                <th width="80">Sr No</th>
+                <th>Vendor Name</th>
+                <th>Item Selection (Choose vendor for each item)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of tablequote; index as i">
+                <td class="text-center">{{ i + 1 }}</td>
+                <td class="vendor-name-cell">
+                  <strong>{{ item?.vendor_name }}</strong>
+                </td>
+                <td>
+                  <div class="selection-grid">
+                    <div
+                      *ngFor="let prodName of item?.items"
+                      class="selection-item"
+                    >
+                      <mat-checkbox
+                        [(ngModel)]="prodName.checked"
+                        [disabled]="
+                          isItemSelectedByOtherVendor(
+                            prodName.item_id,
+                            item.vendor_id,
+                            prodName.service_id
+                          )
+                        "
+                        (change)="checkboxSele(prodName, item.vendor_id, item)"
+                      >
+                        <span class="selection-text">{{
+                          prodName?.item_name || prodName?.service_name
+                        }}</span>
+                        <span class="selection-price text-primary"
+                          >({{ prodName?.price_amt }} rs)</span
+                        >
+                      </mat-checkbox>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Actions Section -->
+    <div class="row align-items-start mt-4" *ngIf="view === 'close'">
+      <div class="col-md-7">
+        <form [formGroup]="remarkForm">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Approval Remark</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              formControlName="remarks_approval"
+              placeholder="Provide reason for selection..."
+            ></textarea>
+          </mat-form-field>
+        </form>
+      </div>
+
+      <div class="col-md-5 text-end mt-2">
+        <div *ngIf="renegoStart">
+          <button
+            mat-raised-button
+            color="accent"
+            class="action-btn px-4 py-2"
+            (click)="OpenDefineDate($event)"
+          >
+            <mat-icon class="me-2">history</mat-icon> Re-Negotiate
+          </button>
+        </div>
+        <div *ngIf="negotiationData?.approval_status === 'PENDING'">
+          <button
+            mat-raised-button
+            color="primary"
+            class="action-btn px-4 py-2"
+            [disabled]="remarkForm.invalid"
+            (click)="sendForApprovel($event)"
+          >
+            <mat-icon class="me-2">done_all</mat-icon> Send For Approval
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-wrapper>

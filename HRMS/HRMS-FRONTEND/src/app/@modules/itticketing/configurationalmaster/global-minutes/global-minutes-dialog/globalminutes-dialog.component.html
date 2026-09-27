@@ -1,0 +1,171 @@
+<ng-container *ngIf="visibility=='visible'">
+  <h3 mat-dialog-title class="popHead">Global Minutes Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Global Minute : </p>
+        <p>Efective From :</p>
+      </div>
+      <div class="emp_value">
+        <p>{{singleCountryData?.global_minute_value}}</p>
+        <p> {{singleCountryData?.effective_from}}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="editDesignation=='Designation'">
+  <h3 mat-dialog-title class="popHead"> Update Global Minute</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <form [formGroup]="globalminutesform">
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <span>All employees</span>
+              <mat-checkbox (change)="forAllCheck($event)" formControlName="allEmployees"
+                color="primary"></mat-checkbox>
+              <span style="margin-left: 7%;"><b>Or</b></span>
+            </div>
+          </div>
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="designation" multiple placeholder="Select Position">
+
+                  <app-search-filter [array]="designations" [placeholder]="'Search by designationame'"
+                    [searchFields]="['designation_name']" (filteredReturn)="designationSearch($event)">
+                  </app-search-filter>
+
+
+                  <mat-option *ngFor="let designation of appDesignationList" [value]="designation.designation_id">{{
+                    designation.designation_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="department" multiple placeholder="Select departments">
+                  <mat-select-filter [array]="departments"
+                    (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let department of appDepartmentList" [value]="department.dept_id">{{
+                    department.department_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Global Minutes </mat-label>
+              <input matInput type="text" formControlName="global_minute_value" placeholder="Enter Global Minutes " />
+              <mat-error *ngIf="globalminutesform.controls['global_minute_value'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="globalminutesform.controls['global_minute_value'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Effective From</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="effective_from" placeholder="Enter Date"
+                readonly [value]="normalizeDate(globalminutesform.controls['effective_from'].value)"
+                (dateChange)="onDateChange($event)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="globalminutesform.controls['effective_from'].hasError('required')">
+                *Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"
+      (click)="ngSubmitDesignation(globalminutesform)">Update</button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>
+
+<ng-container *ngIf="addDesignation=='Add_Designation'">
+  <h3 mat-dialog-title class="popHead"> Add Global Minutes</h3>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="globalminutesform">
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <span>All employees</span>
+            <mat-checkbox (change)="forAllCheck($event)" formControlName="allEmployees" color="primary"></mat-checkbox>
+            <span style="margin-left: 7%;"><b>Or</b></span>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="designation" multiple placeholder="Select Position">
+                <mat-select-filter [array]="designations"
+                  (filteredReturn)="designationSearch($event)"></mat-select-filter>
+                <mat-option *ngFor="let designation of appDesignationList" [value]="designation.designation_id">{{
+                  designation.designation_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="department" multiple placeholder="Select departments">
+                <mat-select-filter [array]="departments"
+                  (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                <mat-option *ngFor="let department of appDepartmentList" [value]="department.dept_id">{{
+                  department.department_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Global Minutes </mat-label>
+            <input matInput type="text" formControlName="global_minute_value" placeholder="Enter Global Minutes " />
+            <mat-error *ngIf="globalminutesform.controls['global_minute_value'].hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error *ngIf="globalminutesform.controls['global_minute_value'].hasError('leadingSpaces')">
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Effective From</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="effective_from" placeholder="Enter Date" readonly
+              [value]="normalizeDate(globalminutesform.controls['effective_from'].value)"
+              (dateChange)="onDateChange($event)" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="globalminutesform.controls['effective_from'].hasError('required')">
+              *Required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"
+      (click)="ngSubmitDesignation(globalminutesform)">Submit</button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+  </mat-dialog-actions>
+
+</ng-container>

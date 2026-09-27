@@ -1,0 +1,88 @@
+<ng-container *ngIf="visibility=='visible'">
+  <h3 mat-dialog-title class="popHead">Employement Type Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <!-- <p>S.NO. :</p> -->
+        <p>Employement Type Name :</p>
+        <p>Status :</p>
+      </div>
+      <div class="emp_value" *ngFor="let data of singleEmpt">
+        <!-- <p>{{ data?.emptype_id }}</p> -->
+        <p>{{ data?.emptype_name }}</p>
+        <p>{{ data?.status }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button mat-dialog-close class="cancel_button_y">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="AddEmployment_type=='Add_Emp'">
+  <h3 mat-dialog-title class="popHead">Employement Type</h3>
+  <form [formGroup]="employmentType">
+  <mat-dialog-content class="mat-typography">
+    <div class="">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <!-- <p>Department Name</p> -->
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Employment Type Name</mat-label>
+              <input matInput type="text" formControlName="emptype_name" />
+              <mat-error *ngIf="employmentType.controls['emptype_name'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="employmentType.controls['emptype_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+    </div>
+  </mat-dialog-content>
+  </form>
+  <mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button (click)="ngSubmitEmp(employmentType.value)">
+      Save
+    </button>
+    <button mat-dialog-close class="cancel_button_y">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container *ngIf="editEmployment=='edit'">
+  <form [formGroup]="employmentType">
+    <h3 mat-dialog-title class="popHead">Employement Type</h3>
+    <mat-dialog-content class="mat-typography">
+      <div class="">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form-group row">
+            <!-- <p>Department Name</p> -->
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Employment Type</mat-label>
+              <input matInput type="text" formControlName="emptype_name" />
+              <mat-error *ngIf="employmentType.controls['emptype_name'].hasError('required')">
+                *Required!
+              </mat-error>
+              <mat-error *ngIf="employmentType.controls['emptype_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-dialog-content>
+  </form>
+  <mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button (click)="ngSubmitEmp(employmentType.value)">
+      Update
+    </button>
+    <button mat-dialog-close class="cancel_button_y">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>

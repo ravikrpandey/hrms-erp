@@ -1,0 +1,91 @@
+<div class="deparment-dialoge">
+    <h3 *ngIf="view !== 'view'" mat-dialog-title class="popHead" style="padding-left: 5px">{{!id?"Add
+        Department":"Update
+        Department"}}</h3>
+
+    <h3 *ngIf="view === 'view'" mat-dialog-title class="popHead" style="padding-left: 5px"> Department Record</h3>
+
+    <ng-container *ngIf="view === 'view'">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Category Code :</p>
+                    <p>Category Name:</p>
+                    <p>Status :</p>
+                    <p>Department Name :</p>
+                </div>
+                <div class="emp_value">
+                    <p>{{formData?.categoryCode}}</p>
+                    <p> {{formData?.categoryName}}</p>
+                    <p> {{formData?.status}}</p>
+                    <p> {{formData?.department_name}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+
+
+    <fieldset *ngIf="view !== 'view'">
+        <div class="m-3" [formGroup]="ticketCategory">
+            <div class="row">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+                    <div class="row align-items-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Category Code</mat-label>
+                            <input matInput type="text" formControlName="categoryCode" />
+                            <mat-error *ngIf="ticketCategory.get('categoryCode')?.hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="ticketCategory.get('categoryCode')?.hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+                    <div class="row align-items-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Department</mat-label>
+                            <mat-select formControlName="dept_id">
+                                <mat-option *ngFor="let dept of departmentname" [value]="dept.dept_id">
+                                    {{ dept.department_name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+                    <div class="row align-items-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Category Name</mat-label>
+                            <input matInput type="text" formControlName="categoryName" />
+                            <mat-error *ngIf="ticketCategory.get('categoryName')?.hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="ticketCategory.get('categoryName')?.hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-dialog-actions align="end">
+            <button *ngIf="!id" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="id" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

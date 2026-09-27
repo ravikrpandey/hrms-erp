@@ -1,0 +1,103 @@
+<ng-container>
+  <h3 class="popHead">Update Attendance Details</h3>
+
+  <mat-dialog-content>
+    <!-- Add Button at Top -->
+    <div
+      style="display: flex; justify-content: flex-start; margin-bottom: 20px"
+    >
+      <button mat-button mat-raised-button color="primary" (click)="addAtTop()">
+        Add <mat-icon>add</mat-icon>
+      </button>
+    </div>
+
+    <!-- Time Entry Rows -->
+    <div
+      *ngFor="let pair of attendancePairs; let i = index"
+      class="row mb-3"
+    >
+      <!-- In Time -->
+      <div class="col-md-5">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>
+            In Time {{ pair?.inMode ? "(" + pair.inMode + ")" : "" }}
+          </mat-label>
+          <input
+            matInput
+            type="time"
+            step="1"
+            [(ngModel)]="pair.inTime"
+            [disabled]="pair?.inMode === 'BIOMETRIC'"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Out Time -->
+      <div class="col-md-5">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>
+            Out Time {{ pair?.outMode ? "(" + pair.outMode + ")" : "" }}
+          </mat-label>
+          <input
+            matInput
+            type="time"
+            step="1"
+            [(ngModel)]="pair.outTime"
+            [disabled]="pair?.outMode === 'BIOMETRIC'"
+          />
+        </mat-form-field>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="col-md-2 d-flex justify-content-center" style="gap: 8px">
+        <button
+          mat-mini-fab
+          color="primary"
+          (click)="addMore(i)"
+          aria-label="Add"
+          matTooltip="Add"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+        <button
+          mat-mini-fab
+          color="warn"
+          *ngIf="attendancePairs.length > 1"
+          (click)="deleteRow(i)"
+          aria-label="Delete"
+          [disabled]="
+            pair?.inMode === 'BIOMETRIC' || pair?.outMode === 'BIOMETRIC'
+          "
+          matTooltip="Delete"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer Actions -->
+    <mat-dialog-actions>
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          width: 100%;
+          gap: 12px;
+          margin-top: 20px;
+        "
+      >
+        <button mat-button mat-dialog-close mat-raised-button color="warn">
+          Close
+        </button>
+        <button
+          mat-button
+          mat-raised-button
+          color="primary"
+          (click)="onSubmit2()"
+        >
+          Update
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+</ng-container>

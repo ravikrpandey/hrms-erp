@@ -1,0 +1,41 @@
+<h3 mat-dialog-title class="popHead">Item Details</h3>
+
+<mat-dialog-content class="mat-typography">
+  <div class="contain">
+    <table class="item-details-table">
+      <thead>
+        <tr>
+          <th>Item Type</th>
+          <th>Asset Category</th>
+          <th>Item Name</th>
+          <th>Item description</th>
+          <th>Qty</th>
+          <th>Scrape</th>
+          <th>Type</th>
+          <th>Scrape Reuseable</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of details">
+          <td>{{ item?.MASTER_ITEM_ITEMTYPE?.itemType }}</td>
+          <td>{{ item?.MASTER_ASSET?.asset_category_name }}</td>
+          <td>{{ item?.MASTER_ITEM?.item_name }}</td>
+          <td>{{ item?.MASTER_ITEM?.description }}</td>
+          <td>{{ item?.bom_qty }}</td>
+          <td>{{ item?.scrape }}</td>
+          <td>{{ item?.type }}</td>
+          <td>{{ item?.scrape_reuseable }}</td>
+          <td>{{ item?.status }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close mat-raised-button color="primary">
+    Close
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,317 @@
+<div class="heading_top">
+  <div class="page-title">
+    <p>HRMS
+      <i class="fa fa-angle-right"></i><span>Dashboard</span>
+    </p>
+    <h1>Dashboard</h1>
+  </div>
+</div>
+
+<div class="row mt-3">
+  <div class="col-md-4 col-sm-4">
+    <div class="content-container">
+      <h2 class="dash-title-name color1">
+        <span><i class="fa fa-paper-plane"></i>Leave</span>
+        <!-- <a href="#">View All</a> -->
+      </h2>
+      <div class="main-dashboard">
+        <div class="form-group ">
+          <mat-form-field appearance="outline">
+            <mat-label>SELECT USER</mat-label>
+            <mat-select formControlName="select the Users" placeholder="Enter user Name"
+              (selectionChange)="onUserSelect($event)">
+              <mat-select-filter></mat-select-filter>
+              <mat-option *ngFor="let item of showSelecteduser" [value]="item.employee_id">
+                {{ item.first_name }} {{ item.middle_name }} {{ item.last_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="content-container-body">
+        <div class="leaves-new">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>LEAVE TYPE</th>
+                <th>TOTAL</th>
+                <th>USED</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of leavename">
+                <td>{{item.leave_name}}</td>
+                <td>{{item.total_available}}</td>
+                <td>{{item.usedDays}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="btn_a_dashbaord green_a" style="margin-bottom: 10px;">
+          <a  class="btn mt-2" (click)="Applyleave()">Apply Leave</a>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="content-container mt-3" style="min-height: 310px;">
+      <h2 class="dash-title-name color3">
+        <span><i class="fa fa-laptop"></i> Attendance</span>
+        <!-- <a href="#">View All</a> -->
+      </h2>
+      <div class="content-container-body">
+        <div class="lblprvmonth">
+          <ul>
+            <li *ngFor="let month of objectKeys(attedenceCount)" (click)="selectMonth(month)">
+              {{ month }}
+            </li>
+          </ul>
+        </div>
+        <div *ngIf="selectedMonth" class="attendance-grid">
+          <div *ngFor="let key of objectKeys(statusLabels)" class="attendance-item">
+            <p><strong>{{ statusLabels[key] }}</strong></p>
+            <span>{{ attedenceCount[selectedMonth]?.statusCount[key] || 0 }}</span>
+          </div>
+          <div class="attendance-total">
+            <p><strong>Total:</strong> {{ attedenceCount[selectedMonth]?.total || 0 }}</p>
+          </div>
+        </div>
+
+        <div class="btn_a_dashbaord blue_a" style="margin-bottom: 10px;">
+          <!-- <a href="#" class="btn">Remote Clock-In</a> -->
+          <a class="btn"  (click)="Attendance()">On Duty</a>
+          <a class="btn" (click)="Attendance()">Work From Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4 col-sm-4">
+    <div class="content-container">
+      <h2 class="dash-title-name color2">
+        <span><i class="fa fa-paper-plane"></i>Team Members </span>
+      </h2>
+      <div class="content-container-body">
+        <div class="team-members">
+          <ul>
+            <li>
+              <a href="#">
+                <p>Members on Leave (Today) <span id="lbltodayonleave">{{this.teammateLeaveCount}}</span></p>
+              </a>
+            </li>
+            <li style="padding: 10px 7px 7px 7px; border-bottom: none; font-size: 14px; ">
+              <strong style="font-weight: 500; color: #d19300;">Pending Approval</strong>
+            </li>
+            <li>
+              <a href="team-leaves.aspx">
+                <p>Leave <span id="lblleavecount">{{meLeaveCount}}</span></p>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="content-container mt-3" style="min-height: 310px;">
+      <h2 class="dash-title-name color4">
+        <span><i class="fa fa-usd"></i>Finances</span>
+        <!-- <a href="#">View All</a> -->
+      </h2>
+      <div class="content-container-body">
+        <div class="leaves-new">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th colspan="2">ANNUAL SALARY</th>
+                <th>300000</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="font-weight: 500;">Total Loan</td>
+                <td style="font-weight: 500;">Total Amount Paid</td>
+                <td style="font-weight: 500;">Outstandig </td>
+              </tr>
+              <tr>
+                <td>800000 </td>
+                <td>0</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 500;">Total Expenses </td>
+                <td style="font-weight: 500;">Approved</td>
+                <td style="font-weight: 500;">Unapproved</td>
+              </tr>
+              <tr>
+                <td>4600 </td>
+                <td>3600</td>
+                <td>1000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="btn_a_dashbaord mt-3">
+          <a href="#" class="btn">Apply Loan</a>
+          <a href="#" class="btn">Apply Expenses</a>
+          <a href="#" class="btn">Pay Slips</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-md-4 col-sm-4">
+    <div class="right-dash-hight">
+      <div class="hrml-tabdas tab-das-01">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="right-col--label">
+                <i class="fa fa-birthday-cake"></i> Birthdays / Anniversaries
+                <a class="tab_right_view">View All</a>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="birthdayList.length > 0; else noData" class="birthday-list-container">
+              <div *ngFor="let person of birthdayList" class="birthday-item">
+                <p>
+                  🎉 <strong>{{ person.firstName }} {{ person.lastName }}</strong> <br>
+                  🎂 Date of Birth:
+                  <strong>
+                    {{ isValidDate(person.dateOfBirth) ? (person.dateOfBirth | date: 'MMMM dd') : 'N/A' }}
+                  </strong>
+                </p>
+              </div>
+            </div>
+            <ng-template #noData>
+              <div class="alert alert-danger" role="alert">No birthdays / anniversaries!</div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+
+
+      <div class="hrml-tabdas tab-das-02 mt-3">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="right-col--label">
+                <i class="fa fa-user-plus"></i>New Joinees
+                <a class="tab_right_view">View All</a>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="filteredNewJoinees.length > 0; else noNewJoinees" class="new-join-list-container"
+                 style="max-height:250px; overflow-y:auto;">
+              <div *ngFor="let emp of filteredNewJoinees" class="new-join-item">
+                <p>
+                  <strong>{{ emp.first_name }} {{ emp.last_name }}</strong> - Join Date:
+                  {{ emp.emp_join_date | date:'yyyy-MM-dd' }}
+                </p>
+              </div>
+            </div>
+            <ng-template #noNewJoinees>
+              <div class="alert alert-success" role="alert">
+                No new joinees!
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      
+
+
+      <div class="hrml-tabdas tab-das-03 mt-3">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="right-col--label">
+                <i class="fa fa-globe"></i> Working Remotely
+                <a class="tab_right_view">View All</a>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div *ngIf="WFHEmployeeListData && WFHEmployeeListData.length > 0; else noWFH" class="wfh-list-container" style="max-height:250px; overflow-y:auto;">
+              <div *ngFor="let employee of WFHEmployeeListData" class="wfh-employee-item">
+                <p>
+                  <strong>{{ employee.first_name }} {{ employee.last_name }}</strong>
+                  ({{ employee.employee_code }})
+                </p>
+              </div>
+            </div>
+            <ng-template #noWFH>
+              <div class="alert alert-info" role="alert">
+                Nobody from team is working remotely today!
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      
+
+      <div class="hrml-tabdas tab-das-04 mt-3">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="right-col--label">
+                <i class="fa fa-calendar"></i> Upcoming Holidays
+                <a class="tab_right_view">View All</a>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="holiday-list-container" style="max-height:250px; overflow-y:auto;">
+              <ng-container *ngIf="getAllHolidayListdata && getAllHolidayListdata.length > 0; else noHolidays">
+                <div *ngFor="let holiday of getAllHolidayListdata" class="holiday-item">
+                  <p>
+                    <strong>{{ holiday.holiday_name }}</strong> - 
+                    {{ holiday.date | date: 'yyyy-MM-dd' }}
+                  </p>
+                </div>
+              </ng-container>
+              <ng-template #noHolidays>
+                <div class="alert alert-primary" role="alert">
+                  No upcoming holidays!
+                </div>
+              </ng-template>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      
+      
+
+      <div class="hrml-tabdas tab-das-05 mt-3">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title class="right-col--label"><i class="fa fa-edit"></i>To Do List
+                <a class="tab_right_view">View All</a>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+              <div class="alert alert-info" role="alert">No Announcement / Notice !</div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div> 
+
+
+      <div class="content-container mt-3" style="min-height: 272px;">
+        <h2 class="dash-title-name color3">
+          <span><i class="fa fa-bullhorn"></i>Announcement / Notice</span>
+          <a href="#">View All</a>
+        </h2>
+        <div class="content-container-body">
+          <div>
+            <div class="alert alert-info" role="alert">No Announcement / Notice !</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+
+
+
+

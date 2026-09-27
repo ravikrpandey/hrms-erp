@@ -1,0 +1,65 @@
+<div class="right_data_all">
+    <div class="row">
+
+        <div class="page-title">
+            <h1>Statutory Bonus</h1>
+        </div>
+    </div>
+
+
+    <Section>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="bonusForm">
+                <div>
+                    <div class="row">
+                        <div class="form-group mb-4">
+                            <mat-radio-group formControlName="payment_frequency">
+                                <label class="d-block mb-2 fw-bold">Payment Frequency</label>
+                                <mat-radio-button class="d-inline-block me-3" value="monthly">Monthly</mat-radio-button>
+                                <mat-radio-button class="d-inline-block" value="yearly">Yearly</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <div class="row w-50">
+                          <div class="mb-4 custom-input-group">
+                            <label for="bonusPercentage" class="custom-label">Monthly Percentage of Bonus</label>
+                            <div class="custom-input-container">
+                              <input matInput type="number" class="custom-input-field" id="bonusPercentage"
+                                formControlName="monthly_bonus_percent" aria-label="Bonus Percentage">
+                              <div class="custom-addon">%</div>
+                            </div>
+                            <small class="form-text text-muted">
+                              Statutory Bonus rate should be between <strong>8.33%</strong> and <strong>20%</strong>, based on the Statutory Bonus Act.
+                            </small>
+                          
+                            <div *ngIf="bonusForm.controls['monthly_bonus_percent'].invalid && bonusForm.controls['monthly_bonus_percent'].touched"
+                              class="text-danger">
+                              Bonus percentage must be between 8.33% and 20%.
+                            </div>
+                          </div>
+
+                          
+                    </div>
+
+                    <div class="alert alert-warning mt-4">
+                        <strong>Note:</strong>
+                        <ul class="mb-0">
+                            <li>The payment frequency of this statutory bonus is <strong>monthly</strong> and
+                                <strong>taxable</strong>.</li>
+                            <li>Once you've associated the statutory bonus with an employee, you can change the bonus
+                                percentage <strong>only at the beginning of the next fiscal year.</strong></li>
+                        </ul>
+                    </div>
+
+
+                </div>
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <button class="btn btn-danger" (click)="back()">Cancel</button>
+                    <button class="btn btn-primary" (click)="submitForm()" [disabled]="bonusForm.invalid">{{bonusId ? 'Update':'Save'}}</button>
+                </div>
+            </form>
+        </div>
+    </Section>
+
+</div>

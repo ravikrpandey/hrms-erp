@@ -1,0 +1,45 @@
+
+ <div class="edd-del">
+     <button (click)="openComponent('edit')" class="btn btn-danger"
+          *ngIf="selectedType === 'Assessment' && status === 'Pending For Manager Review'">
+          Proceed
+     </button>
+     <span *ngIf="approvalManagerId === 'ApprovalManager'">
+          <button (click)="openComponent('edit')" class="btn btn-danger"
+               *ngIf="selectedType === 'Assessment' && status === 'Pending For Approval'">
+               Proceed
+          </button>
+     </span>
+     <mat-icon *ngIf="selectedType === 'Assessment' && 
+              (
+               status === 'Manager Review Completed' || 
+               status === 'Committee Review Completed' || 
+               status === 'Pending Committee Review' || 
+               status === 'Approval Review Completed')" matTooltip="View" (click)="openComponent('view')">
+          visibility
+     </mat-icon>
+     <div class="edd-del">
+          <mat-icon *ngIf="selectedType === 'Assessment' && status === 'Manager Review Completed'" matTooltip="View"
+               (click)="openComponent('view')">
+               visibility
+          </mat-icon>
+          <mat-icon *ngIf="selectedType === 'Assessment' && status === 'Committee Review Completed'" matTooltip="View"
+               (click)="openComponent('view')">
+               visibility
+          </mat-icon>
+          <mat-icon *ngIf="selectedType === 'Assessment' && status === 'Pending Committee Review'" matTooltip="View"
+               (click)="openComponent('view')">
+               visibility
+          </mat-icon>
+          <mat-icon *ngIf="selectedType === 'Assessment' && status === 'Approval Review Completed'" matTooltip="View"
+               (click)="openComponent('view')">
+               visibility
+          </mat-icon>
+          <span *ngIf="approvalManagerId !== 'ApprovalManager'">
+               <mat-icon *ngIf="selectedType === 'Assessment' && status === 'Pending For Approval'" matTooltip="View"
+                    (click)="openComponent('view')">
+                    visibility
+               </mat-icon>
+          </span>
+     </div>
+</div>

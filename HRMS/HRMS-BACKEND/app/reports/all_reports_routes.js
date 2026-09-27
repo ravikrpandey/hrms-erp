@@ -1,0 +1,169 @@
+const reports_controller = require("./all_reports_controller");
+
+module.exports = (app) => {
+  app.get(
+    "/api/v1/getDepartmentForReportPurpose/:entity_id",
+    reports_controller.getDepartmentForReportPurpose
+  );
+  app.post(
+    "/api/v1/exportReportInExcel",
+    reports_controller.export_excel_att_AttedanceReport
+  );
+  app.post(
+    "/api/v1/exportToLateComingEarlyGoing",
+    reports_controller.exportToExcelLateComingEarlyLeave
+  );
+  app.post(
+    "/api/v1/exportToExcelAbsentReports",
+    reports_controller.exportToExcelAbsentRecord
+  );
+  app.get(
+    "/api/v1/departmentSelectedOnMultipleEntity",
+    reports_controller.getDepartmentMultipleEntitySelected
+  );
+  app.get(
+    "/api/v1/getEmployeeDataBasedOndepartment",
+    reports_controller.getEmployeebasedOnDepartment
+  );
+  app.get("/api/v1/getLeaveMaster", reports_controller.getAllLeaveMasterData);
+  app.post(
+    "/api/v1/getDataLeaveMasterRecord",
+    reports_controller.exportToExcelLeaveMasterReport
+  );
+  app.get(
+    "/api/v1/getBranchBasedOnentityid",
+    reports_controller.getBranchRecord
+  );
+  app.get(
+    "/api/v1/getAllDepartments/:entity_id",
+    reports_controller.getAllDepartments
+  );
+
+  ////////////////
+  app.get("/api/v1/getAllBranch", reports_controller.getAllBranch);
+  app.post(
+    "/api/v1/exportToExcelDesignationReport",
+    reports_controller.exportToExcelDesignationReport
+  );
+  app.post(
+    "/api/v1/exportToExcelBankReport",
+    reports_controller.exportToExcelBankReport
+  );
+  app.get("/api/v1/getAllBankData", reports_controller.getAllBANK);
+  app.get(
+    "/api/v1/getAllApprovalManager",
+    reports_controller.getAllApprovalManager
+  );
+  app.get("/api/v1/getAllNationality", reports_controller.getAllNationality);
+  app.post(
+    "/api/v1/exportToExcelManagerReport",
+    reports_controller.exportToExcelManagerReport
+  );
+
+  //////////////Payroll Reports Routing Starts Here////////////////
+
+  app.get(
+    "/api/v1/get-all-act-dept-for-reports/:entity_id",
+    reports_controller.getAllActDeptForReports
+  );
+  app.post(
+    "/api/v1/pay-register-report",
+    reports_controller.payRegisterReport
+  );
+  app.post(
+    "/api/v1/register-of-employee-report",
+    reports_controller.registerOfEmployeeReports
+  );
+  app.post(
+    "/api/v1/wage-register-report",
+    reports_controller.wageRegisterReport
+  );
+  app.post(
+    "/api/v1/muster-roll-report",
+    reports_controller.musterRollReport
+  );
+  app.post(
+    "/api/v1/deduction-register-report",
+    reports_controller.deductionRegisterReport
+  );
+  app.post(
+    "/api/v1/saf-reports",
+    reports_controller.safReports
+  );
+  app.post(
+    "/api/v1/pt-reports",
+    reports_controller.ptReports
+  );
+  app.post(
+    "/api/v1/tds-reports",
+    reports_controller.tdsReports
+  );
+   app.post(
+    "/api/v1/equal-Remuneration-Reports",
+    reports_controller.equalRemunerationReports
+  );
+  app.post(
+    "/api/v1/esic-register-Reports",
+    reports_controller.getAllESICData
+  );
+  app.post(
+    "/api/v1/over-Time-Reports",
+    reports_controller.overTimeReport
+  );
+  app.post(
+    "/api/v1/epf-register-Reports",
+    reports_controller.getAllEPFData
+  );
+  app.post(
+    "/api/v1/ecr-report",
+    reports_controller.generateEcrReport
+  );
+  app.post(
+    "/api/v1/labour-welfare-fund-Reports",
+    reports_controller.getAllLabourWelfareFundData
+  );
+
+  app.post(
+    "/api/v1/advanse-register-report",
+    reports_controller.advanseRegisterReport
+  );
+  app.post(
+    "/api/v1/fine-register-report",
+    reports_controller.fineRegisterReport
+  );
+
+  app.post(
+    "/api/v1/register-of-workman-report",
+    reports_controller.getAllRegisterWorkmanReport
+  );
+  app.post(
+    "/api/v1/nps-Reports",
+    reports_controller.getNpsReports
+  );
+  app.post(
+    "/api/v1/edli-Reports",
+    reports_controller.getEdliReports
+  );
+  app.post(
+    "/api/v1/bonus-Reports",
+    reports_controller.getBonusReports
+  );
+  app.post(
+    "/api/v1/leave-encashment-Reports",
+    reports_controller.getLeaveEncashmentReports
+  );
+  app.post(
+    "/api/v1/adhocDeduction-Reports",
+    reports_controller.getAdHocDeductionReports
+  );
+
+  app.post(
+    "/api/v1/leave-register-report",
+    reports_controller.leaveRegisterReport
+  );
+  app.post(
+    "/api/v1/incentive-reports",
+    reports_controller.incentiveReport
+  );
+  //////////////Payroll Reports Routing Ends Here////////////////
+};

@@ -1,0 +1,84 @@
+<div class="employee_basic_details">
+  <mat-card class="SALARY_DETAILS">
+      <h3>Salary Details </h3>
+    <div class="row">
+      <div class="col-md-4">
+        <p><b>
+          Base Salary</b></p>
+        <p>{{dataObj?.basic_salary ? dataObj?.basic_salary : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Salary per Day</b></p>
+        <p>{{dataObj?.salary_per_day ? dataObj?.salary_per_day :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Salary per Hr</b></p>
+        <p>{{dataObj?.salary_per_hr? dataObj?.salary_per_hr :"-"}}</p>
+      </div>
+      <!-- <div class="col-md-4">
+        <p><b>Total Monthly Hr</b></p>
+        <p>{{dataObj?.total_monthly_hr? dataObj?.total_monthly_hr :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Weekly Hour</b></p>
+        <p>{{dataObj?.weekly_hour? dataObj?.weekly_hour :"-"}}</p>
+      </div> -->
+    </div>
+  </mat-card>
+
+  <!-- <mat-card class="Allowance_Details">
+    <div>
+      <h3>Allowance Details</h3>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Allowance Name</th>
+          <th>Amount</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of dataObj?.allowance_details">
+          <td>{{data?.allowance_name}}</td>
+          <td>{{data?.allowance_amount}}</td>
+        </tr>
+      </tbody>
+      </table>
+  </mat-card> -->
+
+  <mat-card class="History_of_salary_revision">
+      <h3>History of salary revision </h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Year</th>
+          <th>Month</th>
+          <th>Appraisal Amount/Percentage</th>
+          <th>Type of Increment/Decrement</th>
+          <th>Appraisal Mode</th>
+          <th>New Salary</th>
+          <th>Old Salary</th>
+          <th>Designation</th>
+          
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of getHistorySalaryData; index as i">
+                          <td>{{i + 1}}</td>
+                          <td>{{data?.year}}</td>
+                          <td>{{data?.month}}</td>
+                          <td>{{data?.appraisal_amount || data?.appraisal_percentage + "%" }}</td>
+                          <td>{{data?.appraisal_mode }}</td>
+
+                          <td>{{ data?.appraisal_type + ' - ' + (data?.appraisal_comp_type || '') }}</td>
+                          
+                          <td>{{data?.new_ctc}}</td>
+                          <td>{{data?.old_ctc }}</td>
+
+                          <td>{{data?.designation_name}}</td>
+                          <!-- <td>Employee</td> -->
+                        </tr>
+      </tbody>
+    </table>
+  </mat-card>

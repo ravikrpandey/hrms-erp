@@ -1,0 +1,195 @@
+ 
+<section class="section">
+  <div class="row">
+    <div class="employee_top my-1">
+      Production Tracking
+      <span class="employee_2"
+        ><i
+          class="fa fa-angle-right"
+          aria-hidden="true"
+          style="color: #063178"
+        ></i>
+         Production Tracking</span
+      >
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head mt-2">
+      <h3>  Production Tracking</h3>
+      <button class="backBtn" (click)="goBack()" >
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+    <div class="form_basic px-4">
+       
+        <form  [formGroup]="updateTracking"   (ngSubmit)="submitTracking(updateTracking.value)">
+          <div class="row">
+            <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 pt-3">
+            </div>
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+              <div class="form-group mt-2"> 
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="">
+                  <mat-label>Select Product Category</mat-label>
+                  <mat-select  formControlName="product_category_id" (selectionChange)="getAllActiveProduct($event)">
+                    <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="updateTracking.get('cetegory')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+         
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Select Product Name</mat-label>
+                  <mat-select formControlName="product_id" >
+                    <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="updateTracking.get('product_id')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group  ">
+                <mat-form-field appearance="outline" class="">
+                  <mat-label>Product Variant</mat-label>
+                  <input type="text" matInput formControlName="product_variant" readonly />
+                  <mat-error *ngIf="updateTracking.get('product_variant')?.hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group readonly-select"> 
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Start Date</mat-label>
+                  <input matInput [matDatepicker]="picker"   formControlName="start_date"/>
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                   
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group readonly-select">
+                <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>End Date</mat-label>
+                  <input matInput [matDatepicker]="picker1"  formControlName="end_date" />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                  
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" class="mt-1">
+                      <mat-label>Select Shift</mat-label>
+                      <mat-select (selectionChange)="getShiftVal($event)" formControlName="shift_id">
+                        <mat-option *ngFor="let data of shiftList" [value]="data.shift_id" >{{data.MASTER_SHIFT?.shift_name}}</mat-option>
+                      </mat-select>   
+                      <mat-error *ngIf="updateTracking.get('shift_id')?.hasError('required')">
+                        This field is required!
+                    </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div> 
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group readonly-select">
+                    <mat-form-field appearance="outline" class="mt-1">
+                      <mat-label>Select Date</mat-label>
+                      <input matInput [matDatepicker]="picker2"  formControlName="date" />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker2"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker2></mat-datepicker>
+                      
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row mt-3 mx-1 mb-3">
+                  <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th scope="col">S.NO</th>
+                              <th scope="col">Work Station Name</th>
+                              <th scope="col">Net Production</th>
+                              <th scope="col">Rework</th>
+                          </tr>
+                      </thead>
+                      <tbody formArrayName="workstationList">
+                          <tr *ngFor="let roleFieled of itemsFormArray['controls']; let i = index"
+                          [formGroupName]="i">
+                              <td class="inpBox">
+                                  {{i+1}}
+                                  <input type="text" formControlName="new_id" style="display:none;" >
+                              </td>
+                              <td class="inpBox">
+                                  <div class="form-group text-center readonly-select">
+                                      <mat-form-field appearance="outline" style="width: 25vw">
+                                          <mat-label>Work Station Name</mat-label>
+                                          <input matInput  formControlName="qualityParameter" />
+                                            <!-- {{data.Workstation.name_of_workstation}} -->
+                                      </mat-form-field>
+                                  </div>
+                              </td>
+                              <td class="inpBox">
+                                  <div class="form-group text-center">
+                                      <mat-form-field appearance="outline" style="width: 20vw">
+                                          <mat-label>Net Production</mat-label>
+                                          <input type="number" matInput  formControlName="net_production"/>
+                                          <mat-error *ngIf="updateTracking.get('net_production')?.hasError('required')">
+                                            This field is required!
+                                        </mat-error>
+                                        </mat-form-field>
+                                  </div>
+                              </td>
+                              <td class="inpBox">
+                                  <div class="form-group text-center">
+                                      <mat-form-field appearance="outline" style="width: 20vw">
+                                          <mat-label>Rework</mat-label>
+                                          <input type="number" matInput  formControlName="rework" />
+                                          <mat-error *ngIf="updateTracking.get('rework')?.hasError('required')">
+                                            This field is required!
+                                        </mat-error>
+                                      </mat-form-field>
+                                  </div>
+                              </td>
+                               
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+
+          </div>
+          <div class="d-flex justify-content-end mt-2 mb-4"  >
+            <button mat-raised-button color="primary"  >
+               Save
+            </button>
+            
+        </div>
+        </form>
+    
+    </div>
+  </mat-card>
+</section>

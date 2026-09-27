@@ -1,0 +1,1115 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales CRM</h1>
+    <p><span> Create New Quotation</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="conatiner">
+    <section>
+      <form [formGroup]="proposalForm">
+        <div *ngIf="!invoiceAddress" class="row mx-3 mt-4">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Quotation Number</mat-label>
+                <input matInput type="text" formControlName="proposal_no" readonly="true" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" [hidden]="true">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline"
+                [ngClass]="actionType === 'view' ||!actionType ? 'readonly-wrapper' : ''">
+                <mat-label>Proposal Type</mat-label>
+                <mat-select [ngClass]="actionType === 'view' ||!actionType ? 'readonly-block' : ''"
+                  formControlName="proposal_type_id" (selectionChange)="proposalSelection($event)">
+                  <mat-option [disabled]="formDisabled" *ngFor="let item of proposalTypeList" [value]="item.id">{{
+                    item.perposal_type
+                    }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <!-- <app-mat-form-select-filter *ngIf="proposalTypeList.length > 0"
+                formControlName="proposal_type_id"
+                [items]="proposalTypeList"
+                [displayKey]="'perposal_type'"
+                [key]="'perposal_type'"
+                placeholder="Proposal Type"
+              >
+              </app-mat-form-select-filter> -->
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Company Name</mat-label>
+                <input matInput type="text" formControlName="company_name" [readonly]="
+                    type_existing != 'existing_client' ? false : false
+                  " />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Lead Of Sources</mat-label>
+                <mat-select formControlName="lead_source">
+                  <mat-option *ngFor="let leadSource of leadSourceList"
+                    [value]="leadSource.id">{{leadSource.lead_source}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Created By</mat-label>
+                <mat-select formControlName="created_by">
+                  <mat-option *ngFor="let createdBy of createdByList" [value]="createdBy"
+                    (click)="selectCreatedBy(createdBy)">{{createdBy}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+            *ngIf="proposalForm.get('created_by')?.value==='Any Other'">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Employee</mat-label>
+                <mat-select formControlName="created_by_id">
+                  <mat-select-filter [array]="salesEmployeeList3"
+                    (filteredReturn)="typeFilter($event)"></mat-select-filter>
+                  <mat-option *ngFor="let emp of salesEmployeeList" [value]="emp.employee_id">{{emp.employee_code}} -
+                    {{emp.first_name }} {{emp.middle_name }} {{emp.last_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Contact Person Name</mat-label>
+                <input matInput type="text" formControlName="contact_person_name" [readonly]="
+                    type_existing != 'existing_client' ? false : false
+                  " />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Contact Number</mat-label>
+                <input matInput type="tel" formControlName="contact_number" (keypress)="keyPress($event)"
+                  [readonly]="type_existing != 'existing_client' ? false : false" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Mail ID</mat-label>
+                <input matInput type="email"  formControlName="mail_id" [readonly]="
+                    type_existing != 'existing_client' ? false : false
+                  " />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <app-mat-form-select-filter *ngIf="countryList.length > 0" formControlName="country_id"
+                [key]="'countryss_id'" [items]="countryList" [displayKey]="'countryss_name'"
+                placeholder="Select Country">
+              </app-mat-form-select-filter>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Pincode</mat-label>
+                <input matInput type="tel" maxlength="6" formControlName="pincode" (keypress)="allowOnlyNumber($event)"
+                  (blur)="fetchPinDetails()" />
+
+                <!-- Error messages -->
+                <mat-error *ngIf="proposalForm.get('pincode')?.hasError('required')">
+                  Pincode is required
+                </mat-error>
+                <mat-error *ngIf="proposalForm.get('pincode')?.hasError('pattern')">
+                  Pincode must be 6 digits
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <app-mat-form-select-filter formControlName="state_id" [key]="'states_id'" [items]="stateList"
+                [displayKey]="'states_name'" placeholder="Select State">
+              </app-mat-form-select-filter>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <app-mat-form-select-filter formControlName="city_id" [key]="'city_id'" [items]="cityList"
+                [displayKey]="'city_name'" placeholder="Select City">
+              </app-mat-form-select-filter>
+            </div>
+          </div>
+
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+            *ngIf="postOffice.length > 0 && proposalForm.get('country_id')?.value == 101">
+            <mat-form-field appearance="outline">
+              <mat-label>Choose Postal Address</mat-label>
+              <mat-select formControlName="postal_address" (valueChange)="selectPostal($event)">
+                <mat-option *ngFor="let post of postOffice" [value]="post.Name + ',' + post.District"> {{ post.Name +
+                  "," + post.District }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+            *ngIf="postOffice.length > 0 &&  proposalForm.get('country_id')?.value==101">
+            <mat-form-field appearance="outline">
+              <mat-label>Choose Postal Address</mat-label>
+              <mat-select formControlName="postal_address" (valueChange)="selectPostal($event)">
+                <mat-option *ngFor="let post of postOffice"
+                  [value]="post.Name + ','+post.District+','+post.State+', ' + post.Country ">{{ post.Name + ", " +
+                  post.District + ", " + post.State + ", " + post.Country }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Address</mat-label>
+                <input matInput type="text" formControlName="address" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Location</mat-label>
+                <mat-select formControlName="location_id" (valueChange)="selectLocation($event)">
+                  <mat-option *ngFor="let location of locationList"
+                    [value]="location.id">{{location.branch_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Warehouse</mat-label>
+                <mat-select formControlName="warehouse_id">
+                  <mat-option *ngFor="let warehouse of warehouseList"
+                    [value]="warehouse.id">{{warehouse.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+          </div>
+
+
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Sanctioned Credit Period</mat-label>
+                <input matInput type="text" formControlName="credit_days" maxlength="30" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Grace Period</mat-label>
+                <input matInput type="text" formControlName="grace_period" maxlength="30" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Utilized Credit Limit</mat-label>
+                <input matInput type="text" formControlName="grace_period" maxlength="30" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Utilized Credit Days</mat-label>
+                <input matInput type="text" formControlName="grace_period" maxlength="30" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="routerParams?.flag !== 'Add New'">
+            <div class="form-group mb-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Schems</mat-label>
+
+                <mat-select formControlName="schemeData" (selectionChange)="schemSelection($event)">
+                  <mat-option *ngFor="let item of schemeData" [value]="item?.id">{{ item?.scheme_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Lead Source Name</mat-label>
+                <input matInput type="email" formControlName="source_name"
+                  [readonly]="type_existing != 'existing_client' ? true : false" />
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"
+            *ngIf="proposalForm.get('proposal_type_id')?.value == 'B2B'">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>GST Number</mat-label>
+                <input matInput type="email" formControlName="gst_no" [readonly]="formDisabled" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div *ngIf="actionType == 'dealClose'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+            <div class="common_button_sub" style="text-align: left">
+              <button type="button" (click)="makeInvoice()">
+                Make Invoice
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="invoiceAddress" class="mb-4">
+          <div class="col-md-12">
+            <div class="form_head">
+              <h3>Invoice</h3>
+            </div>
+          </div>
+          <div class="form_basic">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="invoice_address">
+                  <h3>Bill To</h3>
+                  <p>{{ leadData?.address }}</p>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="invoice_address">
+                  <h3>Bill From</h3>
+                  <p>Company : {{ branchObj?.branch_name }}</p>
+                  <p>Address : {{ branchObj?.branch_address }}</p>
+                  <p>City : {{ branchObj?.city_name }}</p>
+                  <p>State : {{ branchObj?.states_name }}</p>
+                  <p>Pincode : {{ branchObj?.branch_pin_code }}</p>
+                  <p>Contact : {{ branchObj?.branch_contact_no }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form_table" *ngIf="routerParams?.flag === 'Add New'">
+          <mat-slide-toggle [(ngModel)]="contactDetailsToggle" [ngModelOptions]="{ standalone: true }"
+            (change)="toggleContactDetailsRow($event)">
+            Add Multiple Contact Details
+          </mat-slide-toggle>
+          <mat-card *ngIf="contactDetailsToggle">
+            <div class="tab_table table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Contact Number</th>
+                    <th>Mail ID</th>
+
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container formArrayName="contactDetails"
+                    *ngFor="let control of CF_3.contactDetails['controls']; let i = index ">
+                    <tr [formGroup]="control">
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Phone Number</mat-label>
+                            <input matInput maxlength="30" formControlName="phone_no" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Email ID</mat-label>
+                            <input matInput formControlName="email_id" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td>
+                        <span *ngIf="!control?.controls?.isDisabled"
+                          style=" color: #8d8d8d; cursor: pointer; font-size: 20px; ">
+                          <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteContactDetails(i, control)"
+                            aria-hidden="true"></i></span>
+
+                        <span style="color: #8d8d8d;cursor: pointer;font-size: 20px;">
+                          <i class="fa fa-plus-circle" (click)="addContactDetails()" aria-hidden="true"
+                            style="margin-left: 10px !important"></i></span>
+
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+
+          </mat-card>
+        </div>
+        <div class="form_table">
+          <mat-card>
+            <div class="tab_table table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Item Category</th>
+                    <th>Item Sub Category</th>
+                    <th>Item Name</th>
+                    <!-- <th>Item Code</th> -->
+                    <th>Item Description</th>
+                    <!-- <th>UOM</th> -->
+                    <th>Order Qty</th>
+                    <!-- <th>HSN Code</th> -->
+                    <th>Price Per Unit</th>
+                    <!-- <th *ngIf="!hideTableColumns">GST</th> -->
+                    <!-- <th>Customer Discount(%)</th> -->
+                    <th *ngIf="routerParams?.flag !== 'Add New'">Add-Ons</th>
+
+                    <th
+                      *ngIf="getAllProductDetails?.[0]?.discount_approved || getAllProductDetails?.[0]?.discount_request">
+                      Discount Required
+                    </th>
+                    <th
+                      *ngIf="getAllProductDetails?.[0]?.discount_approved || getAllProductDetails?.[0]?.discount_request">
+                      Discount Approved
+                    </th>
+                    <th *ngIf="(proposalId && actionType == 'edit') || leadId">
+                      Action
+                    </th>
+                    <th *ngIf="type == 'existing_client'">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-container formArrayName="productDetailList" *ngFor="
+                      let control of CF_1.productDetailList['controls'];
+                      let i = index
+                    ">
+                    <tr [formGroup]="control">
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Item Category</mat-label>
+                          <mat-select formControlName="product_category_id"
+                            (selectionChange)="getSubCategory($event, i)">
+                            <mat-option [disabled]="formDisabled" *ngFor="let data of cetegory" [value]="data.id">{{
+                              data.asset_category_name }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Item Sub Category</mat-label>
+                          <mat-select formControlName="product_sub_category_id">
+                            <mat-option [disabled]="formDisabled" *ngFor="let data of subCategory[i]" [value]="data.id"
+                              (click)="getAllActiveProduct(data, data, i)">{{ data.sub_category_name }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td [ngClass]="{
+                          'scheme-applied': control?.get('schemeApplied')?.value
+                        }">
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Item</mat-label>
+                          <mat-select formControlName="product_master_id">
+                            <mat-option [disabled]="formDisabled" *ngFor="let item of productData[i]" [value]="item?.id"
+                              (click)="getProductData(item, i)">
+                              {{ item?.item_name }}
+                            </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+
+                      <!-- <td>
+                        <mat-form-field appearance="outline">
+                          <mat-label>Select Varient</mat-label>
+                          <mat-select formControlName="variant_id" (selectionChange)="bindProductData(i)">
+                            <mat-option [disabled]="formDisabled" *ngFor="let item of productVariantData[i]"
+                              [value]="item?.id">{{ item?.variant_name }}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td> -->
+                      <!-- <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Code</mat-label>
+                            <input matInput maxlength="30" formControlName="product_code" [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td> -->
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Description</mat-label>
+                            <input matInput type="text" maxlength="200" formControlName="product_description"
+                              [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <!-- <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Uom</mat-label>
+                            <input matInput type="text" maxlength="100" formControlName="uom_name" [readonly]="true" />
+                          </mat-form-field>
+                        </div>
+                      </td> -->
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Order Quantity</mat-label>
+                            <input matInput [readonly]="formDisabled" type="text" maxlength="5" formControlName="qty"
+                              (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <!-- <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>HSN Code</mat-label>
+                             <mat-select formControlName="hsn_code_id">
+                              <mat-option
+                                *ngFor="let data of hsnCodeList"
+                                [value]="data.id"
+                                >{{ data?.hsn_sac_code }}</mat-option
+                              >
+                            </mat-select> 
+                            <input matInput [readonly]="control?.get('readonly')?.value || formDisabled" type="text"
+                              formControlName="hsn_code_id" />
+
+                            <mat-error *ngIf="
+                              proposalForm.controls['hsn_code_id'].hasError(
+                                  'required'
+                                )
+                              ">
+                              HSN Code is Required.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </td> -->
+                      <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Price</mat-label>
+                            <input matInput [readonly]="
+                                control?.get('readonly')?.value || formDisabled
+                              " type="text" maxlength="5" formControlName="price_per_unit"
+                              (ngModelChange)="productCalculation()" (keypress)="keyPress($event)" />
+                          </mat-form-field>
+                        </div>
+                      </td>
+
+                      <!-- <td *ngIf="!hideTableColumns">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>GST</mat-label>
+                            <input matInput [readonly]="formDisabled" type="text" maxlength="30" formControlName="igst"
+                              (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" [readonly]="
+                              control?.get('readonly')?.value || formDisabled
+                            " />
+                          </mat-form-field>
+                        </div>
+                      </td> -->
+
+                      <!-- <td>
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <input matInput [readonly]="formDisabled" type="text" maxlength="5"
+                              formControlName="maximum_discount" (keypress)="keyPress($event)"
+                              (ngModelChange)="productCalculation()" />
+                          </mat-form-field>
+                        </div>
+                      </td> -->
+
+                      <td *ngIf="routerParams?.flag !== 'Add New'">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline">
+                            <mat-label>Select Scheme</mat-label>
+                            <mat-select formControlName="select_scheme" multiple>
+                              <mat-option value="1">Customization</mat-option>
+                              <mat-option value="2">Branding</mat-option>
+                              <mat-option value="3">Scheme</mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </div>
+                      </td>
+                      <td
+                        *ngIf="getAllProductDetails?.[0]?.discount_approved || getAllProductDetails?.[0]?.discount_request">
+                        <input readonly="true" type="text" maxlength="5" formControlName="discount_request"
+                          (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" class="form-control"
+                          style="width: fit-content" />
+                      </td>
+                      <td
+                        *ngIf="getAllProductDetails?.[0]?.discount_approved || getAllProductDetails?.[0]?.discount_request">
+                        <input type="text" maxlength="5" formControlName="discount_approved"
+                          (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" class="form-control"
+                          style="width: fit-content" />
+                      </td>
+                      <td>
+                        <span *ngIf="routerParams?.flag !== 'Add New'" style="
+                            color: #8d8d8d;
+                            cursor: pointer;
+                            font-size: 20px;
+                          ">
+                          <i class="fa fa-window-maximize" (click)="selectScheme(i, control)" aria-hidden="true"></i>
+                          <i class="fa fa-eye" (click)="selectSchemeView(i, control)" aria-hidden="true"></i>
+                        </span>
+
+                        <span *ngIf="!control?.controls?.isDisabled"
+                          style=" color: #8d8d8d; cursor: pointer; font-size: 20px; ">
+                          <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                            aria-hidden="true"></i></span>
+
+                        <span style="color: #8d8d8d;cursor: pointer;font-size: 20px;">
+                          <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                            style="margin-left: 10px !important"></i></span>
+                      </td>
+                    </tr>
+                  </ng-container>
+                </tbody>
+              </table>
+            </div>
+            <!-- <ng-container>
+              <div
+                class="common_button_sub"
+                If="((proposalId && actionType == 'edit') || leadId)"
+              >
+                <button type="button" (click)="upsellCreate()">Up-Sell</button>
+              </div>
+            </ng-container> -->
+          </mat-card>
+        </div>
+
+        <div class="promo_add" style="padding: 20px" *ngIf="routerParams?.flag !== 'Add New'">
+          <div class="row">
+            <div class="col-1">
+              <p style="font-size: 24px; text-align: center">Promo</p>
+            </div>
+            <div class="col-1">
+              <div class="common_button_sub_promo">
+                <button (click)="applySelect()">Apply</button>
+              </div>
+            </div>
+            <div class="col-1" (mouseenter)="showInfo = true" (mouseleave)="showInfo = false"
+              style="position: relative">
+              <mat-icon (click)="schemeInfo()">info</mat-icon>
+
+              <div *ngIf="showInfo" class="info-box">
+                <p>
+                  <strong>Scheme Name:</strong> {{ getDataScheme?.scheme_name }}
+                </p>
+                <p>
+                  <strong>Description:</strong>{{ getDataScheme?.description }}
+                </p>
+                <div class="row">
+                  <div class="col-6">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>S.No</th>
+
+                          <th>Select Item</th>
+                          <th>Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="
+                            let item of getDataScheme?.selected_item;
+                            index as i
+                          ">
+                          <td>{{ i + 1 }}</td>
+                          <td>{{ item?.selected_item_name }}</td>
+                          <td>{{ item?.selected_qty }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-6">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>S.No</th>
+                          <th>Promo Item</th>
+                          <th>Qty</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="
+                            let item of getDataScheme?.promo_item;
+                            index as i
+                          ">
+                          <td>{{ i + 1 }}</td>
+                          <td>{{ item?.promo_item_name }}</td>
+                          <td>{{ item?.promo_qty }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mx-3 mt-3">
+          <div class="row mt-4">
+            <div class="top-row">
+              <!-- Toggle for Additional Charges -->
+              <mat-slide-toggle [(ngModel)]="chargesToggle" [ngModelOptions]="{ standalone: true }"
+                (change)="toggleChargesRow($event)">
+                Include Additional Charges
+              </mat-slide-toggle>
+              <!-- Discount Applicable Popup -->
+              <p (click)="discountPopup()" style="cursor: pointer;"><mat-icon>local_offer</mat-icon> <span>Discount
+                  Applicable</span></p>
+            </div>
+
+            <!-- Charges Table (Visible Only if Toggle is ON) -->
+            <div class="form_table mb-3" *ngIf="chargesToggle">
+              <mat-card>
+                <div class="tab_table table-responsive">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>
+                          Additional Charges Name <span class="text-danger">*</span>
+                        </th>
+                        <th>Amount <span class="text-danger">*</span></th>
+                        <th>HSN Code <span class="text-danger">*</span></th>
+                        <th>GST Rate(%)</th>
+                        <th>Description</th>
+                        <th>
+                          Action
+                        </th>
+                        <th *ngIf="type == 'existing_client'">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <ng-container formArrayName="chargesDetailList" *ngFor="
+             let control of CF_2.chargesDetailList['controls']; let i = index">
+                        <tr [formGroup]="control">
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline">
+                                <!-- <input matInput [readonly]="
+                       control?.get('readonly')?.value || formDisabled
+                     " type="text" formControlName="charges_name" /> -->
+                                <mat-select formControlName="charge_name_id"
+                                  (selectionChange)="additionalCharge($event, i)">
+                                  <mat-option *ngFor="let data of additionalChargeData" [value]="data.id">{{
+                                    data.additional_name }}</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline">
+                                <input matInput [readonly]="
+                       control?.get('readonly')?.value || formDisabled
+                     " type="text" formControlName="charges_amount" (keypress)="keyPress2($event)"
+                                  (ngModelChange)="productCalculation()" />
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <!-- <mat-select formControlName="charges_hsn_id"
+                                (selectionChange)="onHSNCodeChange($event.value, i)"
+                                (selectionChange)="productCalculation()">
+                                <mat-select-filter [array]="hsn"
+                                  (filteredReturn)="hsnSearch($event)"></mat-select-filter>
+                                <mat-option [disabled]="formDisabled" *ngFor="let data of hsnCodeList"
+                                  [value]="data.id">{{ data?.hsn_sac_code }}</mat-option>
+                              </mat-select> -->
+                              <input matInput maxlength="30" formControlName="charges_hsn_id" [readonly]="true" />
+
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input matInput maxlength="30" formControlName="charges_rate" [readonly]="true" />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline">
+                                <input matInput maxlength="255" formControlName="charges_desc" [readonly]="true" />
+                              </mat-form-field>
+                            </div>
+                          </td>
+                          <td style="text-align: center; padding: 0px">
+                            <span *ngIf="!control?.controls?.isDisabled" style="
+                   color: #8d8d8d;
+                   cursor: pointer;
+                   font-size: 20px;
+                 ">
+                              <i *ngIf="i > 0" class="fa fa-trash" (click)="deleteChargesRow(i, control)"
+                                aria-hidden="true"></i>
+                            </span>
+                            <span style="
+                   color: #8d8d8d;
+                   cursor: pointer;
+                   font-size: 20px;
+                 ">
+                              <i class="fa fa-plus-circle" (click)="addChargesRow()" aria-hidden="true"
+                                style="margin-left: 10px !important"></i>
+                            </span>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </table>
+                </div>
+              </mat-card>
+            </div>
+            <!-- /////////////////////// -->
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Total Cost</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="total_cost"
+                    readonly="true"
+                  />
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Additional Charges</mat-label>
+                  <input [readonly]="formDisabled" matInput type="text" formControlName="additional_charges"
+                    (keypress)="keyPress($event)" (ngModelChange)="productCalculation()" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Discount</mat-label>
+                  <input matInput type="text" formControlName="discount" readonly="true"
+                    (keypress)="keyPress($event)" />
+                </mat-form-field>
+              </div>
+            </div> -->
+
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Taxable Value</mat-label>
+                  <input matInput type="text" formControlName="taxable_value" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!hideTableColumns">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Gross Amount</mat-label>
+                  <input matInput type="text" formControlName="totalAMTAfterDiscount" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!hideTableColumns">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>GST</mat-label>
+                  <input matInput type="text" formControlName="igst" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Grand Total</mat-label>
+                  <input matInput type="text" formControlName="grant_total" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div>
+
+
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Valid Till Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="valid_till_date"
+                  (dateChange)="onDateChange($event)">
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Term of Delivery</mat-label>
+                <mat-select formControlName="delivery_term_id">
+                  <mat-option *ngFor="let termOfDelivery of termOfDeliveryList"
+                    [value]="termOfDelivery.id">{{termOfDelivery.delivery_term}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline">
+                <mat-label>Term of Delivery Remark</mat-label>
+                <input matInput placeholder="Term of Delivery Remark" formControlName="delivery_term_remark">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Unloading responsibility</mat-label>
+                <mat-select formControlName="unloading_resp_id">
+                  <mat-option *ngFor="let unloadingResp of unloadingRespList"
+                    [value]="unloadingResp.id">{{unloadingResp.unloading}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Unloading responsibility Remark</mat-label>
+                <input matInput placeholder="Unloading responsibility Remark" formControlName="unloading_resp_remark">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Warranty Month</mat-label>
+                <input matInput type="number" placeholder="Warranty Month" formControlName="warranty_month">
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline">
+                <mat-label>Warranty Remark</mat-label>
+                <input matInput placeholder="Warranty Remark" formControlName="warranty_month_remark">
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Payment Category</mat-label>
+                <mat-select formControlName="payment_main_id">
+                  <mat-option *ngFor="let paymentMain of paymentMainList" [value]="paymentMain.id"
+                    (click)="paymentMainSubCategory(paymentMain.id)">{{paymentMain.payment_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Payment Sub Category</mat-label>
+                <mat-select formControlName="sub_payment_main_id">
+                  <mat-option *ngFor="let paymentSub of paymentSubList"
+                    [value]="paymentSub.id">{{paymentSub.sub_payment_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Freight </mat-label>
+                <mat-select formControlName="freight_id">
+                  <mat-option *ngFor="let freight  of freightList" [value]="freight.id">{{freight.freight_name
+                    }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Insurance </mat-label>
+                <mat-select formControlName="insurance_id">
+                  <mat-option *ngFor="let insurance   of insuranceList"
+                    [value]="insurance.id">{{insurance.insurance_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3 fileWithViewImg">
+                <!-- <mat-label>Documents</mat-label> -->
+                <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                  (change)="uploadDoc($event)" formControlName="sales_documents" accept=".png, .jpg, .jpeg" />
+
+                <img *ngIf="sales_documents" src="../../../../../../assets/icons/folder.png" alt class="fileViewImage"
+                  (click)="viewImg()">
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="actionType == 'dealClose'">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-label>Total Received</mat-label>
+                  <input matInput type="text" formControlName="total_received" readonly="true" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div>
+              <!-- <div class="form-group mb-3">
+                <div class="arrow_area" *ngIf="!existingData">
+                  <mat-icon (click)="dialogOpen()" matTooltip="Discount Request"
+                    *ngIf="(proposalId && actionType == 'edit') || leadId">arrow_upward</mat-icon>
+                  <mat-icon (click)="dialogOpen1()" matTooltip="Discount Request"
+                    *ngIf="existing_type == 'existing_client'">arrow_upward</mat-icon>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+
+          <ng-container *ngIf="!existingData">
+            <div class="my-4" *ngIf="(proposalId && actionType == 'edit') || leadId">
+              <div class="common_button_sub">
+                <button (click)="createProposal()" [disabled]="isSubmitting">
+                  Send Proposal
+                </button>
+                <button (click)="goBack()" class="cancel_button_y">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            <div class="my-4" *ngIf="actionType == 'create' || leadId">
+              <div class="common_button_sub">
+                <button (click)="createProposal()" [disabled]="isSubmitting">
+                  Preview
+                </button>
+                <button (click)="goBack()" class="cancel_button_y">
+                  Cancel
+                </button>
+              </div>
+            </div>
+            <div class="my-4" *ngIf="type_existing == 'existing_client'">
+              <div class="common_button_sub">
+                <button (click)="createProposal()" [disabled]="isSubmitting">
+                  Send Proposal
+                </button>
+                <button (click)="goBack()" class="cancel_button_y">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div class="row my-4" *ngIf="proposalId && actionType == 'approval' && status == 'pending'">
+          <div class="col-md-2 col-lg-2">
+            <p class="text_right">Remark</p>
+          </div>
+          <div class="col-md-10 col-lg-10 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <textarea matInput type="text" formControlName="approvalRemark"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="common_button_sub">
+              <button type="button" (click)="updateProposalStatus('AP')">
+                Approve
+              </button>
+              <button type="button" class="cancel_button_y" (click)="updateProposalStatus('RJ')">
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row my-4" *ngIf="invoiceAddress">
+          <div class="col-md-2 col-lg-2">
+            <p class="text_right">Remark</p>
+          </div>
+          <div class="col-md-10 col-lg-10 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <textarea matInput type="text" formControlName="invoice_remark"></textarea>
+              </mat-form-field>
+            </div>
+            <div class="common_button_sub">
+              <button type="button" (click)="saveInvoice()">
+                Save Invoice
+              </button>
+              <button type="button" class="cancel_button_y" (click)="backFromViewInvoice()">
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <form [formGroup]="invoiceAddressForm">
+        <div *ngIf="showInvoice">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <mat-form-field appearance="outline">
+                <mat-label>Select Bill From</mat-label>
+                <mat-select formControlName="branch_id">
+                  <mat-option *ngFor="let item of branchList" [value]="item?.id">{{ item?.branch_name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-12 mb-3">
+              <mat-checkbox [(ngModel)]="defferentAddress" class="example-margin" [checked]="defferentAddress"
+                (change)="defferentAddressChange()">
+                Update Different Address
+              </mat-checkbox>
+            </div>
+          </div>
+          <div class="row" *ngIf="defferentAddress">
+            <div class="col-md-4">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Company Name</mat-label>
+                  <input matInput type="text" formControlName="company_name" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>GST No.</mat-label>
+                  <input matInput type="text" formControlName="gst_no" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                  <mat-label>Complete Address</mat-label>
+                  <input matInput type="text" formControlName="complete_address" />
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="common_button_sub">
+              <button (click)="viewInvoice()">View Invoice</button>
+              <button type="button" class="cancel_button_y" (click)="backInvoice()">
+                Back
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <app-payment-proposal *ngIf="!showInvoice && actionType" [isInvoiceSubmitted]="isInvoiceSubmitted"
+      [grandTotal]="getData?.grant_total" (setReceivedAmount)="setReceivedAmount($event)"></app-payment-proposal>
+  </div>
+</div>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Purchase Order</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        /* margin: 40px; */
+        font-size: 12px;
+        color: #000;
+      }
+      h1 {
+        text-align: center;
+        text-decoration: underline;
+        margin-bottom: 10px;
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+      }
+      .header h2 {
+        margin: 0;
+      }
+      .header p {
+        margin: 2px 0;
+        font-size: 11px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      td,
+      th {
+        padding: 6px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      .section {
+        margin-top: 20px;
+      }
+      .flex {
+        display: flex;
+        justify-content: space-between;
+      }
+      .col {
+        width: 48%;
+      }
+      .totals {
+        width: 300px;
+        margin-left: auto;
+        border-collapse: collapse;
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      .totals td {
+        /* border: 1px solid #333; */
+        padding: 6px;
+      }
+      .totals tr {
+        border: none !important;
+      }
+      .footer {
+        /* margin-top: 40px; */
+        font-size: 11px;
+      }
+      .signature {
+        text-align: right;
+        /* margin-top: 50px; */
+        border: 1px solid #000;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: left;
+        height: 100px;
+        width: 50%;
+      }
+      .signature p {
+        margin: 5px;
+      }
+
+      .section tr {
+        border: 1px solid #000;
+      }
+      .section tr th {
+        background-color: #ddd;
+        text-align: left;
+      }
+      .section tr td {
+        vertical-align: text-top;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="text-align: left; position: relative">
+      <img style="position: absolute" src="{{logo}}" alt="Company Logo" />
+    </div>
+    <div class="header">
+      <div>
+        <h1>PURCHASE ORDER</h1>
+        <h2>Elan Professional Appliances Pvt Ltd</h2>
+        <p>
+          C/o Maruthi Warehousing, SF No. 12, 13 Arkkambakkam Road (VIA),
+          Veerapuram, Avadi I.A.F, Tiruvallur, Chennai, Tamil Nadu - 600055
+        </p>
+      </div>
+    </div>
+
+    <table>
+      <tr>
+        <td><b style="width: 50%; float: left">GSTIN:</b> {{companyGST}}</td>
+        <td><b style="width: 50%; float: left">RefDocNo:</b> {{refDocNo}}</td>
+      </tr>
+      <tr>
+        <td><b style="width: 50%; float: left">Order No:</b> {{orderNo}}</td>
+        <td>
+          <b style="width: 50%; float: left">Ref Doc Date:</b> {{refDocDate}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b style="width: 50%; float: left">Order Date:</b> {{orderDate}}
+        </td>
+        <td>
+          <b style="width: 50%; float: left">Parent Doc No:</b> {{parentDocNo}}
+        </td>
+      </tr>
+    </table>
+
+    <table class="section">
+      <tr>
+        <th colspan="2">Billing Details</th>
+        <th colspan="8">Shipping Details</th>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <p>
+            <b style="width: 30%; float: left">Party Name:</b> {{billingParty}}
+          </p>
+          <p>
+            <b style="width: 30%; float: left">Address:</b> {{billingAddress}}
+          </p>
+          <p>
+            <b style="width: 30%; float: left">State:</b> {{billingState}} |
+            <b>Code:</b> {{billingCode}}
+          </p>
+          <p><b style="width: 30%; float: left">GSTIN:</b> {{billingGST}}</p>
+        </td>
+        <td colspan="8">
+          <p>
+            <b style="width: 30%; float: left">Address:</b> {{shippingAddress}}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <th colspan="7" style="border-right: 1px solid #000"></th>
+        <th colspan="1" style="border-right: 1px solid #000">CGST</th>
+        <th colspan="1" style="border-right: 1px solid #000">SGST</th>
+        <th colspan="1">IGST</th>
+      </tr>
+      <tr>
+        <th style="width: 5%; border-right: 1px solid #000">S.No</th>
+        <th style="border-right: 1px solid #000">Description of Goods</th>
+        <th style="border-right: 1px solid #000">HSN Code</th>
+        <th style="border-right: 1px solid #000">Qty</th>
+        <th style="border-right: 1px solid #000">Unit</th>
+        <th style="border-right: 1px solid #000">Rate</th>
+        <th style="border-right: 1px solid #000">Taxable Amt</th>
+        <th style="border-right: 1px solid #000">Amount</th>
+        <th style="border-right: 1px solid #000">Amount</th>
+        <th style="border-right: 1px solid #000">Amount</th>
+      </tr>
+      {{itemsTable}}
+
+      <tr>
+        <td colspan="2">
+          <p style="margin-top: 0px">
+            <b>Amount in Words:</b> ₹ {{amountInWords}}
+          </p>
+        </td>
+        <td colspan="8">
+          <table class="totals">
+            <tr>
+              <td style="padding: 0px">Sub Total</td>
+              <td style="padding: 0px">₹ {{subTotal}}</td>
+            </tr>
+            <tr>
+              <td style="padding: 0px">GST Tax Amount</td>
+              <td style="padding: 0px">₹ {{gstAmount}}</td>
+            </tr>
+            <tr>
+              <td style="padding: 0px"><b>Bill Amount</b></td>
+              <td style="padding: 0px"><b>₹ {{billAmount}}</b></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" style="vertical-align: text-top">
+          <div class="footer">
+            <p><b>Narration:</b> {{narration}}</p>
+            <p><b>Terms & Conditions:</b></p>
+            <p>1. For Elan Professional Appliances Pvt Ltd</p>
+            <p>
+              2. This is a computer generated order, signature not required.
+            </p>
+          </div>
+        </td>
+        <td
+          colspan="8"
+          style="
+            padding: 0px;
+            vertical-align: middle;
+            text-align: -webkit-right;
+          "
+        >
+          <div class="signature">
+            <p><b>Authorised Signatory</b></p>
+            <p>Date: {{orderDate}}</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

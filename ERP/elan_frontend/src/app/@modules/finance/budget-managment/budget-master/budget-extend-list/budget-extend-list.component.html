@@ -1,0 +1,79 @@
+<div class="section">
+    <!-- <div class="employ_sube">
+        <div class="add_btn">
+            <button type="button" class="btn_add" (click)="openDialog()">Upload<img
+                    src="/assets/icons_management/exc3.png" alt="" height="20px" width="25px"></button>
+        </div>
+    </div> -->
+    <div class="employ_sube py-1">
+        <div class="employee_top">Budget Management
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+                </i>
+                Extend List
+            </span>
+        </div>
+
+        <!-- <div class="btn_add">
+            <button type="button" class="btn_add" routerLink="./create">Add</button>
+        </div> -->
+    </div>
+    <mat-card>
+        <div class="form_basic">
+            <form class="form_set">
+                <div class="mat-inner">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <p class="head"><strong>Financial Year : </strong>{{viewCard?.financial_year_id}}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="head"><strong>Department : </strong>{{viewCard?.department_name}}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="head"><strong>Type : </strong>{{viewCard?.type}}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="head"><strong>Total Budget : </strong>{{viewCard?.amount}}</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p class="head"><strong>Remaning Budget : </strong>{{viewCard?.remainingAmount}}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </mat-card>
+    
+    <div class="add_btn" *ngIf="assignAction?.Write">
+        <button type="button" class="btn_add" (click)="openDialog()">Revised Budget</button>
+    </div>
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <select (change)="onPageSizeChanged()" id="page-size">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+
+        <div>
+            <input type="text" class="form-control" id="filter-text-box" #input placeholder="Search"
+                (input)="onFilterTextBoxChanged()">
+        </div>
+        <!-- <div *ngIf="isDeleteButtonVisible">
+            <button type="button" class="btn_delete" (click)="onDelete($event)">Delete Selected</button>
+        </div> -->
+    </div>
+    <div class="form_head">
+        <h3>Extend Budget</h3>
+        <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+
+    <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9" [rowData]="rowData"
+            [gridOptions]="gridOptions">
+        </ag-grid-angular>
+    </div>
+</div>

@@ -1,0 +1,221 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS </h1>
+    <p> Overtime Request <span class="employee_2" *ngIf="!actionType"><i class="fa fa-angle-right" aria-hidden="true"
+          style="color:#858586">
+        </i>
+        Create </span>
+      <span class="employee_2" *ngIf="actionType == 'edit'"><i class="fa fa-angle-right" aria-hidden="true"
+          style="color:#858586">
+        </i>
+        Update </span>
+      <span class="employee_2" *ngIf="actionType == 'view'"><i class="fa fa-angle-right" aria-hidden="true"
+          style="color:#858586">
+        </i>
+        View </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="form_basic">
+  <form class="form_set" [formGroup]="extraHourForm">
+    <div class="row" style="margin-top: 50px">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline" style="width: 100%;">
+            <mat-label>Employee</mat-label>
+
+            <mat-select (selectionChange)="onEmployeeChange($event)" formControlName="employee_id">
+              <mat-select-filter [array]="employeeslist" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+              <mat-option *ngFor="let employee of employees" [value]="employee?.employee_id">
+                {{ employee?.first_name }} {{ employee?.last_name }} ({{employee?.employee_code}})
+              </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="!employee_id">
+              *This field is required!
+            </mat-error>
+
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee Code</mat-label>
+            <input matInput type="text" formControlName="employee_code" readonly />
+            <mat-error *ngIf="extraHourForm.controls['employee_code'].hasError('required')">
+              *This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Department Name</mat-label>
+            <input matInput type="text" formControlName="department_name" readonly />
+            <mat-error *ngIf="extraHourForm.controls['department_name'].hasError('required')">
+              *This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="container">
+      <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
+        <div class="table-responsive" style="overflow-x: auto;">
+          <table class="table table-bordered table-striped table-hover align-middle">
+            <thead class="table-light text-center"
+              style="position: sticky; top: 0; z-index: 1; background-color: white;">
+              <tr>
+                <th>From Date</th>
+                <th>From Time</th>
+                <th>To Date</th>
+                <th>To Time</th>
+                <th>Total Hours</th>
+                <th
+                  *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'|| actionType == 'view'">
+                  Payroll Year</th>
+                <th
+                  *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'|| actionType == 'view'">
+                  Payroll Month</th>
+                <th>Employee Remark</th>
+                <th *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'|| actionType == 'view'">Approve
+                  Hours</th>
+
+                <!-- <th *ngIf="!actionType || actionType=='edit'|| actionType == 'APPROVED' || actionType == 'REJECTED' || actionType !== 'approver'">Action</th> -->
+                <th *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'">Attendance
+                </th>
+              </tr>
+            </thead>
+            <tbody formArrayName="rows">
+              <tr *ngFor="let row of rows.controls; let i = index" [formGroupName]="i">
+                <td>
+                  <input type="date" class="form-control form-control-sm" formControlName="from_date"
+                    (change)="calculateHours(i)" style="min-width: 130px;" />
+                </td>
+                <td>
+                  <input type="time" class="form-control form-control-sm" formControlName="from_time"
+                    (change)="calculateHours(i)" style="min-width: 100px;" />
+                </td>
+                <td>
+                  <input type="date" class="form-control form-control-sm" formControlName="to_date"
+                    (change)="calculateHours(i)" style="min-width: 130px;" />
+                </td>
+                <td>
+                  <input type="time" class="form-control form-control-sm" formControlName="to_time"
+                    (change)="calculateHours(i)" style="min-width: 100px;" />
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm" formControlName="total_hours" readonly
+                    style="min-width: 80px;" />
+                </td>
+
+                <td
+                  *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'|| actionType == 'view'">
+                  <mat-form-field appearance="outline" style="min-width: 120px;">
+                    <mat-select formControlName="payroll_year" placeholder="Select Year" (selectionChange)="updateMonthsDisable($event.value,i)">
+                      <mat-option *ngFor="let year of financialYearList" [value]="year.financial_year">
+                        {{ year.financial_year }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+                <td
+                  *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED' || actionType == 'view'">
+                  <mat-form-field appearance="outline" style="min-width: 120px;">
+                    <mat-select formControlName="payroll_month" placeholder="Select Month">
+                      <mat-option *ngFor="let m of months" [value]="m.value" [disabled]="m.disabled">
+                        {{ m.name }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </td>
+
+                <td>
+                  <textarea class="form-control form-control-sm" formControlName="employee_remark" rows="2"
+                    style="min-width: 200px;" [attr.readonly]="actionType == 'approver' ? true : null"></textarea>
+                </td>
+                <td *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'|| actionType == 'view'">
+                  <input type="text" class="form-control form-control-sm" formControlName="approve_hours"
+                    (keyup)="keyUpHour($event,i)" style="min-width: 100px;" />
+                </td>
+
+                <!-- <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <i class="bi bi-plus-circle-fill text-success fs-5 cursor-pointer" (click)="addRow()"
+                    *ngIf="actionType !=='approver'"  title="Add Row"></i>
+                    <i class="bi bi-trash-fill text-danger fs-5 cursor-pointer" (click)="removeRow(i)"
+                      *ngIf="rows.length > 1" title="Delete Row"></i>
+                  </div>
+                </td> -->
+
+                <td *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'"
+                  class="text-center">
+                  <a (click)="viewAttendance(i)" title="View Attendance">
+                    <i class="fas fa-user-check text-primary fs-5"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
+    <br>
+    <div *ngIf="actionType == 'approver' || actionType == 'APPROVED' || actionType == 'REJECTED'">
+      <label for="approverRemark" class="form-label fw-bold">Remark</label>
+      <textarea id="approverRemark" type="text" class="form-control form-control-sm" formControlName="approver_remark"
+        style="min-width: 200px;" rows="2">
+  </textarea>
+    </div>
+
+    <div class="container mt-5" *ngIf="actionType=='view'">
+      <h3 class="mb-4">Approver Details</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+          <thead class="table">
+            <tr>
+              <th scope="col">Employee Code</th>
+              <th scope="col">Employee Name</th>
+              <th scope="col">Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let e of approver_Data">
+              <td>{{e.employee_code}}</td>
+              <td>{{e.employee_name}}</td>
+              <td>{{e.approver_remark??'N/A'}}</td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="common_button_sub" *ngIf="!actionType || actionType === 'edit'">
+      <button (click)="onSubmitForm()">
+        {{ actionType === 'edit' ? 'Update' : 'Submit' }}
+      </button>
+      <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+    </div>
+
+    <div class="common_button_sub" *ngIf="actionType =='approver'">
+      <button (click)="onApproveOrReject('APPROVED')">
+        Approve
+      </button>
+      <button class="cancel_button_y" (click)="onApproveOrReject('REJECTED')">Reject</button>
+    </div>
+  </form>
+</div>

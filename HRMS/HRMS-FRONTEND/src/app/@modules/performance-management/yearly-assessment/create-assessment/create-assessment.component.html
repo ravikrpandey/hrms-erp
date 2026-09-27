@@ -1,0 +1,183 @@
+<div class="deparment-dialoge">
+    <h3 class="popHead"> Yearly Assessment</h3>
+    <ng-container *ngIf="action == 'view'">
+        <mat-dialog-content class="mat-typography">
+            <div class="flexCol">
+                <div class="flexRow">
+                    <div class="header1">
+                        <p>Finance Year </p>
+                    </div>
+                    <div class="header">:</div>
+                    <div class="value">
+                        <p class="value">{{singlefinancialYear?.financial_year}}</p>
+                    </div>
+                </div>
+                <div class="flexRow">
+                    <div class="header1">
+                        <p>Assessment Name </p>
+                    </div>
+                    <div class="header">:</div>
+                    <div class="value">
+                        <p> {{assessmentYearData?.data.assessment_name}}</p>
+                    </div>
+                </div>
+                <div class="flexRow">
+                    <div class="header1">
+                        <p>Assessment Degree </p>
+                    </div>
+                    <div class="header">:</div>
+                    <div class="value">
+                        <p class="value">{{assessmentYearData?.data.assessment_degree}}</p>
+                    </div>
+                </div>
+                <div class="flexRow">
+                    <div class="header1">
+                        <p>Start Date </p>
+                    </div>
+                    <div class="header">:</div>
+                    <div class="value">
+                        <p class="value">{{assessmentYearData?.data.start_date2}}</p>
+                    </div>
+                </div>
+                <div class="flexRow">
+                    <div class="header1">
+                        <p>End Date </p>
+                    </div>
+                    <div class="header">:</div>
+                    <div class="value">
+                        <p class="value">{{assessmentYearData?.data.end_date2}}</p>
+                    </div>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub mb-3">
+            <button mat-dialog-close class="cancel_button_y ">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+</div>
+<!-- currect code  -->
+<ng-container *ngIf="action!=='view'">
+    <mat-dialog-content class="mat-typography">
+        <form [formGroup]="yearlyAssessmentForm">
+            <div class="form-group mb-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Financial Year </mat-label>
+                    <mat-select formControlName="financial_year_id" placeholder="Enter Financial Year"
+                        (change)="enableStartdate($event)">
+
+                        <app-search-filter [array]="financialYear2" [placeholder]="'Search by financial year'"
+                            [searchFields]="['financial_year']" (filteredReturn)="fYearFilter($event)">
+                        </app-search-filter>
+
+                        <mat-option *ngFor="let data of financialYear"
+                            [value]="data.id">{{data.financial_year}}</mat-option>
+                    </mat-select>
+                    <mat-error
+                        *ngIf="yearlyAssessmentForm.get('financial_year_id')?.touched && yearlyAssessmentForm.get('financial_year_id')?.hasError('required')">
+                        * Required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Assessment Name</mat-label>
+                    <input matInput formControlName="assessment_name" [(ngModel)]="assessmentName">
+                    <mat-error
+                        *ngIf="yearlyAssessmentForm.get('assessment_name')?.touched && yearlyAssessmentForm.get('assessment_name')?.hasError('required')">
+                        * Required!
+                    </mat-error>
+                    <mat-error
+                        *ngIf="yearlyAssessmentForm.get('assessment_name')?.touched && yearlyAssessmentForm.controls['assessment_name'].hasError('leadingSpaces')"
+                        class="mt-2">
+                        No leading spaces allowed
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [min]="minStartDate" [matDatepicker]="startDatePicker" placeholder="Start Date"
+                        name="startDate" formControlName="start_date" (dateChange)="onStartDateChange($event)" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                    <mat-error
+                        *ngIf="yearlyAssessmentForm.get('start_date')?.touched && yearlyAssessmentForm.controls['start_date'].hasError('required')">
+                        * Required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [min]="minEndDate" [matDatepicker]="endDatePicker" placeholder="End Date"
+                        name="endDate" formControlName="end_date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                    <mat-error
+                        *ngIf="yearlyAssessmentForm.get('end_date')?.touched && yearlyAssessmentForm.controls['end_date'].hasError('required')">
+                        * Required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-4">
+                <mat-form-field appearance="outline">
+                    <mat-label>Department</mat-label>
+                    <mat-select (selectionChange)="selectedDepartmentName($event.value)" formControlName="dept_id" multiple>
+
+
+                        <app-search-filter [array]="departmentdata" [placeholder]="'Search by department name'"
+                            [searchFields]="['department_name']" (filteredReturn)="filteredDepartments  = $event.data">
+                        </app-search-filter>
+
+
+                        <mat-option *ngFor="let dept of filteredDepartments" [value]="dept.dept_id">
+                            {{ dept.department_name }}
+                        </mat-option>
+                        <mat-error
+                            *ngIf="yearlyAssessmentForm.get('dept_id')?.touched && yearlyAssessmentForm.controls['dept_id'].hasError('required')">
+                            * Required!
+                        </mat-error>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-group mt-4">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Employee Name</mat-label>
+                    <mat-select formControlName="employee" multiple>
+                        <span *ngIf="employeeNameData.length > 0 && employeeNameData[0]?.first_name?.length > 0">
+                            <mat-select-filter (keyup)="filterEmployee($event)"></mat-select-filter>
+                            <mat-checkbox (change)="selectAllEmployee($event)" [checked]="isAllSelect">
+                                Select All
+                            </mat-checkbox>
+                            <mat-option *ngFor="let employee of employeeNameData" [value]="employee.employee_id">
+                                {{ employee.first_name + ' ' + employee.last_name }}
+                            </mat-option>
+                        </span>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <h3 class="heading">Assessment Degree </h3>
+            <div class="form-group mt-4">
+                <mat-radio-group formControlName="assessment_degree" class="vertical-radio-group">
+                    <mat-radio-button value="180 Degree">180 Degree</mat-radio-button>
+                    <mat-radio-button value="360 Degree">360 Degree</mat-radio-button>
+                </mat-radio-group>
+                <mat-error
+                    *ngIf="yearlyAssessmentForm.get('assessment_degree')?.touched && yearlyAssessmentForm.controls['assessment_degree'].hasError('required')">
+                    *Required!
+                </mat-error>
+            </div>
+        </form>
+    </mat-dialog-content>
+    <mat-dialog-actions class="common_button_sub mb-3" align="end">
+        <button (click)="onSubmitAssessmentYear()">
+            {{action ? 'Update':'Save'}}
+        </button>
+        <button mat-dialog-close class="cancel_button_y">
+            Close
+        </button>
+    </mat-dialog-actions>
+</ng-container>

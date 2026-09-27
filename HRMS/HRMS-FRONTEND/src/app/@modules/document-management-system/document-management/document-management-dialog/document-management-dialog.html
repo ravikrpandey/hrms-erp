@@ -1,0 +1,155 @@
+<h2 mat-dialog-title>Upload Documents</h2>
+
+<div mat-dialog-content>
+    <form [formGroup]="docForm" class="form-container">
+
+        <div class="row">
+            <!-- Document Category -->
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Document Category *</mat-label>
+                    <mat-select formControlName="document_category" (selectionChange)="onCategoryChange($event.value)">
+                        <mat-option value="" disabled>Select Category</mat-option>
+                        <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="docForm.get('document_category')?.hasError('required')">
+                        Document Category is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- Department -->
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="showDepartment">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Department *</mat-label>
+                        <mat-select formControlName="department_list" [(ngModel)]="selectedDepartment" multiple
+                            (selectionChange)="getAllArea($event.value)">
+                            <mat-select-filter [array]="departments"
+                                (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                            <mat-checkbox class="check" [checked]="isAllSelectDepartment"
+                                (click)="selectAllDepartment($event)">Select All</mat-checkbox>
+                            <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                                {{department?.department_name }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="docForm.get('department_list')?.hasError('required')">
+                            Department is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Employee -->
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="showEmployee">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Employee *</mat-label>
+                        <mat-select formControlName="employee_id">
+                            <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                                {{ item?.first_name }} {{ item?.middle_name || '' }} {{ item?.last_name }} {{
+                                item?.employee_code }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="docForm.get('employee_id')?.hasError('required')">
+                            Employee is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Designation -->
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="showDesignation">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Designation *</mat-label>
+                        <mat-select formControlName="role_master_id">
+                            <app-search-filter [array]="assignDesignationArr2" [placeholder]="'Search by designation'"
+                                [searchFields]="['role_master_name']" (filteredReturn)="allRoleMaster = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let role of allRoleMaster" [value]="role.role_master_id">{{
+                                role.role_master_name }}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="docForm.get('role_master_id')?.hasError('required')">
+                            Designation is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- State -->
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6" *ngIf="showState">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>State *</mat-label>
+                        <mat-select formControlName="states_id">
+                            <app-search-filter [array]="stateVar2" [placeholder]="'Search by state name'"
+                                [searchFields]="['states_name']" (filteredReturn)="StateDataList = $event.data">
+                            </app-search-filter>
+                            <mat-option *ngFor="let state of StateDataList"
+                                [value]="state.states_id">{{state.states_name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="docForm.get('states_id')?.hasError('required')">
+                            State is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Document Version *</mat-label>
+                    <input matInput formControlName="version">
+                    <mat-error *ngIf="docForm.get('version')?.hasError('required')">
+                        Version is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="upload-area" (dragover)="dragOver($event)" (dragleave)="dragLeave($event)" (drop)="dropFile($event)"
+            (click)="fileInput.click()" [class.drag-over]="isDragOver">
+
+            <div class="upload-icon">
+                <i class="fa fa-upload"></i>
+            </div>
+
+            <p><b>Drop files here or click to upload</b></p>
+            <p class="sub-text">
+                Support for PDF, DOCX, XLSX, JPG, PNG (Max 50MB per file)
+            </p>
+
+            <button class="browse-btn" type="button" (click)="fileInput.click(); $event.stopPropagation()">
+                Browse Files
+            </button>
+
+            <!-- ✅ Add formControlName here -->
+            <input type="file" #fileInput hidden formControlName="upload_document" (change)="uploadFile($event)"
+                multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" />
+        </div>
+
+        <!-- Display Uploaded Files -->
+        <div class="uploaded-files" *ngIf="uploadedFiles.length > 0">
+            <h4>Uploaded Files:</h4>
+            <div class="file-list">
+                <div class="file-item" *ngFor="let file of uploadedFiles; let i = index">
+                    <div class="file-info">
+                        <i class="fa" [ngClass]="getFileIcon(file.name)"></i>
+                        <span class="file-name">{{ file.name }}</span>
+                        <span class="file-size">({{ formatFileSize(file.size) }})</span>
+                    </div>
+                    <button type="button" class="remove-btn" (click)="removeFile(i)">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button mat-raised-button color="primary" (click)="onSubmitForm()" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Uploading...' : 'Upload' }}
+    </button>
+</div>

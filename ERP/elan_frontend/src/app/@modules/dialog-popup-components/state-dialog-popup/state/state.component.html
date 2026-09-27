@@ -1,0 +1,42 @@
+<h3 mat-dialog-title class="popHead"> Add State</h3>
+<mat-dialog-content class="mat-typography">
+    <div class="">
+        <form [formGroup]="stateForm">
+            <div class="form-group mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Country Name </mat-label>
+                    <!-- <input matInput type="text" formControlName="countryss_id" /> -->
+                    <mat-select formControlName="countryss_id">
+                        <mat-select-filter
+                          [array]="countryList1"
+                          (filteredReturn)="countrySearch($event)"
+                        ></mat-select-filter>
+                        <mat-option *ngFor="let val of countryList" [value]="val?.countryss_id">
+                          {{ val?.countryss_name }}
+                        </mat-option>
+                      </mat-select>
+                    <mat-error *ngIf="stateForm.controls['countryss_id'].hasError('required')">
+                        *Required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="form-group mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>State Name </mat-label>
+                    <input matInput type="text" formControlName="states_name" />
+                    <mat-error *ngIf="stateForm.controls['states_name'].hasError('required')">
+                        *Required!
+                    </mat-error>
+                    <mat-error *ngIf="stateForm.controls['states_name'].hasError('leadingSpaces')">
+                        *No leading spaces!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button 
+        (click)="onSubmit(stateForm)">Save</button>
+    <button  mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>

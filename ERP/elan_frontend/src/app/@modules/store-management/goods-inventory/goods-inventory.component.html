@@ -1,0 +1,92 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+            Goods Inventory
+            <i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Goods Inventory List</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button type="button" class="" routerLink="add-goods-inventory">Add Goods Inventory</button>
+    </div>
+</div>
+<div class="right_data_all">
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <select id="page-size" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Select Store</mat-label>
+                <mat-select [formControl]="storeMaster_id" (selectionChange)="filterGoodInventoryByStotre($event)">
+                    <mat-form-field>
+                        <input matInput [formControl]="filterStoreControl" type="text" placeholder="Search" />
+                      </mat-form-field>
+  
+                    <mat-option *ngFor="let store of storeList" [value]="store.id">
+                        {{ store?.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="this.storeMaster_id.value" matSuffix (click)="clearSelectedStore()">close</mat-icon>
+            </mat-form-field>
+        </div>
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Item</mat-label>
+                <mat-select [formControl]="itemMaster_id" (selectionChange)="filterGoodInventory($event)">
+                    <mat-form-field>
+                        <input matInput [formControl]="filterItemControl" type="text" placeholder="Search" />
+                      </mat-form-field>
+                    <mat-option *ngFor="let item of ItemList" [value]="item.id">
+                        {{ item?.item_name }}
+                    </mat-option>
+                </mat-select>
+                <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="this.itemMaster_id.value" matSuffix (click)="clearSelectedItem()">close</mat-icon>
+            </mat-form-field>
+        </div>
+        <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                placeholder="Search" />
+        </div>
+    </div>
+    <div class="row inventorytopstyle">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 salesInv  p-0">
+            <div class="box blue"></div> 
+            <h1>Sales Inventory</h1>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 promotionInv  p-0">
+            <div class="box green"></div>
+            <h1>Promotional</h1>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 officeInv  p-0">
+            <div class="box wine"></div>
+            <h1>Office Use</h1>
+        </div>
+    </div>
+    <div class="ag_grid" style="margin-top: 70px;">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="8" [rowData]="rowData"
+            (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+        </ag-grid-angular>
+        <div class="row inventorystyle">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="box blue"></div> 
+                <h1>Sales Inventory</h1>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="box green"></div>
+                <h1>Promotional</h1>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="box wine"></div>
+                <h1>Office Use</h1>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div class="edd-del" *ngIf="assignAction && assignAction.Write">
+    <ng-container *ngIf="tab ==='initiate-rfp'">
+        <button (click)="createRfp($event)" style="margin-top: 2px;"> Create RFP </button>
+    </ng-container>
+    <ng-container *ngIf="tab ==='live-rfp' || tab ==='close-rfp'">
+        <ng-container *ngIf="assignAction.Write && tab ==='live-rfp'">
+            <mat-icon matTooltip="Extend Date" (click)="extendDate($event)">date_range</mat-icon>
+        </ng-container>
+        <mat-icon *ngIf="paramsData?.vendors_responded_count > 0 && tab ==='live-rfp'" matTooltip="Stop RFP"
+            (click)="stopRfp($event)">block</mat-icon>
+        <ng-container *ngIf="assignAction.Write">
+            <mat-icon matTooltip="Quotations" (click)="navigateToQuotation($event)">library_books</mat-icon>
+        </ng-container>
+    </ng-container>
+</div>

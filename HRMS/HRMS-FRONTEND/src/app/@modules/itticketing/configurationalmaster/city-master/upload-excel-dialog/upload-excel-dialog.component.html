@@ -1,0 +1,33 @@
+<div class="">
+  <h3 mat-dialog-title class="popHead">Upload Excel <mat-icon
+      style="float:right;margin-top:15px;color:white" mat-dialog-close>clear</mat-icon></h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <mat-dialog-content class="mat-typography mt-3">
+    <form class="" [formGroup]="fileFormSetupObj">
+      <div class="form-group">
+        <mat-label>Upload File <span class="alertspan">*</span></mat-label>
+        <input class="form-control" type="file"
+          style="padding-right: 10px; height: 42px; font-size:14px; padding-top: 8px;" title="Choose File" #fileInput
+          (change)="onChange($event)" formControlName="file" />
+        <mat-error
+          *ngIf="fileFormSetupObj.controls['file'].hasError('required' ) && (fileFormSetupObj.controls['file'].dirty || fileFormSetupObj.controls['file'].touched)">
+          File is required
+        </mat-error>
+      </div>
+
+      <div class="common_button_sub mt-4">
+        <!-- <button  (click)="generateExcel()"> -->
+        <!-- <a href="../../../../../assets/pdf-excel//sales-invoice.xlsx" download>
+          <button type="button">
+            Download Excel Sheet
+          </button>
+        </a> -->
+        <button (click)="saveDetails()">
+          Submit
+        </button>
+
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

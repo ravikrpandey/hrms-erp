@@ -1,0 +1,90 @@
+<mat-form-field appearance="outline" class="w-100">
+  <mat-label>{{ placeholder }}</mat-label>
+  <mat-select
+    [value]="selectedValue"
+    (selectionChange)="onSelectionChange($event.value)"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [multiple]="multiple"
+  >
+    <!-- Search Field -->
+    <mat-form-field
+      class="search-field-wrapper"
+      style="width: 100%; padding: 0 16px; box-sizing: border-box"
+    >
+      <input
+        matInput
+        [formControl]="itemFilterCtrl"
+        type="search"
+        placeholder="Search"
+      />
+    </mat-form-field>
+
+    <!-- Add New Option (rendered inside the select options at the top) -->
+    <mat-option
+      *ngIf="masterName && !disabled && hasWritePermission()"
+      class="add-new-option"
+      (click)="openQuickAddDialog()"
+      style="background-color: #f1f8ff; border-bottom: 1px solid #e1e4e8"
+    >
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          color: #0366d6;
+          font-weight: 500;
+          height: 100%;
+        "
+      >
+        <mat-icon
+          style="
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            color: #0366d6;
+            display: flex;
+            align-items: center;
+          "
+          >add_circle</mat-icon
+        >
+        <span>Add New {{ placeholder }}</span>
+      </div>
+    </mat-option>
+
+    <!-- Items -->
+    <mat-option *ngIf="noneOption"> None </mat-option>
+    <!-- Virtual Scroll for Options -->
+    <mat-option
+      *ngFor="let item of filteredItems | async"
+      [value]="key ? item[key] : item"
+    >
+      {{ getDisplayText(item) }}
+    </mat-option>
+  </mat-select>
+
+  <!-- Edit Selected Item Button inside mat-form-field as a postfix icon -->
+  <button
+    *ngIf="masterName && selectedValue && !disabled && hasWritePermission()"
+    type="button"
+    mat-icon-button
+    matSuffix
+    (click)="openQuickAddDialog(selectedValue); $event.stopPropagation()"
+    title="Edit selected {{ placeholder }}"
+    style="
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      padding: 0;
+    "
+  >
+    <mat-icon style="font-size: 20px; width: 20px; height: 20px; color: #586069"
+      >edit</mat-icon
+    >
+  </button>
+</mat-form-field>

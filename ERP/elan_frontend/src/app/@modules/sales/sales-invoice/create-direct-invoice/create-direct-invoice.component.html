@@ -1,0 +1,1364 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Sales</h1>
+      <p>
+        Invoice
+        <i class="fa fa-angle-right" aria-hidden="true" style="color: #363636">
+        </i
+        ><span> Direct Invoice </span>
+      </p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" routerLink="/master/sales/sales-invoice-list">
+        <i class="fa fa-arrow-left"></i> Back
+      </button>
+    </div>
+  </div>
+  <section class="right_data_all">
+    <div class="form_basic">
+      <form
+        class="form_set"
+        [formGroup]="formDirectInvoice"
+        (ngSubmit)="createDirectInvoice()"
+      >
+        <div class="row">
+          <div class="col-md-4">
+            <mat-label>Invoice No.</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="sales_invoice_no" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('sales_invoice_no')?.touched &&
+                formDirectInvoice.get('sales_invoice_no')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('sales_invoice_no')?.errors?.['required']"
+              >
+                Invoice no. is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('sales_invoice_no')?.invalid && !formDirectInvoice.get('sales_invoice_no')?.errors?.['required']"
+              >
+                Invoice no. is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Invoice Date</mat-label>
+            <mat-form-field appearance="outline">
+              <input
+                matInput
+                [matDatepicker]="dp"
+                (click)="dp.open()"
+                formControlName="sales_invoice_date"
+                [max]="today"
+              />
+              <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+              <mat-datepicker #dp></mat-datepicker>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('sales_invoice_date')?.touched &&
+                formDirectInvoice.get('sales_invoice_date')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('sales_invoice_date')?.errors?.['required']"
+              >
+                Invoice date is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('sales_invoice_date')?.invalid && !formDirectInvoice.get('sales_invoice_date')?.errors?.['required']"
+              >
+                Invoice date is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Type of Supply</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="supply_type">
+                <mat-option
+                  *ngFor="let item of supplyTypeList"
+                  [value]="item?.id"
+                  >{{ item?.name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('supply_type')?.touched &&
+                formDirectInvoice.get('supply_type')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('supply_type')?.errors?.['required']"
+              >
+                Supply type is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('supply_type')?.invalid && !formDirectInvoice.get('supply_type')?.errors?.['required']"
+              >
+                Supply type is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Customer Name</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select
+                formControlName="customer_id"
+                (selectionChange)="patchCustomerData()"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterCustomerControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!customerList?.length" disabled>
+                  <p>Customer Not Found</p>
+                </mat-option>
+                <mat-option *ngFor="let item of customerList" [value]="item?.id">
+                  {{ item?.company_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_id')?.touched &&
+                formDirectInvoice.get('customer_id')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_id')?.errors?.['required']"
+              >
+                Customer name is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_id')?.invalid && !formDirectInvoice.get('customer_id')?.errors?.['required']"
+              >
+                Customer name is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Customer Code</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="customer_code" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_code')?.touched &&
+                formDirectInvoice.get('customer_code')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_code')?.errors?.['required']"
+              >
+                Customer code is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_code')?.invalid && !formDirectInvoice.get('customer_code')?.errors?.['required']"
+              >
+                Customer code is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Trans Type</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="transition_type">
+                <mat-option
+                  *ngFor="let item of transTypeList"
+                  [value]="item?.id"
+                  (click)="selectTransType(item)"
+                >
+                  {{ item?.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('transition_type')?.touched &&
+                formDirectInvoice.get('transition_type')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('transition_type')?.errors?.['required']"
+              >
+                Trans type is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('transition_type')?.invalid && !formDirectInvoice.get('transition_type')?.errors?.['required']"
+              >
+                Trans type is invalid!
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Billing Branch</mat-label>
+            <mat-form-field appearance="outline">
+              <mat-select
+                formControlName="billing_branch"
+                (selectionChange)="checkApplicableGst($event)"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterbranchControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!branchList?.length" disabled>
+                  <p>Branch Not Found</p>
+                </mat-option>
+                <mat-option *ngFor="let item of branchList" [value]="item?.id">
+                  {{ item?.branch_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_branch')?.touched &&
+                formDirectInvoice.get('billing_branch')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_branch')?.errors?.['required']"
+              >
+                Billing branch is required!
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_branch')?.invalid && !formDirectInvoice.get('billing_branch')?.errors?.['required']"
+              >
+                Billing branch is invalid!
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="isGst && isShippingAddress">
+          <span><label for="">Ship from Address-</label></span>
+          <div class="col-md-4">
+            <mat-label>GST of Supplier</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="supplier_gst" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('supplier_gst')?.touched &&
+                formDirectInvoice.get('supplier_gst')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('supplier_gst')?.errors?.['required']"
+              >
+                GST of Supplier is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('supplier_gst')?.invalid && !formDirectInvoice.get('supplier_gst')?.errors?.['required']"
+              >
+                GST of Supplier is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Supplier Name</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="gst_supplier_name" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('gst_supplier_name')?.touched &&
+                formDirectInvoice.get('gst_supplier_name')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('gst_supplier_name')?.errors?.['required']"
+              >
+                Supplier Name is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('gst_supplier_name')?.invalid && !formDirectInvoice.get('gst_supplier_name')?.errors?.['required']"
+              >
+                Supplier Name is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <mat-label>Trade name</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="trade_name" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('trade_name')?.touched &&
+                formDirectInvoice.get('trade_name')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('trade_name')?.errors?.['required']"
+              >
+                Trade name is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('trade_name')?.invalid && !formDirectInvoice.get('trade_name')?.errors?.['required']"
+              >
+                Trade name is invalid
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <mat-label>Country</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="billingCountryChange($event)"
+                formControlName="billing_country"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterCountryControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!billingCountryList?.length" disabled>
+                  <p>Country Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let country of billingCountryList"
+                  [value]="country?.countryss_id"
+                  >{{ country?.countryss_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_country')?.touched &&
+                formDirectInvoice.get('billing_country')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_country')?.errors?.['required']"
+              >
+                Billing country is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_country')?.invalid && !formDirectInvoice.get('billing_country')?.errors?.['required']"
+              >
+                Billing country is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>State</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="billingStateChange($event)"
+                formControlName="billing_state"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterStateControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!billingSteteData?.length" disabled>
+                  <p>State Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let state of billingSteteData"
+                  [value]="state?.states_id"
+                  >{{ state?.states_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_state')?.touched &&
+                formDirectInvoice.get('billing_state')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_state')?.errors?.['required']"
+              >
+                Billing state is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_state')?.invalid && !formDirectInvoice.get('billing_state')?.errors?.['required']"
+              >
+                Billing state is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>City</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select formControlName="billing_city">
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filtercityControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!billingCityList?.length" disabled>
+                  <p>City Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let city of billingCityList"
+                  [value]="city?.city_id"
+                  >{{ city?.city_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_city')?.touched &&
+                formDirectInvoice.get('billing_city')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_city')?.errors?.['required']"
+              >
+                Billing city is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_city')?.invalid && !formDirectInvoice.get('billing_city')?.errors?.['required']"
+              >
+                Billing city is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>Pin Code</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="billing_pin" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_pin')?.touched &&
+                formDirectInvoice.get('billing_pin')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_pin')?.errors?.['required']"
+              >
+                Billing pin is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_pin')?.invalid && !formDirectInvoice.get('billing_pin')?.errors?.['required']"
+              >
+                Billing pin is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 1</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="billing_add1" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_add1')?.touched &&
+                formDirectInvoice.get('billing_add1')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_add1')?.errors?.['required']"
+              >
+                Billing address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_add1')?.invalid && !formDirectInvoice.get('billing_add1')?.errors?.['required']"
+              >
+                Billing address is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 2</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="billing_add2" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('billing_add2')?.touched &&
+                formDirectInvoice.get('billing_add2')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('billing_add2')?.errors?.['required']"
+              >
+                Billing address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('billing_add2')?.invalid && !formDirectInvoice.get('billing_add2')?.errors?.['required']"
+              >
+                Billing address is invalid
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="customerAddress">
+          <span> <label for="">Customer Billing Address-</label></span>
+          <div class="col-md-3">
+            <mat-label>Country</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="customerBillingCountryChange($event)"
+                formControlName="customer_billing_country"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="customerFilterCountryControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!customerBillingCountryList?.length" disabled>
+                  <p>Country Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let country of customerBillingCountryList"
+                  [value]="country?.countryss_id"
+                  >{{ country?.countryss_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_country')?.touched &&
+                formDirectInvoice.get('customer_billing_country')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_country')?.errors?.['required']"
+              >
+                Billing country is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_country')?.invalid && !formDirectInvoice.get('customer_billing_country')?.errors?.['required']"
+              >
+                Billing country is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>State</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="customerBillingStateChange($event)"
+                formControlName="customer_billing_state"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="customerFilterStateControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!customerBillingSteteData?.length" disabled>
+                  <p>State Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let state of customerBillingSteteData"
+                  [value]="state?.states_id"
+                  >{{ state?.states_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_state')?.touched &&
+                formDirectInvoice.get('customer_billing_state')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_state')?.errors?.['required']"
+              >
+                Billing state is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_state')?.invalid && !formDirectInvoice.get('customer_billing_state')?.errors?.['required']"
+              >
+                Billing state is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>City</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select formControlName="customer_billing_city">
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="customerFiltercityControl"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!customerBillingCityList?.length" disabled>
+                  <p>City Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let city of customerBillingCityList"
+                  [value]="city?.city_id"
+                  >{{ city?.city_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_city')?.touched &&
+                formDirectInvoice.get('customer_billing_city')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_city')?.errors?.['required']"
+              >
+                Billing city is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_city')?.invalid && !formDirectInvoice.get('customer_billing_city')?.errors?.['required']"
+              >
+                Billing city is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>Pin Code</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="customer_billing_pin" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_pin')?.touched &&
+                formDirectInvoice.get('customer_billing_pin')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_pin')?.errors?.['required']"
+              >
+                Billing pin is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_pin')?.invalid && !formDirectInvoice.get('customer_billing_pin')?.errors?.['required']"
+              >
+                Billing pin is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 1</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="customer_billing_add1" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_add1')?.touched &&
+                formDirectInvoice.get('customer_billing_add1')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_add1')?.errors?.['required']"
+              >
+                Billing address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_add1')?.invalid && !formDirectInvoice.get('customer_billing_add1')?.errors?.['required']"
+              >
+                Billing address is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 2</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="customer_billing_add2" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('customer_billing_add2')?.touched &&
+                formDirectInvoice.get('customer_billing_add2')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_add2')?.errors?.['required']"
+              >
+                Billing address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('customer_billing_add2')?.invalid && !formDirectInvoice.get('customer_billing_add2')?.errors?.['required']"
+              >
+                Billing address is invalid
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <mat-label>Customer GST</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="customer_gst_number" />
+              <div
+                *ngIf="
+                  formDirectInvoice.get('customer_gst_number')?.touched &&
+                  formDirectInvoice.get('customer_gst_number')?.invalid
+                "
+                class="text-danger mt-2"
+              >
+                <div
+                  *ngIf="formDirectInvoice.get('customer_gst_number')?.errors?.['required']"
+                >
+                  Customer gst is required
+                </div>
+  
+                <div
+                  *ngIf="formDirectInvoice.get('customer_gst_number')?.invalid && !formDirectInvoice.get('customer_gst_number')?.errors?.['required']"
+                >
+                  Customer gst is invalid
+                </div>
+              </div>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="row"
+          *ngIf="(!isGst && isShippingAddress) || (isGst && isShippingAddress)"
+        >
+          <span><label for="">Customer Shipping Address-</label></span>
+  
+          <div class="col-md-3">
+            <mat-label>Country</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="shippingCountryChange($event)"
+                formControlName="shipping_country"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterCountryControl2"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!shippingCountryList?.length" disabled>
+                  <p>Country Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let country of shippingCountryList"
+                  [value]="country?.countryss_id"
+                  >{{ country?.countryss_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_country')?.touched &&
+                formDirectInvoice.get('shipping_country')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_country')?.errors?.['required']"
+              >
+                Shipping country is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_country')?.invalid && !formDirectInvoice.get('shipping_country')?.errors?.['required']"
+              >
+                Shipping country is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>State</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select
+                (selectionChange)="shippingStateChange($event)"
+                formControlName="shipping_state"
+              >
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filterStateControl2"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!shippingSteteData?.length" disabled>
+                  <p>State Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let state of shippingSteteData"
+                  [value]="state?.states_id"
+                  >{{ state?.states_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_state')?.touched &&
+                formDirectInvoice.get('shipping_state')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_state')?.errors?.['required']"
+              >
+                Shipping state is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_state')?.invalid && !formDirectInvoice.get('shipping_state')?.errors?.['required']"
+              >
+                Shipping state is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>City</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <mat-select formControlName="shipping_city">
+                <mat-form-field>
+                  <input
+                    matInput
+                    [formControl]="filtercityControl2"
+                    type="text"
+                    placeholder="Search"
+                  />
+                </mat-form-field>
+                <mat-option *ngIf="!shippingCityList?.length" disabled>
+                  <p>City Not Found</p>
+                </mat-option>
+                <mat-option
+                  *ngFor="let city of shippingCityList"
+                  [value]="city?.city_id"
+                  >{{ city?.city_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_city')?.touched &&
+                formDirectInvoice.get('shipping_city')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_city')?.errors?.['required']"
+              >
+                Shipping city is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_city')?.invalid && !formDirectInvoice.get('shipping_city')?.errors?.['required']"
+              >
+                Shipping city is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <mat-label>Pin Code</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="shipping_pin" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_pin')?.touched &&
+                formDirectInvoice.get('shipping_pin')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_pin')?.errors?.['required']"
+              >
+                Shipping pin code is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_pin')?.invalid && !formDirectInvoice.get('shipping_pin')?.errors?.['required']"
+              >
+                Shipping pin code is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 1</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="shipping_add1" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_add1')?.touched &&
+                formDirectInvoice.get('shipping_add1')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_add1')?.errors?.['required']"
+              >
+                Shipping address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_add1')?.invalid && !formDirectInvoice.get('shipping_add1')?.errors?.['required']"
+              >
+                Shipping address is invalid
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <mat-label>Address Line 2</mat-label>
+            <mat-form-field appearance="outline" class="disableField">
+              <input matInput formControlName="shipping_add2" />
+            </mat-form-field>
+            <div
+              *ngIf="
+                formDirectInvoice.get('shipping_add2')?.touched &&
+                formDirectInvoice.get('shipping_add2')?.invalid
+              "
+              class="text-danger"
+            >
+              <div
+                *ngIf="formDirectInvoice.get('shipping_add2')?.errors?.['required']"
+              >
+                Shipping address is required
+              </div>
+  
+              <div
+                *ngIf="formDirectInvoice.get('shipping_add2')?.invalid && !formDirectInvoice.get('shipping_add2')?.errors?.['required']"
+              >
+                Shipping address is invalid
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form_table">
+          <mat-card>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>S.NO.</th>
+                        <th>Item Category</th>
+                        <th>Item Sub Category</th>
+                        <th>Item Name</th>
+                        <th>Item Description</th>
+                        <th>HSN Code</th>                        
+                        <th>UOM</th>
+                        <th>Quantity</th>
+                        <th>Price Per Unit</th>
+                        <th>GST(%)</th>
+                        <th>Discount(%)</th>
+                      </tr>
+                    </thead>
+                    <tbody formArrayName="items">
+                      <tr
+                        *ngFor="let item of productItems.controls; let i = index"
+                        [formGroupName]="i"
+                      >
+                        <td>{{ i + 1 }}</td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Category</mat-label>
+                            <mat-select
+                              (selectionChange)="getSubCategory($event, i)"
+                              formControlName="product_category_id"
+                            >
+                              <mat-form-field>
+                                <input
+                                  matInput
+                                  (input)="filterCategories($event, i)"
+                                  placeholder="Search"
+                                />
+                              </mat-form-field>
+                              <mat-option *ngIf="!categoryList[i]?.length" disabled>
+                                <p>Category Not Found</p>
+                              </mat-option>
+                              <mat-option
+                                *ngFor="let data of categoryList[i]"
+                                [value]="data.id"
+                                >{{ data.asset_category_name }}</mat-option
+                              >
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Sub Category</mat-label>
+                            <mat-select formControlName="product_sub_category_id">
+                              <mat-form-field>
+                                <input
+                                  matInput
+                                  (input)="filterProductVariant($event, i)"
+                                  placeholder="Search"
+                                />
+                              </mat-form-field>
+                              <mat-option *ngIf="!subCategory[i]?.length" disabled>
+                                <p>Sub Category Not Found</p>
+                              </mat-option>
+                              <mat-option
+                                *ngFor="let item of subCategory[i]"
+                                [value]="item?.id" (click)="getProductList(item,item,i)"
+                                >{{ item?.sub_category_name }}</mat-option
+                              >
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Item Name</mat-label>
+                            <mat-select
+                          
+                              formControlName="product_master_id"
+                            >
+                              <mat-form-field>
+                                <input
+                                  matInput
+                                  (input)="filterProduct($event, i)"
+                                  placeholder="Search"
+                                />
+                              </mat-form-field>
+                              <mat-option *ngIf="!productList[i]?.length" disabled>
+                                <p>Product Not Found</p>
+                              </mat-option>
+                              <mat-option
+                                *ngFor="let item of productList[i]"
+                                [value]="item?.id"  (click)="setItemDescription(item,i)"
+                                >{{ item?.product_name }}</mat-option
+                              >
+                            </mat-select>
+                          </mat-form-field>
+                        </td>
+                        
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <input
+                              matInput
+                              formControlName="product_description"
+                              placeholder="Description"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>HSN Code</mat-label>
+                            <input
+                              matInput
+                              formControlName="hsn_code"
+                              placeholder="HSN Code"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </td>
+                      
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>UOM</mat-label>
+                            <input
+                              matInput
+                              formControlName="uom_name"
+                              placeholder="UOM"
+                              readonly
+                            />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Quantity</mat-label>
+                            <input
+                              type="text"
+                              matInput
+                              formControlName="quantity"
+                              placeholder="quantity"
+                              (ngModelChange)="productCalculation()"
+                              oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                            />
+                          </mat-form-field>
+                          <div
+                            *ngIf="
+                              item.get('quantity')?.touched &&
+                              item.get('quantity')?.invalid
+                            "
+                            class="text-danger"
+                          >
+                            <div *ngIf="item.get('quantity')?.errors?.['required']">
+                              Item quantity is required
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <mat-form-field appearance="outline">
+                            <mat-label>Price Per Unit</mat-label>
+                            <input
+                              type="text"
+                              matInput
+                              formControlName="price_per_unit"
+                              placeholder="Price Per Unit"
+                              oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                            />
+                          </mat-form-field>
+                          <div
+                            *ngIf="
+                              item.get('price_per_unit')?.touched &&
+                              item.get('price_per_unit')?.invalid
+                            "
+                            class="text-danger"
+                          >
+                            <div
+                              *ngIf="item.get('price_per_unit')?.errors?.['required']"
+                            >
+                              Item price is required
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>GST(%)</mat-label>
+                              <input
+                                type="text"
+                                matInput
+                                formControlName="gst"
+                                placeholder="gst"
+                                (ngModelChange)="productCalculation()"
+                                oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                              />
+                            </mat-form-field>
+                            <div
+                              *ngIf="
+                                item.get('gst')?.touched &&
+                                item.get('gst')?.invalid
+                              "
+                              class="text-danger"
+                            >
+                              <div *ngIf="item.get('gst')?.errors?.['required']">
+                                Item gst is required
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Discount(%)</mat-label>
+                              <input
+                                type="text"
+                                matInput
+                                formControlName="discount"
+                                placeholder="discount"
+                                (ngModelChange)="productCalculation()"
+                                oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                              />
+                            </mat-form-field>
+                            <div
+                              *ngIf="
+                                item.get('discount')?.touched &&
+                                item.get('discount')?.invalid
+                              "
+                              class="text-danger"
+                            >
+                              <div *ngIf="item.get('discount')?.errors?.['required']">
+                                Item discount is required
+                              </div>
+                            </div>
+                          </td>
+                        <td style="text-align: center;
+                        padding: 0px;
+                        ">
+                          <span style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                            <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i)" aria-hidden="true"></i></span>
+                          <span style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                            <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                              style=" margin-left: 10px!important;"></i></span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+            </div>
+          </mat-card>
+        </div>
+  
+        <div class="row">
+          <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Additional Charges</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="additional_charges"
+                  (ngModelChange)="productCalculation()"
+                />
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Total Discount</mat-label>
+              <mat-form-field appearance="outline" class="disableField">
+                <input matInput type="number" formControlName="total_discount" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Total GST</mat-label>
+              <mat-form-field appearance="outline" class="disableField">
+                <input matInput type="number" formControlName="total_gst" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Grand Total</mat-label>
+              <mat-form-field appearance="outline" class="disableField">
+                <input matInput type="number" formControlName="grand_total" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Notes</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="notes" />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Terms & Conditions</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="text"
+                  formControlName="terms_and_conditions"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-label>Payment Term</mat-label>
+              <mat-form-field appearance="outline">
+                <input
+                  matInput
+                  type="number"
+                  formControlName="payment_terms"
+                />
+              </mat-form-field>
+              <div
+                *ngIf="
+                  formDirectInvoice.get('payment_terms')?.touched &&
+                  formDirectInvoice.get('payment_terms')?.invalid
+                "
+                class="text-danger"
+              >
+                <div
+                  *ngIf="formDirectInvoice.get('payment_terms')?.errors?.['required']"
+                >
+                  Payment term is required!
+                </div>
+  
+                <div
+                  *ngIf="formDirectInvoice.get('payment_terms')?.invalid && !formDirectInvoice.get('payment_terms')?.errors?.['required']"
+                >
+                  Payment term is invalid!
+                </div>
+              </div>
+            </div>
+          </div>
+  
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <mat-label>Upload File</mat-label>
+            <input
+              class="form-control"
+              type="file"
+              style="padding-right: 19%"
+              title="Termination Copy Upload"
+              (change)="uploadDoc($event)"
+              accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+            />
+            <mat-icon
+              *ngIf="uploadedFile"
+              class="formFileViewIcon"
+              (click)="viewImg1()"
+              >visibility</mat-icon
+            >
+          </div>
+        </div>
+  
+        <div class="mt-3 common_button_sub">
+          <button *ngIf="!isView">Save</button>
+          <button
+            class="cancel_button_y"
+            type="button"
+            routerLink="/master/sales/sales-invoice-list"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+  

@@ -1,0 +1,421 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Finance & Accounting</h1>
+    <p>Journal <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+      </i><span> Journal Book </span></p>
+  </div>
+  <div class="add_button">
+    <button type="button" routerLink="../"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all mt-4">
+  <mat-card>
+    <div class="form_head">
+      <h3>Record Journal Entries</h3>
+    </div>
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="createJournalEntryForm">
+        <div class="row details mt-3">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+              <mat-form-field appearance="outline">
+                <mat-label>Posting Date</mat-label>
+                <input matInput type="text" formControlName="posting_date" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3 mx-2 inp_disable" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+              <mat-form-field appearance="outline">
+                <mat-label>Journal Number</mat-label>
+                <input matInput type="text" formControlName="general_number" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="singleGeneral.isReversal || reversal">
+            <div class="form-group mb-3 inp_disable">
+              <mat-form-field appearance="outline">
+                <mat-label>Reversal Of</mat-label>
+                <input matInput type="text" value="{{parent_journal_no}}" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3 mx-2" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+              <mat-form-field appearance="outline" readonly>
+                <mat-label>Transaction Date</mat-label>
+                <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="transaction_date" />
+                <mat-datepicker-toggle matSuffix [for]="dp4" [hidden]="paramsType == 'view'"></mat-datepicker-toggle>
+                <mat-datepicker #dp4></mat-datepicker>
+                <button mat-icon-button *ngIf="createJournalEntryForm.get('transaction_date')?.value" matSuffix
+                  (click)="clearDate('transaction_date')" [hidden]="paramsType == 'view'">
+                  <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+              <mat-form-field appearance="outline">
+                <mat-label>Bill No.</mat-label>
+                <input matInput type="text" formControlName="bill_number" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+            <mat-form-field appearance="outline">
+              <mat-label>Voucher Type</mat-label>
+              <mat-select formControlName="voucher_id">
+                <mat-option [value]="voucher.id" *ngFor="let voucher of voucherData">{{voucher.voucher_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-3">
+            <div class="form-group mb-3" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+              <mat-form-field appearance="outline">
+                <mat-label>Notes</mat-label>
+                <input matInput type="text" formControlName="notes" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <ng-container>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                <mat-label>Party Type</mat-label>
+                <mat-select formControlName="party_type" (selectionChange)="onPartyTypeChangeAdvance($event)">
+                  <mat-option value="VENDOR" [disabled]="paramsType == 'view'">Vendor</mat-option>
+                  <mat-option value="CUSTOMER" [disabled]="paramsType == 'view'">Customer</mat-option>
+                </mat-select>
+                <button mat-icon-button *ngIf="this.createJournalEntryForm.get('party_type')?.value"
+                  matSuffix (click)="clearData('party_type')" [hidden]="paramsType == 'view'">
+                  <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </ng-container>
+
+          <ng-container>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <ng-container *ngIf="partyTypeCheck=='VENDOR'">
+                <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                  <mat-label>Party</mat-label>
+                  <mat-select formControlName="vendor_id">
+                    <mat-option [value]="data.id" *ngFor="let data of vendorPartyData;let i = index" (click)="getVendorData(data,i)"
+                      [disabled]="paramsType == 'view'">
+                      {{data.vendor_name}}
+                    </mat-option>
+                  </mat-select>
+                  <button mat-icon-button *ngIf="this.createJournalEntryForm.get('vendor_id')?.value"
+                    matSuffix (click)="clearData('vendor_id')" [hidden]="paramsType == 'view'">
+                    <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </ng-container>
+
+              <ng-container *ngIf="partyTypeCheck=='CUSTOMER'">
+                <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                  <mat-label>Party</mat-label>
+                  <mat-select #select2 formControlName="customer_id">
+                    <mat-select-filter *ngIf="select2.focused" [array]="customerPartyData1"
+                      (filteredReturn)="filterCustomer($event)"></mat-select-filter>
+                    <mat-option [value]="data.id" *ngFor="let data of customerPartyData"
+                      (click)="getCustomerData(data)" [disabled]="paramsType == 'view'">
+                      {{data.company_name}}
+                    </mat-option>
+                  </mat-select>
+                  <button mat-icon-button *ngIf="this.createJournalEntryForm.get('customer_id')?.value"
+                    matSuffix (click)="clearData('customer_id')" [hidden]="paramsType == 'view'">
+                    <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                  </button>
+                </mat-form-field>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+
+    <!-- Item Details -->
+    <div class="form_head">
+      <h3>Account Details</h3>
+    </div>
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="createJournalEntryItemForm">
+        <div formArrayName="Account_details">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">S.No.</th>
+                  <th scope="col">Account</th>
+                  <th scope="col">Debit ({{currencyCode}})</th>
+                  <th scope="col">Credit ({{currencyCode}})</th>
+                  <th scope="col" *ngIf="vendor_id">TDS Section</th>
+                  <th scope="col" *ngIf="vendor_id">TDS Nature</th>
+                  <th scope="col" *ngIf="vendor_id">Nature Of Transaction</th>
+                  <th scope="col" *ngIf="vendor_id">TDS Rate</th>
+                  <th scope="col" *ngIf="vendor_id">TDS Rate Amount ({{currencyCode}})</th>
+                  <th scope="col" *ngIf="getServiceData.length && vendor_id">Tax Rate</th>
+                  <th scope="col" *ngIf="getServiceData.length && vendor_id">Tax Amount ({{currencyCode}})</th>
+                  <th scope="col">Cost Center</th>
+                  <th scope="col">Profit Center</th>
+                  <th scope="col">Remarks</th>
+                  <th scope="col" [hidden]="paramsType == 'view'">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of Account_details.controls; let i = index" [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Account</mat-label>
+                      <mat-select #select2 formControlName="chart_account_id" (selectionChange)="onAccountChange($event,i)">
+                        <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                          (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                        <ng-container>
+                          <mat-option [value]="data.id" *ngFor="let data of chartedAccount" [hidden]="data.hidden"
+                            [disabled]="paramsType == 'view'" (click)="dataPass(data,i)">
+                            {{data.account_name}}
+                          </mat-option>
+                        </ng-container>
+                      </mat-select>
+                      <button mat-icon-button *ngIf="this.Account_details.controls[i].get('chart_account_id')?.value"
+                        matSuffix (click)="clearDropdown('chart_account_id',i)" [hidden]="paramsType == 'view'">
+                        <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                      </button>
+                      <mat-error
+                        *ngIf="this.Account_details.controls[i].get('chart_account_id')?.touched && this.Account_details.controls[i].get('chart_account_id')?.errors?.['required']">
+                        * Required!
+                      </mat-error>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Debit</mat-label>
+                      <input matInput type="text" formControlName="debit_amount" (wheel)="$event.preventDefault()"
+                        (input)="onDebitInputChange($event,i)" (focus)="onDebitFocus(i)" (blur)="onDebitBlur(i)" />
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Credit</mat-label>
+                      <input matInput type="text" formControlName="credit_amount" (wheel)="$event.preventDefault()"
+                        (input)="onCreditInputChange($event,i)" (focus)="onCreditFocus(i)" (blur)="onCreditBlur(i)" />
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>TDS Section</mat-label>
+                      <mat-select formControlName="tds_id">
+                        <ng-container>
+                          <mat-option [value]="data.id" *ngFor="let data of getAllTdsSection" (click)="getAllNatureTransaction(data,i)" [hidden]="data.hidden">
+                            {{data.section}}
+                          </mat-option>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>TDS Nature</mat-label>
+                      <input matInput type="text" formControlName="nature" readonly />
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Nature Of Transaction</mat-label>
+                      <mat-select formControlName="nature_id">
+                        <ng-container>
+                          <mat-option [value]="data.id" *ngFor="let data of getAllNatureOfTrsanction[i]" (click)="getTdsRateData(data,i)" [hidden]="data.hidden">
+                            {{data.nature_of_transaction}}
+                          </mat-option>
+                        </ng-container>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>TDS Rate</mat-label>
+                      <input matInput type="text" formControlName="tds_rate" readonly />
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>TDS Rate Amount</mat-label>
+                      <input matInput type="text" formControlName="tds_rate_amount" readonly />
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="getServiceData.length && vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Tax Rate</mat-label>
+                      <input matInput type="text" formControlName="tax_rate" readonly />
+                    </mat-form-field>
+                  </td>
+
+                  <td *ngIf="getServiceData.length && vendor_id">
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Tax Amount</mat-label>
+                      <input matInput type="text" formControlName="tax_amount" readonly />
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Cost Center</mat-label>
+                      <mat-select formControlName="cost_center_id">
+                        <mat-option *ngFor="let item of costCenter" [value]="item.cost_center_id">{{item.cost_center_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Profit Center</mat-label>
+                      <mat-select formControlName="profit_center_id">
+                        <mat-option *ngFor="let item of getAllProfitCenterData" [value]="item.id">{{item.profit_center_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+  <td >
+                    <mat-form-field appearance="outline" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                      <mat-label>Remarks</mat-label>
+                      <input matInput type="text" formControlName="remarks"  />
+                    </mat-form-field>
+                  </td>
+                  <td [hidden]="paramsType == 'view'">
+                    <div class="edit_del flexRow">
+                      <div (click)="AddRow()">
+                        <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                      </div>
+                      <div *ngIf="i !== 0">
+                        <mat-icon matTooltip="Delete Item" (click)="removeRow(i)">delete_circle</mat-icon>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row mt-2">
+      <div class="col-12 text-end">
+        <button type="button"
+                class="btn btn-primary" style="background-color:#00644d"
+                (click)="showLedgerPreview()"
+                [disabled]="!hasAccounts()">
+          <i class="fa fa-eye"></i> General Ledger Preview
+        </button>
+      </div>
+    </div>
+      </form>
+    </div>
+
+    <!-- Total Amount -->
+    <div class="form_head">
+      <h3>Total Amount</h3>
+    </div>
+    <div class="form_basic mb-0">
+      <div class="form_set totalTable">
+        <div class="row">
+          <div class="col-md-8">
+            <table class="table table-bordered">
+              <tr>
+                <th rowspan="2">Total</th>
+                <th>Total of Debit ({{currencyCode}})</th>
+                <th>Total of Credit ({{currencyCode}})</th>
+              </tr>
+              <tr>
+                <td>{{formatCurrency(totalDebit)}}</td>
+                <td>{{formatCurrency(totalCredit)}}</td>
+              </tr>
+              <tr>
+                <td>Difference</td>
+                <td colspan="2" [ngStyle]="{'background-color': redColor ? 'lightcoral' : '#60d385'}">
+                  {{formatCurrency(Different)}}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div>
+          <form [formGroup]="createJournalreferanceForm">
+            <div class="row">
+              <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-3" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cheque Reference No</mat-label>
+                    <input matInput type="text" formControlName="reference" />
+                    <mat-error *ngIf="createJournalreferanceForm.get('reference')?.hasError('required')">
+                      Cheque Reference No is required for Bank Account
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                <div class="form-group mb-3" [ngClass]="paramsType == 'view' ?'inp_disable':''">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Cheque Reference Date</mat-label>
+                    <input matInput [matDatepicker]="dp3" formControlName="reference_date" />
+                    <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+                    <mat-datepicker #dp3></mat-datepicker>
+                    <mat-error *ngIf="createJournalreferanceForm.get('reference_date')?.hasError('required')">
+                      Cheque Reference Date is required for Bank Account
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Document Upload -->
+            <div class="row mb-3">
+              <ng-container formArrayName="journalDocuments">
+                <ng-container *ngFor="let doc of journalDocuments.controls; let i = index" [formGroupName]="i">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 d-flex mt-3 mb-3">
+                    <input class="form-control" type="file" style="padding-right:10px;height:42px;color:#6c6c6c;padding-top:10px;font-size:13px;"
+                      accept=".jpg,.jpeg,.png,.pdf,.docx,.doc" title="Upload Lead Document" (change)="uploadDoc($event,i)" />
+                    <mat-icon *ngIf="doc.value.file" class="formFileViewIcon" (click)="viewImg(doc.value.file)"
+                      matTooltip="View" style="cursor:pointer;margin-top:8px;">visibility</mat-icon>
+                  </div>
+                  <div class="col-md-2" style="padding-top:25px;" *ngIf="!isView">
+                    <mat-icon matTooltip="Add Item" (click)="addDoc()">add_circle</mat-icon>
+                    <mat-icon matTooltip="Delete Item" *ngIf="journalDocuments.length>1" (click)="remove(i)">delete_circle</mat-icon>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </form>
+
+          <div class="common_button_sub" align="end" *ngIf="paramsType!=='view'">
+            <button (click)="openEditMode()" [disabled]="loading" [hidden]="paramsType === 'edit' || tabType === 'PENDING'" *ngIf="paramsType">
+              Reverse Journal Entry
+            </button>
+            <button (click)="submitPublic('APPROVED')" [disabled]="loading" [hidden]="paramsType == 'view'">
+              Submit & Publish
+            </button>
+            <button class="cancel_button_y" routerLink="/master/finance/journal/journal-ledger" [hidden]="paramsType === 'view' && tabType === 'PENDING'">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

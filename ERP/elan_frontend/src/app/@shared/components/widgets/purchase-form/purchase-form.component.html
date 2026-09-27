@@ -1,0 +1,1102 @@
+<app-wrapper
+  [title]="title"
+  [subTitle]="subheading"
+  [subheading]="''"
+  [showActions]="showActions"
+  [isBack]="isBack"
+  [actions]="actions"
+>
+  <mat-card class="p-2">
+    <form class="" [formGroup]="form">
+      <div class="row">
+        <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+          <div class="row mb-4">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <!-- <mat-radio-group formControlName="prCategory" class="flexRow" [disabled]="mode === 'View'"> -->
+              <mat-label>Indent Type</mat-label>
+              <mat-radio-group
+                formControlName="prCategory"
+                class="flexRow"
+                [ngClass]="{ 'readonly-select': mode === 'View' }"
+              >
+                <mat-radio-button value="Item" class="padding" checked="true">
+                  Items
+                </mat-radio-button>
+                <mat-radio-button value="Service" class="padding">
+                  Services
+                </mat-radio-button>
+                <!-- <mat-radio-button value="Consumables" class="padding" disabled>
+                                    Consumables
+                                </mat-radio-button>
+                                <mat-radio-button value="Raw Material" class="padding" disabled>
+                                    Raw Material
+                                </mat-radio-button> -->
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <!-- <p style="font-weight: 500; font-size: 18px">
+            Billing Branch Address
+          </p> -->
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <app-mat-form-select-filter
+                  [ngClass]="{ 'readonly-select': mode === 'View' }"
+                  [key]="'id'"
+                  [items]="branchData"
+                  [displayKey]="'branch_name'"
+                  placeholder="Billing Branch Address"
+                  formControlName="billing_branch_id"
+                ></app-mat-form-select-filter>
+                <mat-error
+                  *ngIf="
+                    form.controls['billing_branch_id'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </div>
+            </div>
+            <div
+              *ngIf="form.get('billing_branch_id')?.value"
+              class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12"
+            >
+              <div class="form-group mb-3">
+                <b>State:-</b>
+                {{ selectedBranchData?.MASTER_STATE?.states_name || "-" }}
+              </div>
+            </div>
+            <div
+              class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+              *ngIf="form.get('billing_branch_id')?.value"
+            >
+              <div class="form-group mb-3">
+                <b>Address:-</b> {{ selectedBranchData?.branch_address || "-" }}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <!-- <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+              <app-mat-form-select-filter
+                [ngClass]="'readonly-select'"
+                [key]="'id'"
+                [items]="financialYear"
+                [displayKey]="'financial_year'"
+                placeholder="Financial Year"
+                formControlName="financial_year_id"
+              ></app-mat-form-select-filter>
+            </div> -->
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': mode === 'View' }"
+                [key]="'dept_id'"
+                [items]="departmentList"
+                [displayKey]="'department_name'"
+                placeholder="Department"
+                formControlName="department_id"
+              ></app-mat-form-select-filter>
+            </div>
+            <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field
+                  appearance="outline"
+                  [ngClass]="{ 'readonly-select': mode === 'View' }"
+                >
+                  <mat-label>Budget Type </mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="Capex">Capex</mat-option>
+                    <mat-option value="Opex">Opex</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="form.controls['type'].hasError('required')">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+              <div class="form-group mb-3">
+                <mat-form-field
+                  appearance="outline"
+                  class="readonly-wrapper"
+                  *ngIf="formType === 'PR'"
+                >
+                  <mat-label>PR Number</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="purchase_number"
+                    readonly
+                  />
+                  <mat-error
+                    *ngIf="
+                      form.controls['purchase_number'].hasError('required')
+                    "
+                  >
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field
+                  appearance="outline"
+                  class="readonly-wrapper"
+                  *ngIf="formType === 'PO'"
+                >
+                  <mat-label>PO Number</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    formControlName="po_number"
+                    readonly
+                  />
+                  <mat-error
+                    *ngIf="form.controls['po_number'].hasError('required')"
+                  >
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': mode === 'View' }"
+                [key]="'id'"
+                [items]="costCenterData"
+                [noneOption]="false"
+                [displayKey]="'cost_center_name'"
+                placeholder="Cost Center"
+                formControlName="cost_center_id"
+              ></app-mat-form-select-filter>
+              <mat-error
+                *ngIf="
+                  form.controls['cost_center_id']?.touched &&
+                  form.controls['cost_center_id'].hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </div>
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="formType === 'PO'"
+            >
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': mode === 'View' }"
+                [key]="'id'"
+                [items]="profitCenterList"
+                [displayKey]="'profit_center_name'"
+                placeholder="Profit Center"
+                formControlName="profit_center_id"
+              ></app-mat-form-select-filter>
+              <mat-error
+                *ngIf="
+                  form.controls['profit_center_id']?.touched &&
+                  form.controls['profit_center_id'].hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </div>
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="formType === 'PO'"
+            >
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': mode === 'View' }"
+                [key]="'id'"
+                [items]="vendorList"
+                [displayKey]="'vendor_name'"
+                placeholder="Vendor Name"
+                formControlName="vendor_id"
+              ></app-mat-form-select-filter>
+            </div>
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="formType === 'PO'"
+            >
+              <mat-form-field appearance="outline" class="readonly-select">
+                <mat-label>Vendor Category</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="vendor_category"
+                  readonly
+                />
+                <mat-error
+                  *ngIf="
+                    form.controls['vendor_category']?.touched &&
+                    form.controls['vendor_category'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="
+                formType === 'PO' &&
+                form.get('vendor_id')?.value &&
+                form.get('advance_amount')?.value
+              "
+            >
+              <mat-form-field appearance="outline" class="readonly-select">
+                <mat-label>Advance Amount</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  formControlName="advance_amount"
+                  readonly
+                />
+                <mat-error
+                  *ngIf="
+                    form.controls['advance_amount']?.touched &&
+                    form.controls['advance_amount'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="
+                formType === 'PO' &&
+                form.get('vendor_id')?.value &&
+                form.get('advance_amount')?.value
+              "
+            >
+              <mat-form-field appearance="outline">
+                <mat-label>Advance % Utilization</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  max="100"
+                  formControlName="advance_utilization_percent"
+                />
+                <mat-error
+                  *ngIf="
+                    form.controls['advance_utilization_percent']?.touched &&
+                    form.controls['advance_utilization_percent'].hasError(
+                      'required'
+                    )
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div
+              class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+              *ngIf="
+                formType === 'PO' &&
+                form.get('vendor_id')?.value &&
+                form.get('vendor_category')?.value === 'International'
+              "
+            >
+              <app-mat-form-select-filter
+                [ngClass]="{ 'readonly-select': mode !== 'Add' }"
+                [key]="'Currency_Convert_id'"
+                [items]="filteredCurrencyData"
+                [displayKey]="'Currency_Type'"
+                placeholder="Select Trade Currency"
+                formControlName="currency_id"
+              ></app-mat-form-select-filter>
+            </div>
+          </div>
+          <div
+            class="common_button_sub"
+            *ngIf="mode !== 'View' && mode !== 'Approval'"
+            style="text-align: left"
+          >
+            <button
+              *ngIf="form.get('prCategory')?.value === 'Item'"
+              (click)="addProduct('Item')"
+            >
+              + Add Items
+            </button>
+            <button
+              *ngIf="form.get('prCategory')?.value === 'Service'"
+              (click)="addProduct('Service')"
+            >
+              + Add Service
+            </button>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th colspan="2">Budget Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Financial Year</td>
+                <td style="width: 90px">
+                  {{ budgetData?.financial_year }}
+                </td>
+              </tr>
+              <tr>
+                <td>Budget Amount (INR)</td>
+                <td>
+                  {{ budgetData?.amount.toFixed(2) }}
+                </td>
+              </tr>
+              <tr>
+                <td>Total Purchase</td>
+                <td>
+                  {{
+                    getTotalPurchaseBudget
+                      ? getTotalPurchaseBudget.toFixed(2)
+                      : "0.00"
+                  }}
+                  <!-- {{ getTotalPurchaseBudget }} -->
+                </td>
+              </tr>
+              <tr>
+                <td>Remaining Budget</td>
+                <td>
+                  {{
+                    budgetData?.remainingAmount
+                      ? (+budgetData.remainingAmount).toFixed(2)
+                      : "0.00"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- item type -->
+      <div
+        class="row"
+        *ngIf="
+          form.get('prCategory')?.value === 'Item' ||
+          form.get('prCategory')?.value === 'Service'
+        "
+      >
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="form_basic">
+            <div class="table-responsive">
+              <table class="table table-bordered" style="width: 100%">
+                <thead>
+                  <tr>
+                    <th scope="col">Item Image</th>
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col" *ngIf="formType === 'PR'">Priority</th>
+                    <th scope="col" *ngIf="formType === 'PO'">
+                      Unit Price/{{ currencyCode }}
+                    </th>
+                    <th scope="col" *ngIf="formType === 'PO'">Discount %</th>
+
+                    <th scope="col" *ngIf="formType === 'PR'">MVP</th>
+                    <th scope="col" *ngIf="formType === 'PO'">
+                      Amount/{{ currencyCode }}
+                    </th>
+                    <th scope="col" *ngIf="formType === 'PO'">HSN Code</th>
+                    <th
+                      scope="col"
+                      *ngIf="
+                        formType === 'PO' &&
+                        form.get('vendor_category')?.value === 'Domestic'
+                      "
+                    >
+                      GST(%)
+                    </th>
+                    <th scope="col" *ngIf="formType === 'PO'">
+                      Grand Total/{{ currencyCode }}
+                    </th>
+                    <th class="col" *ngIf="formType === 'PR'">Vendors</th>
+                    <th *ngIf="!id" scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody
+                  formArrayName="item_detail"
+                  *ngFor="let control of itemDetail.controls; index as i"
+                >
+                  <tr
+                    *ngIf="itemDetail.length != 0"
+                    style="text-align: center"
+                    [formGroupName]="i"
+                  >
+                    <td>
+                      <div class="form-group">
+                        <img
+                          [src]="
+                            generateImageUrl(control.get('item_image')?.value)
+                          "
+                          style="cursor: pointer"
+                          width="80"
+                          height="60"
+                          (click)="
+                            seePreviewTable(
+                              generateImageUrl(control.get('item_image')?.value)
+                            )
+                          "
+                          (error)="onImageError($event)"
+                        />
+                      </div>
+                    </td>
+                    <td class="inpBox">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 10vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            matInput
+                            formControlName="item_name"
+                            readonly
+                          />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="inpBox">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 6vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            matInput
+                            formControlName="item_code"
+                            readonly
+                          />
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="inpBox">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 6vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            type="number"
+                            matInput
+                            formControlName="quantity"
+                            min="1"
+                            (keyup)="calculateQuantityChange(control)"
+                          />
+                          <mat-error
+                            *ngIf="
+                              control.get('quantity')?.hasError('required')
+                            "
+                          >
+                            Quantity is required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PO'">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 6vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <input
+                            type="number"
+                            matInput
+                            formControlName="unit_price"
+                            (keyup)="calculateQuantityChange(control)"
+                          />
+                          <mat-error
+                            *ngIf="
+                              control.get('unit_price')?.hasError('required')
+                            "
+                          >
+                            Unit Price is required
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PO'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          type="number"
+                          matInput
+                          formControlName="discount"
+                          (keyup)="calculateQuantityChange(control)"
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PR'">
+                      <div class="form-group">
+                        <mat-form-field
+                          appearance="outline"
+                          style="width: 6vw"
+                          [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                        >
+                          <mat-select formControlName="priority">
+                            <mat-option value="HIGH">HIGH</mat-option>
+                            <mat-option value="MEDIUM">MEDIUM</mat-option>
+                            <mat-option value="LOW">LOW</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PR'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          type="number"
+                          matInput
+                          formControlName="mvp"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+
+                    <td class="inpBox" *ngIf="formType === 'PO'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          type="number"
+                          matInput
+                          formControlName="total_mvp"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PO'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          matInput
+                          formControlName="hsn_sac_code"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td
+                      class="inpBox"
+                      *ngIf="
+                        formType === 'PO' &&
+                        form.get('vendor_category')?.value === 'Domestic'
+                      "
+                    >
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          type="number"
+                          matInput
+                          formControlName="tax"
+                          (keyup)="calculateQuantityChange(control)"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PO'">
+                      <mat-form-field
+                        appearance="outline"
+                        style="width: 6vw"
+                        [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+                      >
+                        <input
+                          type="number"
+                          matInput
+                          formControlName="grand_total"
+                          readonly
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td class="inpBox" *ngIf="formType === 'PR'">
+                      <app-mat-form-select-filter
+                        [key]="'id'"
+                        [items]="vendorList"
+                        [noneOption]="false"
+                        [displayKey]="'vendor_name'"
+                        placeholder="Vendor Name"
+                        formControlName="vendor_ids"
+                        [multiple]="true"
+                      ></app-mat-form-select-filter>
+                      <mat-error
+                        *ngIf="
+                          control.get('vendor_ids')?.touched &&
+                          control.get('vendor_ids')?.hasError('required')
+                        "
+                      >
+                        Vendor is required
+                      </mat-error>
+                    </td>
+                    <td class="inpBox2" *ngIf="!id">
+                      <mat-icon (click)="deleteRow(i)">delete</mat-icon>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="itemDetail.controls.length == 0">
+                  <tr>
+                    <td colspan="9" style="text-align: center; color: #8e8e8e">
+                      Items Not Selected
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="row"
+              *ngIf="itemDetail.controls.length !== 0 && formType === 'PO'"
+            >
+              <!-- Total Amount -->
+              <div class="col-9">
+                <p style="text-align: end; font-size: 16px; font-weight: 500">
+                  Total Amount =
+                </p>
+              </div>
+              <div class="col-3">
+                <p style="font-size: 16px; font-weight: 500">
+                  {{
+                    totalUnitPriceQty
+                      | currency: currencyCode : "symbol" : "1.2-2"
+                  }}
+                </p>
+              </div>
+
+              <!-- Total Discount -->
+              <ng-container *ngIf="totalDiscount > 0">
+                <div class="col-9">
+                  <p style="text-align: end; font-size: 16px; font-weight: 500">
+                    Total Discount =
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p style="font-size: 16px; font-weight: 500; color: #d9534f">
+                    -{{
+                      totalDiscount
+                        | currency: currencyCode : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                </div>
+              </ng-container>
+
+              <!-- Total Tax/GST (Domestic Vendor category only) -->
+              <ng-container
+                *ngIf="form.get('vendor_category')?.value === 'Domestic'"
+              >
+                <div class="col-9">
+                  <p style="text-align: end; font-size: 16px; font-weight: 500">
+                    Total Tax/GST =
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p style="font-size: 16px; font-weight: 500">
+                    {{
+                      totalTaxGst | currency: currencyCode : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                </div>
+              </ng-container>
+
+              <!-- Grand Total -->
+              <div class="col-9">
+                <p style="text-align: end; font-size: 16px; font-weight: 500">
+                  Grand Total =
+                </p>
+              </div>
+              <div class="col-3">
+                <p style="font-size: 16px; font-weight: 500">
+                  {{ grandTotal | currency: currencyCode : "symbol" : "1.2-2" }}
+                </p>
+              </div>
+
+              <!-- Advance Paid -->
+              <div class="col-9">
+                <p style="text-align: end; font-size: 16px; font-weight: 500">
+                  Advance Paid =
+                </p>
+              </div>
+              <div class="col-3">
+                <p style="font-size: 16px; font-weight: 500">
+                  {{
+                    form.get("advance_amount")?.value || 0
+                      | currency: currencyCode : "symbol" : "1.2-2"
+                  }}
+                </p>
+              </div>
+
+              <!-- Advance Utilized Amount -->
+              <ng-container
+                *ngIf="
+                  form.get('advance_amount')?.value > 0 &&
+                  form.get('advance_utilization_percent')?.value > 0
+                "
+              >
+                <div class="col-9">
+                  <p style="text-align: end; font-size: 16px; font-weight: 500">
+                    Advance Utilized ({{
+                      form.get("advance_utilization_percent")?.value
+                    }}%) =
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p style="font-size: 16px; font-weight: 500; color: #5cb85c">
+                    -{{
+                      advanceUtilizedAmount
+                        | currency: currencyCode : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                </div>
+              </ng-container>
+
+              <!-- Balance Amount -->
+              <ng-container
+                *ngIf="
+                  form.get('advance_amount')?.value > 0 &&
+                  form.get('advance_utilization_percent')?.value > 0
+                "
+              >
+                <div class="col-9">
+                  <p style="text-align: end; font-size: 16px; font-weight: 500">
+                    Balance Amount =
+                  </p>
+                </div>
+                <div class="col-3">
+                  <p style="font-size: 16px; font-weight: 500">
+                    {{
+                      balanceAmount
+                        | currency: currencyCode : "symbol" : "1.2-2"
+                    }}
+                  </p>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-weight: 500; font-size: 18px">
+        Warehouse Delivery Address
+      </p>
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <app-mat-form-select-filter
+              [ngClass]="{ 'readonly-select': mode === 'View' }"
+              [key]="'id'"
+              [items]="warehouseList"
+              [displayKey]="'name'"
+              placeholder="Warehouse Name"
+              formControlName="warehouse_id"
+            ></app-mat-form-select-filter>
+            <mat-error
+              *ngIf="form.controls['warehouse_id'].hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+        <div
+          *ngIf="form.get('warehouse_id')?.value"
+          class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12"
+        >
+          <div class="form-group mb-3">
+            <b>State:-</b> {{ form.get("state")?.value || "-" }}
+          </div>
+        </div>
+
+        <div
+          *ngIf="form.get('warehouse_id')?.value"
+          class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+        >
+          <div class="form-group mb-3">
+            <b>Address:-</b> {{ form.get("delivery_address")?.value || "-" }}
+          </div>
+        </div>
+      </div>
+      <p style="font-weight: 500; font-size: 18px" *ngIf="formType === 'PO'">
+        DELIVERY TERMS & PAYMENT TERMS
+      </p>
+      <div class="row" *ngIf="formType === 'PO'">
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-select': mode === 'View' }"
+            >
+              <mat-label>Delivery Terms </mat-label>
+              <mat-select formControlName="delivery_term">
+                <mat-option value="Immediate Delivery"
+                  >Immediate Delivery</mat-option
+                >
+                <mat-option value="Door Delivery">Door Delivery</mat-option>
+                <mat-option value="Ex-Works">Ex-Works</mat-option>
+                <mat-option value="Against Schedule"
+                  >Against Schedule</mat-option
+                >
+              </mat-select>
+              <mat-error
+                *ngIf="form.controls['delivery_term'].hasError('required')"
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+            >
+              <mat-label>Delivery Terms Remark</mat-label>
+              <input
+                [readonly]="mode === 'View'"
+                matInput
+                type="text"
+                formControlName="delivery_term_remark"
+                placeholder="70% on delivery"
+              />
+              <mat-error
+                *ngIf="
+                  form.controls['delivery_term_remark'].hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-3">
+            <app-mat-form-select-filter
+              [ngClass]="{ 'readonly-select': mode === 'View' }"
+              [key]="'id'"
+              [items]="paymentTerms"
+              [displayKey]="'term_name'"
+              placeholder="Payment Terms"
+              formControlName="payment_term_id"
+            ></app-mat-form-select-filter>
+            <mat-error
+              *ngIf="form.controls['payment_term_id'].hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+            >
+              <mat-label>Payment Terms Remark</mat-label>
+              <input
+                [readonly]="mode === 'View'"
+                matInput
+                type="text"
+                formControlName="payment_term_remark"
+                placeholder="30% Advance Payment"
+              />
+              <mat-error
+                *ngIf="
+                  form.controls['payment_term_remark'].hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div
+          class="col-md-4 col-12"
+          *ngIf="form.get('prCategory')?.value !== 'Service'"
+        >
+          <div class="form-group mb-3">
+            <app-mat-form-select-filter
+              [ngClass]="{ 'readonly-select': mode === 'View' }"
+              [key]="'id'"
+              [items]="portList"
+              [displayKey]="['port_name', 'unlocode', 'port_type']"
+              placeholder="Select Port"
+              formControlName="port_id"
+            ></app-mat-form-select-filter>
+            <mat-error *ngIf="form.controls['port_id'].hasError('required')">
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+        <div
+          class="col-md-4 col-12"
+          *ngIf="form.get('prCategory')?.value !== 'Service'"
+        >
+          <div class="form-group mb-3">
+            <app-mat-form-select-filter
+              [ngClass]="{ 'readonly-select': mode === 'View' }"
+              [key]="'id'"
+              [items]="incotermList"
+              [displayKey]="['incoterm_code', 'incoterm_meaning']"
+              placeholder="Select Incoterm"
+              formControlName="incoterm_id"
+            ></app-mat-form-select-filter>
+            <mat-error
+              *ngIf="form.controls['incoterm_id'].hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+        <div class="col-md-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-wrapper': mode === 'View' }"
+            >
+              <mat-label>Justification</mat-label>
+              <input
+                [readonly]="mode === 'View'"
+                matInput
+                type="text"
+                formControlName="remark"
+                placeholder="Remarks"
+              />
+              <mat-error *ngIf="form.controls['remark'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <table
+            class="table table-bordered"
+            *ngIf="mode === 'View' || mode === 'Edit'"
+          >
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>File Name</th>
+                <th>File Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let file of fileView; index as i">
+                                        <td>{{i + 1}}</td>
+                                        <td>{{file?.img_name}}</td>
+                                        <td>
+                                            <a href="{{sevralUrl()+file?.uploade_image}}" download target="_blank">
+                                                <mat-icon class="" matTooltip="View File">visibility</mat-icon>
+                                            </a>
+                                            <mat-icon *ngIf="mode !== 'View'" class="" matTooltip="Edit File"
+                                                (click)="fileEdit($event,file,i)">edit</mat-icon>
+                                        </td>
+                                    </tr> -->
+            </tbody>
+          </table>
+          <!-- <p style="text-align: center;
+            font-size: 16px;">{{this.withoutFile}}</p> -->
+        </div>
+      </div>
+
+      <!-- <div class="row" *ngIf="mode !== 'VIEW'">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12"
+                            *ngFor="let file of fileArray; let i = index"
+                            style="padding: 15px 10px; display: flex; align-items: center;">
+                            <div style="margin-right: 10px; display: flex; flex-direction: row; align-items: center;">
+                                <div (click)="addFileInput(i)" style="cursor: pointer;">
+                                    <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                                </div>
+                                <div (click)="removeFileInput(i)" style="cursor: pointer;">
+                                    <mat-icon matTooltip="Remove Item">remove_circle</mat-icon>
+                                </div>
+                            </div>
+                            <div style="position: relative; flex-grow: 1;">
+                                <input class="form-control" type="file" title="Upload Document"
+                                    (change)="onChange($event, i)" style="    width: 100%;
+                  padding-right: 10px;
+                  height: 42px;
+                  padding-top: 8px;" accept=".jpg,.jpeg,.png,.pdf .doc,.docx" />
+                                <p>(DOCX,PDF,Image Files)</p>
+                                <img *ngIf="file.imagePath" [src]="file.imagePath" (click)="openFileInNewTab(file.url)"
+                                    style="width: 30px; height: 30px; position: absolute; top: 5px; right: 5px; cursor: pointer;" />
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="checkFile">
+                            <div class="form-group">
+                                <input #fileInput class="form-control" type="file" style="padding-right: 5%;
+                height: 40px;
+                padding-top: 8px;
+                font-size: 14px;" title="UPLOAD DOCUMENT" (change)="onChangeEdit($event)"
+                                    formControlName="upload_document" />
+                                <p>(DOCX,PDF,Image Files)</p>
+                                <a *ngIf="indexDetail !==null" href="{{generateImageUrlEdit()+documentView}}" download
+                                    target="_blank">
+                                    <mat-icon class="imgEmp">folder_open</mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div> -->
+
+      <div class="mt-3 common_button_sub" align="end">
+        <button *ngIf="mode === 'Add' || !id" (click)="onSubmit()">
+          Submit
+        </button>
+        <button *ngIf="mode === 'Edit'" (click)="onUpdate()">Update</button>
+        <button *ngIf="mode === 'Approval'" (click)="onApproval()">
+          Approval
+        </button>
+        <button
+          class="cancel_button_y"
+          routerLink="../"
+          *ngIf="!id || mode === 'Edit'"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </mat-card>
+
+  <ng-template #callAPIDialog>
+    <h2 matDialogTitle>Budget Reminder!</h2>
+    <hr />
+    <mat-dialog-content class="mat-typography">
+      <div class="warning-msg">
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+        Out of Budget.
+      </div>
+      <!-- <h4 class="mt-4" style="font-weight: 700;">
+                NOTE :- The amount of your current budget is {{remainingAmount}}, and this PR value is {{totalAmountItem
+                }} || {{ totalAmountPrice }}. This PR cannot be raised, thus send it to the RBH for budget approval.
+            </h4> -->
+    </mat-dialog-content>
+    <hr />
+    <mat-dialog-actions align="end">
+      <button type="button" matDialogClose="no" class="btn btn-danger mx-4">
+        Cancel
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+</app-wrapper>
+
+<!-- <pre>
+    {{form.value | json}}
+</pre> -->

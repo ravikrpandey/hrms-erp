@@ -1,0 +1,154 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Recruitment</h1>
+    <p>Recruitment Candidate Add Profile <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Candidate Add Profile </span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card class="mb-4 p-3 mt-3">
+    <div class="basic_details basicInfos">
+      <h2>Basic Details</h2>
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Location</h5>
+          <p>{{profileDetails?.location}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Job title</h5>
+          <p>{{profileDetails?.job_title}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Job Position</h5>
+          <p>{{profileDetails?.designation_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Expected End Date</h5>
+          <p>{{profileDetails?.end_date}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Department</h5>
+          <p>{{profileDetails?.department_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Area</h5>
+          <p>{{profileDetails?.area_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Experience (In Months)</h5>
+          <p>{{profileDetails?.experience}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Level of Interview</h5>
+          <p>{{profileDetails?.level_of_interview}}</p>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <div class="form_basic mb-0">
+    <form class="form_set formBorder " [formGroup]="createComplaint">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>First Name <span class="alertspan">*</span></mat-label>
+            <mat-form-field >
+              <input matInput type="text" formControlName="first_name" />
+              <mat-error *ngIf="createComplaint.controls['first_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Middle Name</mat-label>
+            <mat-form-field>
+              <input matInput type="text" formControlName="middle_name" />
+              <mat-error *ngIf="createComplaint.controls['middle_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Last Name <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" formControlName="last_name" />
+              <mat-error *ngIf="createComplaint.controls['last_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Contact Number</mat-label>
+
+            <div class="wrapper countryCodeInput">
+              <ngx-intl-tel-input
+                [cssClass]="'custom'"
+                [enableAutoCountrySelect]="true"
+                [searchCountryFlag]="true"
+                [searchCountryField]="[
+                  SearchCountryField.Iso2,
+                  SearchCountryField.Name
+                ]"
+                [selectFirstCountry]="false"
+                [selectedCountryISO]="selectedCountryISO"
+                [maxLength]="15"
+                [phoneValidation]="false"
+                [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National"
+                name="phone"
+                formControlName="contact_number"
+
+
+              >
+              </ngx-intl-tel-input>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Email <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" style="text-transform:lowercase" formControlName="email" />
+              <mat-error *ngIf="
+              createComplaint.controls['email'].hasError('email')
+            ">
+                Please enter a valid email
+              </mat-error>
+              <mat-error *ngIf="createComplaint.controls['email'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3 fileWithViewImg">
+            <mat-label>Upload CV<span class="alertspan">*</span></mat-label>
+            <input class="form-control" type="file" style="padding-right: 10px; height:42px; font-size:14px; padding:8px 10px;" title="Termination Copy Upload"
+              (change)="uploadDoc($event)" formControlName="cv_upload" />
+            <mat-icon *ngIf="cv_upload" class="file_icon" (click)="viewImg()">visibility</mat-icon>
+            <mat-error *ngIf="createComplaint.controls['cv_upload'].hasError('required') &&
+                              (createComplaint.controls['cv_upload'].touched || createComplaint.controls['cv_upload'].dirty)">
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+      </div>
+
+      <div class="common_button_sub">
+          <button *ngIf="!complaintId" (click)="onSubmitForm()" >
+            Save
+          </button>
+      </div>
+    </form>
+  </div>
+</div>

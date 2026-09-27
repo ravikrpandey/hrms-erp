@@ -1,0 +1,43 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>Task Management</span></p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" routerLink="channel-partner-create" type="button" (click)="addTask('master/project-management/create-task')" >Add Task</button>
+      <!-- <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+    </div>
+  </div>
+  
+  
+  <div class="right_data_all">
+      <div class="employ_sube py-2">
+        <div class="example-header">
+          <select  id="page-size" (change)="onPageSizeChanged()">
+            <option value="10" selected="">10</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+          </select>
+          <!-- <span class="pag_size">Per Page</span> -->
+        </div>
+       
+            <div class="tab-employee_2">
+              <button class="main-button" [ngClass]="'main-button-active'" (click)="changeTabs('TotalTask')">Total Task</button>
+              <button class="main-button" [ngClass]="AssignedTask?'main-button-active':''"  (click)="changeTabs('AssignedTask')">Assign To Me</button>
+            </div>
+          
+          <div class="employee_2" >
+              <input type="text" placeholder="Search" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()" />
+            </div>
+      </div>
+   
+    <div class="ag_grid">
+      <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+        [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10 [rowData]="rowData"
+        (gridReady)="onGridReady($event)"   [rowClass]="rowClass">
+      </ag-grid-angular>
+    </div>
+  </div>
+

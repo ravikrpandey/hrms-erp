@@ -1,0 +1,97 @@
+<!-- <pre>{{ applicabilityForm.value | json }}</pre> -->
+
+<div class="heading_neo mt-3">
+  <h3>Policy Applicability</h3>
+</div>
+
+<form [formGroup]="applicabilityForm">
+  <div class="form_sePo formBorder">
+
+    <div class="row mt-3">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+          <span>All employees</span>
+          <mat-checkbox (change)="forAllCheck($event)" formControlName="allEmployees" color="primary"></mat-checkbox>
+          <span style="margin-left: 7%;"><b>Or</b></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+          <mat-label>Position<span class="alertspan">*</span></mat-label>
+          <mat-form-field>
+            <mat-select formControlName="designation" multiple placeholder="Select Position">
+              <app-search-filter [array]="appDesignationList" [placeholder]="'Search by desigantion name'"
+                [searchFields]="['designation_name']" (filteredReturn)="filterappDesignationList = $event.data">
+              </app-search-filter>
+              <mat-option *ngFor="let designation of filterappDesignationList" [value]="designation.designation_id">{{
+                designation.designation_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Department <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <mat-select formControlName="department" multiple placeholder="Select departments">
+                <app-search-filter [array]="appDepartmentList" [placeholder]="'Search by department name'"
+                  [searchFields]="['department_name']" (filteredReturn)="filterDepartment = $event.data">
+                </app-search-filter>
+                <mat-option *ngFor="let department of filterDepartment" [value]="department.dept_id">{{
+                  department.department_name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Gender<span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <mat-select formControlName="gender" multiple placeholder="Select genders">
+                <mat-option *ngFor="let gender of genderList" [value]="gender">{{ gender }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Marital Status<span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <mat-select formControlName="maritalStatus" multiple placeholder="Select marital statuses">
+                <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus">{{ maritalStatus
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group" [ngClass]="{'disable-pointer-events': pageMode == 'viewMode'}">
+            <mat-label>Locations<span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <mat-select formControlName="locations" multiple placeholder="Select locations">
+                   <app-search-filter [array]="appLocationList" [placeholder]="'Search by Location'"
+                [searchFields]="['branch_name']" (filteredReturn)="locationfilter = $event.data">
+              </app-search-filter>
+                <mat-option *ngFor="let location of locationfilter" [value]="location.id">{{ location.branch_name
+                  }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 common_button_sub mt-2">
+    <button type="button" *ngIf="pageMode === 'addMode'" (click)="onAdd()">Add</button>
+    <button type="button" *ngIf="showUpdate && pageMode === 'editMode'" (click)="onAdd()">Update</button>
+  </div>
+</form>

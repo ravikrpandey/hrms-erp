@@ -1,0 +1,155 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>{{quotationType?'Sales Booking':'Quotation'}}</h1>
+    <!-- <p><span>Quotation</span></p> -->
+  </div>
+    <div class="add_button">
+      <!-- <button type="button" routerLink="employee-create" (click)="createData()" >Add New</button> -->
+      <!-- <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+    </div>
+    </div>
+  
+  
+  
+  <div class="right_data_all">
+  
+    <form [formGroup]="leadSummaryForm" class="mt-2">
+      <div class="row">
+        
+        
+
+        <div class="col-sm-6 col-md-6 col-lg-6 col-12" *ngIf="!quotationType">
+          <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption"
+          name="optionGroup" (change)="changeSelect($event)" >
+            <mat-radio-button value="1" >New Customer</mat-radio-button>
+            <mat-radio-button value="2">Existing Customer</mat-radio-button>
+            <mat-radio-button value="3">For Dealers</mat-radio-button>
+          </mat-radio-group>
+          
+        </div>
+
+        <div class="col-sm-6 col-md-6 col-lg-6 col-12" *ngIf="openExisting">
+          <div class="d-flex">
+            <mat-form-field appearance="outline">
+              <mat-label>For Existing Customer</mat-label>
+              <mat-select formControlName="status"  >
+                <mat-select-filter [array]="clientData3" (filteredReturn)="typeFilter($event)"></mat-select-filter>
+                <mat-option *ngFor=" let item of clientData" [value]="item?.id"  (click)="getClientDataByName(item)" >
+                  {{item?.company_name }} - {{ item?.MASTER_CUSTOMER_CATEGORY?.customer_category_name }} - {{ item?.customer_code }} (Customer-{{item?.data_status}}) </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 col-12" *ngIf="isForDealers && dealerRadio">
+          <mat-radio-group aria-label="Select an option" #dealerRadioGroup [(ngModel)]="selectedDealerOption"
+          name="optionDealerGroup" (change)="changeDealerSelect($event)" >
+            <mat-radio-button value="1" >New Customer</mat-radio-button>
+            <mat-radio-button value="2">Existing Customer</mat-radio-button>           
+          </mat-radio-group>
+          
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-6 col-12" *ngIf="existClientData">
+          <div class="d-flex">
+            <mat-form-field appearance="outline">
+              <mat-label>For Existing Dealer Customer</mat-label>
+              <mat-select formControlName="dealer_status"  >
+                <mat-select-filter [array]="dealerClientData3" (filteredReturn)="typeFilter($event)"></mat-select-filter>
+                <mat-option *ngFor=" let item of dealerClientData" [value]="item?.id"  (click)="getDealerClient(item)" >
+                  {{item?.company_name }} - {{ item?.MASTER_CUSTOMER_CATEGORY?.customer_category_name }} - {{ item?.customer_code }} (Customer-{{item?.data_status}}) </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+     
+    </form>
+    <div class="employ_sube py-2">
+      <!-- <div class="">
+        <div class="example-header">
+          <select (change)="onPageSizeChanged()" id="page-size">
+            <option value="10" selected="">10</option>
+            <option value="100">100</option>
+            <option value="500">500</option>
+            <option value="1000">1000</option>
+          </select>        
+        </div>
+      </div> -->
+      <!-- <div class="">
+        <div class="employee_2" align="end">
+  
+          <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+            (input)="onFilterTextBoxChanged()">
+  
+        </div>
+      </div> -->
+    </div>
+   
+  
+  
+    <!-- <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+        [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+        (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [gridOptions]="gridOptions"
+        [rowSelection]="gridOptions.rowSelection" (selectionChanged)="onSelectionChanged($event)">
+      </ag-grid-angular>
+    </div> -->
+
+    <div class="" *ngIf="(exsitingData && !isForDealers ) || exsitingDealersData">
+      <div class="row quot_css">
+        <div class="col-6"></div>
+        <div class="col-6">
+          
+            <!-- <div class="col-4">
+        <span>Company Name</span>
+        <p>{{exsitingData?.company_name || null}}</p>
+            </div>
+            <div class="col-4">
+        <span>Customer Code</span>
+        <p>{{exsitingData?.customer_code || null}}</p>
+              
+            </div> -->
+            <div class="col-4" style="float: left;">
+          <span>Customer Type </span>
+          <p>{{exsitingData?.MASTER_CUSTOMER_TYPE?.customer_type_name || null}}</p>
+            </div>
+          <!-- </div>
+
+          <div class="row quot_css" style="padding: 20px 0;"> -->
+            <div class="col-4" style="float: left;">
+        <span>Identification</span>
+        <p> {{exsitingData?.identification || null}}</p>
+            </div>
+            <div class="col-4" style="float: left;">
+        <!-- <span>Customer Type </span> -->
+        <span>Customer Category </span>
+        <!-- <p>{{exsitingData?.MASTER_CUSTOMER_TYPE?.customer_type_name || null}}</p> -->
+        <p>{{exsitingData?.MASTER_CUSTOMER_CATEGORY?.customer_category_name || null}}</p>
+              
+            </div>
+            <!-- <div class="col-3">
+          <span>Customer Status : {{exsitingData?.customer_status}}</span>
+              
+            </div> -->
+        </div>
+      </div>
+
+      <div class="my-4">
+        <div class="common_button_sub">
+          <button (click)="process(exsitingData)">
+            Process
+          </button>
+          <button (click)="goBack()" class="cancel_button_y">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    </div>
+
+    <div class="img_css" style="text-align: center">
+      <img src="../../../../assets/QuotationNewImg" style="width: 50%; height: 45vh;">
+    </div>
+    
+  

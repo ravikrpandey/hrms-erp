@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            font-size: 12px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 210mm;
+            margin: auto;
+            background-color: #fff;
+            padding: 10mm;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10mm;
+        }
+
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .header div {
+            width: 48%;
+        }
+
+        .leftPara p {
+            color: #777777;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .supplierInfo {
+            border: 1px solid #b6b6b6;
+        }
+
+        .supplierInfo h2 {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+
+        .rightPara p {
+            color: #777777;
+            font-size: 14px;
+            margin: 5px 0;
+            text-align: right;
+        }
+
+        .info-labelss {
+            width: 50%;
+            padding: 5px;
+            border-right: 1px solid #c8c8c8;
+        }
+
+        .info-labelss p {
+            margin: 5px 0;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            text-transform: uppercase;
+            text-align: right;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            background-color: #00a2b2;
+            color: #fff;
+            padding: 5px;
+            margin: 0;
+        }
+
+        .section-content {
+            display: flex;
+            margin-top: 5px;/
+        }
+
+        .section-contents {
+            display: flex;
+            border-bottom: 1px solid #c8c8c8;
+        }
+
+        .info-values {
+            width: 50%;
+        }
+
+        .info-values p {
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .locations {
+            width: 100%;
+            border-bottom: 1px solid #c8c8c8;
+        }
+
+        .locations p {
+            padding: 5px;
+            margin: 5px 0;
+        }
+
+        .section-content .info-labels,
+        .section-content .info-values {
+            width: 50%;
+            padding: 5px;
+        }
+
+        .section-content .info-labels p,
+        .section-content .info-values p {
+            margin: 2px 0;
+            padding: 2px 0;
+            line-height: 1.2;
+        }
+
+        footer {
+            text-align: right;
+            margin-top: 20mm;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .page-break-section {
+            page-break-before: always;
+            margin-top: 40px !important;
+}
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="leftPara">
+                <img src="https://mectsapi.elitetraveltech.in/uploaded_files/file-1721278650765.png"
+                    alt="Company Logo" />
+                <p>{entity_name}</p>
+                <p>{registered_office}</p>
+                <p>{smtp_server_address}</p>
+            </div>
+            <div class="leftPara">
+                <h1>PURCHASE ORDER</h1>
+                <p>DATE: <span>{po_date}</span></p>
+                <p>PURCHASE ORDER NO.: <span>{po_number}</span></p>
+
+
+              
+               
+                
+            </div>
+        </div>
+
+        <section class="supplierInfo">
+            <div class="section-header">
+                <h2>INFORMAÇÃO DO FORNECEDOR / SUPPLIER INFORMATION</h2>
+            </div>
+            <div class="section-contents">
+                <div class="info-labelss">
+                    <p>NOME DO FORNECEDOR / SUPPLIER NAME</p>
+                    <p><strong>{vendor_name}</strong></p>
+                </div>
+                <div class="info-values">
+                    <p>NOME DO VENDEDOR / SALER NAME</p>
+                    <p></p>
+
+                </div>
+            </div>
+            <div class="locations">
+                <p>LOCALIZAÇÃO / LOCATION</p>
+                <p><strong>{vendor_address}</strong></p>
+            </div>
+            <div class="section-contents">
+                <div class="info-labelss">
+                    <p>CONTACT NO.</p>
+                    <p><strong>+{phone_code} {vendor_contact_num}</strong></p>
+
+                </div>
+                <div class="info-values">
+                    <p>EMAIL ADDRESS</p>
+                    <p>{vendor_email}</p>
+
+                </div>
+            </div>
+            <div class="section-header">
+                <h2>INFORMAÇÃO DO CLIENTE / CLIENT INFORMATION</h2>
+            </div>
+            <div class="section-contents">
+                <div class="info-labelss">
+                    <p>NOME DO CLIENTE / CLIENT NAME</p>
+                    <p><strong>{branch_name}</strong></p>
+                </div>
+                <div class="info-values">
+                    <p>PESSOA DE CONTACTO / CONTACT PERSON</p>
+                    <p><strong>{branch_contact_person_name}</strong></p>
+
+                </div>
+            </div>
+            <div class="locations">
+                <p>LOCALIZAÇÃO / LOCATION</p>
+                <p><strong>{branch_address}</strong></p>
+            </div>
+            <div class="section-contents">
+                <div class="info-labelss">
+                    <p>CONTACT NO.</p>
+                    <p><strong>{branch_contact_no}</strong></p>
+
+                </div>
+                <div class="info-values">
+                    <p>EMAIL ADDRESS</p>
+                    <mailto:p>{branch_email}</p>
+
+                </div>
+            </div>
+        </section>
+
+        <div>
+            
+            {serviceItemTable}
+           <div class="page-break-section">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px;margin-top: 50px;">
+                <thead></thead>
+                <tbody>
+                    <!-- <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right;">
+                            Autorizado por/ Authorized by: Liberdade Mulessiua</td>
+                    </tr>
+                    <tr>
+
+                        <td colspan="6"></td>
+                        <td style="padding: 14px 0;
+                        border-bottom: 1px solid #ddd;
+                        font-weight: bold;
+                        text-align: right;
+                        width: 48%;"></td>
+                    </tr>
+                    <tr>
+
+                        <td colspan="6" style="padding: 8px; "></td>
+                        <td
+                            style="padding: 8px; border-bottom: 1px solid #ddd; font-weight: bold; text-align: right; width: 48%;">
+                            21-01-2025
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td colspan="6"></td>
+                        <td style="padding: 14px 0;
+                        border-bottom: 1px solid #ddd;
+                        font-weight: bold;
+                        text-align: right;
+                        width: 48%;"></td>
+                    </tr> -->
+                    <tr>
+
+                        <td colspan="6"></td>
+                        <td style="padding: 8px; text-align: right;">
+                            Autorizado por/ Authorized by:<span style="font-weight: bold;">Cornelio Aly</span> </td>
+                    </tr>
+                    <tr>
+
+                        <td colspan="6" style="padding: 8px; "></td>
+                        <td
+                            style="padding: 8px; text-align: right; width: 48%;">
+                            Data/ Date : <span style="font-weight: bold;">21-01-2025</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 14px 0;
+                        font-weight: bold;
+                        text-align: right;
+                        width: 48%;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 8px; text-align: right;">
+                            Aprovado por/ Approved by: <span style="font-weight: bold;">{employee_name}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 8px; text-align: right;">
+                            Cargo/ Designation: <span style="font-weight: bold;">{employee_designation}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 8px; text-align: right;">
+                            Data e Hora / Date & Time: <span style="font-weight: bold;">{employee_Signature_date}</span></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                        <td style="padding: 14px 0;
+                        font-weight: bold;
+                        text-align: right;
+                        width: 48%;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" style="padding: 8px; "></td>
+                        <td
+                            style="padding: 8px; text-align: right; width: 48%;">
+                            <p> <img src="{employee_signature}" width="110" /></p>
+                          <p>Aprovador Assinatura /Approver Signature:</p>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

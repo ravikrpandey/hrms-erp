@@ -1,0 +1,50 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!store_Id?"Add Store":"Update Store"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Store</h3>
+    <fieldset [disabled]="view == 'view'">
+        <div class="m-3" [formGroup]="store_Management">
+            <div class="row">
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-10 col-12">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Branch</mat-label>
+                            <mat-select formControlName="branch">
+                                <mat-option *ngFor="let branch of branch_Dropdown" [value]="branch.id">
+                                    {{ branch.branch_name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-10 col-12">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Store Name</mat-label>
+                            <input matInput type="text" formControlName="store_name" />
+                            <mat-error *ngIf="store_Management.controls['store_name'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="store_Management.controls['store_name'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                
+            
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!store_Id" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="store_Id" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

@@ -1,0 +1,968 @@
+<div class="main section">
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Recruitment</h1>
+      <p>Recruitment Module <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span routerLink="../">Job Description</span></p>
+    </div>
+    <div class="add_button" style="margin-left:auto;">
+      <button (click)="goBack()" routerLink="../job-list">List</button>
+    </div>
+    <!-- <div class="add_button" style="padding-left:20px">
+      <button (click)="goBackStepper(stepper)"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div> -->
+  </div>
+</div>
+<div class="right_data_all">
+  <div class="step_si">
+    <mat-horizontal-stepper [linear]="isLinear" #stepper labelPosition="bottom">
+      <mat-step [stepControl]="jobDetailsForm" label="Job Details">
+        <section class="job-nav">
+          <!-- <div class="add_button backButton">
+            <button mat-button matStepperPrevious><i class="fa fa-arrow-circle-left"></i> Back</button>
+          </div> -->
+
+          <!-- <div class="form_mar_top"> -->
+          <div class="form_basic">
+            <div class="right_data_all form_mar_top">
+              <form [formGroup]="jobDetailsForm">
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Job Title <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                        <input matInput type="text" formControlName="jobTitle" />
+                        <!-- <mat-error *ngIf="
+                            jobDetailsForm.controls['jobTitle'].hasError(
+                              'maxlength'
+                            )
+                          ">
+                            Maximum character limit (300) exceeded.
+                          </mat-error> -->
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['jobTitle'].hasError(
+                              'required'
+                            )
+                          ">
+                          This field is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Job Position <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                        <!-- <mat-select formControlName="selectPosition">
+                          <mat-option
+                            value="Yes">Yes</mat-option>
+                            <mat-option
+                            value="Yes">No</mat-option>
+                        </mat-select> -->
+                        <mat-select formControlName="job_position">
+                          <mat-select-filter [array]="designations"
+                            (filteredReturn)="designationFilter($event)"></mat-select-filter>
+                          <mat-option *ngFor="let contract of designationList"
+                            [value]="contract.designation_id">{{contract.designation_name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['job_position'].hasError(
+                              'required'
+                            )
+                          ">
+                          This field is Required!
+                        </mat-error>
+                      </mat-form-field>
+
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Leadership Position <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <mat-select formControlName="leader_position">
+                          <mat-option value="YES">YES</mat-option>
+                          <mat-option value="NO">NO</mat-option>
+
+                        </mat-select>
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['leader_position'].hasError(
+                              'required'
+                            )
+                          ">
+                          This field is Required!
+                        </mat-error>
+                        <!-- <mat-error
+                          *ngIf="
+                            jobDetailsForm.controls['jobRole'].hasError(
+                              'required'
+                            )
+                          "
+                        >
+                          This field is Required!
+                        </mat-error> -->
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Type Of Contract <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                        <!-- <input matInput type="text" formControlName="type_of_contract" /> -->
+                        <mat-select formControlName="type_of_contract">
+                          <mat-select-filter [array]="contracts"
+                            (filteredReturn)="contractFilter($event)"></mat-select-filter>
+                          <mat-option *ngFor="let contract of getContractData"
+                            [value]="contract.id">{{contract.contract_type}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['type_of_contract'].hasError(
+                              'required'
+                            )
+                          ">
+                          This field is Required!
+                        </mat-error>
+                        <!-- <mat-error
+                            *ngIf="
+                              jobDetailsForm.controls['job_position'].hasError(
+                                'maxlength'
+                              )
+                            "
+                          >
+                          Maximum character limit (300) exceeded.
+                          </mat-error> -->
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Expected Start Date <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="startDate"
+                          [max]="paramsData !== 'view' ? maxDate : null" [min]="paramsData !== 'view' ? minDate : null"
+                          (dateChange)="paramsData !== 'view' ? fromDate($event) : null" />
+                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp></mat-datepicker>
+                        <mat-error *ngIf="jobDetailsForm.controls['startDate'].hasError('required')">
+                          This field is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Expected End Date <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <input matInput [matDatepicker]="picker2" (click)="picker2.open()" formControlName="endDate"
+                          [max]="paramsData !== 'view' ? maxDate : null"
+                          [min]="paramsData !== 'view' ? FromDate || minDate : null"
+                          (dateChange)="paramsData !== 'view' ? ToDate($event) : null" />
+                        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                        <mat-error *ngIf="jobDetailsForm.controls['endDate'].hasError('required')">
+                          This field is Required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <mat-label class="label_o">Department <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                      <!-- <mat-label>Department</mat-label> -->
+                      <mat-select formControlName="department" (selectionChange)="getAllAreas($event)">
+                        <mat-select-filter [array]="departmentList"
+                          (filteredReturn)="departmentFilter($event)"></mat-select-filter>
+                        <mat-option *ngFor="let department of departments"
+                          [value]="department.dept_id">{{department.department_name}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="jobDetailsForm.get('department')?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3" *ngIf="paramsData !== 'view'">
+                    <mat-label class="label_o">Area <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                      <mat-select formControlName="area">
+                        <!-- <mat-option
+                        value="">Master not ready</mat-option> -->
+                        <mat-select-filter [array]="areas" (filteredReturn)="areaFilter($event)"></mat-select-filter>
+                        <mat-option *ngFor="let area of newAreaList" [value]="area.id">{{area.area_name}}</mat-option>
+                      </mat-select>
+                      <!-- <mat-error *ngIf="requestNewPositionForm.get('area')?.hasError('required')">
+                        This field is required!
+                      </mat-error> -->
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3" *ngIf="paramsData == 'view'">
+                    <mat-label class="label_o">Area <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                      <input matInput type="text" formControlName="area_name">
+
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <mat-label class="label_o">Location <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                      <mat-select formControlName="location">
+                        <mat-select-filter [array]="locationList"
+                          (filteredReturn)="locationFilter($event)"></mat-select-filter>
+                        <mat-option *ngFor="let location of locations"
+                          [value]="location.id">{{location.branch_name}}</mat-option>
+                      </mat-select>
+                      <!-- <mat-error *ngIf="requestNewPositionForm.get('location')?.hasError('required')">
+                        This field is required!
+                      </mat-error> -->
+                    </mat-form-field>
+                  </div>
+
+
+                </div>
+
+
+                <!-- <div class="row">
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-label class="label_o">Requisition Status <span>*</span></mat-label>
+                      <mat-form-field appearance="outline">
+
+                        <mat-select formControlName="requisitionStatus">
+                          <mat-option value="new">New</mat-option>
+                          <mat-option [disabled]="!job_id" value="re-open">Re-open</mat-option>
+                        </mat-select>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  </div> -->
+
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-4">
+                    <div class="form-group">
+                      <mat-label class="label_o">Experience (In Year) <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <input matInput type="number" formControlName="experience">
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['experience'].hasError(
+                              'pattern'
+                            )
+                          ">
+                          Maximum of 3 digits is allowed.
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Number of Position <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <input matInput type="number" formControlName="number_of_positions">
+                        <mat-error *ngIf="
+                            jobDetailsForm.controls['number_of_positions'].hasError(
+                              'pattern'
+                            )
+                          ">
+                          Maximum of 3 digits is allowed.
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-label class="label_o">Created By <span>*</span></mat-label>
+                      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                        <input readonly matInput type="text" formControlName="created_by" />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <mat-label class="label_o">Job Description Type <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                      <!-- <mat-label>Department</mat-label> -->
+                      <mat-select formControlName="job_Type_id">
+
+                        <mat-option *ngFor="let s of allJob_Type"
+                          [value]="s.id">{{s.job_Type}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="jobDetailsForm.get('department')?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <mat-label class="label_o">Job Description Externally Share <span>*</span></mat-label>
+
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                      <!-- <mat-label>Department</mat-label> -->
+                      <mat-select formControlName="selectedshare_profile" multiple>
+
+                        <mat-option *ngFor="let t of allshare_profileType"
+                          [value]="t.id">{{t.share_type}}</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="jobDetailsForm.get('department')?.hasError('required')">
+                        This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div class="common_button_sub mt-2" *ngIf="paramsData !== 'view'">
+                  <button (click)="scroll(stepper)">
+                    Save & Next
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- </div> -->
+
+        </section>
+      </mat-step>
+
+      <mat-step [stepControl]="jobDescriptionForm" label="Job Description">
+        <section class="job-nav">
+          <div class="form_basic mt-4">
+            <div class="right_data_all">
+              <div class="right_data_bg_white form_mar_top">
+                <form [formGroup]="jobDescriptionForm">
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-5 col-12 mb-3">
+                      <mat-label class="label_o">Uploaded Document <span>*</span></mat-label>
+
+                      <!-- Upload button should only be shown if paramsData is not 'view' -->
+                      <ng-container *ngIf="paramsData != 'view'; else viewTemplate">
+                        <input class="form-control" type="file" multiple="true" style="padding-right: 10px; "
+                          title="Choose File" #fileInput (change)="onChange($event)" formControlName="file"
+                          accept=".pdf,.doc,.docx" [ngClass]="{'readonly-wrapper': paramsData === 'view'}" />
+                        <p class="upload-instructions">
+                          Upload (.pdf, .doc, .docx)
+                        </p>
+                      </ng-container>
+
+                      <!-- View button template -->
+                      <ng-template #viewTemplate>
+                        <a href="{{ generateImageUrl() + jobDataBy?.upload_document }}" download target="_blank"
+                          class="view-button">
+                          <mat-icon class="view-icon">folder_open</mat-icon>
+                          <span class="view-label">View</span>
+                        </a>
+                      </ng-template>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                      <div class="form-group">
+                        <ckeditor #editer [data]="htmlEditorValue2"  id="ckediter" formControlName="description"></ckeditor>
+
+                      </div>
+                      <div
+                        *ngIf="jobDescriptionForm.get('description')?.invalid && jobDescriptionForm.get('description')?.touched"
+                        class="text-danger">
+                        Text is required
+                      </div>
+
+
+                    </div>
+                  </div>
+                  <div class="common_button_sub mt-2" *ngIf="paramsData !== 'view'">
+                    <button (click)="scrollTwo(stepper)">
+                      Save & Next
+                    </button>
+                  </div>
+
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+      </mat-step>
+
+      <mat-step [stepControl]="jobPostDetailsForm" label="Job Requirements">
+        <section class="job-nav">
+          <div class="form_basic mt-4">
+            <div class="right_data_all">
+              <div class="right_data_bg_white form_mar_top">
+                <form class="" [formGroup]="jobPostDetailsForm">
+                  <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group text-center">
+                        <mat-label class="label_o" style="padding: 10px;">Age Range <span>*</span></mat-label>
+                        <div class="row justify-content-center align-items-center">
+                          <div class="col-md-5 col-lg-5 mb-4">
+                            <mat-form-field appearance="outline"
+                              [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                              <input matInput type="number" formControlName="age_range_min" required
+                                (input)="onKeyPress($event)" (input)="validateAgeRange()" />
+                              <mat-error *ngIf="jobPostDetailsForm.controls['age_range_min'].hasError('required')">
+                                Required Field
+                              </mat-error>
+                              <mat-error
+                                *ngIf="jobPostDetailsForm.controls['age_range_min'].hasError('min') || jobPostDetailsForm.controls['age_range_min'].hasError('max')">
+                                Age must be between 18 and 50
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-md-2 col-lg-2 mb-4">
+                            <span>To</span>
+                          </div>
+                          <div class="col-md-5 col-lg-5 mb-4">
+                            <mat-form-field appearance="outline"
+                              [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                              <input matInput type="number" formControlName="age_range_max" required
+                                (input)="validateAgeRange()" />
+                              <mat-error *ngIf="jobPostDetailsForm.controls['age_range_max'].hasError('required')">
+                                Required Field
+                              </mat-error>
+                              <mat-error
+                                *ngIf="jobPostDetailsForm.controls['age_range_max'].hasError('min') || jobPostDetailsForm.controls['age_range_max'].hasError('max')">
+                                Age must be between start date and 50
+                              </mat-error>
+                              <mat-error
+                                *ngIf="jobPostDetailsForm.controls['age_range_max'].hasError('ageRangeInvalid')">
+                                Max age must be greater than or equal to Min age.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+
+                      <div class="form-group text-center mb-4">
+                        <mat-label class="label_o" style="padding: 10px;">Monthly Salary
+                          <span>*</span></mat-label>
+                        <div class="row justify-content-center align-items-center">
+                          <div class="col-md-12">
+                            <mat-form-field appearance="outline"
+                              [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                              <input matInput type="number" formControlName="monthly_salary" required />
+                              <mat-error *ngIf="
+                              jobPostDetailsForm.controls['monthly_salary'].hasError(
+                              'pattern'
+                            )
+                          ">
+                                Maximum of 8 digits is allowed.
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Qualification <span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                          <input matInput type="text" formControlName="qualification" required />
+                          <!-- <mat-select formControlName="qualification">
+                            <mat-option value="BCA">BCA</mat-option>
+                            <mat-option value="BTECH">BTECH</mat-option>
+
+                          </mat-select> -->
+
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Job Status<span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                          <mat-select formControlName="job_status">
+                            <mat-option value="Active">Active</mat-option>
+                            <mat-option value="Inactive">Inactive</mat-option>
+
+                          </mat-select>
+
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="margin-top:24px;">
+                      <div class="custom-radio-group">
+
+                        <label class="custom-radio-label">
+                          <input type="radio" name="allocation"  [(ngModel)]="allocationType" [ngModelOptions]="{standalone: true}" value="Internal" (change)="statusChange('Internal')"> Internal
+                        </label>
+                        <label class="custom-radio-label">
+                          <input type="radio" name="allocation"  [(ngModel)]="allocationType" [ngModelOptions]="{standalone: true}" value="Vendor" (change)="statusChange('Vendor')"> Vendor
+                        </label>
+                        <label class="custom-radio-label">
+                          <input type="radio" name="allocation"  [(ngModel)]="allocationType" [ngModelOptions]="{standalone: true}" value="Both" (change)="statusChange('Both')"> Both
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="type=='Vendor' || type=='Both'">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Vendor<span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                          <!-- <mat-select formControlName="assign_to" required>
+                              <mat-option value="1">1</mat-option>
+                            </mat-select> -->
+                          <mat-select formControlName="vendor_id">
+                            <!-- <mat-select-filter [array]="supervisers"
+                              (filteredReturn)="superviserFilter($event)"></mat-select-filter> -->
+                            <mat-option *ngFor="let v of vendors"
+                              [value]="v?.id">{{v?.vendor_name}}</mat-option>
+                            <!-- [value]="emp.employee_id">{{$common?.generateFullName(emp?.first_name, emp?.middle_name, emp?.last_name)}}</mat-option> -->
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="type=='Internal' || type=='Both'">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Assign to <span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                          <!-- <mat-select formControlName="assign_to" required>
+                              <mat-option value="1">1</mat-option>
+                            </mat-select> -->
+                          <mat-select formControlName="assign_to">
+                            <mat-select-filter [array]="supervisers"
+                              (filteredReturn)="superviserFilter($event)"></mat-select-filter>
+                            <mat-option *ngFor="let emp of getAllSuperviserData"
+                              [value]="emp.employee_id">{{emp?.first_name + ' ' + emp?.last_name + ' ' +
+                              emp?.employee_code}}</mat-option>
+                            <!-- [value]="emp.employee_id">{{$common?.generateFullName(emp?.first_name, emp?.middle_name, emp?.last_name)}}</mat-option> -->
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Spoc Name <span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                          <!-- <mat-select formControlName="spoc_name" required>
+                              <mat-option value="1">1</mat-option>
+                            </mat-select> -->
+                          <mat-select formControlName="spoc_name">
+                            <mat-select-filter [array]="supervisersSpoc"
+                              (filteredReturn)="superviserSpocFilter($event)"></mat-select-filter>
+                            <mat-option *ngFor="let emp of getAllSuperviserDataSpoc"
+                              [value]="emp.employee_id">{{emp?.first_name + ' ' + emp?.last_name}}
+                              ({{emp?.employee_code}})</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Level of Interview <span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+
+                          <input matInput type="number" formControlName="level_of_interview" />
+                          <mat-error *ngIf="
+                              jobPostDetailsForm.controls['monthly_salary'].hasError(
+                              'pattern'
+                            )
+                          ">
+                            Maximum of 2 digits is allowed.
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mb-4">
+                        <mat-label class="label_o">Created On<span>*</span></mat-label>
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                          <input matInput type="text" readonly formControlName="created_on" />
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+
+                  <!-- <div class="row">
+
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label class="label_o">Created By <span>*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="verticalId" required>
+                              <mat-option *ngFor="let vertical of verticalData" [value]="vertical.id">{{
+                                vertical.vertical_name }}</mat-option>
+                            </mat-select>
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label class="label_o">Department <span>*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="department" required>
+                              <mat-option *ngFor="let department of departmentData"
+                                [value]="department.department_name">{{ department.department_name }}</mat-option>
+                            </mat-select>
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div> -->
+
+                  <!-- <div class="row">
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label class="label_o">Candidate Age <span>*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="candidateAge" required>
+                              <mat-option value="20-25">20-25</mat-option>
+                              <mat-option value="25-30">25-30</mat-option>
+                              <mat-option value="30-35">30-35</mat-option>
+                              <mat-option value="30-35">35-40</mat-option>
+                              <mat-option value="30-35">40-45</mat-option>
+                              <mat-option value="30-35">45-50</mat-option>
+                              <mat-option value="30-35">50-55</mat-option>
+                              <mat-option value="30-35">55-60</mat-option>
+                            </mat-select>
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label class="label_o">Salary Range <span>*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <mat-select formControlName="salaryRange" required>
+                              <mat-option value="1L - 5L">1L - 5L</mat-option>
+                              <mat-option value="5L - 10L">5L - 10L</mat-option>
+                              <mat-option value="10L - 15L">10L - 15L</mat-option>
+                              <mat-option value="10L - 15L">15L - 20L</mat-option>
+                              <mat-option value="10L - 15L">20L - 25L</mat-option>
+                              <mat-option value="10L - 15L">25L - 30L</mat-option>
+                              <mat-option value="10L - 15L">30L - 35L</mat-option>
+                              <mat-option value="10L - 15L">35L - 40L</mat-option>
+                            </mat-select>
+
+                          </mat-form-field>
+                        </div>
+                      </div>
+
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-label class="label_o">Qualification <span>*</span></mat-label>
+                          <mat-form-field appearance="outline">
+
+                            <input matInput type="text" formControlName="qualification" required />
+                            <mat-error *ngIf="
+                          jobPostDetailsForm.controls['qualification'].hasError(
+                              'maxlength'
+                            )
+                          ">
+                              Maximum character limit (100) exceeded.
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </div> -->
+
+                  <div class="common_button_sub mt-2" *ngIf="paramsData !== 'view'">
+                    <button (click)="scrollThree(stepper)">
+                      Save & Next
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </mat-step>
+
+      <mat-step [stepControl]="jobAddForm" label="Skill">
+        <section class="job-nav">
+          <div class="form_basic mt-4">
+            <div class="right_data_all">
+              <div class="right_data_bg_white form_mar_top">
+                <form class="" [formGroup]="jobAddForm">
+                  <div class="row" *ngIf="paramsData !== 'view'">
+                    <div class="col-md-10">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                          <input matInput type="text" formControlName="skill_name" placeholder="ADD Skill" />
+                          <!-- <mat-error *ngIf="jobAddForm.get('skill_name')?.hasError('required')">
+                        This field is required!
+                      </mat-error> -->
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <button class="favorite  saveStyle saveCss" (click)="addTickt()">Add Skills</button>
+                    </div>
+                  </div>
+                  <div class="table-container">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col">S.No</th>
+                          <th scope="col">Skill Name</th>
+                          <th *ngIf="paramsData !== 'view'" scope="col">Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody *ngIf="paramsData !== 'view'">
+                        <tr *ngFor="let skills of arrayData; index as i">
+                          <td>{{i + 1}}</td>
+                          <td>{{skills?.skill_name}}</td>
+
+                          <td style="
+
+                          color: #858586;
+                          cursor: pointer;
+
+                        ">
+                            <i class="material-icons" (click)="deletData(skills)">delete</i>
+                            <!-- <i class="material-icons" (click)="editSkill(skills,i)">edit</i> -->
+
+
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody *ngIf="paramsData == 'view'">
+                        <tr *ngFor="let skills of allJobArray?.getAllData_skill; index as i">
+                          <td>{{i + 1}}</td>
+                          <td>{{skills?.skill_name}}</td>
+
+                          <td *ngIf="paramsData !== 'view'" style="
+
+                          color: #858586;
+                          cursor: pointer;
+
+                        ">
+                            <i class="material-icons" (click)="deletData(skills)">delete</i>
+                            <i class="material-icons" (click)="editSkill(skills,i)">edit</i>
+
+
+                          </td>
+                        </tr>
+                      </tbody>
+
+                    </table>
+                    <div class="row" *ngIf="checkCondition">
+                      <p>Skill Record Not Available</p>
+                    </div>
+
+
+                  </div>
+
+                  <div class="common_button_sub mt-2">
+                    <button *ngIf="paramsData !== 'view'" (click)="scrollFour(stepper)">
+                      Save & Next
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </mat-step>
+      <mat-step label="Questions">
+        <section class="job-nav">
+          <div class="add_button">
+            <!-- <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+          </div>
+          <div class="form_basic mt-4">
+            <div class="right_data_all">
+              <div class="right_data_bg_white form_mar_top">
+                <form [formGroup]="questionForm">
+                  <div class="row" *ngIf="paramsData !== 'view'">
+                    <div class="col-6">
+                      <div class="form-group mb-4">
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                          <input matInput type="text" formControlName="question_name" placeholder="Question" />
+
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <div class="form-group mb-4">
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="question_answer" placeholder="Currect Answer">
+                            <mat-option value="YES">YES</mat-option>
+                            <mat-option value="NO">NO</mat-option>
+
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-md-2 mb-4">
+                      <button class="favorite  saveStyle saveCss" (click)="addRowQuestion()">
+                        Add
+                      </button>
+                    </div>
+                    <div class="col-md-2">
+
+                      <div class="form-group mb-4">
+                        <!-- <span></span> -->
+                        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+                          <input matInput type="text" placeholder="Passing %" formControlName="percentage" />
+
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="paramsData == 'view'">
+                    <p><b>Passing percentage</b> : {{jobDataBy?.percentage}} %</p>
+                  </div>
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>
+                          S.No
+                        </th>
+                        <th>
+                          Question
+                        </th>
+                        <th>
+                          Answer
+                        </th>
+
+                        <th *ngIf="paramsData !== 'view'">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+                      <!-- <ng-container formArrayName="tableRows" *ngFor="let control of CF_1.tableRows['controls']; index as i" ?>
+                          <tr  [formGroup]="control">
+                           <td>
+                            <div class="form-group">
+                              <mat-form-field appearance="outline">
+                                <input  matInput type="text" formControlName="question_name" />
+
+                              </mat-form-field>
+                            </div>
+                           </td>
+                            <td>
+                              <div class="form-group">
+                                <mat-form-field appearance="outline">
+                              <mat-select formControlName="question_answer">
+                          <mat-option value="YES">YES</mat-option>
+                          <mat-option value="NO">NO</mat-option>
+
+                        </mat-select>
+                        </mat-form-field>
+                        </div>
+                            </td>
+                            <td style="
+
+                            color: #858586;
+                            cursor: pointer;
+
+                          ">
+                                <i class="material-icons" (click)="deleteTableRows(i, control)">delete</i>
+                                <i class="material-icons">edit</i>
+
+
+                              </td>
+                          </tr>
+                        </ng-container> -->
+                    </tbody>
+
+                    <tbody *ngIf="paramsData !== 'view'">
+                      <tr *ngFor="let skills of arrayDataQuestion; index as i">
+                        <td>{{i + 1}}</td>
+                        <td>{{skills?.question}}</td>
+                        <td>{{skills?.answer}}</td>
+
+
+                        <td style="
+
+                        color: #858586;
+                        cursor: pointer;
+
+                      ">
+                          <i class="material-icons" (click)="deletDataQuestion(skills)">delete</i>
+                          <!-- <i class="material-icons" (click)="editQuestions(skills,i)">edit</i> -->
+
+
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    <tbody *ngIf="paramsData == 'view'">
+                      <tr *ngFor="let skills of allJobArray?.getAllData_question; index as i">
+                        <td>{{i + 1}}</td>
+                        <td>{{skills?.question}}</td>
+                        <td>{{skills?.answer}}</td>
+
+
+                        <td *ngIf="paramsData !== 'view'" style="
+
+                        color: #858586;
+                        cursor: pointer;
+
+                      ">
+                          <i class="material-icons" (click)="deletDataQuestion(skills)">delete</i>
+                          <i class="material-icons" (click)="editQuestions(skills,i)">edit</i>
+
+
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="row" *ngIf="paramsData !== 'view'">
+                    <p *ngIf="arrayDataQuestion.length == 0"> Question Record Not Found</p>
+                  </div>
+
+
+
+
+                  <div class="common_button_sub mt-2" *ngIf="paramsData !== 'view'">
+                    <button (click)="onSubmitSpocForm()" matStepperNext>
+                      Save & Next
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </div>
+</div>

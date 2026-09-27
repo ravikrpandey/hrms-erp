@@ -1,0 +1,103 @@
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { ICellRendererParams } from 'ag-grid-community';
+import { ToastrService } from 'ngx-toastr';
+import { ConfigurationalmasterService } from 'src/app/@shared/services/configurationalmaster.service';
+import Swal from 'sweetalert2';
+import { RbacMasterService } from 'src/app/@shared/services/rbac-master.service';
+import { BudgetRevenueDialogComponent } from '../budget-revenue-dialog/budget-revenue-dialog.component';
+import { FinaceService } from 'src/app/@shared/services/finace.service';
+
+@Component({
+  selector: 'app-budget-revenue-action',
+  templateUrl: './budget-revenue-action.component.html',
+  styleUrls: ['./budget-revenue-action.component.scss']
+})
+export class BudgetRevenueActionComponent {
+  cellValue: any;
+  assignAction: any;
+  status: any;
+  constructor(private route: Router,
+    public dialog: MatDialog,
+    private router: Router,
+    private _configurationalmasterService: ConfigurationalmasterService,
+    private financeService: FinaceService,
+    private _rbackService: RbacMasterService,
+    private toster: ToastrService) { }
+  ngOnInit(): void {
+    this.assignAction = this._rbackService.accessAssignAction();
+  }
+
+  agInit(params: ICellRendererParams): void {
+    console.log("+++++++",params)
+    this.cellValue = this.getValueToDisplay(params);
+    
+  }
+  getValueToDisplay(params: ICellRendererParams) {
+
+    return params.data.id;
+  }
+
+  reloadCurrentRoute() {
+    let currentUrl = this.route.url;
+    this.route.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.route.navigate([currentUrl]);
+    });
+  }
+
+  Delete(e: any) {
+    e.stopPropagation();
+    Swal.fire({
+      title: 'Are you sure you want to Remove it?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonColor: "#f44336",
+      confirmButtonColor: "#3f51b5",
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.financeService.deleteBudgetPlan(this.cellValue).subscribe(
+          (res: any) => {
+
+            this.toster.success("Deleted successfully")
+            this.reloadCurrentRoute();
+          }, (err) => {
+
+            this.toster.error('Something went wrong please try again', 'Error Message')
+          }
+        )
+      };
+    });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(BudgetRevenueDialogComponent, {
+      data: { mode: 'view', id: this.cellValue },
+      width: '25%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+
+    });
+
+  }
+  editData(event: any) {
+    const dialogRef = this.dialog.open(BudgetRevenueDialogComponent, {
+      data: {  id: this.cellValue },
+      width: '25%',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+
+    });
+  }
+
+
+}
+
+
+
+
+

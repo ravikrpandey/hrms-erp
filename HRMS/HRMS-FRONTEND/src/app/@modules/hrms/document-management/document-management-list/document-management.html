@@ -1,0 +1,42 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS </h1>
+    <p>Document Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>Document Template List</span></p>
+  </div>
+  <div class="add_button" style="display: flex; gap: 16px;">
+    <button class="btn-mail-download" [routerLink]="['/master/hrms/document-management/send-download']">
+      <i class="fa fa-envelope"></i>
+      <span>Mail / Download</span>
+      <i class="fa fa-download"></i>
+    </button>
+    <button type="button" class="btn_add" style="background: #0c85c0; padding: 11px; margin-top: 17px;"
+      (click)="openDialog()">Add Document Template</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select id="page-size" (change)="onPageSizeChanged()">
+        <option value="10" selected="">10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2" align="end">
+      <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+        placeholder="Search">
+    </div>
+  </div>
+
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+      [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]=10 [rowData]="rowData"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+
+  </div>
+
+</div>

@@ -1,0 +1,103 @@
+<ng-container *ngIf="isVendor; else adminLayout">
+  <div class="page-wrapper">
+    <app-vendor-top-header [vendor_id]="vendor_id_header" *ngIf="isVendor"></app-vendor-top-header>
+
+    <div class="dashboard-container">
+      <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #adminLayout>
+  <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+</ng-template>
+
+<ng-template #mainContent>
+  <div
+    class="purchase-return-container"
+    [style.padding]="isVendor ? '0' : '24px'"
+  >
+    <!-- Header Section (Hidden in print) -->
+    <div class="page-header no-print">
+      <div>
+        <h2>Purchase Return Management</h2>
+        <p *ngIf="isVendor">
+          Track and view approved purchase returns and debit notes
+        </p>
+        <p *ngIf="!isVendor">
+          Manage goods returns, stock adjustments, and vendor credit notes
+        </p>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn secondary-btn" (click)="fetchReturns()">
+          <i class="fa fa-refresh"></i> Refresh
+        </button>
+        <button
+          *ngIf="!isVendor && viewMode === 'list'"
+          class="btn primary-btn"
+          (click)="toggleView('create')"
+        >
+          <i class="fa fa-plus"></i> Create Return
+        </button>
+        <button
+          *ngIf="isVendor && viewMode === 'list'"
+          class="btn secondary-btn"
+          (click)="onBack()"
+        >
+          <i class="fa fa-arrow-left"></i> Back
+        </button>
+        <button
+          *ngIf="viewMode !== 'list'"
+          class="btn secondary-btn"
+          (click)="toggleView('list')"
+        >
+          <i class="fa fa-arrow-left"></i> Back to List
+        </button>
+      </div>
+    </div>
+
+    <app-purchase-return-list
+      *ngIf="viewMode === 'list'"
+      [returnsList]="returnsList"
+      [isVendor]="isVendor"
+      [stats]="stats"
+      [vendorsList]="vendorsList"
+      [statusList]="statusList"
+      (onView)="toggleView('view', $event)"
+      (onEdit)="toggleView('edit', $event)"
+      (onSubmit)="submitRecord($event)"
+      (onDelete)="deleteRecord($event)"
+      (onComplete)="completeRecord($event)"
+      (onCreate)="toggleView('create')"
+      (onRefresh)="fetchReturns()"
+    >
+    </app-purchase-return-list>
+
+    <app-purchase-return-form
+      *ngIf="viewMode === 'create' || viewMode === 'edit'"
+      [viewMode]="viewMode"
+      [selectedReturn]="selectedReturn"
+      [vendorsList]="vendorsList"
+      [grnsList]="grnsList"
+      [isVendor]="isVendor"
+      [vendorId]="vendorId"
+      (onCancel)="toggleView('list')"
+      (onSave)="saveReturn($event)"
+    >
+    </app-purchase-return-form>
+
+    <app-purchase-return-view
+      *ngIf="viewMode === 'view'"
+      [selectedReturn]="selectedReturn"
+      [isVendor]="isVendor"
+      (onBack)="toggleView('list')"
+      (onSubmit)="submitRecord($event)"
+      (onApprove)="approveRecord($event)"
+      (onReject)="rejectRecord($event)"
+      (onCancelRecord)="cancelRecord($event)"
+      (onComplete)="completeRecord($event)"
+    >
+    </app-purchase-return-view>
+  </div>
+</ng-template>

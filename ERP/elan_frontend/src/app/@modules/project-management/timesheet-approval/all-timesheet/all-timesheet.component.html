@@ -1,0 +1,146 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Project Management</h1>
+        <p>Project Management<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span>All Timesheet</span></p>
+    </div>
+  </div>
+  <div class="right_data_all">
+    <div>
+        <mat-card>
+            <div class="row form_head">
+                <h3>All Timesheet</h3>
+            </div>
+            <form class="form_set" [formGroup]="filterForm">
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Select Employee</mat-label>
+                        <mat-select formControlName="employee_id" >
+                          <mat-select-filter [array]="employees" (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                          <mat-option *ngFor="let employee of employeesList" [value]="employee.employee_id" >
+                            {{ employee.employee_name }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="filterForm.controls['employee_id']?.hasError('required')">
+                            This field is required!
+                        </mat-error>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12 ">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" class="full-width">
+                            <mat-label>Month</mat-label>
+                            <mat-select formControlName="employee_month_id">
+                              <mat-option *ngFor="let month of months" [value]="month.id">
+                                  {{ month.month_name }}
+                              </mat-option>
+                              </mat-select>
+                            <mat-error *ngIf="filterForm.controls['employee_month_id']?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+            
+            <div class="timesheet-container m-2">
+              <h1 class="calendar-title"></h1>
+              <full-calendar [options]="calendarOptions"></full-calendar>
+            
+              <div class="form_basic mb-0">
+                <form class="form_set" [formGroup]="filterForm">
+                  <div class="row">
+
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                          <div class="form-group">
+                              <mat-form-field appearance="outline" >
+                                  <mat-label>Month</mat-label>
+                                  <mat-select formControlName="month_id">
+                                    <mat-option *ngFor="let month of months" [value]="month.id">
+                                        {{ month.month_name }}
+                                    </mat-option>
+                                    </mat-select>
+                                  <mat-error *ngIf="filterForm.controls['month_id']?.hasError('required')">
+                                      This field is required!
+                                  </mat-error>
+                              </mat-form-field>
+                          </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" >
+                                <mat-label>From Date</mat-label>
+                                <input
+                                    matInput
+                                    [matDatepicker]="fromPicker"
+                                    formControlName="from_date"
+                                    [min]="minDate"
+                                    [max]="maxDate"
+                                  />
+                                  <mat-datepicker-toggle matIconSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                                  <mat-datepicker #fromPicker></mat-datepicker>
+                                <mat-error *ngIf="filterForm.controls['from_date']?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                      <div class="form-group">
+                          <mat-form-field appearance="outline" >
+                              <mat-label>To Date</mat-label>
+                              <input
+                                  matInput
+                                  [matDatepicker]="toPicker"
+                                  formControlName="to_date"
+                                  [min]="filterForm.controls['from_date'].value || minDate"
+                                  [max]="maxDate"
+                                />
+                                <mat-datepicker-toggle matIconSuffix [for]="toPicker"></mat-datepicker-toggle>
+                                <mat-datepicker #toPicker></mat-datepicker>
+                              <mat-error *ngIf="filterForm.controls['to_date']?.hasError('required')">
+                                  This field is required!
+                              </mat-error>
+                          </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="common_button_sub">
+                    <button (click)="getFilteredHours()">Get Hours</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" class="readonly-wrapper">
+                          <mat-label>Total Hours</mat-label>
+                          <input matInput [value]="totalHours" readonly />
+                        </mat-form-field>
+                      </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="readonly-wrapper">
+                        <mat-label>Billable Hours</mat-label>
+                        <input matInput [value]="billableHours" readonly />
+                      </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                  <div class="form-group">
+                    <mat-form-field appearance="outline" class="readonly-wrapper">
+                      <mat-label>Non Billable Hours</mat-label>
+                      <input matInput [value]="nonBillableHours" readonly />
+                    </mat-form-field>
+                  </div>
+              </div>
+                </div>
+              </form>
+              </div>
+            </div>
+        </mat-card>
+    </div>
+  </div>  

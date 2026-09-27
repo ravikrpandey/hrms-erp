@@ -1,0 +1,114 @@
+<section class="form_basic">
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Document Details</h3>
+    </div>
+    <form class="" [formGroup]="documentForm">
+      <div class="form_sePo">
+        <div class="row"  *ngIf="!action_type">
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <div class="form-group">
+              <mat-label>Document Name</mat-label>
+              <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="document_name" />
+                <mat-error *ngIf="
+                          documentForm.controls['document_name'].hasError('pattern')
+                        ">
+                  Please enter only alphabet characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <div class="form-group">
+              <mat-label>Document Number</mat-label>
+              <mat-form-field appearance="outline">
+
+                <input matInput type="text" formControlName="document_description" />
+                <mat-error *ngIf="
+                          documentForm.controls['document_description'].hasError('pattern')
+                        ">
+                  Please enter only alphabet characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" [ngClass]="{'disable-pointer-events': action_type == 'view' }">
+            <div class="form-group fileWithViewImg">
+              <mat-label>Upload Image <span class="alertspan">*</span></mat-label>
+              <input class="form-control" type="file" style="    padding-right: 15%;
+                        font-size: 12px;
+                        padding-top: 7px;
+                        padding-bottom: 7px;
+                        border-radius: 5px;
+                    " title="Termination Copy Upload" (change)="uploadDoc($event)" formControlName="documents"
+                accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc" />
+              <mat-icon *ngIf="documents" class="formFileViewIcon" (click)="viewImg()">visibility</mat-icon>
+              <!-- <img *ngIf="documents" [src]="baseUrl + '/' + documents" alt="" class="fileViewImage"
+                          (click)="viewImg()"> -->
+            </div>
+          </div>
+          <div class="col-xxl-1 col-lg-1 col-md-1 col-sm-1 col-12"></div>
+          <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" *ngIf="action_type !='view'">
+            <div class="add_button" style="float: left; margin-top: 25px;">
+              <button type="button" (click)="addDocument()">Add</button>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="listHeading">
+          <h3>List Of Documents</h3>
+        </div>
+        <div class="acor_data_y">
+          <div class="table_ip tableDesign table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th class="cen">S. No.</th>
+                  <th class="cen">Document Name</th>
+                  <th class="cen">Document Number</th>
+                  <th class="cen">Download File</th>
+                  <th class="cen" *ngIf="action_type !='view'">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let document of documents_detail; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{document?.document_name}}</td>
+                  <td>{{document?.document_description}}</td>
+                  <td>
+                    <div class="flexRow">
+                      <div style="cursor:pointer;" (click)="downloadFile(baseUrl + '/' + document?.documents)"
+                        matTooltip="Download File">
+                        <span class="icon_img"><img src="assets/icons/top3.png"></span>
+                      </div>
+                      <div style="width:10px"></div>
+                      <div style="cursor:pointer;margin-top: 5px;" (click)="viewImage(document?.documents)"
+                        matTooltip="View Doc/Image">
+                        <mat-icon>visibility</mat-icon>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="common_button_sub" *ngIf="action_type !='view'">
+                    <button (click)="editRecord(i, document)">Edit</button>
+                    <button class="cancel_button_y" (click)="deleteRecord(i)">Delete</button>
+                  </td>
+                </tr>
+                <tr class="text-center">
+                  <td colspan="4" *ngIf="!documents_detail?.length">No record found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub fotter_u" *ngIf="!action_type">
+          <button (click)="onSubmitForm()">Save & Next</button>
+          <button class="cancel_button_y" (click)="Skip()">Skip</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

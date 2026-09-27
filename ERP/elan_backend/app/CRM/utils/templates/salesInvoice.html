@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+
+<style>
+body{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size:12px;
+}
+
+.header-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:20px;
+}
+
+.header-table td{
+  border:1px solid #ccc;
+  padding:10px;
+}
+
+.section-title{
+  background:#00695c;
+  color:#fff;
+  padding:10px;
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+.invoice-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.invoice-table th{
+  background:#f3f3f3;
+  border:1px solid #ccc;
+  padding:8px;
+  text-align:left;
+}
+
+.invoice-table td{
+  border:1px solid #ccc;
+  padding:8px;
+}
+
+.summary td{
+  font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+ <table class="header-table">
+<tr>
+  <td colspan=3 style="text-align: center;"><h1>Invoice</h1></td>
+</tr>
+        <tr>
+
+            <td rowspan="2" width="50%">
+
+                <!-- Optional Logo -->
+                <!--
+                <img src="{{logo}}" style="height:60px;margin-bottom:10px;">
+                -->
+
+                <div class="company-name">
+                    {{elanName}}
+                </div>
+
+                <div class="company-address">
+
+                    {{mainAddress}}<br>
+
+                    GSTIN :
+                    {{company_gstin}}
+
+                </div>
+
+            </td>
+
+            <td width="30%">
+
+                <span class="heading-title">
+
+                    Invoice No:
+
+                </span>
+
+                {{invoice_no}}
+
+            </td>
+
+            <td width="20%">
+
+                <span class="heading-title">
+
+                    Date:
+
+                </span>
+
+                {{invoice_date}}
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td colspan="2">
+
+                <div class="sales-manager">
+
+                    <strong>Sales Manager:</strong>
+
+                    {{titles}}
+                    {{first_name}}
+                    <!-- {{middel_name?middel_name:''}} -->
+                    {{last_name}}
+
+                    <br>
+
+                    Contact No :
+                    {{contact_number}}
+
+                    <br>
+
+                    Email :
+                    {{employee_official_email}}
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <tr>
+
+            <td>
+
+                <div class="section-title">
+
+                    Bill To
+
+                </div>
+
+                {{customer_name}}<br>
+
+                {{billing_address}},{{billing_postal_address}}
+                {{billing_pin_code}}
+
+                <br>
+
+                GSTIN :
+                {{billing_gst_in}}
+
+                <br>
+
+                Contact Person :
+                {{title}}
+                {{contact_person_name}}
+
+                <br>
+
+                Contact No :
+                {{mobile}}
+
+            </td>
+
+            <td colspan="2">
+
+                <div class="section-title">
+
+                    Ship To
+
+                </div>
+
+                {{customer_name}}
+
+                <br>
+
+                {{shipping_address}}
+
+                <br>
+
+                {{shipping_postal_address}},
+                {{shipping_pin_code}}
+
+                <br>
+
+              GSTIN:  {{shipping_gst_in}}
+
+            </td>
+
+        </tr>
+
+    </table>
+<!-- <table class="header-table">
+<tr>
+<td>
+<b>Invoice No</b><br>
+{{invoice_no}}
+</td>
+<td>
+<b>Invoice Date</b><br>
+{{invoice_date}}
+</td>
+
+<td>
+<b>Customer</b><br>
+{{customer_name}}
+</td>
+
+
+</tr>
+</table> -->
+
+<div class="section-title">
+Item Details
+</div>
+
+<table class="invoice-table">
+
+<thead>
+<tr>
+<th>S.N.</th>
+<th>Item Name</th>
+<th>HSN</th>
+<th>GST %</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Discount</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody>
+{{itemRows}}
+</tbody>
+
+<tfoot>
+
+<tr class="summary">
+<td colspan="7" align="right">
+Gross Amount
+</td>
+<td>
+{{gross_amount}}
+</td>
+</tr>
+
+<tr class="summary">
+<td colspan="7" align="right">
+GST Value
+</td>
+<td>
+{{gst_amount}}
+</td>
+</tr>
+
+<tr class="summary">
+<td colspan="7" align="right">
+Net Basic Offer Amount
+</td>
+<td>
+{{net_amount}}
+</td>
+</tr>
+
+</tfoot>
+
+</table>
+
+</body>
+</html>

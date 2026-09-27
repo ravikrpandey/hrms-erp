@@ -1,0 +1,116 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>License & Compliance</h3>
+    </div>
+    <form class="form_set formBorder" [formGroup]="licenseform">
+
+      <div class="form_sePo">
+        <div class="row">
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Driving License Number <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="driving_license_number"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>License Issuing Authority <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="license_issuing_authority"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>License Type <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="license_type">
+                  <mat-option value="LMV">LMV</mat-option>
+                  <mat-option value="HMV">HMV</mat-option>
+                  <mat-option value="Trailer">Trailer</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>License Expiry Date <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+
+                <input matInput [matDatepicker]="dobPicker1" type="text" formControlName="license_expiry_date">
+                <mat-datepicker-toggle matSuffix [for]="dobPicker1"></mat-datepicker-toggle>
+                <mat-datepicker #dobPicker1></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Aadhar Number / Social Security Number <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="aadhar_number"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>PAN Number (India-specific) <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="pan_number"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Passport Number (For international trips) <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" formControlName="passport_number"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Work Permit Expiry Date (If applicable)</mat-label>
+              <mat-form-field>
+
+                <input matInput [matDatepicker]="dobPicker" type="text" formControlName="work_permit_expiry_date">
+                <mat-datepicker-toggle matSuffix [for]="dobPicker"></mat-datepicker-toggle>
+                <mat-datepicker #dobPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Police Verification Status <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="police_verification_status">
+                  <mat-option value="Verified">Verified</mat-option>
+                  <mat-option value="Pending">Pending</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="action_type!='view'">
+            <div class="common_button_sub">
+              <button (click)="onSubmitForm()">Save & Next</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

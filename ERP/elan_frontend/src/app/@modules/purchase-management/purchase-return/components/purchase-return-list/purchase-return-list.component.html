@@ -1,0 +1,172 @@
+<!-- Summary Cards Dashboard -->
+<div class="summary-grid">
+    <div class="summary-card">
+        <div class="card-icon blue">
+            <i class="fa fa-list"></i>
+        </div>
+        <div class="card-content">
+            <h3>{{ stats.total }}</h3>
+            <p>Total Returns</p>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon orange">
+            <i class="fa fa-clock-o"></i>
+        </div>
+        <div class="card-content">
+            <h3>{{ stats.pending }}</h3>
+            <p>Pending Approval</p>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon green">
+            <i class="fa fa-check-circle"></i>
+        </div>
+        <div class="card-content">
+            <h3>{{ stats.approved }}</h3>
+            <p>Approved / Credit Issued</p>
+        </div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon red">
+            <i class="fa fa-times-circle"></i>
+        </div>
+        <div class="card-content">
+            <h3>{{ stats.rejected }}</h3>
+            <p>Rejected</p>
+        </div>
+    </div>
+</div>
+
+<!-- Filter & Search Section -->
+<div class="filter-section">
+    <div class="filter-grid">
+        <mat-form-field appearance="outline" *ngIf="!isVendor">
+            <mat-label>Filter Vendor</mat-label>
+            <mat-select [(ngModel)]="filterVendor" (selectionChange)="searchReturns()">
+                <mat-option value="">All Vendors</mat-option>
+                <mat-option *ngFor="let vendor of vendorsList" [value]="vendor.id">
+                    {{ vendor.vendor_name }} ({{ vendor.vendor_code }})
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Filter Status</mat-label>
+            <mat-select [(ngModel)]="filterStatus" (selectionChange)="searchReturns()">
+                <mat-option value="">All Statuses</mat-option>
+                <mat-option *ngFor="let status of statusList" [value]="status">
+                    {{ status }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Search Return No</mat-label>
+            <input matInput [(ngModel)]="filterSearch" placeholder="PRXXXX" (keyup.enter)="searchReturns()">
+        </mat-form-field>
+
+        <div class="filter-action-buttons">
+            <button class="btn filter-btn" (click)="searchReturns()">
+                <i class="fa fa-search"></i> Search
+            </button>
+            <button class="btn reset-btn" (click)="resetFilters()">
+                Reset
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Data Grid Table -->
+<div class="table-card">
+    <div class="table-header" *ngIf="!isVendor">
+        <h3>Purchase Returns Registry</h3>
+    </div>
+
+    <!-- Tab header for Vendor Panel -->
+    <div class="vendor-tabs-header" *ngIf="isVendor">
+        <div class="vendor-tab" [class.active]="vendorTab === 'approval'"
+            (click)="setVendorTab('approval')">
+            <i class="fa fa-clock-o"></i> Pending Acknowledgment & Approval
+        </div>
+        <div class="vendor-tab" [class.active]="vendorTab === 'history'"
+            (click)="setVendorTab('history')">
+            <i class="fa fa-check-circle-o"></i> Return History
+        </div>
+    </div>
+
+    <div class="table-responsive" *ngIf="getFilteredReturns().length > 0; else noData">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Return No</th>
+                    <th>Vendor</th>
+                    <th>GRN No</th>
+                    <th>Return Date</th>
+                    <th>Subtotal</th>
+                    <th>Tax Amount</th>
+                    <th>Total Credit</th>
+                    <th>Status</th>
+                    <th>Created By</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of getFilteredReturns()">
+                    <td class="bold-text">{{ row.return_no }}</td>
+                    <td>{{ row.vendor?.vendor_name || 'N/A' }}</td>
+                    <td>{{ row.grn?.grn_number || 'N/A' }}</td>
+                    <td>{{ row.return_date | date:'dd-MMM-yyyy' }}</td>
+                    <td>₹ {{ row.sub_total | number:'1.2-2' }}</td>
+                    <td>₹ {{ row.tax_amount | number:'1.2-2' }}</td>
+                    <td class="bold-text text-teal">₹ {{ row.final_amount | number:'1.2-2' }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="row.status.toLowerCase()">
+                            {{ row.status }}
+                        </span>
+                    </td>
+                    <td>{{ row.creator ? (row.creator.first_name + ' ' + row.creator.last_name) : 'System' }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="icon-btn view" title="View details"
+                                (click)="onView.emit(row.id)">
+                                <i class="fa fa-eye"></i>
+                            </button>
+                            <button *ngIf="!isVendor && row.status === 'DRAFT'" class="icon-btn edit"
+                                title="Edit Draft" (click)="onEdit.emit(row.id)">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button *ngIf="!isVendor && row.status === 'DRAFT'" class="icon-btn submit"
+                                title="Submit Return" (click)="onSubmit.emit(row.id)">
+                                <i class="fa fa-paper-plane"></i>
+                            </button>
+                            <button *ngIf="!isVendor && row.status === 'DRAFT'" class="icon-btn reject"
+                                title="Delete Draft" (click)="onDelete.emit(row.id)">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            <button *ngIf="row.status === 'APPROVED' || row.status === 'COMPLETED'"
+                                class="icon-btn print" title="Print Debit Note"
+                                (click)="onView.emit(row.id)">
+                                <i class="fa fa-print"></i>
+                            </button>
+                            <button *ngIf="isVendor && row.status === 'APPROVED'" class="icon-btn submit"
+                                title="Acknowledge & Approve" (click)="onComplete.emit(row.id)">
+                                <i class="fa fa-check"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ng-template #noData>
+        <div class="empty-state">
+            <i class="fa fa-folder-open-o"></i>
+            <p>No purchase return records found. Modify filters or create a new return request.</p>
+        </div>
+    </ng-template>
+</div>

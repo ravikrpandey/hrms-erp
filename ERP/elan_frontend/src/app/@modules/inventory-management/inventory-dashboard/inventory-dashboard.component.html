@@ -1,0 +1,144 @@
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h2>Inventory Management Dashboard</h2>
+    <div class="filters">
+      <mat-form-field appearance="outline" class="warehouse-field">
+        <mat-label>Warehouse</mat-label>
+        <mat-icon matPrefix>warehouse</mat-icon>
+        <mat-select
+          panelClass="warehouse-dropdown"
+          [(ngModel)]="selectedWarehouseId"
+          (selectionChange)="loadDashboardData(+$event.value)">
+          <mat-option *ngFor="let w of warehouseList" [value]="+w.id">
+            {{ w.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+
+    <div class="kpi-card total">
+      <div class="kpi-header">
+        <span class="material-icons">inventory_2</span>
+        <h4>Total Items</h4>
+      </div>
+      <h2>{{ totalItems || 0 }}</h2>
+    </div>
+
+    <div class="kpi-card stock">
+      <div class="kpi-header">
+        <span class="material-icons">warehouse</span>
+        <h4>Total Stock</h4>
+      </div>
+      <h2>{{ totalStock || 0 }}</h2>
+    </div>
+
+    <div class="kpi-card available">
+      <div class="kpi-header">
+        <span class="material-icons">check_circle</span>
+        <h4>Available Stock</h4>
+      </div>
+      <h2>{{ availableQty || 0 }}</h2>
+    </div>
+
+    <div class="kpi-card hold">
+      <div class="kpi-header">
+        <span class="material-icons">pause_circle</span>
+        <h4>On Hold Stock</h4>
+      </div>
+      <h2>{{ holdQty || 0 }}</h2>
+    </div>
+
+    <div class="kpi-card delivered">
+      <div class="kpi-header">
+        <span class="material-icons">local_shipping</span>
+        <h4>Delivered Stock</h4>
+      </div>
+      <h2>{{ deliveredQty || 0 }}</h2>
+    </div>
+
+    <div class="kpi-card scrap">
+      <div class="kpi-header">
+        <span class="material-icons">delete</span>
+        <h4>Scrap Stock</h4>
+      </div>
+      <h2>{{ scrapQty || 0 }}</h2>
+    </div>
+
+  </div>
+
+  <!-- Middle Section -->
+  <div class="grid-section">
+
+    <!-- Top Selling -->
+    <div class="card">
+      <h3><span class="material-icons">trending_up</span> Top 5 Selling Items</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Item Code</th>
+            <th>Item Name</th>
+            <th>Delivered Qty</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="topSelling?.length > 0; else noTopSellingData">
+          <tr *ngFor="let item of topSelling; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.item_code }}</td>
+            <td>{{ item.item_name }}</td>
+            <td>{{ item.qty }}</td>
+          </tr>
+        </tbody>
+        <ng-template #noTopSellingData>
+          <tbody>
+            <tr>
+              <td colspan="4" style="text-align:center; padding:15px; color:#888;">
+                No Top Selling Items Found
+              </td>
+            </tr>
+          </tbody>
+        </ng-template>
+      </table>
+    </div>
+
+    <!-- Low Stock -->
+    <div class="card">
+      <h3><span class="material-icons">warning</span> Low Stock Alerts</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Item Code</th>
+            <th>Item Name</th>
+            <th>Available</th>
+            <th>Min Level</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="lowStock?.length > 0; else noLowStockData">
+          <tr *ngFor="let item of lowStock">
+            <td>{{ item.item_code }}</td>
+            <td>{{ item.item_name }}</td>
+            <td class="danger">{{ item.availableQty }}</td>
+            <td>{{ item.min }}</td>
+          </tr>
+        </tbody>
+        <ng-template #noLowStockData>
+          <tbody>
+            <tr>
+              <td colspan="4" style="text-align:center; padding:15px; color:#888;">
+                No Low Stock Items Found
+              </td>
+            </tr>
+          </tbody>
+        </ng-template>
+      </table>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,29 @@
+<mat-icon class="close-icon" (click)="onNoClick()">close</mat-icon>
+<h3 class="popHead">Add {{data.type==='Status' ? 'Delay':'Reject' }} Reason</h3>
+<mat-card>
+
+    <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{data.type==='Status'?'Delay':'Reject' }} Reason</mat-label>
+                        <mat-select formControlName="reason_id">
+                            <mat-option *ngFor=" let item of salesReasion" [value]="item?.id">
+                                {{item?.sales_reason}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-md-12">
+                    <textarea class="outlined-textarea" rows="3" formControlName="remark" placeholder="Description" style="resize:none;"></textarea>
+                </div>
+            </div>
+
+            <div class="text-right mt-3 d-flex justify-content-end">
+                <button mat-raised-button color="primary"> Submit </button>
+                &nbsp;
+                <button mat-raised-button type="button" color="warn" (click)="onNoClick()"> Close </button>
+            </div>
+        </form>
+    </mat-card-content>
+</mat-card>

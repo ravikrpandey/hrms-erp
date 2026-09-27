@@ -1,0 +1,162 @@
+<app-wrapper [title]="'Assign User-Specific Permissions'">
+  <div class="employee-selector">
+    <form [formGroup]="form">
+      <app-mat-form-select-filter
+        *ngIf="employees.length > 0"
+        formControlName="employee_id"
+        [key]="'employee_id'"
+        [items]="employees"
+        [displayKey]="[
+          'title',
+          'first_name',
+          'last_name',
+          'employee_code',
+          'role_master_name'
+        ]"
+        placeholder="Select Employee"
+      >
+      </app-mat-form-select-filter>
+    </form>
+    
+    <div class="info-banner" *ngIf="form.get('employee_id')?.value">
+      <i class="bi bi-info-circle me-2"></i>
+      <span>User-specific permissions will override role permissions. Only modified permissions will be saved.</span>
+    </div>    
+    <div class="info-banner" *ngIf="form.get('employee_id')?.value">
+      <i class="bi bi-info-circle me-2"></i>
+      <span>To assign permissions based on roles, please use the <b>Role Master > Permissions action.</b>
+Permissions set at the role level will automatically apply to all employees assigned to that role.</span>
+    </div>
+  </div>
+  
+  <div class="mt-3">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 text-muted">Loading permissions...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && moduleList.length === 0 && form.get('employee_id')?.value" class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>
+      No permissions found for this employee.
+    </div>
+
+    <!-- Permissions List -->
+    <div *ngIf="!isLoading && moduleList.length > 0" class="card shadow-sm">
+      <div class="card-body">
+        <div *ngFor="let module of moduleList; trackBy: trackByModuleId">
+          <mat-expansion-panel
+            [expanded]="false"
+            [disabled]="!module.children?.length"
+            class="mb-2 force-normal-style"
+          >
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-checkbox
+                  [(ngModel)]="module.selected"
+                  (change)="toggleAll(module)"
+                  (click)="$event.stopPropagation()"
+                >
+                  {{ module.name }}
+                  <span *ngIf="module.isUser" class="badge bg-info ms-2" style="font-size: 0.7rem;">Custom</span>
+                </mat-checkbox>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <!-- LEVEL 1 CHILDREN -->
+            <div class="ms-4 mt-2" *ngFor="let menu of module.children; trackBy: trackByModuleId">
+              <mat-expansion-panel
+                [expanded]="false"
+                [disabled]="!menu.children?.length"
+                class="mb-2 force-normal-style"
+              >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-checkbox
+                      [(ngModel)]="menu.selected"
+                      (change)="toggleChildren(module, menu)"
+                      (click)="$event.stopPropagation()"
+                    >
+                      {{ menu.name }}
+                      <span *ngIf="menu.isUser" class="badge bg-info ms-2" style="font-size: 0.7rem;">Custom</span>
+                    </mat-checkbox>
+                  </mat-panel-title>
+
+                  <mat-panel-description>
+                    <mat-checkbox
+                      [(ngModel)]="menu.read"
+                      (click)="$event.stopPropagation()"
+                      (change)="menu.isUser = true"
+                      >Read</mat-checkbox
+                    >
+                    <mat-checkbox
+                      [(ngModel)]="menu.write"
+                      class="ms-2"
+                      (click)="$event.stopPropagation()"
+                      (change)="menu.isUser = true"
+                      >Write</mat-checkbox
+                    >
+                    <mat-checkbox
+                      [(ngModel)]="menu.remove"
+                      class="ms-2"
+                      (click)="$event.stopPropagation()"
+                      (change)="menu.isUser = true"
+                      >Delete</mat-checkbox
+                    >
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <!-- LEVEL 2 CHILDREN -->
+                <div class="ms-4 mt-2" *ngFor="let child of menu.children; trackBy: trackByModuleId">
+                  <div
+                    class="d-flex align-items-center justify-content-between border p-2 rounded"
+                  >
+                    <mat-checkbox
+                      [(ngModel)]="child.selected"
+                      (change)="updateParentStatus(module, menu, child)"
+                    >
+                      {{ child.name }}
+                      <span *ngIf="child.isUser" class="badge bg-info ms-2" style="font-size: 0.7rem;">Custom</span>
+                    </mat-checkbox>
+
+                    <div>
+                      <mat-checkbox 
+                        [(ngModel)]="child.read"
+                        (change)="child.isUser = true"
+                      >Read</mat-checkbox>
+                      <mat-checkbox 
+                        [(ngModel)]="child.write" 
+                        class="ms-2"
+                        (change)="child.isUser = true"
+                      >Write</mat-checkbox>
+                      <mat-checkbox 
+                        [(ngModel)]="child.remove" 
+                        class="ms-2"
+                        (change)="child.isUser = true"
+                      >Delete</mat-checkbox>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </div>
+          </mat-expansion-panel>
+        </div>
+
+        <button 
+          class="btn btn-success mt-3 w-100" 
+          (click)="savePermissions()"
+          [disabled]="isSaving || isLoading"
+        >
+          <span *ngIf="!isSaving">Save Permissions</span>
+          <span *ngIf="isSaving">
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            Saving...
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</app-wrapper>

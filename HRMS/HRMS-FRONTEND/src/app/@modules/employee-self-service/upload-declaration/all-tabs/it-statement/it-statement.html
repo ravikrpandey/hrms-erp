@@ -1,0 +1,173 @@
+<mat-accordion class="custom-accordion">
+    <mat-expansion-panel>
+        <mat-expansion-panel-header class="header-flex">
+            <mat-panel-title>
+                A. Income
+            </mat-panel-title>
+            <mat-panel-description>
+                <span class="subtotal-value">1,92,001.2</span>
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <table class="full-width">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Annual Total</th>
+                    <th>Apr 2024</th>
+                    <th>May 2024</th>
+                    <th>Jun 2024</th>
+                    <th>Jul 2024</th>
+                    <th>Aug 2024</th>
+                    <th>Sep 2024</th>
+                    <th>Oct 2024</th>
+                    <th>Nov 2024</th>
+                    <th>Dec 2024</th>
+                    <th>Jan 2025</th>
+                    <th>Feb 2025</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let row of dataSource">
+
+                    <!-- Section Row -->
+                    <tr *ngIf="row.type === 'section'" class="section">
+                        <td colspan="13">{{ row.item }}</td>
+                    </tr>
+
+                    <!-- Subtotal Row -->
+                    <tr *ngIf="row.type === 'subtotal'" class="subtotal">
+                        <td>{{ row.item }}</td>
+                        <td>{{ row.annual }}</td>
+                        <!-- <td colspan="12"></td> -->
+                    </tr>
+
+                    <!-- Total Row -->
+                    <tr *ngIf="row.type === 'total'" class="total">
+                        <td>{{ row.item }}</td>
+                        <td>{{ row.annual }}</td>
+                    </tr>
+
+                    <!-- Normal Data Row -->
+                    <tr *ngIf="!row.type">
+                        <td>{{ row.item }}</td>
+                        <td>{{ row.annual }}</td>
+                        <td>{{ row.apr }}</td>
+                        <td>{{ row.may }}</td>
+                        <td>{{ row.jun }}</td>
+                        <td>{{ row.jul }}</td>
+                        <td>{{ row.aug }}</td>
+                        <td>{{ row.sep }}</td>
+                        <td>{{ row.oct }}</td>
+                        <td>{{ row.nov }}</td>
+                        <td>{{ row.dec }}</td>
+                        <td>{{ row.jan }}</td>
+                        <td>{{ row.feb }}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </mat-expansion-panel>
+</mat-accordion>
+
+
+<mat-accordion class="deductions-accordion">
+  <mat-expansion-panel  class="mt-2">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        B. Deductions
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="table-container">
+      <table class="deductions-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Annual Total</th>
+            <th>Apr 2024</th>
+            <th>May 2024</th>
+            <th>Jun 2024</th>
+            <th>Jul 2024</th>
+            <th>Aug 2024</th>
+            <th>Sep 2024</th>
+            <th>Oct 2024</th>
+            <th>Nov 2024</th>
+            <th>Dec 2024</th>
+            <th>Jan 2025</th>
+            <th>Feb 2025</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let row of deductionsData">
+
+            <!-- Section Row -->
+            <tr *ngIf="getRowType(row) === 'section'" class="deductions-row-section">
+              <td colspan="13">{{ row.label }}</td>
+            </tr>
+
+            <!-- Subtotal Row -->
+            <tr *ngIf="getRowType(row) === 'subtotal'" class="deductions-row-subtotal">
+              <td>{{ row.label }}</td>
+              <td>{{ row.annualTotal }}</td>
+              <td colspan="12"></td>
+            </tr>
+
+            <!-- Normal Row -->
+            <tr *ngIf="getRowType(row) === 'normal'">
+              <td>{{ row.item }}</td>
+              <td>{{ row.annualTotal }}</td>
+              <td>{{ row.apr }}</td>
+              <td>{{ row.may }}</td>
+              <td>{{ row.jun }}</td>
+              <td>{{ row.jul }}</td>
+              <td>{{ row.aug }}</td>
+              <td>{{ row.sep }}</td>
+              <td>{{ row.oct }}</td>
+              <td>{{ row.nov }}</td>
+              <td>{{ row.dec }}</td>
+              <td>{{ row.jan }}</td>
+              <td>{{ row.feb }}</td>
+            </tr>
+
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+
+
+<mat-accordion class="deductions-accordion">
+  <mat-expansion-panel  class="mt-2">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        C  Perquisites
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="table-container">
+      <table class="deductions-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Annual Total</th>
+            <th>Apr 2024</th>
+            <th>May 2024</th>
+            <th>Jun 2024</th>
+            <th>Jul 2024</th>
+            <th>Aug 2024</th>
+            <th>Sep 2024</th>
+            <th>Oct 2024</th>
+            <th>Nov 2024</th>
+            <th>Dec 2024</th>
+            <th>Jan 2025</th>
+            <th>Feb 2025</th>
+          </tr>
+        </thead>
+       
+      </table>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>

@@ -1,0 +1,51 @@
+
+<div style="width: 100%;
+    float: left;padding-top: 20px;">
+  <form [formGroup]="earningForm" class="wrapper" novalidate>
+    <div class="settlement-form">
+
+      <div class="form-row">
+        <label>Final Month Salary</label>
+        <input type="text" formControlName="final_salary" class="form-control" />
+        <small *ngIf="earningForm.get('final_salary')?.touched && earningForm.get('final_salary')?.invalid" class="text-danger">
+         Final Month Salary are Required.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <label>Leave Encashment Days</label>
+        <input type="text" formControlName="leave_encashment_days" class="form-control" />
+        <small *ngIf="earningForm.get('leave_encashment_days')?.touched && earningForm.get('leave_encashment_days')?.invalid" class="text-danger">
+         Leave Encashment Days are Required.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <label>Leave Encashment Amount</label>
+        <input type="text" formControlName="leave_encashment_amount" class="form-control" />
+        <small *ngIf="earningForm.get('leave_encashment_amount')?.touched && earningForm.get('leave_encashment_amount')?.invalid" class="text-danger">
+          Leave Encashment Amount are Required.
+        </small>
+      </div>
+
+      <div class="form-row">
+        <label>Bonus (If Any)</label>
+        <input type="text" formControlName="bonus_amount" class="form-control" />
+       
+      </div>
+
+      <div class="form-row">
+        <label>Gratuity (If Eligible)</label>
+        <input type="text" formControlName="gratuity_amount" class="form-control" />
+      
+      </div>
+
+    </div>
+
+    <div class="form-actions mt-3">
+      <button type="button" class="action-btn btn btn-primary" (click)="submit()">Save & Next</button>
+      <button type="button" class="action-btn btn btn-secondary" [routerLink]="['/master/ess/fnf-settlement']">Cancel</button>
+    </div>
+  </form>
+  </div>
+

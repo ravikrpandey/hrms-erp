@@ -1,0 +1,69 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Breakdown Management</h1>
+    <p>All Indent<i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span>All Indent List</span></p>
+  </div>
+  <!-- <div class="add_button">
+    <button type="button" class="btn_add" >Add </button>
+  </div> -->
+</div>
+
+<div class="right_data_all">
+  <div class="container text-center mt-5">
+    <!-- Buttons to toggle grids -->
+    <button class="btn btn-custom-2 me-3" (click)="openGrid('Open')" >Open Indent</button>
+    <button class="btn btn-custom-2" (click)="openGrid('Allocated')">Allocated Indent</button>
+  </div>
+
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <!-- Page size selector -->
+      <select id="page-size" (change)="onPageSizeChanged()">
+        <option value="10" selected>10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2" align="end">
+      <!-- Search box -->
+      <input
+        type="text"
+        class="form-control"
+        id="filter-text-box"
+        (input)="onFilterTextBoxChanged()"
+        placeholder="Search"
+      />
+    </div>
+  </div>
+
+  <!-- Conditional rendering of grids -->
+  <div class="ag_grid">
+    <!-- Open Indent Grid -->
+    <ag-grid-angular
+      *ngIf="currentGrid === 'Open'"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="15"
+      (gridReady)="onGridReady($event)"
+      [rowClass]="rowClass"
+    ></ag-grid-angular>
+
+    <!-- Allocated Indent Grid -->
+    <ag-grid-angular
+      *ngIf="currentGrid === 'Allocated'"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px"
+      [rowData]="rowData1"
+      [columnDefs]="columnDefs1"
+      [pagination]="true"
+      [paginationPageSize]="15"
+      (gridReady)="onGridReady($event)"
+      [rowClass]="rowClass"
+    ></ag-grid-angular>
+  </div>
+</div>

@@ -1,0 +1,244 @@
+
+
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Recruitment</h1>
+      <p> Create Candidate Offer Letter <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>Create Candidate Offer Letter </span></p>
+    </div>
+  </div>
+
+  <div class="right_data_all">
+    <div class="mt-4">
+     
+      <form [formGroup]="personalForm">
+        <mat-card class="p-4 mb-4">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Ref Number</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="reference_number" [readonly]="true" />
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Issued Date</mat-label>
+                <mat-form-field appearance="outline" readonly>
+                  <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="created_date"
+                    [readonly]="true" />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp [disabled]="true"></mat-datepicker>
+                  <mat-error *ngIf="
+                        personalForm.controls['created_date'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Position</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="positoin_name" [readonly]="true" />
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Base Salary</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="base_salary" />
+                  <mat-error *ngIf="
+                  personalForm.controls['base_salary'].hasError(
+                  'pattern'
+                )
+              ">
+                    Maximum of 8 digits is allowed.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Reporting Manager</mat-label>
+                <mat-form-field appearance="outline" readonly>
+                  <mat-select formControlName="reporting_manager_id">
+                    <mat-select-filter [array]="employees" (filteredReturn)="employeeFilter($event)"></mat-select-filter>
+                    <mat-option *ngFor="let reportingManagement of reportingManagerList"
+                      [value]="reportingManagement?.employee_id">{{reportingManagement?.first_name + " " + reportingManagement?.last_name + " " + reportingManagement?.employee_code}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                      personalForm.controls['reporting_manager_id'].hasError('required')
+                    ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Type of Contract </mat-label>
+                <mat-form-field appearance="outline" readonly>
+                  <mat-select formControlName="contract_types_id">
+                    <mat-select-filter [array]="contracts" (filteredReturn)="contractFilter($event)"></mat-select-filter>
+                    <mat-option *ngFor="let typeOfContract of typeOfContractList"
+                      [value]="typeOfContract?.id">{{typeOfContract?.contract_type}}</mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="
+                      personalForm.controls['contract_types_id'].hasError('required')
+                    ">
+                    This field is Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Probation Period (In Days)</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="number" formControlName="probation_period" />
+                  <mat-error *ngIf="
+                  personalForm.controls['probation_period'].hasError(
+                  'pattern'
+                )
+              ">
+                    Maximum of 8 digits is allowed.
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label>Location</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="location" />
+                </mat-form-field>
+              </div>
+            </div> -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+              <mat-label>Location</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="location_id">
+                  <mat-select-filter [array]="locationList" (filteredReturn)="locationFilter($event)"></mat-select-filter>
+                  <mat-option *ngFor="let location of locations"
+                    [value]="location?.id">{{location?.branch_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="personalForm.get('location_id')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group mb-3">
+                <mat-label>Expected Joining date</mat-label>
+                <mat-form-field appearance="outline" readonly>
+                  <input matInput [matDatepicker]="dp1" (click)="dp1.open()" [min]="currentDate" formControlName="exp_joining_date"
+                    readonly />
+                  <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                  <mat-datepicker #dp1></mat-datepicker>
+                  <mat-error *ngIf="
+                        personalForm.controls['exp_joining_date'].hasError('required')
+                      ">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+        <mat-card>
+          <div class="heading_neo">
+            <h3>Allowance</h3>
+          </div>
+          <div class="basic_details mb-0">
+            <table class="table table-bordered mt-4 p-4">
+              <thead>
+                <tr>
+                  <th maxlength="50" style="width: 50%">
+                    Allowance Name
+                  </th>
+                  <th>
+                    Amount
+                  </th>
+                  <th class="common_button_sub" *ngIf="!offer_id">
+                    <button type="button" (click)="addRow()">
+                      Add
+                    </button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container formArrayName="allowance_details"
+                  *ngFor="let control of CF_1.allowance_details['controls']; index as i">
+                  <tr [formGroup]="control">
+                    <td>
+                      <div class="form-group addCoding">
+                        <mat-form-field appearance="outline">
+                          <mat-select formControlName="allowance_name">
+                            <mat-select-filter [array]="allowances[i]" (filteredReturn)="allowanceFilter($event,i)"></mat-select-filter>
+                            <mat-option *ngFor="let allowance of allowanceList[i]"
+                              [value]="allowance?.allowance_name">{{allowance?.allowance_name}}</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="form-group">
+                      <input matInput type="number" formControlName="allowance_amount" class="form-control" />
+                    </div>
+                    </td>
+                    <td *ngIf="!offer_id" style="text-align: left; color: #858586; cursor: pointer;">
+                      <i class="material-icons" (click)="deleteallowance_details(i, control)">delete</i>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+            <div class="row mt-3 px-4 mb-4">
+              <div class="col-md-12 col-sm-12" *ngIf="actionType == 'PENDING' && offer_id">
+                <label>Creator's Remark</label>
+                <textarea class="form-control" row="2" formControlName="offerremark"  [readonly]="actionFor == 'approval'"></textarea>
+              </div>
+            </div>
+            <div class="row mt-3 px-4 mb-4">
+              <div class="col-md-4 col-sm-4" *ngIf="actionType == 'PENDING' || candidate_id">
+                <label>Remark</label>
+                <textarea class="form-control" row="3" formControlName="offer_remarks"></textarea>
+              </div>
+              <div class="col-md-4 col-sm-4" *ngIf="!offer_id">
+                <div class="form-group">
+                  <mat-label>Send for Approval</mat-label>
+                  <mat-form-field appearance="outline" readonly>
+                    <mat-select formControlName="approval_id">
+                      <mat-option *ngFor="let reportingManagement of reportingManagerList"
+                        [value]="reportingManagement?.employee_id">{{reportingManagement?.first_name}} {{reportingManagement?.last_name}} ({{reportingManagement?.employee_code}})</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="
+                        personalForm.controls['approval_id'].hasError('required')
+                      ">
+                      This field is Required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-4 col-sm-4 common_button_sub mt-4" style="text-align: left;">
+              <div *ngIf="status !='completed' && candidate_id">
+                <button (click)="handleSubmit()">Save</button>
+              </div>
+              <div *ngIf="offer_id && actionType == 'PENDING'">
+                <button (click)="approveOfferLetter()">Approve</button>
+              </div>
+            </div>
+            </div>
+            </div>
+        </mat-card>
+      </form>
+      
+    </div>
+  </div>

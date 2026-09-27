@@ -1,0 +1,111 @@
+<app-wrapper [title]="'Asset Management'" [subTitle]="'Asset'" [subheading]="'Asset List'" [showActions]="true" [actions]="actions">
+  <div class="right_data_all pt-0 mt-0">
+  <div class="employ_sube py-2 mt-4 mb-3">
+    <div class="searchSelector">
+      <div class="employee_2" align="end">
+
+        <div class="customSearchbar">
+          <div class="search-box">
+
+            <input type="text" class="form-control" id="filter-text-box" placeholder="Search....."
+              (input)="onFilterTextBoxChanged()" style="height: 76%; margin-top: 1px">
+          </div>
+
+          <div class="filter-category">
+            <mat-form-field appearance="outline">
+              <mat-label>Filter by Category:</mat-label>
+              <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
+                <mat-form-field>
+                  <input matInput [formControl]="filterCategoryControl" type="text" placeholder="Search" />
+                </mat-form-field>
+                <mat-option *ngIf="!assetCategory?.length" disabled>
+                  <p>data Not Found</p>
+                </mat-option>
+                <mat-option value="" *ngIf="assetCategory?.length">All</mat-option>
+                <mat-option *ngFor="let cat of assetCategory" [value]="cat.asset_category_name">{{
+                  cat.asset_category_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="example-header">
+            <select (change)="onPageSizeChanged()" id="page-size">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="downloadAddButton">
+      <div class="group-buttons" [ngClass]="{'no-flex': !assignAction?.Write}">
+        <a (click)="downloadSampleExcel()" style="background: none;border: none;">
+          <button type="button" [ngStyle]="{'height': assignAction?.Write ? '100%' : 'auto'}"> <i
+              class="bi bi-arrow-down-circle"></i> Download Sample
+            Excel</button></a>
+        <button type="button" (click)="onBtnExportDataAsExcel()"> <i class="bi bi-arrow-down-circle"></i> Download Asset
+          List</button>
+        <button type="button" (click)="exportAssetDataToExcel()"> <i class="bi bi-cloud-plus"></i> Download Report
+        </button>
+        <button type="button" (click)="openAloDialog()" *ngIf="assignAction?.Write"> <i class="bi bi-cloud-plus"></i>
+          Bulk Allocation </button>
+        <!-- <button type="button" (click)="openDialog()" *ngIf="assignAction?.Write"> <i class="bi bi-cloud-plus"></i> Upload Excel </button> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="mat-chip-list-card">
+    <mat-chip-listbox>
+      <mat-chip-option *ngFor="let name of selectedNames" [removable]="true" (removed)="removeName(name)">
+        {{ name.item_name }} ({{ name.asset_tagId }})
+
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+
+
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms"
+    (selectedTabChange)="onTabChange($event)" [(selectedIndex)]="selectedIndex">
+
+    <mat-tab label="All Assets ({{ selectedAssetCount }})">
+      <ng-container *ngIf="selectedIndex === 0">
+        <div class="ag_grid tableGrid ag_final_dat mt-3">
+          <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width:100%; height:426px;"
+            [rowData]="rowData" [columnDefs]="columnDefs" [pagination]=true [paginationPageSize]=10
+            (cellClicked)='onCellClicked($event)' (gridReady)="onGridReady($event)" [rowClass]="rowClass"
+            [gridOptions]="gridOptions" [rowSelection]="'multiple'" (selectionChanged)="onSelectionChanged($event)"
+            [suppressRowClickSelection]="true">
+          </ag-grid-angular>
+        </div>
+      </ng-container>
+    </mat-tab>
+    <mat-tab label="Near to salvage">
+      <ng-container *ngIf="selectedIndex === 1">
+        <div class="ag_grid tableGrid ag_final_dat mt-3">
+          <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+            [rowData]="rowData_NS" [columnDefs]="columnDefs_NS" [pagination]="true" [paginationPageSize]="9"
+            (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [gridOptions]="gridOptions"
+            [rowSelection]="gridOptions.rowSelection">
+          </ag-grid-angular>
+        </div>
+      </ng-container>
+    </mat-tab>
+
+    <mat-tab label="Already Salvage">
+      <ng-container *ngIf="selectedIndex === 2">
+        <div class="ag_grid tableGrid ag_final_dat mt-3">
+          <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+            [rowData]="rowData_AS" [columnDefs]="columnDefs_AS" [pagination]="true" [paginationPageSize]="9"
+            (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [gridOptions]="gridOptions"
+            [rowSelection]="gridOptions.rowSelection">
+          </ag-grid-angular>
+        </div>
+      </ng-container>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+</app-wrapper>

@@ -1,0 +1,164 @@
+<div>
+    <!-- Back Button -->
+    <div style="text-align: right">
+      <button class="btn" routerLink="/master/ess/my-tickets" style="background-color: #0c85c0">
+        Back
+      </button>
+    </div>
+
+    <h1>Allocated Ticket</h1>
+  
+    <form [formGroup]="myTicketForm" (ngSubmit)="onSubmit()">
+
+      <mat-radio-group aria-label="Select an option" formControlName="ticketType">
+        <mat-radio-button value="self">Self</mat-radio-button>
+        <mat-radio-button value="colleague">For Colleague</mat-radio-button>
+      </mat-radio-group>
+  
+      <div class="row">
+  
+        <div class="col-md-3 col-sm-6 col-12 mt-3" >
+          <mat-form-field appearance="outline" class="full-width" [ngClass]="{'disabled-field': myTicketForm.get('ticketType')?.value === 'self'}">
+            <mat-label>Employee</mat-label>
+            <mat-select formControlName="employee_id" [disabled]="myTicketForm.get('ticketType')?.value === 'self'">
+              <mat-option *ngFor="let employe of employeList" [value]="employe.employee_id">{{ employe.first_name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        
+        <div class="col-md-3 col-sm-6 col-12 mt-3">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Department</mat-label>
+              <mat-select formControlName="department_id" (selectionChange)="onDepartmentChange($event.value)">
+                <mat-option *ngFor="let dept of departments" [value]="dept.dept_id">{{ dept.department_name }}</mat-option>
+              </mat-select>
+           
+            </mat-form-field>
+          </div>
+    
+  
+        
+        <div class="col-md-3 col-sm-6 col-12 mt-3">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="ticket_category_id">
+              <mat-option *ngFor="let cat of categories" [value]="cat.id">
+                {{ cat.categoryName }}
+              </mat-option>
+            </mat-select>
+  
+          </mat-form-field>
+        </div>
+  
+    
+        <div class="col-md-3 col-sm-6 col-12 mt-3">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option *ngFor="let priority of priorities" [value]="priority">
+                {{ priority }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+  
+
+      <div class="mt-3">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Subject</mat-label>
+          <textarea
+            matInput
+            rows="2"
+            formControlName="subject"
+            placeholder="Enter subject"
+          ></textarea>
+        </mat-form-field>
+      </div>
+  
+   
+      <div class="mt-3">
+        <mat-form-field appearance="outline" >
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            rows="1"
+            cols="6"
+            formControlName="description"
+            placeholder="Enter description"
+
+          ></textarea>
+          <mat-error *ngIf="myTicketForm.get('description')?.invalid">
+            *Required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="mt-3">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Remark</mat-label>
+          <input matInput type="text" formControlName="remark" />
+        </mat-form-field>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-6  mt-3">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status_type">
+              <mat-option value="APPROVED">APPROVED </mat-option>
+              <mat-option value="PENDING">PENDING </mat-option>
+              <mat-option value="REJECTED">REJECTED </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6 col-sm-6  mt-3">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Allocated To</mat-label>
+            <mat-select formControlName="allocate_id" multiple>
+              <mat-option *ngFor="let allocate of employeList" [value]="allocate.employee_id">
+                {{ allocate.first_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+      
+      <div *ngFor="let doc of documentDetails.controls; let i = index" class="col-12 mt-3">
+    
+        <div style="width: 30%">
+          <label>Upload Document</label>
+          <input type="file" (change)="uploadDoc($event, i)" class="form-control" accept=".jpg,.png,.pdf" />
+        </div>
+      
+     
+        <div *ngIf="doc.value.document_path" class="mt-2">
+          <img [src]="baseUrl+'/'+doc.value.document_path" alt="Preview" class="fileViewImage" style="max-width: 43px; max-height: 30px;" (click)="openImage(doc.value.document_path)" />
+        </div>
+        
+      
+        <!-- Remove File Button -->
+        <button type="button" (click)="removeFileControl(i)" class="btn btn-danger mt-2">
+          <i class="fa fa-trash"></i> Remove
+        </button>
+      </div>
+      
+      <!-- Add New File Button -->
+      <div class="mt-3">
+        <button type="button" (click)="addFileControl()" class="btn btn-outline-primary">
+          <i class="fa fa-plus"></i> Add File
+        </button>
+      </div>
+      
+
+      <div style="text-align: center; margin-top: 20px">
+        <button *ngIf="!id" type="submit" class="btn btn-primary" style="background-color: #04490d">
+          Submit
+        </button>
+        <button *ngIf="id" type="submit" class="btn btn-primary"  style="background-color: #0c85c0">
+          Update
+        </button>
+
+      </div>
+    </form>
+  </div>
+  

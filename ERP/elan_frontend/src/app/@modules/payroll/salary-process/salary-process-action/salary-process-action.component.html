@@ -1,0 +1,9 @@
+<div class="edd-del">
+  <mat-icon matTooltip="View" *ngIf="singleData?.actionType != 'view detail'" (click)="view()">arrow_forward</mat-icon>
+  <mat-icon matTooltip="View" *ngIf="singleData?.actionType == 'view detail'"
+    (click)="viewDetail()">visibility</mat-icon>
+  <a *ngIf="singleData?.pay_slip_status == 'PROCESSED'"
+    href="{{baseUrl}}/api/v1/download_SalarySlip?pay_slip_month={{singleData?.pay_slip_month}}&employee_id={{singleData?.employee_id}}"
+    download target="_blank">
+  </a>
+</div>

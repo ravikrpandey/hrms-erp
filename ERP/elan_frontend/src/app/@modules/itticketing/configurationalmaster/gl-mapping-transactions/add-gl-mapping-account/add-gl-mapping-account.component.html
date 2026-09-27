@@ -1,0 +1,102 @@
+<section class="section mt-3 mx-2">
+    <div class="row">
+        <div class="employee_top my-1">
+            GL Mapping For Transactions
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+                GL Mapping</span>
+        </div>
+    </div>
+    <mat-card> 
+        <div class="form_head">
+            <h3>GL Mapping</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="form">
+               
+                <div formArrayName="roleFiled" class="mt-3">
+                    <div class="row " *ngFor="let roleFieled of itemsFormArray['controls']; let i = index"
+                        [formGroupName]="i">
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                            <div class="form-group">
+                                <mat-label>Transactions</mat-label>
+                                <mat-form-field appearance="outline" class="mt-1">
+                                    <mat-label>Dispatch</mat-label>
+                                    <mat-select formControlName="transaction_type"  >
+                                        <mat-option value="dispatch">Dispatch</mat-option>
+                                        <!-- <mat-option value="Service PR">Service PR</mat-option>
+                                        <mat-option value="BOM PR">BOM PR</mat-option>
+                                        <mat-option value="Item PO">Item PO</mat-option>
+                                        <mat-option value="Service PO">Service PO</mat-option> -->
+    
+                                    </mat-select>
+                                    <mat-error *ngIf="form.get('transaction_type')?.hasError('required')">
+                                        This field is required!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-1">
+                            <div class="form-group ">
+                                <mat-label>Select Debit Account</mat-label>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Debit Account</mat-label>
+                                    <mat-select #select2 formControlName="debit_account_id"  >
+                    
+                                      <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                                        (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                                      
+                                        <mat-option [value]="data.id" *ngFor="let data of chartedAccount"  
+                                          >
+                                          {{data.account_name}}
+                                        </mat-option>
+                                     </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-1">
+                            <div class="form-group ">
+                                <mat-label>Select Credit Account</mat-label>
+                                
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Credit Account</mat-label>
+                                    <mat-select #select3 formControlName="credit_account_id"  >
+                    
+                                      <mat-select-filter *ngIf="select3.focused" [array]="chartedAccount1Credit"
+                                        (filteredReturn)="accountFilterCredit($event)"></mat-select-filter>
+                                      
+                                        <mat-option [value]="data.id" *ngFor="let data of chartedAccountCredit"  
+                                          >
+                                          {{data.account_name}}
+                                        </mat-option>
+                                     </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class=" col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+                            <div class="add_delete mt-3">
+                                <div class="edd-del">
+                                    <mat-icon matTooltip="Add New" (click)="addItem()">add_circle</mat-icon>
+                                </div>
+                                <div class="delete_del" *ngIf="i+1!==1">
+                                    <mat-icon matTooltip="delete Item" (click)="removeItem(i)">delete_circle</mat-icon>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-3" >
+                    <div>
+                        <button mat-raised-button color="primary" (click)="onSubmit(this.form.value)">
+                            {{this.workflowId?'Update':'Submit'}}
+                        </button>
+                        <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

@@ -1,0 +1,76 @@
+<div class="section">
+  <h3 mat-dialog-title class="popHead" style="padding-left: 5px">Close Deal</h3>
+
+  <section class="px-2" *ngIf="dataList?.length">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Version Number</th>
+            <!-- <th>Proposal Id</th> -->
+            <th>Proposal No</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of dataList; let i = index">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ data?.version }}</td>
+              <!-- <td>{{ data?.proposal_id }}</td> -->
+              <td>{{ data?.proposal_no }}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  [(ngModel)]="data.isClosed"
+                  (change)="closeProposal(data)"
+                />
+                <p class="view_proposal">
+                  <mat-icon matTooltip="View Proposal" (click)="viewProposal(data)">visibility</mat-icon>
+                </p>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <div style="display: flex; gap: 10px; align-items: center; margin-top: 9px">
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        style="
+          width: 120px;
+          min-width: 120px;
+          height: 36px;
+          padding: 0 16px;
+          font-size: 14px;
+        "
+        [class.spinner]="loading"
+        [disabled]="loading"
+        (click)="closeLeadCreate()"
+      >
+        Submit
+      </button>
+
+      <button
+        mat-raised-button
+        mat-dialog-close
+        color="warn"
+        style="
+          width: 120px;
+          min-width: 120px;
+          height: 36px;
+          padding: 0 16px;
+          font-size: 14px;
+        "
+      >
+        Close
+      </button>
+    </div>
+  </section>
+  <h3 class="text-center" *ngIf="!dataList?.length">
+    Please create at least one proposal then you can close it
+  </h3>
+</div>

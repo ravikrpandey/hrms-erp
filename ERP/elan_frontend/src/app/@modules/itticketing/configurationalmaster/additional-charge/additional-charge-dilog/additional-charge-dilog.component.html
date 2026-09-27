@@ -1,0 +1,102 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!id?"Add Additional Charge":"Update Additional Charge"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px"> Additional Charge List</h3>
+
+    <ng-container *ngIf="view">
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain">
+                <div class="emp_key">
+                    <p>Additional Charge Name : </p>
+                    <p>HSN Code: </p>
+                    <p>Gst Rate: </p>
+                    <p>Description: </p>
+                   
+                  
+                    <!-- <p>Status :</p> -->
+                </div>
+                <div class="emp_value">
+                    <p>{{additionalCharge?.additional_name}}</p>
+                    <p> {{additionalCharge?.hsn_sac_code}}</p>
+                    <p> {{additionalCharge?.gstRate}}</p>
+                    <p> {{additionalCharge?.description_additional}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button mat-dialog-close class="cancel_button_y">Close</button>
+        </mat-dialog-actions>
+    </ng-container>
+
+    <fieldset *ngIf="!view">
+        <div class="m-3" [formGroup]="additionalForm">
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <div class="form-group mb-4">
+                    <mat-form-field appearance="outline" readonly>
+                        <mat-label>Additional Charge Name</mat-label>
+                        <input matInput type="text" formControlName="additionalCharge_name" />
+                        <mat-error *ngIf="additionalForm.controls['additionalCharge_name'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <!-- <mat-error *ngIf="additionalForm.controls['additionalCharge_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error> -->
+                    </mat-form-field>
+                </div>
+            </div>
+
+            
+
+
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <div class="form-group mb-4">
+                    <mat-form-field appearance="outline" [ngClass]="{'readonly-select': id}">
+                        <mat-label>HSN Code</mat-label>
+                        <mat-select formControlName="hsn_code_id" >
+                            <!-- <mat-select-filter [array]="departments"
+                                (filteredReturn)="departmentFilter($event)"></mat-select-filter> -->
+                            <mat-option *ngFor="let hsnCode of hsnCodeList"
+                                [value]="hsnCode.id">{{hsnCode.hsn_sac_code}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="additionalForm.get('hsn_code_id')?.hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+ <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <div class="form-group mb-4">
+                    <mat-form-field appearance="outline" readonly>
+                        <mat-label>Description</mat-label>
+                        <input matInput type="text" formControlName="description_additional" />
+                        <mat-error *ngIf="additionalForm.controls['description_additional'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <!-- <mat-error *ngIf="additionalForm.controls['additionalCharge_name'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error> -->
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view" class="common_button_sub">
+            <button *ngIf="!id" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="id" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-dialog-close class="cancel_button_y" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

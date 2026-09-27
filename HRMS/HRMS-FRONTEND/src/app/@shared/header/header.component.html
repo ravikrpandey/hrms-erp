@@ -1,0 +1,177 @@
+<header>
+  <div class="toggle_button" (click)="toggleLeftNav(leftNavToggle=!leftNavToggle)">
+    <img src="../../../assets/icons/navbar-icon.svg" />
+  </div>
+  <div routerLink="ess/dashboard" class="logo">
+    <img [src]="baseUrl + '/uploaded_files/' + entityDetail?.logo" alt="" class="header_logo">
+    <!-- <img src="../../../assets/logo.png" class="img-responsive"> -->
+  </div>
+
+
+  <!-- <div class="search-task">
+    routerLink="../pending-task"
+  (click)="openDialog()"
+    <a routerLinkActive="activ" style="position: relative;" routerLink="header-menu/notification" (click)="notifications($event)">
+      <mat-icon class="iconBell">notifications</mat-icon>
+      Notification</a>
+      <a routerLinkActive="activ" style="position: relative;" routerLink="header-menu/pending-task" (click)="myPendingTask($event)">
+       
+        My Pending Task</a>
+    <a routerLinkActive="active">Ex & AR Dashboard</a>
+    <a routerLinkActive="active">My Account</a>
+    <a routerLinkActive="active">Org Chart</a>
+  </div> -->
+
+  <!-- <div class="user_profile">
+    <ul>
+        <li>
+            <a href="#" class="arrow_down"><span class="user_picture"><img src="images/user.jpg" ></span>Uday Admin</a>
+            <div class="dropdown-profile">
+                <a href="#"><img src="images/user.png"> Profile User</a> 	
+                <a href="change-password.html"><img src="images/password.png"> Change password</a>
+                <a href="#"><img src="images/sign-out.png">Sign Out</a>
+</div>
+          </li>
+      </ul>
+   </div> -->
+
+
+
+  <div class="search-box position-relative">
+    <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearchChange()"
+      placeholder="Search module, menu, or feature..." />
+
+    <ul class="dropdown-menu show w-100" *ngIf="showDropdown && searchResults.length > 0"
+      style="max-height: 250px; overflow-y: auto;">
+      <li *ngFor="let item of searchResults" (click)="navigateTo(item.path, item)"
+        class="dropdown-item d-flex justify-content-between align-items-center">
+
+        <div>
+          <strong>{{ item.name }}</strong>
+          <small class="text-muted">({{ item.type }})</small>
+        </div>
+        <i class="fa fa-arrow-right text-secondary"></i>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="float-right">
+    <div class="user_profile">
+
+
+
+      <ul>
+        <!-- <li class="home" *ngIf="badges_count!==0">
+      <mat-icon  matTooltip="Notification"
+      matBadge="{{badges_count}}" matBadgePosition="after" matBadgeColor="accent" class="iconBell"  (click)="triggerFunction($event)" (mouseleave)="onHoverOut()">notifications</mat-icon>
+    </li> -->
+        <li class="header_form">
+          <div class="form-group" style="display: flex; gap:10px;">
+            <mat-form-field appearance="outline">
+              <mat-select [(ngModel)]="selectedYearId" (selectionChange)="onFinancialYearChange($event)">
+                <mat-option *ngFor="let year of financialYearList" [value]="year.id">
+                  {{ year.financial_year }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+
+            <mat-form-field appearance="outline">
+              <mat-select [(ngModel)]="selectedEntity" placeholder="Select Entity"
+                (selectionChange)="selectEntity($event)">
+                <app-search-filter [array]="entityList" [placeholder]="'Search by branch'"
+                  [searchFields]="['company_branch']" (filteredReturn)="filterEntityList = $event.data">
+                </app-search-filter>
+                <mat-option *ngFor="let item of filterEntityList" [value]="item?.entity_id">
+                  {{ item?.company_branch }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </li>
+        <li>
+          <!-- <a >
+            <mat-icon matTooltip="Notification" [matBadgeHidden]="hidden" matBadge="{{lengths}}"
+              matBadgePosition="after" matBadgeColor="warn" class="iconBell" (click)="triggerFunction($event)"
+              (mouseleave)="onHoverOut()">notifications_none</mat-icon>
+          </a> -->
+          <a>
+            <mat-icon matTooltip="Notifications" [matBadgeHidden]="lengths === 0" [matBadge]="lengths"
+              matBadgePosition="after" matBadgeColor="warn" class="iconBell" (click)="triggerFunction($event)"
+              (mouseleave)="onHoverOut()">notifications_none</mat-icon>
+          </a>
+        </li>
+        <li>
+          <a (click)="seeProfile(loginUserDetails?.employee_photo)"> <span class="user_picture">
+              <img
+                [src]="notExist !== undefined || loginUserDetails?.employee_photo !== null ? (baseUrl + '/' + loginUserDetails?.employee_photo):imagePath"
+                *ngIf="notExist !== 'undefined'" alt="" class="profileImg" />
+              <img [src]="notExist === 'undefined' ?imagePath:loginUserDetails?.employee_photo"
+                *ngIf="notExist === 'undefined'" alt="" (click)="seeProfile(loginUserDetails?.employee_photo)"
+                class="profileImg" />
+            </span>
+            Welcome {{ loginUserDetails?.first_name }}
+          </a>
+          <div class="dropdown-profile">
+
+            <a (click)="onLogout()"><img src="assets/logout.png" alt="Sign Out"> <span
+                style="padding-left: 10px;">Logout</span></a>
+
+            <a class="change-password-link" routerLink="/master/ess/change-password">
+
+              <span style="padding-left: 10px;">Change Password</span>
+            </a>
+          </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</header>
+
+
+
+<nav *ngIf="show" id="di" [class.className]="condition" (click)="nav($event)">
+
+  <div class="notifi-box custom-scrollbar-container" id="box" #box #boxElement [style.height]="boxHeight"
+    [style.opacity]="boxOpacity">
+    <h2 class="header2">Notifications
+      <span style="margin-left: 5px;">{{ lengths }}</span>
+      <span class="notification-icon">
+        <mat-icon class="notification-icon-style" matTooltip="view all notifications" routerLink="/master/notifications"
+          (click)="notificationnav()">table_view</mat-icon>
+        <mat-icon class="notification-icon-style" matTooltip="clear all notifications"
+          (click)="clearAllNotifications()">clear_all</mat-icon>
+      </span>
+    </h2>
+
+    <div class="notifi-item" *ngFor="let notification of rowDataNotifications; let i = index">
+      <div class="text" (click)="handleNotificationClick(notification)">
+
+        <p> <span>
+            <div><span [ngClass]="{'dot-green': !notification.is_read, 'dot-blue': notification.is_read}"
+                class="dot"></span>
+            </div>
+          </span> <span [ngClass]="{'message-unread': !notification.is_read, 'message-read': notification.is_read}">
+            {{ notification.message }}
+          </span>
+          <span class="timestamp">
+            {{ notification.updatedAt | date: 'short' }}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <!-- No Notification Message -->
+    <div class="no_noti" *ngIf="notificarray == 0">
+      <h1>Empty</h1>
+    </div>
+
+    <!-- Loader at the bottom -->
+    <div *ngIf="loading" class="loader">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  </div>
+
+</nav>

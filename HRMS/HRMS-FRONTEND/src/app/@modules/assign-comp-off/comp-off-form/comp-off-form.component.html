@@ -1,0 +1,62 @@
+<div>
+    <div style="text-align: right; margin-top: 10px">
+        <button class="btn" routerLink="/master/comp-off/assign-comp-off" style="background-color: #0c85c0">
+            Back
+        </button>
+        
+    </div>
+    <h1 style="margin-left: 10px;">COMP OFF WORK ASSIGN</h1>
+    <form [formGroup]="compForm" class="comp">
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Employee Name</mat-label>
+                    <mat-select formControlName="employee_id" multiple>
+                        <app-search-filter [array]="employeedata" [placeholder]="'Search by employee name'"
+                            [searchFields]="['first_name', 'last_name']"
+                            (filteredReturn)="filterEmployeedata = $event.data">
+                        </app-search-filter>
+                        <mat-checkbox [checked]="isAllSelect" (change)="selectAllEmployee($event)">Select
+                            All</mat-checkbox>
+                        <mat-option *ngFor="let item of filterEmployeedata" [value]="item.employee_id">
+                            {{ item.first_name }} {{ item.last_name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="compForm.controls['employee_id'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>From Date</mat-label>
+                    <input matInput [matDatepicker]="fromPicker" formControlName="from_date"
+                        placeholder="Choose From Date">
+                    <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #fromPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-4 col-sm-6 col-12 mt-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>To Date</mat-label>
+                    <input matInput [matDatepicker]="toPicker" formControlName="to_date" placeholder="Choose To Date"
+                        [matDatepickerFilter]="toDateFilter" />
+                    <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #toPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12 col-sm-12 col-12 mt-3">
+                <mat-form-field class="text-ar" appearance="outline">
+                    <mat-label>Reason</mat-label>
+                    <textarea matInput formControlName="reason" rows="5"
+                        placeholder="Enter reason if any..."></textarea>
+                </mat-form-field>
+            </div>
+            <div style="text-align: center; margin-top: 20px; width: 100%">
+                <button class="btn btn-primary" style="background-color: #0c85c0" (click)="onSubmit()">
+                    {{ mode === 'edit' ? 'Update' : 'Submit' }}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

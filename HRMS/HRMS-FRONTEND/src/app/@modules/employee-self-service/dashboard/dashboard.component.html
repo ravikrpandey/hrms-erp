@@ -1,0 +1,277 @@
+<div class="heading_tops">
+  <div class="page-title-top">
+
+    <div class="topMainHeading">
+      <!-- <h3 class="page-titles">Dashboard</h3> -->
+
+
+
+      <h1>Welcome, {{ parse.first_name }}</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2 col-lg-2">
+        <div class="check_in_time">
+          <button [disabled]="isCheckIn ? true : false" [ngClass]="isCheckIn ? 'chec_in_i' : 'chec_out_i'"
+            (click)="create_DAILY_attendance('IN')">
+            <span>Check-In</span>
+            <img src="../../../assets/check-in1.png">
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-lg-4 col-sm-6">
+        <div class="current_date">
+          <h5 class="day_name">Current Day Status</h5>
+          <span class="text-center" *ngIf="currentDate"> {{currentDate}} <span *ngIf="!checkInTime">Click on
+              check-in</span></span>
+          <div class="checkingTimeHere">
+            <div class="working_hrs">
+              <h5 style="margin-top:0px;">In Time</h5>
+              <p>{{checkInTime}} <span *ngIf="!checkInTime">Click on check-in</span></p>
+            </div>
+
+            <hr class="left_hr">
+            <div class="working_hrs">
+              <h5 style="margin-top:0px;">Out Time</h5>
+              <p>{{checkOutTime}} <span *ngIf="!checkOutTime">Click on check-out</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-2 col-lg-2">
+
+        <div class="check_in_time">
+          <button [disabled]="!isCheckIn ? true : false" [ngClass]="isCheckIn ? 'chec_out_i' : 'chec_in_i'"
+            (click)="create_DAILY_attendance('OUT')">
+            <span>Check-Out</span>
+            <img src="../../../assets/check-in1.png">
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4 col-lg-4 col-sm-6">
+
+        <div class="current_date">
+          <h5 class="day_name">Previous Day Status</h5>
+          <span class="text-center" *ngIf="previousDate"> {{previousDate}}</span> <span *ngIf="!previousDate">Not
+            Available</span>
+          <div class="checkingTimeHere">
+            <div class="working_hrs">
+              <h5 style="margin-top:0px;">In Time</h5>
+              <p><span *ngIf="prev_in_time">{{prev_in_time}} </span><span *ngIf="!prev_in_time">Not Available</span></p>
+            </div>
+
+            <hr class="left_hr">
+            <div class="working_hrs">
+              <h5 style="margin-top:0px;">Out Time</h5>
+              <p><span *ngIf="prev_out_time">{{prev_out_time}}</span> <span *ngIf="!prev_out_time">Not Available</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- <div class="row mt-3">
+      <div class="col-md-4 Yester">
+        <h4 class="my-2 text-center">Yesterday</h4>
+        <div class="check_in_container">
+          <span class="check_in">Check IN dd</span>
+          <span class="check_in">8:00AM</span>
+        </div>
+
+        <div class="check_in_container">
+          <span class="check_in">Check Out</span>
+          <span class="check_in">5:00PM</span>
+        </div>
+      </div>
+      <div class="col-md-4 page-title-top">
+        
+      </div>
+      <div class="col-md-4 today" style="float:right">
+        <h4 class="my-2 text-center">Today</h4>
+        <div class="check_in_container">
+          <span class="check_in">Check IN</span>
+          <span class="check_in">8:00AM</span>
+        </div>
+
+        <div class="check_in_container">
+          <span class="check_in">Check Out</span>
+          <span class="check_in">5:00PM</span>
+        </div>
+      </div>
+    </div> -->
+
+  </div>
+  <!-- <div class="add_button">
+  </div> -->
+  <div class="boxArea">
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="contain_panel">
+          <div class="panel_text box1">
+            <div class="panel_H">
+              <figure class="mx-auto"><img src="../../../assets/dash-1.png"></figure>
+              <h1>Apply leave</h1>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="contain_panel">
+          <div class="panel_text box2">
+            <div class="panel_H">
+              <figure class="mx-auto"><img src="../../../assets/dash-2.png"></figure>
+              <h1>Help Desk</h1>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="contain_panel">
+          <div class="panel_text box3">
+            <div class="panel_H">
+              <figure class="mx-auto"><img src="../../../assets/dash-3.png"></figure>
+              <h1>Employee Directory</h1>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="contain_panel">
+          <div class="panel_text box4">
+            <div class="panel_H">
+              <figure class="mx-auto"><img src="../../../assets/dash-4.png"></figure>
+              <h1>Approval Pending</h1>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- <div class="my-4">
+  <div class="row">
+    <div class="col-md-12 col-sm-12 col-lg-12 mt-2">
+      
+    </div>
+  </div>
+</div> -->
+
+<div class="row">
+  <div class="col-sm-6 col-md-6 col-lg-6 col-12 course">
+    <div class="loginpage">
+      <mat-card>
+        <div class="form_head">
+          <h3>My Time And Attendance</h3>
+        </div>
+        <div class="row">
+          <div class='demo-app' style="height: 310px;;">
+            <div class='demo-app-main'>
+              <full-calendar *ngIf='calendarVisible' [options]='calendarOptions'>
+                <ng-template #eventContent let-arg>
+                  <b>{{ arg.timeText }}</b>
+                  <i>{{ arg.event.title }}</i>
+                </ng-template>
+              </full-calendar>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <!-- Travel Requests -->
+  <div class="col-sm-6 col-md-6 col-lg-6 col-12">
+    <div class="course">
+      <div class="loginpage">
+        <mat-card>
+          <div class="form_head">
+            <h3>My Travel Requests</h3>
+            <button mat-raised-button color="primary" class="" (click)="openTravelPlanDialog()">Travel Plan</button>
+          </div>
+          <div class="row">
+            <div class="demo-app">
+              <div class="demo-app-main">
+                <!-- <full-calendar [options]="calendarOptions"></full-calendar> -->
+                <full-calendar *ngIf="tavelCalendarVisible" [options]="travelCalendarOptions">
+                  <ng-template #travelEventContent let-arg>
+                    <b>{{ arg.timeText }}</b>
+                    <i>{{ arg.event.title }}</i>
+                  </ng-template>
+                </full-calendar>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6 col-lg-6 col-12 course">
+    <div class="loginpage">
+      <mat-card>
+        <div class="form_head">
+          <h3>Celebration</h3>
+        </div>
+        <!-- autoplayInterval -->
+        <div class="demo text-center">
+          <div *ngIf="images && images.length > 0; else noDataTemplate">
+            <div slickContainer #slickController="slick" [slickConfig]="config">
+              <div class="center-image-container" *ngFor="let item of images" slickItem>
+                <img [src]="baseUrl + '/' + item.employee_photo" class="p-10">
+                <p class="para1">{{ item.first_name + ' ' + item.last_name }}</p>
+                <p class="para2">{{ item.designation_name }}</p>
+                <!-- <p>{{ item.date_of_birth }}</p>
+                <P>{{ item.start_working_date }}</P> -->
+                <p class="para3">
+                  <ng-container *ngFor="let eventMessage of item.event_type; let i = index">
+                    {{ eventMessage }}<span *ngIf="i < item.event_type.length - 1"></span>
+                  </ng-container>
+                </p>
+              </div>
+            </div>
+          </div>
+          <ng-template #noDataTemplate>
+            <p class="text-center mt-2">No data found</p>
+          </ng-template>
+        </div>
+
+      </mat-card>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6 col-lg-6 col-12">
+    <div class="course">
+      <div class="loginpage">
+        <mat-card>
+          <div class="form_head">
+            <h3>Announcement</h3>
+          </div>
+
+          <div class="announcement-container">
+            <div class="announcement-scroll">
+              <div class="newsletter_list" *ngFor="let a of announcement">
+                <div class="newsletter_list_text">
+                  <div class="announcement-text">
+                    <h5>{{ a?.notice_title }}</h5>
+                    <p>{{ a?.description }}</p>
+                  </div>
+                  <div class="announcement-img">
+                    <img class="newsletter_list_pic" [src]="baseUrl + '/uploaded_files/' + a?.file_Name"
+                      alt="Announcement Image" (click)="openAnnouncementDialog(a)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>

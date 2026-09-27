@@ -1,0 +1,36 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-7">
+      <!-- Chat Box -->
+      <div class="card">
+        <div class="card-header text-center">
+          <h4>REMARK</h4>
+        </div>
+        <div class="card-body">
+          <!-- Chat messages container -->
+          <div class="chat-box">
+            <div *ngIf="Allremark?.length > 0; else noRecord">
+              <div class="message sent" *ngFor="let x of Allremark">
+                {{ x?.remark }}
+              </div>
+            </div>
+            <ng-template #noRecord>
+              <div class="no-record">
+                No record found
+              </div>
+            </ng-template>
+
+
+          </div>
+        </div>
+        <!-- Chat input -->
+        <div class="card-footer">
+          <div class="input-group" style="display: flex; justify-content: flex-end;">
+            <button class="btn btn-primary" mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

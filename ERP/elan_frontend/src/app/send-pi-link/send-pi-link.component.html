@@ -1,0 +1,89 @@
+<!-- 
+
+<div class="container py-4"
+     style="max-width: 1100px; height: 760px; background-color: #ffffff; border: 1px solid #ddd; box-shadow: 0 0 10px rgba(0,0,0,0.05); overflow-y: auto;">
+
+<div class="d-flex align-items-center mb-4 border-bottom pb-2" style="border-color: #ddd;">
+  <img [src]="proposal.imageUrl || 'https://via.placeholder.com/300x100'"
+       alt="Logo"
+       class="me-4"
+       width="300"
+       height="100">
+
+  <h1 class="mb-0" style="color: #00644d; font-size: 2.2rem;">Proforma Invoice</h1>
+</div>
+
+
+
+  <div class="mb-4" style="background-color: #f3f8f7; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); padding: 1rem;">
+    <h5 class="mb-3 py-2 px-3" style="background-color: #00644d; color: white; border-radius: 4px;">Basic Information</h5>
+    <div class="row g-3 px-2">
+      <div class="col-md-3"><strong>Proposal Number</strong><br><span>{{ getData?.proposal_no || '-' }}</span></div>
+      <div class="col-md-3"><strong>Proposal Type</strong><br><span>{{ getData?.perposal_type || '-'}}</span></div>
+      <div class="col-md-3"><strong>Company Name</strong><br><span>{{ getData?.company_name || "-"}}</span></div>
+      <div class="col-md-3"><strong>Customer Name</strong><br><span>{{ getData?.contact_name || '-'}}</span></div>
+      <div class="col-md-3"><strong>Contact Number</strong><br><span>{{ getData?.contact_number || '-' }}</span></div>
+      <div class="col-md-3"><strong>Mail ID</strong><br><span>{{ getData?.mail_id || '-' }}</span></div>
+      <div class="col-md-3"><strong>Address</strong><br><span>{{ getData?.address || '-'}}</span></div>
+    </div>
+  </div>
+
+  <div class="mb-4" style="background-color: #f3f8f7; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1rem;">
+    <h5 class="mb-3 py-2 px-3" style="background-color: #00644d; color: white; border-radius: 4px;">Item Information</h5>
+    <div class="table-responsive">
+      <table class="table table-bordered table-sm mb-0">
+        <thead style="background-color: #e9ecef;" class="text-center align-middle">
+          <tr>
+            <th>S.No</th>
+            <th>Item Name</th>
+            <th>Item Code</th>
+            <th>HSN Code</th>
+            <th>GST(%)</th>
+            <th>Description</th>
+            <th>UOM</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody class="text-center align-middle">
+          <tr *ngFor="let item of getData?.productDetailList; index as i">
+            <td>{{i + 1 }}</td>
+            <td>{{ item?.product_name }}</td>
+            <td>{{ item?.product_code }}</td>
+            <td>{{ item?.hsn_sac_code }}</td>
+            <td>{{ item?.igst }}</td>
+            <td>{{ item?.product_description }}</td>
+            <td>{{ item?.uom_name }}</td>
+            <td>{{ item?.qty }}</td>
+            <td>₹{{ item?.price_per_unit | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div class="mb-4" style="background-color: #f3f8f7; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1rem;">
+    <h5 class="mb-3 py-2 px-3" style="background-color: #00644d; color: white; border-radius: 4px;">Summary & Charges</h5>
+    <div class="row g-3 px-2">
+      <div class="col-md-3"><strong>Discount:</strong><br>₹{{ getData?.discount }}</div>
+      <div class="col-md-3"><strong>GST:</strong><br>₹{{ getData?.igst }}</div>
+      <div class="col-md-3"><strong>Total Amount:</strong><br>₹{{ getData?.totalAMTAfterDiscount }}</div>
+      <div class="col-md-3"><strong>Grand Total:</strong><br>₹{{ getData?.grant_total }}</div>
+      <div class="col-md-6"><strong>Payment T&C:</strong><br>{{ getData?.paymentTC }}</div>
+      <div class="col-md-6"><strong>Follow-Up Date:</strong><br>{{ getData?.expiry_date | date }}</div>
+    </div>
+  </div>
+
+  <div class="text-end">
+    <button class="btn me-2 text-white" style="background-color: #00644d;" (click)="acceptedPI()" *ngIf="emailCheckBtn !== true">Accept</button>
+    <button class="btn btn-outline-danger" (click)="rejectPI()" *ngIf="emailCheckBtn !== true">Reject</button>
+  </div>
+</div>
+
+
+
+  
+   -->
+
+   <app-preview-quotation></app-preview-quotation>

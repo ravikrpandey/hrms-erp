@@ -1,0 +1,253 @@
+<app-wrapper [title]="'Purchase Management'" [subTitle]="'Create Invoice'" [subheading]="''" [showActions]="true"
+    [isBack]="true">
+    <section class="right_data_all pt-4">
+        <form [formGroup]="POformGroup">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="margin-top: 10px">
+                    <div class="mb-3">
+                        <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Existing POs</mat-label>
+                            <mat-select formControlName="po_id" (selectionChange)="getPOData($event.value)">
+                                <mat-option *ngFor="let data of rowData" [value]="data.po_Id">{{ data.po_number }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="margin-top: 10px">
+                    <div class="mb-3">
+                        <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>GRNs of PO</mat-label>
+                            <mat-select formControlName="grn_id" (selectionChange)="onGRNChange($event)" multiple>
+                                <mat-option *ngFor="let data of storeList" [value]="data.grn_number">{{ data.grn_number
+                                    }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" style="margin-top: 12px">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Invoice Number</mat-label>
+                        <input type="text" matInput formControlName="invoice_no" />
+                        <mat-error *ngIf="POformGroup.get('invoice_no')?.hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group inp_disable">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Budget Type</mat-label>
+                            <input type="text" matInput formControlName="po_type" />
+                        </mat-form-field>
+                    </div>
+                </div> -->
+
+                <div class="" *ngIf="promoDataAllItems.length">
+                    <p class="ItemClass">Promo Items</p>
+                </div>
+                <div class="px-2 mb-5 form_basic table-responsive">
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <table class="table" style="width: 100%">
+                            <thead style="text-align: center">
+                                <tr style="text-align: center">
+                                    <th scope="col">S. No.</th>
+                                    <!-- <th scope="col">Asset Category</th> -->
+                                    <th scope="col">Item Name</th>
+                                    <th scope="col">Managed By</th>
+                                    <th scope="col">Item Code</th>
+                                    <th scope="col">HSN Code</th>
+                                    <th scope="col">TAX</th>
+                                    <th scope="col">Accepted Quantities</th>
+                                    <th scope="col">Allocated Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody style="text-align: center" formArrayName="grnItem">
+                                <tr *ngFor="let item of grnItems.controls; let i = index" [formGroupName]="i">
+                                    <td>{{ i + 1 }}</td>
+                                    <!-- <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input matInput type="text" formControlName="item_cat" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td> -->
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 13vw">
+                                                <input matInput type="text" formControlName="item_name" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input matInput type="text" formControlName="manage_by" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input matInput type="text" formControlName="item_code" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input type="text" matInput formControlName="hsnCode" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input type="text" matInput formControlName="gstRate" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input matInput type="number" formControlName="receiveQty" min="0" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                    <td class="inp_disable">
+                                        <div class="form-group">
+                                            <mat-form-field appearance="outline" style="width: 10vw">
+                                                <input matInput type="number" formControlName="total_amount" min="0" />
+                                            </mat-form-field>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="row mt-4">
+                    <mat-slide-toggle [(ngModel)]="chargesToggle" [ngModelOptions]="{ standalone: true }"
+                        (change)="toggleChargesRow($event)">
+                        Include Additional Charges
+                    </mat-slide-toggle>
+
+                    <div class="form_table mb-3" *ngIf="chargesToggle">
+                        <mat-card>
+                            <div class="tab_table table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Additional Charges Name <span class="text-danger">*</span>
+                                            </th>
+                                            <th>Amount <span class="text-danger">*</span></th>
+                                            <th>HSN Code <span class="text-danger">*</span></th>
+                                            <th>Tax Rate(%)</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container formArrayName="chargesDetailList" *ngFor="
+                      let control of CF_2.chargesDetailList['controls'];
+                      let i = index
+                    ">
+                                            <tr [formGroup]="control">
+                                                <td>
+                                                    <div class="form-group">
+                                                        <mat-form-field appearance="outline">
+                                                            <input matInput [readonly]="
+                                control?.get('readonly')?.value || formDisabled
+                              " type="text" formControlName="additional_charges_name" />
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <mat-form-field appearance="outline">
+                                                            <input matInput [readonly]="
+                                control?.get('readonly')?.value || formDisabled
+                              " type="text" formControlName="amount" (keypress)="keyPress2($event)"
+                                                                (ngModelChange)="productCalculation()" />
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field appearance="outline">
+                                                        <mat-select formControlName="hsn_code_id"
+                                                            (selectionChange)="onHSNCodeChange($event.value, i)"
+                                                            (selectionChange)="productCalculation()">
+                                                            <mat-select-filter [array]="hsn"
+                                                                (filteredReturn)="hsnSearch($event)"></mat-select-filter>
+                                                            <mat-option [disabled]="formDisabled"
+                                                                *ngFor="let data of hsnCodeList" [value]="data.id">{{
+                                                                data?.hsn_sac_code }}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <mat-form-field appearance="outline">
+                                                        <input matInput maxlength="30" formControlName="tax_rate"
+                                                            [readonly]="true" />
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <mat-form-field appearance="outline">
+                                                            <input matInput maxlength="255"
+                                                                formControlName="description" [readonly]="true" />
+                                                        </mat-form-field>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center p-0 align-middle">
+                                                    <div class="d-flex justify-content-center align-items-center">
+                                                        <span *ngIf="!control?.controls?.isDisabled" class="mx-1" style="
+                              color: #8d8d8d;
+                              cursor: pointer;
+                              font-size: 20px;
+                            ">
+                                                            <i *ngIf="i > 0" class="fa fa-trash"
+                                                                (click)="deleteChargesRow(i, control)"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                        <span class="mx-1" style="
+                              color: #8d8d8d;
+                              cursor: pointer;
+                              font-size: 20px;
+                            ">
+                                                            <i class="fa fa-plus-circle" (click)="addChargesRow()"
+                                                                aria-hidden="true"></i>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div> -->
+                <div class="d-flex justify-content-end px-2">
+                    <div class="common_button_sub">
+                        <strong>Total Amount = {{ totalAmount || "00" }}</strong>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end px-2 -mt-3">
+                    <div class="common_button_sub">
+                        <button (click)="onSubmitData()" *ngIf="submitBtn || statusNumber != 2">
+                            Save
+                        </button>
+                        <!-- <button (click)="goBack()" class="cancel_button_y" *ngIf="submitBtn || statusNumber != 2">
+                            Cancel
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
+</app-wrapper>

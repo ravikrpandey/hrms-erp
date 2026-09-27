@@ -1,0 +1,125 @@
+<div class="check" *ngIf="!checkCond">
+  <h3 mat-dialog-title class="popHead">
+    Remark
+    <!-- Close icon positioned at the top-right -->
+    <button mat-icon-button class="close-btn" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h3>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <form class="form_set" [formGroup]="remarksForm">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Remark</mat-label>
+                <input matInput type="text" formControlName="remarks" />
+                <mat-error *ngIf="remarksForm.controls['remarks'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary" (click)="updateRemarkApprove($event)">
+      Approve
+    </button>
+    <button mat-button mat-raised-button color="warn" (click)="updatePrRemarkReject($event)">
+      Reject
+    </button>
+  </mat-dialog-actions>
+</div>
+
+
+
+
+<div class="ma" *ngIf="checkCond == 'reRunning'">
+  <h3 mat-dialog-title class="popHead">Remark
+    <button mat-icon-button class="close-btn" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography">
+  <div class="cotain">
+    <!-- <p>Do you want to approve this PR</p> -->
+    <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <form class="form_set" [formGroup]="remarksForm">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Remark</mat-label>
+                <input matInput type="text" formControlName="remarks"/>
+                <mat-error *ngIf="
+                remarksForm.controls['remarks'].hasError(
+                  'required'
+                )
+              ">
+            This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+            </form>
+          </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-raised-button color="primary" (click)="updateRemarkOK($event)">
+    OK
+  </button>
+  <button mat-button mat-raised-button color="warn" (click)="updatePrRemarkReject($event)">Close</button>
+</mat-dialog-actions>
+
+</div>
+
+<div class="ma" *ngIf="checkCond == 'closedPaySlip'">
+  <h3 mat-dialog-title class="popHead">Remark
+    <button mat-icon-button class="close-btn" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography">
+  <div class="cotain">
+    <!-- <p>Do you want to approve this PR</p> -->
+    <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <form class="form_set" [formGroup]="remarksForm">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Remark</mat-label>
+                <input matInput type="text" formControlName="remarks"/>
+                <mat-error *ngIf="
+                remarksForm.controls['remarks'].hasError(
+                  'required'
+                )
+              ">
+            This field is required!
+              </mat-error>
+              </mat-form-field>
+            </div>
+            </form>
+          </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-raised-button color="primary" (click)="updateRemarkOK($event)">
+    OK
+  </button>
+  <button mat-button mat-raised-button color="warn" (click)="updatePrRemarkReject($event)">Close</button>
+</mat-dialog-actions>
+
+</div>
+
+

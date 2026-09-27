@@ -1,0 +1,73 @@
+
+<div>
+    <h3 mat-dialog-title class="popHead" style="padding-left: 5px" *ngIf="!view">{{ data?.id ? 'Update Content' :
+      'Add Content' }}</h3>
+    <h3 mat-dialog-title class="popHead" style="padding-left: 5px" *ngIf="view">View Content</h3>
+    <form [formGroup]="formModel" class="form_set" (ngSubmit)="onSubmit()">
+      <div class="row" [ngClass]="{'disable-interaction': view}">
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline" [ngClass]="{'disable-interaction': view}">
+              <mat-label>File Type</mat-label>
+              <mat-select formControlName="content_file_type">
+                <mat-option *ngFor="let file of fileType" [value]="file.value">{{file.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Content Name</mat-label>
+              <input matInput formControlName="content_name" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Link</mat-label>
+              <input matInput formControlName="content_file_link">
+            </mat-form-field>
+          </div>
+        </div>
+        
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div  class="col s3">
+            <mat-label>Upload</mat-label>
+            <div class="em_upload">
+                <label class="file-upload">
+                    <i class="material-icons">add</i>
+                    <input autocomplete="off" type="file" style="display: none;"
+                        accept="*" formControlName="content_file_path"
+                        (change)="uploadDoc($event)" />
+                </label>
+                <div *ngIf="isLoading" class="loading-spinner">
+                  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+                </div>
+                <a class="prview" *ngIf="file_path">
+                    
+                    <img *ngIf="file_path"
+                    [src]="baseUrl + '/' + file_path"
+                        onError='src="assets/img/No_Image_Available.jpg"' alt="" (click)="viewImage(file_path)">
+                    <!-- <img *ngIf="file_path"
+                        src="assets/loder.gif" alt="" class="lg"> -->
+                      
+                </a>
+                <span >{{ file_path }}</span>
+            </div>
+        </div>
+        </div>
+        
+      </div>
+  
+      <mat-dialog-actions align="end">
+        <button mat-raised-button color="primary" type="submit" class="mx-2" *ngIf="!view">{{ data?.id ? 'Update' :
+          'Submit' }}</button>
+        <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">Close</button>
+      </mat-dialog-actions>
+    </form>
+  </div>

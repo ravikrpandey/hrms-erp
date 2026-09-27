@@ -1,0 +1,115 @@
+<div class="inputBox">
+
+  <!-- TEXTAREA -->
+  <ng-container *ngIf="type === 'textarea'">
+    <label class="form-label">{{ labelname }}</label>
+    <textarea
+      class="form-control inputClass"
+      [readonly]="readonly"
+      [placeholder]="placeholder"
+      [maxLength]="maxLength"
+      [required]="required"
+      [value]="valueSignal"
+      (input)="onInput($event)"
+      [rows]="rows"
+      [cols]="cols">
+    </textarea>
+  </ng-container>
+
+  <!-- SELECT -->
+  <ng-container *ngIf="type === 'select'">
+    <label class="form-label">{{ labelname }}</label>
+    <select
+      class="form-select inputClass"
+      aria-label="Default select example"
+      [value]="valueSignal"
+      (change)="onInput($event)"
+      [disabled]="disabled">
+      <option [selected]="!valueSignal">Select</option>
+      <ng-container *ngFor="let opt of selectoptions; trackBy: trackBySelectValue">
+        <option
+          [value]="opt[selectvaluekey]"
+          [disabled]="getDisabledStatu(opt[selectvaluekey])"
+          [selected]="opt[selectvaluekey] === valueSignal">
+          {{ opt[selectshowvaluekey] }}
+        </option>
+      </ng-container>
+    </select>
+  </ng-container>
+
+  <!-- CHECKBOX -->
+  <ng-container *ngIf="type === 'checkbox'">
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        [disabled]="readonly"
+        [checked]="valueSignal"
+        (change)="onInput($event)"
+        type="checkbox"
+        value="" />
+      <label class="form-check-label">{{ labelname }}</label>
+    </div>
+  </ng-container>
+
+  <!-- DATE -->
+  <ng-container *ngIf="type === 'date'">
+    <label [for]="labelname" class="form-label">{{ labelname }}</label>
+    <input
+      [type]="type"
+      [id]="labelname"
+      class="form-control inputClass"
+      (input)="onInput($event)"
+      [value]="valueSignal"
+      [readonly]="readonly"
+      [maxLength]="maxLength"
+      [placeholder]="placeholder" />
+  </ng-container>
+
+  <!-- MULTISELECT -->
+  <ng-container *ngIf="type === 'multiselect'">
+    <label class="form-label">{{ labelname }}</label>
+    <div class="dropdown w-100">
+      <button
+        class="form-control inputClass dropdown-toggle w-100 text-start"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+        {{ valueSignal?.length ? getValueforMultiSelect(valueSignal, selectshowvaluekey) : 'Select options' }}
+      </button>
+      <ul class="dropdown-menu w-100 p-2" style="max-height:200px; overflow-y:auto;">
+        <ng-container *ngFor="let opt of selectoptions; trackBy: trackBySelectValue">
+          <li class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              [id]="opt[selectvaluekey]"
+              [value]="opt[selectvaluekey]"
+              [checked]="valueSignal?.includes(opt[selectvaluekey])"
+              (change)="onMultiSelectChange($event)" />
+            <label class="form-check-label" [for]="opt[selectvaluekey]">
+              {{ opt[selectshowvaluekey] }}
+            </label>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+  </ng-container>
+
+  <!-- DEFAULT -->
+  <ng-container *ngIf="type !== 'textarea' && type !== 'select' && type !== 'checkbox' && type !== 'date' && type !== 'multiselect'">
+    <label [for]="labelname" class="form-label">{{ labelname }}</label>
+    <input
+      [type]="type"
+      [id]="labelname"
+      (blur)="onBlur($event)"
+      class="form-control inputClass"
+      (input)="onInput($event)"
+      [value]="valueSignal"
+      [readonly]="readonly"
+      [maxLength]="maxLength"
+      [placeholder]="placeholder" />
+  </ng-container>
+
+  <!-- ERROR -->
+  <div *ngIf="errorshow" class="errorShow">{{ errorshow }}</div>
+</div>

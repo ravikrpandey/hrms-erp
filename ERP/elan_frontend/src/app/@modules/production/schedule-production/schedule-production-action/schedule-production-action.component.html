@@ -1,0 +1,9 @@
+<div class="edd-del ">
+  <ng-container *ngIf="currentStatus.data.status!=='STOP'">
+    <mat-icon matTooltip="Stop" (click)="stop($event)" *ngIf="currentStatus.data.status!=='STOP' && currentStatus.data.status !=='PENDING'">stop</mat-icon>
+    <mat-icon matTooltip="Pause" (click)="pause($event)" *ngIf="currentStatus.data.status!=='HOLD' && currentStatus.data.status !=='PENDING'">pause</mat-icon>
+    <mat-icon matTooltip="Start" (click)="start($event)" *ngIf="currentStatus.data.status!=='START' &&currentStatus.data.status =='PENDING' || currentStatus.data.status =='HOLD'">play_arrow</mat-icon>
+  </ng-container>
+    <mat-icon matTooltip="view" *ngIf="currentStatus.data.status !=='PENDING'"  (click)="viewScheduledProduction()"  >visibility</mat-icon>
+</div>
+

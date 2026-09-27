@@ -1,0 +1,78 @@
+<!-- ⭐ VIEW MODE -->
+<ng-container *ngIf="visible === 'visible'">
+    <h3 mat-dialog-title class="popHead">Category Name</h3>
+
+    <mat-dialog-content class="mat-typography">
+        <div class="cotain">
+            <div class="emp_key">
+                <p>Business Unit :</p>
+                <p>Status :</p>
+            </div>
+
+            <div class="emp_value">
+                <p>{{ singleGrade?.category_name }}</p>
+                <p>{{ singleGrade?.status }}</p>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+    </mat-dialog-actions>
+</ng-container>
+
+
+<!-- ⭐ ADD / EDIT FORM -->
+<ng-container *ngIf="formMode === 'add' || formMode === 'edit'">
+    <form [formGroup]="ktForm">
+
+        <h3 mat-dialog-title class="popHead">
+            {{ formMode === 'add' ? 'Add KT Category Name' : 'KT Category Name' }}
+        </h3>
+
+        <mat-dialog-content class="mat-typography">
+            <div class="cotain" style="display: flex; flex-direction: column; gap: 14px;margin-top: 3px;">
+
+                <!-- Category Name -->
+                <mat-form-field appearance="outline" class="big-input">
+                    <mat-label>Category Name</mat-label>
+                    <input matInput type="text" formControlName="category_name" />
+
+                    <mat-error *ngIf="ktForm.controls['category_name'].hasError('required')">
+                        *This field is required!
+                    </mat-error>
+
+                    <mat-error *ngIf="ktForm.controls['category_name'].hasError('leadingSpaces')">
+                        *No leading spaces!
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Description -->
+                <mat-form-field appearance="outline" class="big-input">
+                    <mat-label>Description</mat-label>
+                    <input matInput type="text" formControlName="description" />
+
+                    <mat-error *ngIf="ktForm.controls['description'].hasError('required')">
+                        *This field is required!
+                    </mat-error>
+
+                    <mat-error *ngIf="ktForm.controls['description'].hasError('leadingSpaces')">
+                        *No leading spaces!
+                    </mat-error>
+                </mat-form-field>
+
+            </div>
+        </mat-dialog-content>
+
+        <mat-dialog-actions align="end">
+            <button mat-button mat-raised-button color="primary" (click)="ngSubmitEmp(ktForm.value)">
+                {{ formMode === 'add' ? 'Submit' : 'Update' }}
+            </button>
+
+            <button mat-button mat-dialog-close mat-raised-button color="warn">
+                Close
+            </button>
+        </mat-dialog-actions>
+
+    </form>
+</ng-container>

@@ -1,0 +1,147 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance & Accounting </h1>
+    <p> Bank Accounting<i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+    </i><span> {{chartId?'Update':'Add'}} Bank</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+  </div>
+
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_head">
+            <h3>Bank Status</h3>
+        </div>
+        <div class="form_basic mb-0">
+            <form class="form_set" [formGroup]="form">
+                <div class="row mt-2">
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Bank Name</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Bank Name</mat-label>
+                                <input matInput type="text" formControlName="bank_name" />
+                                <mat-error *ngIf="form.get('bank_name')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('bank_name')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>Swift Number</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Swift Number</mat-label>
+                                <input matInput type="text" formControlName="swift_number" />
+                                <mat-error *ngIf="form.get('swift_number')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label>IFSC Code</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>IFSC Code</mat-label>
+                                <input matInput type="text" formControlName="ifsc_code" />
+                                <mat-error *ngIf="form.get('ifsc_code')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-1">
+                        <div class="form-group">
+                            <mat-label>Branch</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Branch</mat-label>
+                                <input matInput type="text" formControlName="branch" />
+                                <mat-error *ngIf="form.get('branch')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('branch')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mt-1">
+                            <mat-label>State</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>State</mat-label>
+                                <input matInput type="text" formControlName="state" />
+                                <mat-error *ngIf="form.get('state')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('state')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mt-1">
+                            <mat-label>Country</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Country</mat-label>
+                                <mat-select #select2 formControlName="country_id">
+                                    <mat-select-filter *ngIf="select2.focused" [array]="countryList1" (filteredReturn)="countryFilter($event)"></mat-select-filter>
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of countryList"
+
+                                            [value]="data.countryss_id">{{data.countryss_name}}</mat-option>
+                                    </ng-container>
+                                    <div class="add_button">
+                                      <button type="button" (click)="openCountryDialog()">
+                                        + Create New
+                                      </button>
+                                    </div>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('country_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group mt-1">
+                            <mat-label>Status</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select an option</mat-label>
+                                <mat-select formControlName="status">
+                                  <!-- <mat-option>None</mat-option> -->
+                                  <mat-option value="ACTIVE">Active</mat-option>
+                                  <mat-option value="INACTIVE">InActive</mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="mt-3 common_button_sub" align="end">
+                    <button  (click)="onSubmit(this.form.value)">
+                        {{this.chartId?'Update':'Submit'}}
+                    </button>
+                    <button  class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

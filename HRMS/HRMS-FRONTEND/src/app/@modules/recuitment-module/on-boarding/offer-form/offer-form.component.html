@@ -1,0 +1,71 @@
+<div class="form_head">
+    <h3>Offer Form</h3>
+</div>
+
+<div class="form_basic">
+
+    <form class="form_set" [formGroup]="form">
+        <div class="row">
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Offer CTC</mat-label>
+                        <input matInput type="number" formControlName="offerCTC" />
+                        <mat-error *ngIf="form.controls['offerCTC'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Joining Date</mat-label>
+                        <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="joiningDate" />
+                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                        <mat-datepicker #dp></mat-datepicker>
+                        <mat-error *ngIf="form.controls['joiningDate'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Reporting Time</mat-label>
+                    <mat-select formControlName="reportingTime">
+                      <mat-option value="10:00">10:00</mat-option>
+                      <mat-option value="11:00">11:00</mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="basicForm.controls['status'].hasError('required')">
+                      This field is required!
+                    </mat-error> -->
+                  </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Offer Valid Till</mat-label>
+                        <input matInput [matDatepicker]="dp1" (click)="dp1.open()" formControlName="offerValidTill" />
+                        <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                        <mat-datepicker #dp1></mat-datepicker>
+                        <mat-error *ngIf="form.controls['offerValidTill'].hasError('required')">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div align="end">
+            <button mat-raised-button mat-dialog-close color="primary">Cancel</button>
+            <button mat-raised-button color="primary" class="mx-3" (click)="productSave()">Save</button>
+        </div>
+    </form>
+</div>

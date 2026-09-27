@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sales Order - {{sales_order_no}}</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    color: #111;
+    background: #e9e9e9;
+    margin: 0;
+    padding: 20px 0;
+  }
+  .page {
+    width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    
+    border: 1px solid #999;
+  }
+  .page2 {
+    width: 950px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px 24px 14px;
+    
+  }
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    margin-bottom: 4px;
+  }
+  h1.title {
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin: 0 0 10px;
+  }
+  .company-block {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .logo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 130px;
+    text-align: center;
+  }
+  .logo .el {
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+  .logo .el span { color: #0072bc; }
+  .logo .tag {
+    font-size: 8px;
+    color: #333;
+    margin-top: 2px;
+  }
+  .company-info { text-align: center; width: 100%; }
+  .company-info .name {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  .company-info .addr {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  table.meta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    
+    border-bottom: 1px solid #000;
+  }
+  table.meta td {
+    padding: 3px 4px;
+    font-size: 11.5px;
+    vertical-align: top;
+  }
+  table.meta td.label { width: 15%; font-weight: normal; }
+  table.meta td.colon { width: 1%; }
+  table.meta td.value { width: 34%; }
+
+  table.parties {
+    width: 100%;
+    border-collapse: collapse;
+    border-bottom: 1px solid #000;
+  }
+  table.parties td {
+    vertical-align: top;
+    padding: 4px 6px;
+    font-size: 11.5px;
+    width: 50%;
+  }
+  
+  .section-head {
+    font-weight: bold;
+    border-bottom: 1px solid #000;
+    padding: 3px 6px !important;
+    background: #fafafa;
+  }
+  .field-row { display: flex; margin: 2px 0; }
+  .field-label { width: 90px; flex: 0 0 auto; }
+  .field-colon { width: 12px; flex: 0 0 auto; }
+  .field-value { flex: 1; }
+
+  table.items {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+  }
+  table.items th, table.items td {
+    border: 1px solid #000;
+    padding: 4px 5px;
+    font-size: 11px;
+    text-align: center;
+  }
+  table.items th { font-weight: bold; background: #f5f5f5; }
+  table.items td.desc, table.items th.desc { text-align: left; }
+  table.items tbody td {  vertical-align: top; }
+  table.items tfoot td { font-weight: bold; height: auto; }
+
+  .totals {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+  .narration { font-size: 11.5px; }
+  .totals-table { font-size: 11.5px; }
+  .totals-table td { padding: 1px 4px; }
+  .totals-table td.tlabel { text-align: right; }
+  .totals-table td.tval { text-align: right; min-width: 100px; }
+
+  .amount-words {
+    font-weight: bold;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+  .certify-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 11.5px;
+  }
+
+  .terms {
+    display: flex;
+    border-top: 1px solid #000;
+    margin-top: 10px;
+    padding-top: 6px;
+  }
+  .terms .tc-list {
+    flex: 1;
+    font-size: 11px;
+  }
+  .terms .tc-list p { font-weight: bold; margin: 0 0 4px; }
+  .terms .tc-list ol { margin: 0; padding-left: 16px; }
+  .terms .tc-list li { margin-bottom: 2px; }
+  .signature-box {
+      width: 220px;
+    border-left: 1px solid #000;
+    margin-left: 12px;
+    padding: 6px;
+    font-size: 11px;
+    height: 90px;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+  }
+  .signature-box .for-line { font-weight: normal; }
+  .signature-box .auth {
+    margin-top: 55px;
+  }
+
+  .branch {
+    text-align: center;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 10px;
+    
+    padding-top: 6px;
+  }
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    font-style: italic;
+    margin-top: 4px;
+  }
+  .page-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10.5px;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+  <div class="page2">
+    <div class="top-row">
+    <!-- <span>Page : 1/1</span>
+    <span>Original For Recipient</span> -->
+  </div>
+  <div class="page">
+
+    <h1 class="title">SALES ORDER</h1>
+
+    <div class="company-block">
+      <div class="logo" style="padding-left: 10px;">
+          <img src="{{company_logo}}" alt="Company Logo" width="140"/>
+        <!-- <div class="el">ELAN<span>PRO</span></div>
+        <div class="tag">The Commercial Refrigeration Experts</div> -->
+      </div>
+      <div class="company-info">
+        <div class="name">{{elanName}}</div>
+        <div class="addr">
+         {{mainAddress}}
+        </div>
+      </div>
+    </div>
+
+    <table class="meta">
+      <tr>
+        <td class="label">GSTIN / UTGSTIN No.</td>
+        <td class="colon">:</td>
+        <td class="value">{{warehouse_gst}}</td>
+        <td class="label">PO No.</td>
+        <td class="colon">:</td>
+        <td class="value">MM-07-014</td>
+      </tr>
+      <tr>
+        <td class="label">Order No</td>
+        <td class="colon">:</td>
+        <td class="value">{{sales_order_no}}</td>
+        <td class="label">PO Date</td>
+        <td class="colon">:</td>
+        <td class="value">15/07/2026</td>
+      </tr>
+      <tr>
+        <td class="label">Order Date</td>
+        <td class="colon">:</td>
+        <td class="value">{{sales_order_date}}</td>
+        <td class="label">Place of Supply</td>
+        <td class="colon">:</td>
+        <td class="value">Delhi</td>
+      </tr>
+    </table>
+
+    <table class="parties">
+      <tr>
+        <td class="section-head">Billing Details</td>
+        <td class="section-head">Shipping Details</td>
+      </tr>
+      <tr>
+        <td>
+          <div class="field-row"><div class="field-label">Party Name</div><div class="field-colon">:</div><div class="field-value"><strong>{{customer_name}}</strong></div></div>
+          <div class="field-row"><div class="field-label">&amp; Address</div><div class="field-colon">:</div><div class="field-value">{{billing_address}} - {{billing_pin_code}}</div></div>
+          <div class="field-row"><div class="field-label"></div><div class="field-colon"></div><div class="field-value">{{billing_postal_address}}</div></div>
+          <div class="field-row"><div class="field-label">State</div><div class="field-colon">:</div><div class="field-value">{{states_name}}</div></div>
+          <div class="field-row"><div class="field-label">State Code</div><div class="field-colon">:</div><div class="field-value">{{states_code}}</div></div>
+          <div class="field-row"><div class="field-label">GSTIN No.</div><div class="field-colon">:</div><div class="field-value">{{billing_gst_in}}</div></div>
+        </td>
+        <td>
+          <div class="field-row"><div class="field-label">Consignee Address</div><div class="field-colon">:</div><div class="field-value"><strong> {{customer_name}}</strong></div></div>
+          <div class="field-row"><div class="field-label"></div><div class="field-colon"></div><div class="field-value">{{shipping_address}},{{shipping_postal_address}} - {{shipping_pin_code}}</div></div>
+          <div class="field-row"><div class="field-label">GSTIN</div><div class="field-colon">:</div><div class="field-value">{{shipping_gst_in}}</div></div>
+        </td>
+      </tr>
+    </table>
+
+    <table class="items">
+      <thead>
+        <tr>
+          <th rowspan="2" style="border-left: none;">SNo</th>
+          <th rowspan="2">Code</th>
+          <th class="desc" rowspan="2">Description<br>of Goods</th>
+          <th rowspan="2">HSN Code</th>
+          <th rowspan="2">Qty<br>(No)</th>
+          <th rowspan="2">Rate</th>
+          <th rowspan="2">Amount</th>
+          <th rowspan="2">Discount</th>
+          <th rowspan="2">TaxableAmt</th>
+          <th rowspan="2">Rate%</th>
+          <th colspan="3" style="border-right: none;">CGST&nbsp;&nbsp;&nbsp;&nbsp;SGST&nbsp;&nbsp;&nbsp;&nbsp;IGST</th>
+        </tr>
+        <tr>
+          <th>Amount</th><th>Amount</th><th style="border-right: none;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+       {{itemRows}}
+      </tbody>
+      <tfoot>
+       
+    
+        <tr>
+          <td></td><td></td><td class="desc"></td><td></td>
+          <td></td>
+          <td></td>
+          <td>{{totalAmount}}</td>
+          <td>{{totalDiscount}}</td>
+          <td>{{totalTaxableAmount}}</td>
+          <td></td>
+          <td>{{totalCGST}}</td>
+          <td>{{totalSGST}}</td>
+          <td>{{totalIGST}}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="totals">
+      <div class="narration">Narration : Narration</div>
+      <table class="totals-table">
+        <tr><td class="tlabel">Sub Total</td><td>:</td><td class="tval">₹ {{subTotal}}</td></tr>
+        <tr><td class="tlabel"></td><td>:</td><td class="tval">-₹ {{totalDiscount}}</td></tr>
+        <tr><td class="tlabel">GST Tax Amount</td><td>:</td><td class="tval">₹ {{totalGSTAmount}}</td></tr>
+        <tr><td class="tlabel">Bill Amount</td><td>:</td><td class="tval">{{totalBillAmount}}</td></tr>
+      </table>
+    </div>
+
+    <div class="amount-words">₹ {{totalInWords}}</div>
+
+    <div class="certify-row">
+      <span>Certified that the Particulars given above are true and correct</span>
+      <span>Electronic Reference No</span>
+    </div>
+
+    <div class="terms">
+      <div class="tc-list">
+        <p>Terms &amp; Conditions</p>
+        <ol>
+          <li>All Payments should be made direct to the company or its authroised representive by cheque/NEFT/RTGS/DD only.</li>
+          <li>All disputes subject to GGM-FG Jurisdiction</li>
+          <li>Goods once sold will not taken back.</li>
+          <li>Our responsiblity ceases of as soon as the goods are handed over to the carrier.</li>
+          <li>15-07-2026</li>
+        </ol>
+      </div>
+      <div class="signature-box">
+        <div class="for-line">For Elan Professional Appliances Pvt Ltd</div>
+        <div class="auth">Authorised Signatory</div>
+      </div>
+    </div>
+
+    <div class="branch">
+      Branch Address : Khasra No.11/1, 12//5/2, - Village Begampur Khatola, - Begampur Industrial Area, - Gurgaon - 122004
+    </div>
+    <div class="footer-note">This is a computer generated order Signature not required.</div>
+
+  </div>
+  <div class="page-footer">
+    <span>Original For Recipient</span>
+    <span>Page : 1/1</span>
+  </div>
+  </div>
+</body>
+</html>

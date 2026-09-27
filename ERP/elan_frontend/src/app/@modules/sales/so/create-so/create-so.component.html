@@ -1,0 +1,460 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales CRM</h1>
+    <p><span> Create Sales Order</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<section class="right_data_all">
+  <div class="form_basic">
+    <form class="form_set" [formGroup]="frmSalesOrder" (ngSubmit)="createSalesOrder()">
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>PI Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="pi_no"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Company Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="company_name"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Lead Of Source</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="lead_source"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Created By</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="created_by"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12"  *ngIf="frmSalesOrder?.value?.created_by !== 'Self'">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="employee_name"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Person Name</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_person_name"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="contact_number"
+                (keypress)="keyPress($event)"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Mail ID</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="mail_id"
+                [readonly]="type_existing != 'existing_client' ? true : false"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="frmSalesOrder.get('proposal_type')?.value == 'B2B'">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>GST Number</mat-label>
+              <input
+                matInput
+                type="email"
+                formControlName="gst_no"
+                [readonly]="formDisabled"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12" *ngIf="form?.get('schemeData')?.value">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="readonly-wrapper">
+              <mat-label>Scheme</mat-label>
+
+              <mat-select formControlName="schemeData" class="readonly-block">
+                <mat-option
+                  [disabled]="formDisabled"
+                  *ngFor="let item of schemeData"
+                  [value]="item?.id"
+                  >{{ item?.scheme_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Scheduled Delivery Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker3"
+                formControlName="schedule_delivery_date" readonly
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker3"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker3></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Elan SO Number</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="elan_sales_order_no"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Elan SO Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="elan_so_date" readonly
+              />
+              <mat-hint>DD/MM/YYYY</mat-hint>
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <!-- <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Dispatch From</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="branch_name"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Warehouse</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="warehouse_name"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div> -->
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Dispatch From</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="dispatch_from"
+                readonly="true"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="form_table">
+          <div class="mb-2">
+            <button
+              type="button"
+              mat-raised-button
+              color="primary"
+              (click)="openDialog()">
+              Delivery & Stock Allocation
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Item Name</th>
+                  <th>Item Description</th>
+                  <th>Ordered Qty</th>
+                  <th>Delivered Qty</th>
+                  <th>Remaining Qty</th>
+                  <th>Add-Ons</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="items">
+                <!-- Product Items -->
+                <tr *ngFor="let item of productItems.controls; let i = index" [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td
+                    [ngClass]="{
+                      'promo-applied': item?.get('promo_item')?.value === 1,
+                      'scheme-applied':
+                        item?.get('promo_item')?.value === 0 &&
+                        item?.get('apply_scheme')?.value === 1
+                    }"
+                  >
+                  {{ getProductName(item?.get('product_master_id')?.value, i) }}
+                  </td>
+                  <td>{{ item?.get("product_description")?.value }}</td>
+                  <td>{{ item?.get("proposed_quantity")?.value }} </td>
+                  <td>{{ item?.get("delivered_qty")?.value }}</td>
+                  <td>{{ item?.get("remaining_quantity")?.value }}</td>
+                  <td>
+                    <!-- {{ getAddOnsNames(item?.get('select_scheme')?.value) }} -->
+                    <span *ngIf="item?.get('select_scheme')?.value?.length > 0; else noScheme" style="color: #8d8d8d; cursor: pointer; font-size: 20px">
+                      <i class="fa fa-tags" (click)="selectSchemeView(i, item)" aria-hidden="true" title="Customization & Branding"></i>
+                    </span>
+                    <ng-template #noScheme>
+                      --
+                    </ng-template>
+                  </td>
+                </tr>
+                <!-- BOM Items -->
+                <ng-container *ngIf="bomArray?.length > 0">
+                  <tr class="bom-header">
+                    <td colspan="7">
+                      <span>Installation Kit (BOM) Details</span>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let b of bomArray; let j = index">
+                    <td>{{ j + 1 }}</td>
+                    <td>{{ b.item_name }}</td>
+                    <td>{{ b.bom_name }} 
+                      <span class="ml-2">
+                        <b>Total Items : {{ b.bom_item_count }}</b>
+                        <i class="fa fa-info-circle text-primary ml-1"
+                          [matTooltip]="getBomItemsTooltip(b.bom_items)"
+                          matTooltipClass="bom-tooltip"
+                          matTooltipPosition="right"
+                          style="cursor: pointer; margin-left: 4px;">
+                        </i>
+                      </span>
+                    </td>
+                    <td>{{ b.bom_qty }}</td>
+                    <!-- <td>Dispatch: {{ b.dispatch_qty }} | Partial: {{ b.partial_qty }}</td> -->
+                    <td>{{ b.dispatch_qty }}</td>
+                    <td>{{ b.pending_qty }}</td>
+                    <td>--</td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+      </div>
+
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Notes</mat-label>
+              <input matInput type="text" formControlName="notes" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Terms & Conditions</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="terms_and_conditions"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-label>Upload File</mat-label>
+          <input
+            class="form-control"
+            type="file"
+            style="padding-right: 19%"
+            title="Termination Copy Upload"
+            (change)="uploadDoc($event)"
+            accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+          />
+          <mat-icon
+            *ngIf="uploadedFile"
+            class="formFileViewIcon"
+            (click)="viewImg1()"
+            >visibility</mat-icon
+          >
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Valid Till Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              formControlName="valid_till_date" readonly
+            />
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Term of Delivery</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="delivery_term"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Term of Delivery Remark</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="delivery_term_remark"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Unloading Responsibility</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="unloading"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Unloading Responsibility Remark</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="unloading_resp_remark"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label> Warranty</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="warranty_month"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Warranty Remark</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="warranty_month_remark"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mt-3">
+          <mat-form-field appearance="outline">
+            <mat-label> Insurance</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="insurance_name"
+              readonly="true"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mt-3 common_button_sub">
+        <button *ngIf="!isView">Create Sales Order</button>
+      </div>
+    </form>
+  </div>
+</section>

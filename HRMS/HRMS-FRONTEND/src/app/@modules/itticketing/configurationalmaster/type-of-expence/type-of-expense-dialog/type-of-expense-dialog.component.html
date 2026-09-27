@@ -1,0 +1,48 @@
+<ng-container *ngIf="mode=='view'">
+  <h3 mat-dialog-title class="popHead">Type Of Expense Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p> Type Of Expense:</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ getData?.expense_type }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+<ng-container *ngIf="mode!='view'">
+  <h3 mat-dialog-title class="popHead" *ngIf="id">Update Type Of Expense</h3>
+  <h3 mat-dialog-title class="popHead" *ngIf="!id">Type Of Expense</h3>
+  <mat-dialog-content class="mat-typography">
+    <form [formGroup]="typeOfExpenseForm">
+      <div class="form-group row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Expense Type</mat-label>
+            <input matInput type="text" formControlName="expense_type" />
+            <mat-error *ngIf="typeOfExpenseForm.controls['expense_type'].hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error *ngIf="typeOfExpenseForm.controls['expense_type'].hasError('leadingSpaces')">
+            *No leading spaces!
+          </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-raised-button color="primary"  (click)="submitData(typeOfExpenseForm.value)" >
+      Submit
+    </button>
+    <button mat-button mat-dialog-close mat-raised-button color="warn">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>

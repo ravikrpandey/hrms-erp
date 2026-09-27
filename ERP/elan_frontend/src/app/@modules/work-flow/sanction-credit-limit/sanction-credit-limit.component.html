@@ -1,0 +1,69 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Workflow</h1>
+        <p>Sanction Credit Limit Details</p>
+    </div>
+
+</div>
+<section class="right_data_all">
+    <div class="form_basic">
+        <form class="form_set" [formGroup]="SanctionForm" (ngSubmit)="onSubmit()">
+
+            <div formArrayName="rows">
+                <div *ngFor="let row of rows.controls; let i=index" [formGroupName]="i" class="row align-items-center">
+                    <div class="col-md-3">
+                        <mat-form-field appearance="outline" class="w-100" *ngIf="row.value.id">
+                            <mat-label>Category</mat-label>
+                            <input matInput [value]="getCategoryName(row.value.customer_category_id)" disabled />
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="w-100" *ngIf="!row.value.id">
+                            <mat-label>Select Category</mat-label>
+                            <mat-select formControlName="customer_category_id">
+                                <mat-option *ngFor="let cat of customerCategory" [value]="cat.customer_category_id"
+                                    [disabled]="selectedCategories.includes(cat.customer_category_id)">
+                                    {{ cat.customer_category_name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Amount</mat-label>
+                            <input matInput type="text" formControlName="amount" (keypress)="allowNumbersOnly($event)" />
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-3">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Sanction Credit Period</mat-label>
+                            <input matInput type="text" formControlName="credit_period"
+                                (keypress)="allowNumbersOnly($event)" />
+                        </mat-form-field>
+                    </div>
+
+
+                    <div class="col-md-3 d-flex align-items-center">
+                        <button *ngIf="i === rows.length - 1" mat-icon-button color="primary" type="button"
+                            (click)="addRow(i)">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <!-- <button *ngIf="!row.value.isSaved && rows.length > 1" mat-icon-button color="warn" type="button"
+                            (click)="removeRow(i)">
+                            <mat-icon>remove</mat-icon>
+                        </button> -->
+                        <button *ngIf="rows.length > 1" mat-icon-button color="warn" type="button"
+                            (click)="removeRow(i)">
+                            <mat-icon>remove</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mt-3 common_button_sub">
+                <button type="submit">{{ mode === 'edit' ? 'Update' : 'Save' }}</button>
+                <!-- <button class="cancel_button_y" type="button" (click)="goBack()">Cancel</button> -->
+            </div>
+        </form>
+    </div>
+</section>

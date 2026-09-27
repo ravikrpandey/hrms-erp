@@ -1,0 +1,42 @@
+<div class="heading_top" style="margin-bottom: 10px">
+  <div class="page-title">
+    <h1>Menu Management</h1>
+    <p>
+      All Menu List
+      <i
+        class="fa fa-angle-right"
+        aria-hidden="true"
+        style="color: #5d6c7c"
+      ></i>
+      <span>Menu List</span>
+    </p>
+  </div>
+
+  <div class="sticky-toolbar">
+    <button (click)="SequenceWiseSort('Sidebar')" class="refresh-button">
+      <mat-icon>refresh</mat-icon>
+      <span>Reload Sidebar Menu</span>
+    </button>
+
+    <button (click)="SequenceWiseSort('OrderBy')" class="refresh-button">
+      <mat-icon>refresh</mat-icon>
+      <span>Get Updated View</span>
+    </button>
+
+    <button
+      *ngIf="createButton"
+      (click)="openPopup('create', '', 'Parent'); $event.stopPropagation()"
+    >
+      + Parent Menu
+    </button>
+  </div>
+</div>
+
+<!-- PARENT MENU -->
+<div *ngFor="let menu of menuList; let i = index" class="module">
+  <app-menu-list-card
+    [menu]="menu"
+    [createButton]="createButton"
+  ></app-menu-list-card>
+</div>
+<div style="margin-bottom: 35px"></div>

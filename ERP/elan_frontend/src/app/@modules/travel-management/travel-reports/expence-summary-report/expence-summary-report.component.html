@@ -1,0 +1,21 @@
+<app-travel-filters 
+    [selectedMonth]="selectedMonth" 
+    [selectedDepartment]="selectedDepartment"
+    [selectedEmployee]="selectedEmployee" 
+    [selectedLocation]="selectedLocation" 
+    [selectedYear]="selectedYear"
+    [selectedStatus]="selectedStatus"
+    [selectedCategory]="selectedCategory"
+    [filtersToShow]="['year', 'month', 'employee','department','status','expenseCategory']"
+    (filtersChanged)="onFiltersUpdated($event)"></app-travel-filters>
+
+    
+<div class="ag_grid-container">
+    <h3 class="text-center">Expense Summary Report</h3>
+    <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 480px;" [rowData]="rowData"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" (gridReady)="onGridReady($event)"
+            [rowClass]="rowClass">
+        </ag-grid-angular>
+    </div>
+</div>

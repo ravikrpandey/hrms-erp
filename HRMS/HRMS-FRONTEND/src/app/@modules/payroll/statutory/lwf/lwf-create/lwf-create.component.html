@@ -1,0 +1,525 @@
+<div class="right_data_all">
+  <div class="row">
+    <div class="page-title">
+      <h1>Labour Welfare Fund</h1>
+    </div>
+  </div>
+
+  <section>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="lwfForm" (ngSubmit)="submitForm()">
+        <!-- State Dropdown -->
+        <!-- State Dropdown with Search -->
+        <div class="row mb-3" [ngClass]="{ 'disable-pointer': lwfId }">
+          <mat-form-field appearance="outline" class="state-select">
+            <mat-label>State</mat-label>
+            <mat-select
+              formControlName="state"
+              (openedChange)="onDropdownOpened($event)"
+              (selectionChange)="onStateChange($event.value)"
+            >
+              <!-- Search Filter -->
+              <mat-select-filter
+                #stateFilter
+                [array]="LWF_STATES"
+                [displayMember]="'name'"
+                placeholder="Search..."
+                (filteredReturn)="onFilterReset($event)"
+              >
+              </mat-select-filter>
+
+              <!-- Filtered Options -->
+              <mat-option *ngFor="let st of filteredStates" [value]="st.name">
+                {{ st.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Info for Non-applicable States -->
+        <div
+          *ngIf="selectedState && !selectedState.lwfApplicable"
+          class="alert alert-info"
+        >
+          LWF is <strong>not applicable</strong> in {{ selectedState.name }}.
+        </div>
+
+        <!-- Contribution Section (if applicable) -->
+        <div *ngIf="selectedState?.lwfApplicable">
+          <h4 class="mt-3">Contribution Setup</h4>
+
+          <!-- EMPLOYEE -->
+          <div formGroupName="employee">
+            <h5>Employee Contribution</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Contribution Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="FIXED">Fixed Amount</mat-option>
+                    <mat-option value="PERCENT">Percentage of Wages</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employee', 'type')"
+                >
+                  This field is required!
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Value</mat-label>
+                  <input matInput type="number" formControlName="value" />
+                </mat-form-field>
+                <!-- Required error -->
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    hasError('employee', 'value') &&
+                    !(
+                      lwfForm.get('employee.type')?.value === 'PERCENT' &&
+                      lwfForm.get('employee.value')?.value > 100
+                    )
+                  "
+                >
+                  This field is required!
+                </div>
+
+                <!-- Percentage error -->
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('employee.type')?.value === 'PERCENT' &&
+                    lwfForm.get('employee.value')?.value > 100
+                  "
+                >
+                  Percentage cannot exceed 100!
+                </div>
+              </div>
+
+              <!-- Frequency -->
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Frequency</mat-label>
+                  <mat-select formControlName="frequency">
+                    <mat-option value="MONTHLY">Monthly</mat-option>
+                    <mat-option value="HALF_YEARLY">Half-Yearly</mat-option>
+                    <mat-option value="YEARLY">Yearly</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employee', 'frequency')"
+                >
+                  This field is required!
+                </div>
+              </div>
+              <!-- Deduction Months (Dynamic) -->
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('employee.frequency')?.value === 'HALF_YEARLY'
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Months (Select 2)</mat-label>
+                  <mat-select formControlName="deductionMonths" multiple>
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('employee.deductionMonths')?.value?.length !== 2
+                  "
+                >
+                  Please select exactly 2 months!
+                </div>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="lwfForm.get('employee.frequency')?.value === 'YEARLY'"
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Month</mat-label>
+                  <mat-select formControlName="deductionMonths">
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="!lwfForm.get('employee.deductionMonths')?.value"
+                >
+                  Please select 1 month!
+                </div>
+              </div>
+
+              <!-- Capping only if PERCENT -->
+              <div
+                class="col-md-4 d-flex align-items-start"
+                *ngIf="lwfForm.get('employee.type')?.value === 'PERCENT'"
+              >
+                <mat-checkbox
+                  formControlName="isCapped"
+                  (change)="toggleCapping('employee')"
+                >
+                  Apply Capping
+                </mat-checkbox>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('employee.type')?.value === 'PERCENT' &&
+                  lwfForm.get('employee.isCapped')?.value
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Capping Amount</mat-label>
+                  <input matInput type="number" formControlName="capAmount" />
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employee', 'capAmount')"
+                >
+                  Capping Amount is required & must be > 0!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EMPLOYER -->
+          <div formGroupName="employer" class="mt-4">
+            <h5>Employer Contribution</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Contribution Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="FIXED">Fixed Amount</mat-option>
+                    <mat-option value="PERCENT">Percentage of Wages</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employer', 'type')"
+                >
+                  This field is required!
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Value</mat-label>
+                  <input matInput type="number" formControlName="value" />
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    hasError('employer', 'value') &&
+                    !(
+                      lwfForm.get('employer.type')?.value === 'PERCENT' &&
+                      lwfForm.get('employer.value')?.value > 100
+                    )
+                  "
+                >
+                  This field is required!
+                </div>
+
+                <!-- Percentage error -->
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('employer.type')?.value === 'PERCENT' &&
+                    lwfForm.get('employer.value')?.value > 100
+                  "
+                >
+                  Percentage cannot exceed 100!
+                </div>
+              </div>
+
+              <!-- Frequency -->
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Frequency</mat-label>
+                  <mat-select formControlName="frequency">
+                    <mat-option value="MONTHLY">Monthly</mat-option>
+                    <mat-option value="HALF_YEARLY">Half-Yearly</mat-option>
+                    <mat-option value="YEARLY">Yearly</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employer', 'frequency')"
+                >
+                  This field is required!
+                </div>
+              </div>
+              <!-- Deduction Months (Dynamic) -->
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('employer.frequency')?.value === 'HALF_YEARLY'
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Months (Select 2)</mat-label>
+                  <mat-select formControlName="deductionMonths" multiple>
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('employer.deductionMonths')?.value?.length !== 2
+                  "
+                >
+                  Please select exactly 2 months!
+                </div>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="lwfForm.get('employer.frequency')?.value === 'YEARLY'"
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Month</mat-label>
+                  <mat-select formControlName="deductionMonths">
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="!lwfForm.get('employer.deductionMonths')?.value"
+                >
+                  Please select 1 month!
+                </div>
+              </div>
+
+              <!-- Capping only if PERCENT -->
+              <div
+                class="col-md-4 d-flex align-items-center"
+                *ngIf="lwfForm.get('employer.type')?.value === 'PERCENT'"
+              >
+                <mat-checkbox
+                  formControlName="isCapped"
+                  (change)="toggleCapping('employer')"
+                >
+                  Apply Capping
+                </mat-checkbox>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('employer.type')?.value === 'PERCENT' &&
+                  lwfForm.get('employer.isCapped')?.value
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Capping Amount</mat-label>
+                  <input matInput type="number" formControlName="capAmount" />
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('employer', 'capAmount')"
+                >
+                  Capping Amount is required & must be > 0!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- GOVERNMENT -->
+          <div formGroupName="government" class="mt-4">
+            <h5>Government Contribution</h5>
+            <div class="row">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Contribution Type</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option value="FIXED">Fixed Amount</mat-option>
+                    <mat-option value="PERCENT">Percentage of Wages</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('government', 'type')"
+                >
+                  This field is required!
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Value</mat-label>
+                  <input matInput type="number" formControlName="value" />
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    hasError('government', 'value') &&
+                    !(
+                      lwfForm.get('government.type')?.value === 'PERCENT' &&
+                      lwfForm.get('government.value')?.value > 100
+                    )
+                  "
+                >
+                  This field is required!
+                </div>
+
+                <!-- Percentage error -->
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('government.type')?.value === 'PERCENT' &&
+                    lwfForm.get('government.value')?.value > 100
+                  "
+                >
+                  Percentage cannot exceed 100!
+                </div>
+              </div>
+
+              <!-- Frequency -->
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Frequency</mat-label>
+                  <mat-select formControlName="frequency">
+                    <mat-option value="MONTHLY">Monthly</mat-option>
+                    <mat-option value="HALF_YEARLY">Half-Yearly</mat-option>
+                    <mat-option value="YEARLY">Yearly</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('government', 'frequency')"
+                >
+                  This field is required!
+                </div>
+              </div>
+              <!-- Deduction Months (Dynamic) -->
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('government.frequency')?.value === 'HALF_YEARLY'
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Months (Select 2)</mat-label>
+                  <mat-select formControlName="deductionMonths" multiple>
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="
+                    lwfForm.get('government.deductionMonths')?.value?.length !== 2
+                  "
+                >
+                  Please select exactly 2 months!
+                </div>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="lwfForm.get('government.frequency')?.value === 'YEARLY'"
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Deduction Month</mat-label>
+                  <mat-select formControlName="deductionMonths">
+                    <mat-option
+                      *ngFor="let month of monthsList"
+                      [value]="month"
+                    >
+                      {{ month }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="!lwfForm.get('government.deductionMonths')?.value"
+                >
+                  Please select 1 month!
+                </div>
+              </div>
+
+              <!-- Capping only if PERCENT -->
+              <div
+                class="col-md-4 d-flex align-items-start"
+                *ngIf="lwfForm.get('government.type')?.value === 'PERCENT'"
+              >
+                <mat-checkbox
+                  formControlName="isCapped"
+                  (change)="toggleCapping('government')"
+                >
+                  Apply Capping
+                </mat-checkbox>
+              </div>
+
+              <div
+                class="col-md-4"
+                *ngIf="
+                  lwfForm.get('government.type')?.value === 'PERCENT' &&
+                  lwfForm.get('government.isCapped')?.value
+                "
+              >
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Capping Amount</mat-label>
+                  <input matInput type="number" formControlName="capAmount" />
+                </mat-form-field>
+                <div
+                  class="text-danger small"
+                  *ngIf="hasError('government', 'capAmount')"
+                >
+                  Capping Amount is required & must be > 0!
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="mt-4 d-flex justify-content-between">
+          <button type="button" class="btn btn-danger" (click)="back()">
+            Cancel
+          </button>
+          <button
+            *ngIf="selectedState?.lwfApplicable"
+            type="submit"
+            class="btn btn-primary"
+          >
+            {{ lwfId ? "Update" : "Save" }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,112 @@
+<h3 mat-dialog-title class="popHead" *ngIf="timesheet_approval_status === 'PENDING'">Timesheet Approval</h3>
+<h3 mat-dialog-title class="popHead" *ngIf="timesheet_approval_status !== 'PENDING'">View Timesheet</h3>
+
+<mat-dialog-content class="mat-typography">
+    <form class="form_set" [formGroup]="timesheetForm">
+        <div class="row">
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="readonly-wrapper">
+                        <mat-label>Date</mat-label>
+                        <input matInput formControlName="date" readonly />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3" >
+                <div class="form-group">
+                <mat-form-field appearance="outline" class="readonly-wrapper">
+                    <mat-label>Project Name</mat-label>
+                    <input matInput formControlName="project_name" readonly />
+                </mat-form-field>
+                </div>
+            </div>
+            
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                <mat-form-field appearance="outline" class="readonly-wrapper">
+                    <mat-label>Task Name</mat-label>
+                    <input matInput formControlName="task_name" readonly />
+                </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <mat-form-field appearance="outline" class="readonly-wrapper">
+                  <mat-label>Start Time</mat-label>
+                  <input matInput  formControlName="start_time" readonly/>
+                </mat-form-field>
+              </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <mat-form-field appearance="outline" class="readonly-wrapper">
+                  <mat-label>End Time</mat-label>
+                  <input matInput  formControlName="end_time" readonly/>
+                </mat-form-field>
+              </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <mat-form-field appearance="outline" class="readonly-wrapper">
+                  <mat-label>Total Hours</mat-label>
+                  <input matInput formControlName="total_hours" readonly />
+                </mat-form-field>
+              </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                <div class="form-group">
+                  <mat-checkbox
+                  class="readonly-wrapper"
+                    [checked]="timesheetForm.get('billable')?.value"
+                    (change)="onCheckboxChange('billable', $event)"
+                  >
+                    Billable
+                  </mat-checkbox>
+                  <mat-checkbox
+                  class="readonly-wrapper"
+                    [checked]="timesheetForm.get('non_billable')?.value"
+                    (change)="onCheckboxChange('non_billable', $event)"
+                  >
+                    Non-Billable
+                  </mat-checkbox>
+                </div>
+              </div>
+              
+            <div class="col-12 mb-3">
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="readonly-wrapper">
+                        <mat-label>Remarks</mat-label>
+                        <textarea matInput formControlName="remarks"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-12 mb-3" *ngIf="timesheet_approval_status === 'PENDING'">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>My Comment</mat-label>
+                        <textarea matInput formControlName="manager_comment"></textarea>
+                        <mat-error *ngIf="timesheetForm.controls['manager_comments']?.hasError('required')">
+                          This field is required!
+                      </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-12 mb-3" *ngIf="timesheet_approval_status !== 'PENDING'">
+              <div class="form-group">
+                  <mat-form-field appearance="outline" class="readonly-wrapper">
+                      <mat-label>My Comment</mat-label>
+                      <textarea matInput formControlName="manager_comments"></textarea>
+                      
+                  </mat-form-field>
+              </div>
+          </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button (click)="onApprove()" *ngIf="timesheet_approval_status === 'PENDING'">Approve</button>
+  <button mat-dialog-close (click)="onReject()" *ngIf="timesheet_approval_status === 'PENDING'">Reject</button>
+  <button mat-dialog-close class="cancel_button_y">Close</button>
+</mat-dialog-actions>
+

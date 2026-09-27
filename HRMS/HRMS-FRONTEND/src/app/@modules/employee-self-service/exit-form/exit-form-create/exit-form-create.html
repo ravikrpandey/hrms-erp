@@ -1,0 +1,288 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>ESS</h1>
+        <p>Exit Form
+            <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+            <span> Create Exit Form</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-circle-left"></i> Back
+        </button>
+    </div>
+</div>
+
+<section class="right_data_all pt-4 pb-5">
+    <form [formGroup]="exitForm" (ngSubmit)="submitForm()">
+
+        <!-- Employee Details -->
+        <div class="card readonly-section">
+            <h3>Employee Details</h3>
+
+            <div class="row">
+
+                <!-- Employee Name -->
+                <div class="col-md-4">
+                    <label>Employee Name</label>
+                    <input type="text" class="form-control" formControlName="employeeName" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('employeeName')?.touched && exitForm.get('employeeName')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+
+                <!-- Employee Code -->
+                <div class="col-md-4">
+                    <label>Employee Code</label>
+                    <input type="text" class="form-control" formControlName="employeeCode" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('employeeCode')?.touched && exitForm.get('employeeCode')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+
+                <!-- Department -->
+                <div class="col-md-4">
+                    <label>Department</label>
+                    <input type="text" class="form-control" formControlName="department" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('department')?.touched && exitForm.get('department')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+
+                <!-- Designation -->
+                <div class="col-md-4 mt-3">
+                    <label>Designation</label>
+                    <input type="text" class="form-control" formControlName="designation" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('designation')?.touched && exitForm.get('designation')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+
+                <!-- Date of Joining -->
+                <div class="col-md-4 mt-3">
+                    <label>Date of Joining</label>
+                    <input type="date" class="form-control" formControlName="dateOfJoining" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('dateOfJoining')?.touched && exitForm.get('dateOfJoining')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+
+                <!-- Last Working Day -->
+                <div class="col-md-4 mt-3">
+                    <label>Last Working Day</label>
+                    <input type="date" class="form-control" formControlName="lastWorkingDay" />
+                    <div class="text-danger mt-1"
+                        *ngIf="exitForm.get('lastWorkingDay')?.touched && exitForm.get('lastWorkingDay')?.hasError('required')">
+                        This field is required!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reason for leaving -->
+        <div class="card mt-4">
+            <h3>Reason for Leaving</h3>
+
+            <!-- Primary Reason -->
+            <div class="col-md-6">
+                <label>Primary Reason</label>
+                <select class="form-control" formControlName="primaryReason">
+                    <option value="">Select</option>
+                    <option value="better_opportunity">Better Opportunity</option>
+                    <option value="career_growth">Career Growth</option>
+                    <option value="compensation">Compensation</option>
+                    <option value="work_life_balance">Work-Life Balance</option>
+                    <option value="relocation">Relocation</option>
+                    <option value="conflict_manager">Conflict With Manager/Team</option>
+                    <option value="role_mismatch">Role Mismatch</option>
+                    <option value="personal">Personal</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('primaryReason')?.touched && exitForm.get('primaryReason')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Decision Trigger -->
+            <div class="col-md-12 mt-3">
+                <label>Trigger for decision</label>
+                <textarea class="form-control" rows="3" formControlName="decisionTrigger"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('decisionTrigger')?.touched && exitForm.get('decisionTrigger')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Prevent Reason -->
+            <div class="col-md-12 mt-3">
+                <label>Could we have prevented your exit?</label>
+                <textarea class="form-control" rows="3" formControlName="preventReason"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('preventReason')?.touched && exitForm.get('preventReason')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+        </div>
+
+        <!-- Work Experience -->
+        <div class="card mt-4">
+            <h3>Work Experience</h3>
+
+            <!-- Job Match -->
+            <div class="col-md-6">
+                <label>Job Responsibility Match</label>
+                <select class="form-control" formControlName="jobMatch">
+                    <option value="">Select</option>
+                    <option value="excellent">Excellent Match</option>
+                    <option value="good">Good Match</option>
+                    <option value="partial">Partial Match</option>
+                    <option value="poor">Poor Match</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('jobMatch')?.touched && exitForm.get('jobMatch')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Work Environment -->
+            <div class="col-md-6 mt-3">
+                <label>Work Environment Rating</label>
+                <select class="form-control" formControlName="workEnvironment">
+                    <option value="">Select</option>
+                    <option value="very_good">Very Good</option>
+                    <option value="good">Good</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="poor">Poor</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('workEnvironment')?.touched && exitForm.get('workEnvironment')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Challenges -->
+            <div class="col-md-12 mt-3">
+                <label>Challenges Faced</label>
+                <textarea class="form-control" rows="3" formControlName="challenges"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('challenges')?.touched && exitForm.get('challenges')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+        </div>
+
+        <!-- Manager & Team -->
+        <div class="card mt-4">
+            <h3>Manager & Team Experience</h3>
+
+            <!-- Manager Relation -->
+            <div class="col-md-6">
+                <label>Relationship with Manager</label>
+                <select class="form-control" formControlName="managerRelation">
+                    <option value="">Select</option>
+                    <option value="excellent">Excellent</option>
+                    <option value="good">Good</option>
+                    <option value="average">Average</option>
+                    <option value="poor">Poor</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('managerRelation')?.touched && exitForm.get('managerRelation')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Manager Support -->
+            <div class="col-md-12 mt-3">
+                <label>Manager Support & Fairness</label>
+                <textarea class="form-control" rows="3" formControlName="managerSupport"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('managerSupport')?.touched && exitForm.get('managerSupport')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Team Communication -->
+            <div class="col-md-12 mt-3">
+                <label>Team Communication & Collaboration</label>
+                <textarea class="form-control" rows="3" formControlName="teamCommunication"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('teamCommunication')?.touched && exitForm.get('teamCommunication')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+        </div>
+
+        <!-- Compensation & Growth -->
+        <div class="card mt-4">
+            <h3>Compensation & Growth</h3>
+
+            <!-- Compensation Satisfaction -->
+            <div class="col-md-6">
+                <label>Compensation Satisfaction</label>
+                <select class="form-control" formControlName="compensationSatisfaction">
+                    <option value="">Select</option>
+                    <option value="very_satisfied">Very Satisfied</option>
+                    <option value="satisfied">Satisfied</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="dissatisfied">Dissatisfied</option>
+                    <option value="very_dissatisfied">Very Dissatisfied</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('compensationSatisfaction')?.touched && exitForm.get('compensationSatisfaction')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Growth Feedback -->
+            <div class="col-md-12 mt-3">
+                <label>Growth & Development Feedback</label>
+                <textarea class="form-control" rows="3" formControlName="growthFeedback"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('growthFeedback')?.touched && exitForm.get('growthFeedback')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Feedback -->
+        <div class="card mt-4">
+            <h3>Final Feedback</h3>
+
+            <!-- Recommendation -->
+            <div class="col-md-12">
+                <label>Would you recommend us?</label>
+                <select class="form-control" formControlName="recommendation">
+                    <option value="">Select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="not_sure">Not Sure</option>
+                </select>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('recommendation')?.touched && exitForm.get('recommendation')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+
+            <!-- Suggestions -->
+            <div class="col-md-12 mt-3">
+                <label>Suggestions</label>
+                <textarea class="form-control" rows="3" formControlName="suggestions"></textarea>
+                <div class="text-danger mt-1"
+                    *ngIf="exitForm.get('suggestions')?.touched && exitForm.get('suggestions')?.hasError('required')">
+                    This field is required!
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end mt-4" *ngIf="type != 'view'">
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+
+    </form>
+</section>

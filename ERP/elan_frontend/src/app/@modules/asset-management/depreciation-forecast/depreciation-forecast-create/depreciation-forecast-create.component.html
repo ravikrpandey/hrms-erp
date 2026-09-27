@@ -1,0 +1,106 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Asset Management</h1>
+      <p>Depreciation Forecast<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span *ngIf="!mode">  {{this.id?'Update':'Add'}} Depreciation  </span>
+        <span *ngIf="mode">  View Depreciation</span>
+    </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+    </div> 
+</div>
+
+
+<section class="right_data_all pt-4">
+    <div class="heading_neo">
+        <h3>Depreciation Forecast</h3>
+    </div>
+    <mat-card>
+        <div class="form_basic mb-0  ">
+            <form class="form_set" [formGroup]="myform">
+                <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 p-0">
+                        <mat-radio-group  [disabled]="mode" formControlName="depreciation_type"
+                          (change)="onSelection($event)" style="margin-top: 4px;">
+                          <mat-radio-button value="Forecast">Forecast</mat-radio-button>
+                          <mat-radio-button value="Actual">Actual</mat-radio-button>
+                        </mat-radio-group>
+                        <mat-error *ngIf="myform.get('depreciation_type')?.hasError('required')">
+                          This field is required!
+                        </mat-error>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Financial Year</mat-label>
+                                <mat-select formControlName="financial_year_id">
+                                    <mat-select-filter [array]="financeYears" (filteredReturn)="yearFilter($event)"></mat-select-filter>
+                                    <mat-option *ngFor="let yr of fYearsFiltered"
+                                        [value]="yr.id">{{yr.financial_year}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="myform.get('financial_year_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div  *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4 mb-4">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Financial Year</mat-label>
+                                <input matInput type="text"  [readonly]="mode" [value]="financial_year"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div *ngIf="!mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Month</mat-label>
+                                <mat-select formControlName="depreciation_month">
+                                    <mat-select-filter [array]="monthList" (filteredReturn)="monthsFilter($event)"></mat-select-filter>
+                                    <mat-option *ngFor="let data of months"
+                                        [value]="data.name">{{data.name}}</mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="myform.get('depreciation_month')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                
+
+                    <div  *ngIf="mode" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4 mb-4">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Month</mat-label>
+                                <input matInput type="text"  [readonly]="mode" formControlName="depreciation_month"/>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Depreciation Amount</mat-label>
+                                <input matInput type="number" [readonly]="mode" formControlName="depreciation_amount" />
+                                <mat-error *ngIf="myform.get('depreciation_amount')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!mode" class="common_button_sub mt-4">
+                    <button (click)="onSubmit(this.myform.value)">
+                        {{this.id?'Update':'Submit'}}
+                    </button>
+                    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

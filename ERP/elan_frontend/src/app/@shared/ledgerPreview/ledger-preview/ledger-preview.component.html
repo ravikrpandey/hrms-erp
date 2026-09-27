@@ -1,0 +1,102 @@
+
+<div class="ledger-header">
+    <div class="header-title">
+        <i class="fa fa-book"></i>
+        {{ data.title || 'Ledger Preview' }}
+        <span class="voucher-badge">{{ data.voucherNumber || '-' }}</span>
+    </div>
+    <div class="header-actions">
+        <span class="date-text">
+            <i class="fa fa-calendar"></i>
+            {{ data.voucherDate | date:'dd-MM-yyyy' }}
+        </span>
+        <button class="close-btn" (click)="closeDialog()">×</button>
+    </div>
+</div>
+
+
+<mat-dialog-content class="dialog-content">
+
+
+    <div class="party-info" *ngIf="data.partyName">
+        <span class="label">Party:</span>
+        <span class="value">{{ data.partyName }}</span>
+    </div>
+
+
+    <div class="table-responsive">
+        <table class="ledger-table">
+            <thead>
+                <tr>
+                    <th style="width:50px;">#</th>
+                    <th class="text-left">Account Name</th>
+                    <th class="text-center">Debit</th>
+                    <th class="text-center">Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let account of data.accounts; let i = index">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td class="text-left">
+                        <span class="account-name">
+                            {{ account.account_name }}
+                        </span>
+                        <span class="account-code">({{ account.account_code }})</span>
+                    </td>
+                    <td class="text-center debit-amount">
+                        {{ account.debit_amount > 0 ? formatCurrency(account.debit_amount) : '-' }}
+                    </td>
+                    <td class="text-center credit-amount">
+                        {{ account.credit_amount > 0 ? formatCurrency(account.credit_amount) : '-' }}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="2" class="text-right fw-bold">TOTAL</td>
+                    <td class="text-center fw-bold debit-amount">
+                        {{ formatCurrency(data.totalDebit) }}
+                    </td>
+                    <td class="text-center fw-bold credit-amount">
+                        {{ formatCurrency(data.totalCredit) }}
+                    </td>
+                </tr>
+                <tr class="difference-row" [class.balanced]="data.totalDebit === data.totalCredit">
+                    <td colspan="2" class="text-right fw-bold">DIFFERENCE</td>
+                    <td colspan="2" class="text-center fw-bold">
+                        <span class="diff-status"
+                              [class.balanced]="data.totalDebit === data.totalCredit"
+                              [class.unbalanced]="data.totalDebit !== data.totalCredit">
+                            {{ formatCurrency(data.totalDebit - data.totalCredit) }}
+                            <i class="fa"
+                               [class.fa-check-circle]="data.totalDebit === data.totalCredit"
+                               [class.fa-exclamation-circle]="data.totalDebit !== data.totalCredit">
+                            </i>
+                            {{ data.totalDebit === data.totalCredit ? 'Balanced ' : 'Not Balanced ' }}
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- Narration -->
+    <div class="narration-box" *ngIf="data.narration">
+        <span class="label">Narration:</span>
+        <span>{{ data.narration }}</span>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="dialog-footer" align="end">
+    <button mat-button class="btn-secondary" (click)="closeDialog()">
+        <i class="fa fa-times"></i> Close
+    </button>
+    <!-- <button mat-button class="btn-primary" (click)="printDialog()">
+        <i class="fa fa-print"></i> Print
+    </button> -->
+    <button mat-flat-button class="btn-success"
+            *ngIf="data.showSubmitButton !== false && !data.isViewMode"
+            (click)="onSubmit()">
+        <i class="fa fa-check"></i> Submit
+    </button>
+</mat-dialog-actions>

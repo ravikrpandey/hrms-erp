@@ -1,0 +1,79 @@
+<!-- <pre>{{ addLeave.value | json }}</pre> -->
+
+<h3 class="popHead" style="padding:10px 15px; font-weight:500; font-size:18px;">Add Leave</h3>
+<form [formGroup]="addLeave" class="m-4">
+
+  <div class="row">
+    <div class="col-md-6 col-lg-6">
+      <mat-label>Leave Name<span class="alertspan">*</span></mat-label>
+      <mat-form-field appearance="outline">
+        <input type="text" matInput formControlName="leaveName" placeholder="Leave name"
+          (change)="generateLeaveCode()" />
+
+        <mat-error *ngIf="getFormControl('leaveName')?.invalid && getFormControl('leaveName')?.touched">
+          This field is required!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+      <mat-label>Leave Code<span class="alertspan">*</span></mat-label>
+      <mat-form-field appearance="outline">
+        <input type="text" matInput formControlName="leaveCode" placeholder="Leave code" min="1" readonly />
+
+        <mat-error *ngIf="getFormControl('leaveCode')?.invalid && getFormControl('leaveCode')?.touched">
+          This field is required!
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+  </div>
+
+
+  <!-- <div class="col-md-6 col-lg-6 ">
+    <label for="inputLeaveCode" class="form-label">Leave Code</label>
+    <input type="number" onkeypress="return event.charCode >= 48" min="1" class="form-control" id="inputLeaveCode"
+      formControlName="leaveCode" placeholder="Enter the code of leave">
+    <div
+      *ngIf=" (addLeave.get('leaveCode')?.touched && addLeave.get('leaveCode')?.dirty) && addLeave.get('leaveCode')?.errors?.['required']"
+      class="text-danger">Leave Code is
+      required!</div>
+    <div
+      *ngIf=" (addLeave.get('leaveCode')?.touched && addLeave.get('leaveCode')?.dirty) && isSubmitted && addLeave.get('leaveCode')?.errors?.['pattern']"
+      class="text-danger">Leave Code must be
+      numeric!</div>
+    <div
+      *ngIf=" (addLeave.get('leaveCode')?.touched && addLeave.get('leaveCode')?.dirty) && isSubmitted && addLeave.get('leaveCode')?.errors?.['minlength']"
+      class="text-danger">Minimum 3
+      characters required!</div>
+  </div> -->
+
+  <div class="row mt-4">
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group-name-cat borrder">
+        <mat-checkbox color="primary" formControlName="toggleLeaveTotal">Total</mat-checkbox>
+      </div>
+    </div>
+
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+      <div class="form-group-name-cat borrder" *ngIf="addLeave.get('toggleLeaveTotal')?.value">
+        <mat-label>Total leaves<span class="alertspan">*</span></mat-label>
+        <mat-form-field appearance="outline">
+          <input type="number" matInput formControlName="leaveTotal" placeholder="Total leaves"
+            onkeypress="return event.charCode >= 48" min="1" />
+
+          <mat-error *ngIf="getFormControl('leaveTotal')?.invalid && getFormControl('leaveTotal')?.touched">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 mt-4 common_button_sub">
+    <button type="button" (click)="addLeaveForm()">Add</button>
+    <button type="button" class="cancel_button_y" (click)="closeDialog()">Cancel</button>
+  </div>
+</form>

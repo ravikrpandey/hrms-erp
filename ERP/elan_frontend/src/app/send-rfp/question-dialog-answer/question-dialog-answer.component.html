@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Questions for {{ itemName }}</h2>
+
+<form [formGroup]="parentGroup">
+  <div *ngIf="questions?.length > 0; else noQuestions" formArrayName="questions">
+    <div
+      *ngFor="let q of questions?.controls; let j = index"
+      [formGroupName]="j"
+      class="question-card mat-elevation-z2 p-3 mb-3 rounded"
+    >
+      <p class="question-text"><b>Q{{ j + 1 }}:</b> {{ q.value?.question }}</p>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Answer</mat-label>
+        <input matInput formControlName="answer" />
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<ng-template #noQuestions>
+  <div class="no-questions text-center">
+    <mat-icon color="warn" class="mb-2">info</mat-icon>
+    <p class="text-muted">No questions available for this item.</p>
+  </div>
+</ng-template>
+
+<div mat-dialog-actions align="end" class="mt-3">
+  <button mat-stroked-button (click)="close()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="submit()"
+    [disabled]="questions?.length === 0"
+  >
+    Save
+  </button>
+</div>

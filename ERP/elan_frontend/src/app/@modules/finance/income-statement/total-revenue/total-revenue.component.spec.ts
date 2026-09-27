@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { EbitdaComponent } from './total-revenue.component';
+
+describe('EbitdaComponent', () => {
+  let component: EbitdaComponent;
+  let fixture: ComponentFixture<EbitdaComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ EbitdaComponent ]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(EbitdaComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

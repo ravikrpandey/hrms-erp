@@ -1,0 +1,35 @@
+
+<div class="row" [formGroup]="expenceForm">
+  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+  </div>
+  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+    <div class="form-group">
+      <mat-form-field appearance="outline" >
+    
+        <mat-label>Job Type</mat-label>
+
+        <mat-select formControlName="expense_type">
+            <mat-option  value="Cert">Cert</mat-option>
+            <mat-option  value="Non-Cert">Non-Cert</mat-option>
+            <mat-option  value="Auditors">Auditors</mat-option>
+          </mat-select>
+
+      </mat-form-field>        
+    </div>
+  </div>
+</div>
+<div class="section">
+    <mat-card>
+        <div class="div"  >
+            <div class="form_head">
+              <h3>Approved Invoice Reqeust</h3>
+            </div>
+            <div class="ag_grid">
+              <ag-grid-angular class="ag-theme-alpine" id="myGrid" style=" width:100%; height:400px;" [rowData]="rowData"
+                [columnDefs]="columnDefsApproved" [pagination]=true [paginationPageSize]=10 [rowData]="rowDataApproved"
+                (gridReady)="onGridReady($event)" (cellClicked)='onCellClicked($event)' [rowClass]="rowClass">
+              </ag-grid-angular>
+            </div>
+          </div>
+    </mat-card>
+</div>

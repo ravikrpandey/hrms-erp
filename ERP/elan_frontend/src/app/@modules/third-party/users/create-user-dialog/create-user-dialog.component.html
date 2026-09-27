@@ -1,0 +1,118 @@
+<app-wrapper
+  [title]="this.data.type === 'edit' ? 'Edit User' : 'Create User'"
+  [showActions]="true"
+  [actions]="[
+    { label: '', icon: 'close', color: 'danger', callback: onClose() }
+  ]"
+>
+      <form [formGroup]="userForm">
+        <ng-template>User Details</ng-template>
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>First Name</mat-label>
+              <input matInput type="text" formControlName="first_name" />
+              <mat-error
+                *ngIf="
+                  userForm.get('first_name')?.invalid &&
+                  (userForm.get('first_name')?.touched ||
+                    userForm.get('first_name')?.dirty)
+                "
+              >
+                First Name is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Last Name</mat-label>
+              <input matInput type="text" formControlName="last_name" />
+              <mat-error
+                *ngIf="
+                  userForm.get('last_name')?.invalid &&
+                  (userForm.get('last_name')?.touched ||
+                    userForm.get('last_name')?.dirty)
+                "
+              >
+                Last Name is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Login Email</mat-label>
+              <input
+                matInput
+                type="text"
+                formControlName="employee_official_email"
+              />
+              <mat-error
+                *ngIf="
+                  userForm.get('employee_official_email')?.invalid &&
+                  (userForm.get('employee_official_email')?.touched ||
+                    userForm.get('employee_official_email')?.dirty)
+                "
+              >
+                Email is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Contact Number</mat-label>
+              <input matInput type="text" formControlName="contact_number" />
+              <mat-error
+                *ngIf="
+                  userForm.get('contact_number')?.invalid &&
+                  (userForm.get('contact_number')?.touched ||
+                    userForm.get('contact_number')?.dirty)
+                "
+              >
+                Contact Number is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <app-mat-form-select-filter
+              *ngIf="roles && roles.length > 0"
+              formControlName="role_master_id"
+              [key]="'role_master_id'"
+              [items]="roles"
+              [displayKey]="'role_master_name'"
+              placeholder="Select Role"
+            ></app-mat-form-select-filter>
+            <mat-error
+              *ngIf="
+                userForm.get('role_master_id')?.invalid &&
+                (userForm.get('role_master_id')?.touched ||
+                  userForm.get('role_master_id')?.dirty)
+              "
+            >
+              Role is required.
+            </mat-error>
+          </div>
+          <!-- <div class="col-md-6">
+            <app-mat-form-select-filter
+              *ngIf="entities && entities.length > 0"
+              formControlName="primary_entity_id"
+              [key]="'entity_id'"
+              [items]="entities"
+              [displayKey]="'entity_name'"
+              placeholder="Select Entity"
+            ></app-mat-form-select-filter>
+            <mat-error
+              *ngIf="
+                userForm.get('primary_entity_id')?.invalid &&
+                (userForm.get('primary_entity_id')?.touched ||
+                  userForm.get('primary_entity_id')?.dirty)
+              "
+            >
+              Entity is required.
+            </mat-error>
+          </div> -->
+        </div>
+        <div class="d-flex justify-content-end">
+          <button mat-button (click)="onSubmit()">{{this.data.type === 'edit' ? 'Update' : 'Save'}}</button>
+        </div>
+      </form>
+</app-wrapper>

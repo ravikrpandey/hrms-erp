@@ -1,0 +1,46 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Warehouse management </h1>
+    <p>Warehouse Bifurcation <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span>Receiving Goods List</span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back </button>
+</div> 
+  </div>
+  <div class="row mt-2 p-2 px-2">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+        <div class="form-group ">
+          <mat-form-field appearance="outline">
+            <mat-label>Item Category</mat-label>
+            <mat-select   multiple  (selectionChange)="getCatId($event.value)">
+              <mat-option *ngFor="let cat of getAllCat" [value]="cat.id" >{{cat.asset_category_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+  </div>
+  <div class="right_data_all">
+    <div class="employ_sube py-2">
+        <div class="example-header">
+            <select id="page-size" (change)="onPageSizeChanged()">
+                <option value="10" selected="">10</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div class="employee_2" align="end">
+            <input type="text" class="form-control" id="filter-text-box" (input)="onFilterTextBoxChanged()"
+                placeholder="Search" />
+        </div>
+    </div>
+    <button mat-raised-button color="accent" (click)="getSelectedData()" style="background-color: #00644d;">+ Allocate Items</button>
+
+    <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9" [rowData]="rowData"
+            (gridReady)="onGridReady($event)" [gridOptions]="gridOptions"  >
+        </ag-grid-angular>
+    </div>
+</div>

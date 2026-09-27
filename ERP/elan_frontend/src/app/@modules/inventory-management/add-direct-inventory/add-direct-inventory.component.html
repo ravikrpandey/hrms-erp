@@ -1,0 +1,93 @@
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Inventory Management</h1>
+      <p><span>Add Direct Inventory</span></p>
+    </div>
+    <div class="add_button">
+      <button (click)="goBack()">Back</button>
+    </div>
+</div>
+
+<form [formGroup]="mainForm">
+  <div class="card">
+    <div class="header-grid">
+      <mat-form-field appearance="outline">
+        <mat-label>Warehouse Name</mat-label>
+        <mat-icon matPrefix>warehouse</mat-icon>
+        <mat-select formControlName="warehouse_id">
+          <mat-option *ngFor="let w of warehouseList" [value]="w.id">{{ w.name }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="mainForm.get('warehouse_id')?.hasError('required')">
+          Warehouse Name is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Inventory Transaction Date</mat-label>
+        <input matInput [matDatepicker]="inventoryDatePicker" formControlName="inventory_date" [max]="today" readonly>
+        <mat-datepicker-toggle matSuffix [for]="inventoryDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #inventoryDatePicker></mat-datepicker>
+        <mat-error *ngIf="mainForm.get('inventory_date')?.hasError('required')">
+          Date is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row-header">
+      <h3>Inventory Items</h3>
+      <button mat-raised-button color="primary" type="button" (click)="addRow()"><mat-icon>add</mat-icon>Add Item</button>
+    </div>
+
+    <div formArrayName="items">
+      <div *ngFor="let row of items.controls; let i = index; trackBy: trackByControl" [formGroupName]="i" class="item-row">
+        <mat-form-field appearance="outline" class="item-field">
+          <mat-label>Item / Basket / Accessory</mat-label>
+          <mat-select formControlName="itemId" (selectionChange)="onItemChange($event.value, i)">
+            <mat-select-filter [array]="getItemSearchList(row)" (filteredReturn)="onItemSearch($event, row)"></mat-select-filter>
+            <mat-option *ngFor="let item of getFilteredItems(row)" [value]="item.id">
+              {{ item.item_name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="row.get('itemId')?.hasError('required')">
+            Item is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Quantity</mat-label>
+          <input matInput type="number" formControlName="quantity">
+          <mat-error *ngIf="row.get('quantity')?.hasError('required')">
+            Quantity required
+          </mat-error>
+          <mat-error *ngIf="row.get('quantity')?.hasError('min')">
+            Quantity must be greater than 0
+          </mat-error>
+        </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Manage By (Batch / Serial No.)</mat-label>
+        <input matInput formControlName="manageBy" readonly>
+        <mat-icon matSuffix *ngIf="row.get('manageBy')?.value" (click)="openBatchSerialPopup(i)" style="cursor: pointer;" matTooltip="Add Batch / Serial No.">
+          open_in_new
+        </mat-icon>
+      </mat-form-field>
+
+        <button mat-icon-button color="warn" type="button" *ngIf="items.length > 1" (click)="removeRow(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="save-row">
+      <div class="grand-total">
+        <span>Grand Total</span>
+        <strong>
+          ₹ {{ grandTotal | number:'1.2-2' }}
+        </strong>
+      </div>
+      <button mat-raised-button color="primary" type="button" (click)="saveData()">Save Inventory</button>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,207 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>HRMS</h1>
+    <p>
+      Document Management
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178"></i>
+      <span>Document Template Allocations</span>
+    </p>
+  </div>
+  <div class="add_button" style="display:flex;">
+    <button type="button" class="btn_add" style="padding: 10px;" (click)="openDialog()">Add Document Template</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+
+  <!-- Template & User Selection -->
+  <div class="card mb-3 p-3">
+    <div class="row align-items-end">
+      <div class="col-md-3 mb-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Choose Template</mat-label>
+          <mat-select [(ngModel)]="selectedTemplate" (selectionChange)="onTemplateChange()">
+            <mat-option *ngFor="let tpl of templateList" [value]="tpl?.id">{{ tpl.template_name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3 mb-2">
+        <label>User Type</label>
+        <div class="d-flex align-items-center mt-1">
+          <div class="form-check me-3">
+            <input class="form-check-input" type="radio" name="userType" [(ngModel)]="isExistignUser" [value]="true" />
+            <label class="form-check-label">Existing</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="userType" [(ngModel)]="isExistignUser" [value]="false" />
+            <label class="form-check-label">Not Existing</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isExistignUser" class="col-md-3 mb-2">
+        <mat-form-field appearance="outline">
+          <mat-label>Select Users</mat-label>
+          <mat-select [(ngModel)]="selectedUsers" multiple>
+            <mat-option *ngFor="let u of userList" [value]="u.employee_id">{{ u.name }} {{ u.employee_code
+              }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- 🧩 Generate Button -->
+      <div class="d-flex justify-content-end mt-3"
+        style="position: sticky; right: 0; z-index: 10; background: white; padding: 10px 0;">
+        <button class="btn btn-primary" style="background: #0c85c0" (click)="generatePreview()"
+          [disabled]="!selectedTemplate || (isExistignUser && !selectedUsers.length) || (!isExistignUser && !manualUsers.length)">
+          Generate UserWise Template
+        </button>
+      </div>
+
+      <!-- 🧩 Dynamic Missing User Inputs -->
+      <div *ngIf="manualUsers?.length && isExistignUser && placeholders.length !== 0" class="card mb-3 p-3">
+        <h5>Enter Missing Details Per User</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>S.No</th>
+                <th>User Name</th>
+                <th *ngFor="let field of placeholders">{{ field | titlecase }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of manualUsers; let i = index">
+                <td style="width: 50px;">{{ i + 1 }}</td>
+                <td style="min-width: 200px;">
+                  <input type="text" class="form-control w-100"
+                    [ngModel]="u.user_name || previewList[i]?.user_name || ''" (ngModelChange)="u.user_name = $event"
+                    placeholder="Enter User Name" />
+                </td>
+                <td *ngFor="let field of placeholders" style="min-width: 180px;">
+                  <input type="text" class="form-control w-100"
+                    [ngModel]="u.missingFields ? u.missingFields[field] : ''"
+                    (ngModelChange)="updateMissingField(u, field, $event)"
+                    placeholder="Enter {{ field | titlecase }}" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 🧩 Non-Existing Users Input Table -->
+      <div *ngIf="(!isExistignUser && placeholders.length !==0)" class="card mb-3 p-3">
+        <div class="table-responsive">
+          <h5>Enter User Details</h5>
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>S.No</th>
+                <th>user_name</th>
+                <th>Email</th>
+                <th *ngFor="let field of placeholders">{{ field | titlecase }}</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let u of manualUsers; let i = index">
+                <td style="width: 50px;">{{ i + 1 }}</td>
+
+                <!-- user_name (Required) -->
+                <td style="min-width: 200px;">
+                  <input type="text" class="form-control w-100" [(ngModel)]="u.user_name" placeholder="User Name"
+                    required [ngClass]="{ 'is-invalid': !u.user_name }" />
+                  <div *ngIf="!u.user_name" class="invalid-feedback"></div>
+                </td>
+
+                <!-- Email (Required with basic pattern validation) -->
+                <td style="min-width: 200px;">
+                  <input type="email" class="form-control w-100" [(ngModel)]="u.email" placeholder="Email" required
+                    pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+                    [ngClass]="{ 'is-invalid': !u.email || !u.email.match('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$') }" />
+                  <div *ngIf="!u.email" class="invalid-feedback"></div>
+                  <div *ngIf="u.email && !u.email.match('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$')" class="invalid-feedback">
+                    Enter a valid email address
+                  </div>
+                </td>
+
+                <!-- Dynamic Fields -->
+                <td *ngFor="let field of placeholders" style="min-width: 180px;">
+                  <input type="text" class="form-control w-100"
+                    [ngModel]="u.missingFields ? u.missingFields[field] : ''"
+                    (ngModelChange)="updateMissingField(u, field, $event)"
+                    placeholder="Enter {{ field | titlecase }}" />
+                </td>
+
+                <!-- Delete Button -->
+                <td>
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeManualUser(i)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+        <div class="text-end mt-2" style="position: sticky; right: 0; z-index: 5; background: white;">
+          <button class="btn btn-sm btn-outline-primary" (click)="addManualUser()">
+            <i class="fa fa-plus"></i> Add User
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Preview Listing Table -->
+      <div *ngIf="manualUsers.length !==0 " class="card p-3 position-relative">
+        <div class="mb-2 d-flex justify-content-between align-items-center">
+        </div>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>
+                  <input type="checkbox" [checked]="isAllSelected" (change)="toggleAllSelection($event)" />
+                </th>
+                <th>S.No</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Template Name</th>
+                <th style="width:180px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of previewList; let i = index">
+                <td>
+                  <input type="checkbox" [(ngModel)]="row.checked" />
+                </td>
+                <td>{{ i + 1 }}</td>
+                <td>{{ row.user_name }}</td>
+                <td>{{ row.email }}</td>
+                <td>{{ row?.template_name || selectedTemplateName}}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-info" (click)="previewTemplate(row, i)">Preview</button>
+                  <button class="btn btn-sm btn-outline-success mx-1"
+                    (click)="downloadTemplate(row, i)">Download</button>
+                </td>
+              </tr>
+              <tr *ngIf="!previewList?.length">
+                <td colspan="6" class="text-center">No users selected yet</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="d-flex justify-content-end mt-3">
+          <button *ngIf="isExistignUser" class="btn btn-secondary me-2" style="background: #0c85c0"
+            [disabled]="!hasSelectedPreview()" (click)="sendMailToSelected('assign')">
+            <i class="fa fa-user-plus me-1"></i> Assign To Selected
+          </button>
+
+          <button class="btn btn-primary" style="background: #0c85c0" [disabled]="!hasSelectedPreview()"
+            (click)="sendMailToSelected('mail')">
+            <i class="fa fa-envelope me-1"></i> Send Mail to Selected
+          </button>
+        </div>
+
+      </div>
+    </div>

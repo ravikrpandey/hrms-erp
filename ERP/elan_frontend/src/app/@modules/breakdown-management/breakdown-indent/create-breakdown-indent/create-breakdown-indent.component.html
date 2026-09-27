@@ -1,0 +1,255 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Breakdown Management</h1>
+    <p>Create Breakdown Indent</p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+  <div class="right_data_all">
+
+    <div class="form_basic mb-0">
+      <form class="form_set" [formGroup]="createBreakIndentForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>WorkStation Name</mat-label>
+              <mat-select formControlName="workstation_id" >
+                  <mat-option *ngFor="let state of getAllWorkStation"
+                      [value]="state?.id">{{ state?.name_of_workstation }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="createBreakIndentForm.controls['workstation_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Line</mat-label>
+              <input matInput type="text" formControlName="line" maxlength="30"/>
+              <mat-error *ngIf="createBreakIndentForm.controls['line'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput type="text" readonly formControlName="name" maxlength="30"/>
+              <mat-error *ngIf="createBreakIndentForm.controls['name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Shift</mat-label>
+              <mat-select formControlName="shift_id" >
+                <mat-option *ngFor="let state of shiftData"
+                    [value]="state?.id">{{ state?.shift_name }}</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createBreakIndentForm.controls['shift_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Issue Type</mat-label>
+              <mat-select formControlName="issue_id" >
+                <mat-option *ngFor="let i of allIssueType"
+                    [value]="i?.id">{{ i?.issue_type }}</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createBreakIndentForm.controls['issue_id'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-select formControlName="priority" placeholder="Low || Medium || High" >
+                <mat-option value="Low">Low</mat-option>
+                <mat-option value="Medium">Medium</mat-option>
+                <mat-option value="High">High</mat-option>
+            </mat-select>
+              <mat-error *ngIf="createBreakIndentForm.controls['priority'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-label>Description</mat-label>
+
+            <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d; padding:5px 10px;"
+              rows="3" maxlength="200" formControlName="description"
+              [ngModel]="createBreakIndentForm.controls['description'].value">
+            </textarea>
+            <mat-error *ngIf="
+            createBreakIndentForm.controls['description'].hasError('required')
+          ">
+              This field is Required!
+            </mat-error>
+            <mat-error *ngIf="
+            createBreakIndentForm.controls['description'].hasError('leadingSpaces')
+          ">
+              No leading spaces!
+            </mat-error>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mt-2">
+            <input type="file" class="form-control" (change)="onChange($event)" formControlName="image_upload" />
+            <ng-container *ngIf="id">
+              <img [src]="imageToUpload" class="imgEmp">
+            </ng-container>
+            <span class="badge text-bg-primary ms-2" *ngIf="imageView" type="button" (click)="viewImage()">View
+              File</span>
+          </div>
+
+
+
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="status=='edit'">
+        <div class="d-flex">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee Name</mat-label>
+            <mat-select formControlName="allocated_emp_id" >
+              <mat-option *ngFor=" let item of employeeList" [value]="item?.employee_id">
+                {{item?.first_name + ' ' + item?.last_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="status=='update'">
+        <div class="d-flex">
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status" >
+              <mat-option *ngFor=" let item of AllStatus" [value]="item?.id">
+                {{item?.status_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" *ngIf="status=='update'">
+      <div class="form-group">
+        <mat-label>Remark</mat-label>
+
+        <textarea style="width: 975px; border-radius: 3px; border-color: #9d9d9d; padding:5px 10px;"
+          rows="3" maxlength="200" formControlName="remark"
+          [ngModel]="createBreakIndentForm.controls['remark'].value">
+        </textarea>
+
+      </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12" *ngIf="status=='update'">
+      <div class="form-group">
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <input
+            type="checkbox"
+            id="partRequiredCheckbox"
+            style="font-size: 25px;"
+            class="form-check-input"
+            (input)="changevalue()"
+          />
+          <label for="partRequiredCheckbox" class="form-check-label" style="margin-bottom: -5px;">
+            Spare Part required
+          </label>
+        </div>
+
+
+      </div>
+    </div>
+    <br>
+    <div class="form_table" *ngIf="isPartRequired==true">
+      <mat-card>
+        <div class="tab_table table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Item Category</th>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th >Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container formArrayName="productDetailList"
+                *ngFor="let control of CF_1.productDetailList['controls']; let i = index">
+                <tr [formGroup]="control">
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Select Item Category</mat-label>
+                      <mat-select formControlName="category_id"
+                        (selectionChange)="selectCateGory($event,i)">
+                        <mat-option  *ngFor="let data of cetegory" [value]="data.id"
+                         >{{data.asset_category_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Select Item</mat-label>
+                      <mat-select formControlName="item_id"
+                        >
+                        <mat-option  *ngFor="let item of productData[i]"
+                          [value]="item?.id">{{item?.item_name}}</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Quantity</mat-label>
+                      <input matInput type="number" formControlName="quantity" maxlength="30"/>
+                    </mat-form-field>
+                  </td>
+                  <td >
+                    <span *ngIf="!control?.controls?.isDisabled"
+                      style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                      <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                        aria-hidden="true"></i></span>
+                    <span style="color: #8d8d8d; cursor: pointer;font-size: 20px;">
+                      <i class="fa fa-plus-circle" (click)="addrow()" aria-hidden="true"
+                        style="margin-top:5px; margin-left: 10px!important;"></i></span>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+
+      </mat-card>
+    </div>
+
+      <div class="common_button_sub">
+        <button (click)="onSubmitForm()" *ngIf="viewData!='view'" >
+          {{id?'Update':'Submit'}}
+        </button>
+        <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+<h3 mat-dialog-title class="popHead">
+  {{ type === 'email' ? 'Update Email' : 'Update Contact' }}
+</h3>
+
+<mat-dialog-content class="mat-typography">
+  <div class="contain">
+
+    <!-- Email Form -->
+    <form *ngIf="type === 'email'" [formGroup]="emailForm">
+      <div class="form-group mt-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="emp_personal_email" />
+          <mat-error *ngIf="emailForm.controls['emp_personal_email'].hasError('required')">
+            *Required!
+          </mat-error>
+          <mat-error *ngIf="emailForm.controls['emp_personal_email'].hasError('email')">
+            *Enter a valid email!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <!-- Contact Form -->
+    <form *ngIf="type === 'contact'" [formGroup]="contactForm">
+      <div class="d-flex align-items-start mt-3 contact-form-row">
+
+        <!-- Country Code (smaller width) -->
+        <mat-form-field appearance="outline" class="country-code">
+          <mat-select formControlName="country_code">
+            <app-search-filter [array]="countryCodeList" [placeholder]="'Search by country code'"
+              [searchFields]="['dialing_code']" (filteredReturn)="filteredCountryCodeList1 = $event.data">
+            </app-search-filter>
+            <mat-option *ngFor="let countryCode of filteredCountryCodeList1" [value]="countryCode?.dialing_code">
+              +{{ countryCode?.dialing_code }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Contact Number (wider) -->
+        <mat-form-field appearance="outline" class="contact-number flex-grow-1 ms-2">
+          <mat-label>Contact Number <span class="alertspan">*</span></mat-label>
+          <input matInput type="tel" formControlName="contact_number" />
+          <mat-error *ngIf="contactForm.controls['contact_number'].hasError('required')">
+            This field is required
+          </mat-error>
+          <mat-error *ngIf="contactForm.controls['contact_number'].hasError('pattern')">
+            Invalid number
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-raised-button color="primary" (click)="submit()">Submit</button>
+  <button mat-button mat-dialog-close mat-raised-button color="warn">Close</button>
+</mat-dialog-actions>

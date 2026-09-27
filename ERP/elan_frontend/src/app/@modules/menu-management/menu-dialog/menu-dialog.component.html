@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>
+  {{ data.mode === "create" ? "Create Menu" : "Update Menu" }}
+</h2>
+
+<div mat-dialog-content class="container-fluid">
+  <form [formGroup]="form" class="row g-3">
+    <!-- Menu Name -->
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Menu Name</mat-label>
+        <input
+          matInput
+          formControlName="name"
+          required
+          placeholder="Enter menu name"
+        />
+        <mat-error>Menu name is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Sequencing -->
+    <div class="col-md-6">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Sequence</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="order"
+          required
+          placeholder="Enter sequence"
+        />
+        <mat-error>Sequence is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Menu Link (only for child) -->
+    <div class="col-md-6" *ngIf="!hideFields">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Menu Link</mat-label>
+        <input
+          matInput
+          formControlName="path"
+          required
+          placeholder="Enter menu link"
+        />
+        <mat-error>Link is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Icon -->
+    <div class="col-12">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Menu Icon (mat-icon)</mat-label>
+        <input
+          matInput
+          formControlName="icon"
+          placeholder="Enter mat-icon name"
+        />
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+
+<!-- Dialog Actions -->
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="!form.valid"
+  >
+    Save
+  </button>
+</div>

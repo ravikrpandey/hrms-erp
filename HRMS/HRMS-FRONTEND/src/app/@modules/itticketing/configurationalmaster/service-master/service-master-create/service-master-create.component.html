@@ -1,0 +1,106 @@
+<section class="section">
+  <div class="row head">
+    <p>Admin</p>
+  </div>
+  <div class="row py-1">
+    <div class="employee_top">Service Master
+      <span class="employee_2" *ngIf="!service_id"><i class="fa fa-angle-right" aria-hidden="true"
+          style="color:#5d6c7c">
+        </i>
+        Create </span>
+      <span class="employee_2" *ngIf="service_id"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Update </span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head">
+      <h3>Service Master</h3>
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+    <div class="form_basic">
+      <form class="form_set" [formGroup]="serviceMasterForm">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Service Category</mat-label>
+                <mat-select formControlName="service_category_id">
+                  <mat-option *ngFor="let data of getCat_data"
+                    [value]="data.id">{{data?.service_category_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Service Name</mat-label>
+                <input matInput type="text" formControlName="service_name" />
+                <mat-error *ngIf="serviceMasterForm.controls['service_name'].hasError('required')">
+                  Service Name is Required.
+                </mat-error>
+                <mat-error *ngIf="serviceMasterForm.controls['service_name'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+                <mat-label>MVP</mat-label>
+                <input matInput type="number" formControlName="MVP" />
+                <mat-error *ngIf="serviceMasterForm.controls['MVP'].hasError('required')">
+                  MVP is Required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <input class="form-control" type="file" style="padding-right: 19%" title="UPLOAD DOCUMENT"
+                (change)="onChange($event)" formControlName="image" />
+                <mat-error *ngIf="serviceMasterForm.controls['image'].hasError('required')">
+                  Image File is required and Upload file only jpg,jpeg,png
+                </mat-error>
+              <img [src]="imagePath?imagePath:this.singleItem?.image" *ngIf="imagePath || this.singleItem?.image"
+                class="imgEmp" (click)="seePreview(this.singleItem?.image, imagePath)" />
+            </div>
+          </div>
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="form-group service_description">
+              <mat-form-field appearance="outline">
+                <mat-label>Service Description</mat-label>
+                <input matInput type="text" formControlName="service_description" />
+                <mat-error *ngIf="serviceMasterForm.controls['service_description'].hasError('required')">
+                  Service Description is Required.
+                </mat-error>
+                <mat-error *ngIf="serviceMasterForm.controls['service_description'].hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="serviceMasterForm.controls['service_description'].hasError('minlength')">
+                  This field accepted minimum 2 length.
+                </mat-error>
+                <mat-error *ngIf="serviceMasterForm.controls['service_description'].hasError('maxlength')">
+                  This field accepted maximum 150 length.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="!service_id" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button
+            color="primary">
+            Submit
+          </button>
+
+          <button *ngIf="service_id" (click)="updateForm($event)" mat-raised-button color="primary">
+            Update
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </mat-card>
+</section>

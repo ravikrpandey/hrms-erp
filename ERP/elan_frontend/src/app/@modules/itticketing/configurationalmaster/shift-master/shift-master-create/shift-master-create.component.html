@@ -1,0 +1,107 @@
+<section class="section">  
+    <div class="heading_top">
+        <div class="page-title">
+            <h1>Configurational Master</h1>
+            <p>
+                Shift-Master
+                <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+                <span *ngIf="!shiftId"> Create  </span>
+                <span *ngIf="shiftId"> Update  </span>
+            </p>
+        </div>
+        <div class="add_button">
+            <button class="backBtn" routerLink="../">
+                <i class="fa fa-arrow-circle-left"></i> Back
+            </button>
+        </div>
+    </div>
+
+
+
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="shiftMasterForm">
+                <div class="row">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Shift Name</mat-label>
+                                <input matInput type="text" formControlName="shift_name" />
+                                <mat-error *ngIf="shiftMasterForm.controls['shift_name'].hasError('required')">
+                                    Shift Name is Required.
+                                </mat-error>
+                                <mat-error *ngIf="shiftMasterForm.controls['shift_name'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <mat-form-field appearance="outline">
+                            <input matInput name="selected_time_B" [format]=24 formControlName="shift_from_time"
+                                [ngxMatTimepicker]="pickerA" readonly />
+                            <mat-icon matSuffix (click)="pickerA.open()"> watch_later </mat-icon>
+                            <mat-error *ngIf="shiftMasterForm.controls['shift_from_time'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="accent" #pickerA></ngx-mat-timepicker>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <mat-form-field appearance="outline">
+                            <input matInput name="selected_time_B" [format]=24 formControlName="shift_to_time"
+                                [ngxMatTimepicker]="pickerB" readonly />
+                            <mat-icon matSuffix (click)="pickerB.open()"> watch_later </mat-icon>
+                            <mat-error *ngIf="shiftMasterForm.controls['shift_to_time'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="accent" #pickerB></ngx-mat-timepicker>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Working Hour</mat-label>
+                                <input matInput type="number" formControlName="working_hour" />
+                                <mat-error *ngIf="shiftMasterForm.controls['working_hour'].hasError('required')">
+                                    Working Hour is Required.
+                                </mat-error>
+                                <mat-error *ngIf="shiftMasterForm.controls['working_hour'].hasError('minlength')">
+                                    This field accepted minimum 2 length.
+                                </mat-error>
+                                <mat-error *ngIf="shiftMasterForm.controls['working_hour'].hasError('maxlength')">
+                                    This field accepted maximum 150 length.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Description</mat-label>
+                                <input matInput type="text" formControlName="description" />
+                                <mat-error *ngIf="shiftMasterForm.controls['description'].hasError('required')">
+                                    Description is Required.
+                                </mat-error>
+                                <mat-error *ngIf="shiftMasterForm.controls['description'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div [hidden]="actionMode == 'view'">
+                    <button *ngIf="!shiftId" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button
+                        color="primary">
+                        Submit
+                    </button>
+
+                    <button *ngIf="shiftId" (click)="updateForm($event)" mat-raised-button color="primary">
+                        Update
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+
+</section>

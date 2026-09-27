@@ -1,0 +1,95 @@
+<div class="deparment-dialoge">
+  <h3 *ngIf="!view" mat-dialog-title class="popHead">{{!departmentId?"Add Department":"Update Department"}}</h3>
+  <h3 *ngIf="view" mat-dialog-title class="popHead"> Department Record</h3>
+
+  <ng-container *ngIf="view">
+    <mat-dialog-content class="mat-typography mt-3">
+      <div class="cotain">
+        <div class="emp_key">
+          <p>Department Name :</p>
+          <p>CC Code: </p>
+          <p>Status :</p>
+          <p>Role :</p>
+          <p>Employee :</p>
+        </div>
+        <div class="emp_value">
+          <p>{{departmentData?.department_name}}</p>
+          <p> {{departmentData?.cc_code}}</p>
+          <p> {{departmentData?.status}}</p>
+          <p> {{departmentData?.role_master_name}}</p>
+          <p>{{ (departmentData?.first_name ?? '') + ' ' + (departmentData?.last_name ?? '') }}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub mb-2">
+      <button mat-dialog-close class="cancel_button_y">Close</button>
+    </mat-dialog-actions>
+  </ng-container>
+
+  <fieldset *ngIf="!view">
+    <div class="m-3" [formGroup]="departmentForm">
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Department Name</mat-label>
+            <input matInput type="text" formControlName="department_name" />
+            <mat-error *ngIf="departmentForm.get('department_name')?.hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error *ngIf="departmentForm.get('department_name')?.hasError('leadingSpaces')">
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+          <mat-form-field appearance="outline">
+            <mat-label>CC Code</mat-label>
+            <input matInput type="text" formControlName="cc_code" />
+            <mat-error *ngIf="departmentForm.get('cc_code')?.hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error *ngIf="departmentForm.get('cc_code')?.hasError('leadingSpaces')">
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+          <mat-label>Select Department Head</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role_name" (selectionChange)="get_all_employeeBy_User_role($event)">
+              <mat-select-filter [array]="rolesList" (filteredReturn)="roleFilter($event)"></mat-select-filter>
+              <mat-option *ngFor="let role of roles" [value]="role.role_master_id">
+                {{ role.role_master_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+          <mat-label> &nbsp; &nbsp; &nbsp;</mat-label>
+          <mat-form-field appearance="outline">
+            <mat-label>Employee</mat-label>
+            <mat-select formControlName="employee_name" [disabled]="!roleSelected">
+              <mat-select-filter [array]="employeesList" (filteredReturn)="employeeFilter($event)"></mat-select-filter>
+              <mat-option *ngFor="let employee of employees" [value]="employee.employee_id">
+                {{ employee.first_name + ' ' + employee.last_name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <mat-dialog-actions align="end" *ngIf="!view" class="common_button_sub mb-3">
+      <button *ngIf="!departmentId"  (click)="onSubmitForm()">
+        Save
+      </button>
+      <button *ngIf="departmentId"  (click)="onUpdateForm()" >
+        Update
+      </button>
+      <button  mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </fieldset>
+</div>

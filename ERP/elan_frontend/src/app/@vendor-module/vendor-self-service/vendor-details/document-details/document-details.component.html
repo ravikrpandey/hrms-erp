@@ -1,0 +1,29 @@
+<div class="employee_basic_details">
+  <mat-card class="Document_Details">
+      <h3>Document Details </h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Document Name</th>
+          <th>Document Description</th>
+          <th>Notice Day</th>
+          <th>Expire Date</th>
+          <th>Document</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of dataObj?.doc_details;let i=index;">
+          <td>{{i+1}}</td>
+          <td>{{data?.document_name}}</td>
+          <td>{{data?.remark}}</td>
+          <td>{{data?.notice_day}}</td>
+          <td>{{data?.expired_date ? (data?.expired_date | date:'yyyy-MM-dd') : '-'}}</td>
+          <td>
+            <mat-icon style="cursor:pointer" matTooltip="View" (click)="viewImg(data?.upload_doc)">visibility</mat-icon>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+</div>

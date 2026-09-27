@@ -1,0 +1,40 @@
+<mat-form-field appearance="outline" style="width: 100%;" class="with-search-field">
+  <mat-label>{{ placeholder }}</mat-label>
+  
+  <input
+    matInput
+    [(ngModel)]="searchText"
+    [ngModelOptions]="{standalone: true}"
+    [matAutocomplete]="auto"
+    (input)="filterOptions()"
+    placeholder="{{ searchPlaceholder }}"/>
+
+  <!-- Clear button (visible only if value selected) -->
+
+  <button
+    mat-icon-button
+    *ngIf="value"
+    matSuffix
+    class="search-only-btn"
+    (click)="clearSelection()"
+    aria-label="Clear selection">
+    <mat-icon>search</mat-icon>
+  </button>
+
+  <!-- Dropdown icon (always visible) -->
+  <mat-icon matSuffix class="dropdown-icon">arrow_drop_down</mat-icon>
+
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOption($event)">
+    <ng-container *ngIf="!showNoData; else noDataTpl">
+      <mat-option *ngFor="let option of filteredOptions" [value]="option[displayKey]">
+        {{ option[displayKey] }}
+      </mat-option>
+    </ng-container>
+
+    <ng-template #noDataTpl>
+      <mat-option disabled>
+        <em>No data found</em>
+      </mat-option>
+    </ng-template>
+  </mat-autocomplete>
+</mat-form-field>

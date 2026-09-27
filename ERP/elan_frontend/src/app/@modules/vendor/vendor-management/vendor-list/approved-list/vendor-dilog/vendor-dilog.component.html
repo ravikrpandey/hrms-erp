@@ -1,0 +1,109 @@
+<h3 mat-dialog-title class="popHead">VENDOR RECORD</h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography">
+  <div class="cotain">
+    <div class="emp_key">
+      <p>Vendor Id:</p>
+      <p>Vendor Code:</p>
+      <p>Vendor Name:</p>
+      <p>Type of vendor:</p>
+      <p>Sub Type:</p>
+      <p>Address:</p>
+      <p>Country:</p>
+      <p>State:</p>
+      <p>district:</p>
+      <p>City:</p>
+      <p>Pincode:</p>
+      <p>Contact Number:</p>
+      <p>Alternative Number:</p>
+      <p>Email Id:</p>
+      <p>Web</p>
+      <p>Fax</p>
+      <p>Region</p>
+      <p>Contact Person</p>
+      <p>State Code</p>
+      <p>Under Gst</p>
+      <div *ngIf="singleVendorData?.under_gst =='no'? true : false">
+        <p>department</p>
+        <p>pan</p>
+        <p>provisional_id</p>
+        <p>gst_in</p>
+        <p>Des. of goods</p>
+        <p>msme</p>
+        <p>currency</p>
+        <p>T&C</p>
+        </div>
+      <p>Bank Name</p>
+      <p>Branch</p>
+      <p>Bank Address</p>
+      <p>Branch City</p>
+      <p>Account Type</p>
+      <p>Bank Bccount No.</p>
+      <p>Ifsc Number</p>
+      <p>Swift Code</p>
+      <p>Micr Code</p>
+      <p>Document Type</p>
+      <p>Upload Document</p>
+      <p>Expiry Date</p>
+      <p>remarks</p>
+      <p>Vendor Status</p>
+     
+    </div>
+
+    <div class="emp_value">
+      <p>{{ singleVendorData?.vendor_management_id }}</p>
+      <p>{{ singleVendorData?.vendor_code }}</p>
+      <p>{{ singleVendorData?.vendor_name }}</p>
+      <p>{{ singleVendorData?.type_of_vendor }}</p>
+      <p>{{ singleVendorData?.sub_type }}</p>
+      <p>{{ singleVendorData?.address }}</p>
+      <p>{{ singleVendorData?.country_name }}</p>
+      <p>{{ singleVendorData?.state_name }}</p>
+      <p>{{ singleVendorData?.district }}</p>
+      <p>{{ singleVendorData?.city_name }}</p>
+      <p>{{ singleVendorData?.pin }}</p>
+      <p>{{ singleVendorData?.contact_number }}</p>
+      <p>{{ singleVendorData?.alternative_number }}</p>
+      <p>{{ singleVendorData?.email }}</p>
+      <p>{{ singleVendorData?.web }}</p>
+      <p>{{ singleVendorData?.fax }}</p>
+      <p>{{ singleVendorData?.region }}</p>
+      <p>{{ singleVendorData?.contact_person }}</p>
+      <p>{{ singleVendorData?.state_code }}</p>
+      <p>{{ singleVendorData?.under_gst }}</p>
+      <div *ngIf="singleVendorData?.under_gst =='no'? true : false">
+        <p>{{ singleVendorData?.department }}</p>
+        <p>{{ singleVendorData?.pan }}</p>
+        <p>{{ singleVendorData?.provisional_id }}</p>
+        <p>{{ singleVendorData?.gst_in }}</p>
+        <p>{{ singleVendorData?.description_of_goods }}</p>
+        <p>{{ singleVendorData?.msme }}</p>
+        <p>{{ singleVendorData?.currency }}</p>
+        <p>{{ singleVendorData?.term_and_conditions }}</p>
+      </div>
+      <p>{{ singleVendorData?.bank_name }}</p>
+      <p>{{ singleVendorData?.branch }}</p>
+      <p>{{ singleVendorData?.bank_address }}</p>
+      <p>{{ singleVendorData?.city_name }}</p>
+      <p>{{ singleVendorData?.account_type }}</p>
+      <p>{{ singleVendorData?.bank_account_number }}</p>
+      <p>{{ singleVendorData?.ifsc_number }}</p>
+      <p>{{ singleVendorData?.swift_code }}</p>
+      <p>{{ singleVendorData?.micr_code }}</p>
+      <p>{{ singleVendorData?.document_type }}</p>
+      <p *ngIf="singleVendorData?.upload_document" style="color: dodgerblue;"><a [href]='singleVendorData.upload_document'  target="_blank">View File</a></p>
+      <!-- <p>{{ singleVendorData?.upload_document }}</p> -->
+      <!-- <p>{{UploadDocument}}</p> -->
+      <p>{{ singleVendorData?.expiry_date }}</p>
+      <p>{{ singleVendorData?.remarks }}</p>
+      <p style="color: green;">{{ singleVendorData?.vendor_status }}</p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close mat-raised-button color="primary">
+    Close
+  </button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>

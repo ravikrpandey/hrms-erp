@@ -1,0 +1,335 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>RBAC</h1>
+    <p>
+      User Permission
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+      </i
+      ><span> Role Functionality Assign Menu</span>
+    </p>
+  </div>
+  <!-- <div class="add_button">
+    <button type="button"  (click)="achivement()" *ngIf="assignAction?.Write">
+      Add
+    </button>
+    <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div> -->
+</div>
+
+<section class="job-nav right_data_all">
+  <div class="heading_neo">
+    <h3>Please Select The Functional Admin</h3>
+  </div>
+  <mat-card>
+    <div class="form_basic mb-0">
+      <div class="form_set">
+        <div [formGroup]="roleAssignForm">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Functional Admin</mat-label>
+                  <mat-select formControlName="role_master_id">
+                    <mat-select-filter
+                      [array]="roles"
+                      (filteredReturn)="roleSearch($event)"
+                    ></mat-select-filter>
+                    <mat-option
+                      *ngFor="let role of roleGet"
+                      [value]="role.role_master_id"
+                      (click)="roleIdData(role.role_master_id)"
+                      >{{ role.role_master_name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Employee Name</mat-label>
+                  <mat-select formControlName="employee_ids" multiple (selectionChange)="getEntityList()">
+
+                    <ngx-mat-select-search [formControl]="employeeFilterCtrl" placeholderLabel="Search employees..."
+                      noEntriesFoundLabel="No results found">
+                    </ngx-mat-select-search>
+
+                    <mat-option *ngFor="let emp of filteredEmployees" [value]="emp.employee_id">
+                      {{ emp.first_name }} {{ emp.last_name }} ({{ emp?.employee_code }})
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                <!-- Select All / Clear All Buttons -->
+                <div class="d-flex gap-2 mb-2">
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    type="button"
+                    (click)="selectAllEmployees()"
+                  >
+                    Select All
+                  </button>
+                  <button
+                    mat-stroked-button
+                    color="warn"
+                    type="button"
+                    (click)="clearAllEmployees()"
+                  >
+                    Clear All
+                  </button>
+                </div>
+
+                <!-- Employee Dropdown -->
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Employee Name</mat-label>
+                  <mat-select
+                    formControlName="employee_ids"
+                    multiple
+                    (selectionChange)="onEmployeeSelectionChange($event)"
+                  >
+                    <!-- 🔍 Search Box -->
+                    <ngx-mat-select-search
+                      [formControl]="employeeFilterCtrl"
+                      placeholderLabel="Search employees..."
+                      noEntriesFoundLabel="No results found"
+                    >
+                    </ngx-mat-select-search>
+
+                    <!-- Employee List -->
+                    <mat-option
+                      *ngFor="let emp of filteredEmployees"
+                      [value]="emp.employee_id"
+                    >
+                      {{ emp.first_name }} {{ emp.last_name }} ({{
+                        emp?.employee_code
+                      }})
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+              <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Employee Name</mat-label>
+                  <mat-select formControlName="employee_id" (selectionChange)="getEntityList()">
+                    <mat-select-filter [array]="employees"
+                  (filteredReturn)="employeeSearch($event)"></mat-select-filter>
+                    <mat-option *ngFor="let role of roleGetByemployee" [value]="role.employee_id">{{role.first_name+
+                    " "+role.last_name + " " + role?.employee_code}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                <mat-form-field appearance="outline">
+                  <mat-label>Entity</mat-label>
+                  <mat-select formControlName="entity_id">
+                    <mat-select-filter
+                      [array]="entities"
+                      (filteredReturn)="entitySearch($event)"
+                    ></mat-select-filter>
+                    <mat-option
+                      *ngFor="let entity of entityList"
+                      (click)="roleMenuAccessIdData()"
+                      [value]="entity?.entity_id"
+                      >{{ entity?.entity_name }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="empty-screen" *ngIf="!selectFunctiona">
+          <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+              <img
+                class="empty-img"
+                src="../../../../../../assets/role-access-image.webp"
+              />
+            </div>
+            <div class="col-md-4"></div>
+          </div>
+        </div>
+
+        <div class="menu-list" *ngIf="selectFunctiona">
+          <h4>MENU LIST</h4>
+          <hr />
+          <cdk-accordion class="example-accordion">
+            <span *ngFor="let role of mdata; let index = index">
+              <cdk-accordion-item
+                #accordionItem="cdkAccordionItem"
+                class="example-accordion-item"
+                role="button"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + index"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + index"
+              >
+                <section class="example-section">
+                  <div class="example-accordion-item-header">
+                    <span class="example-accordion-item-description">
+                      <!-- Click to {{ accordionItem.expanded ? ' open' : 'close' }} -->
+                    </span>
+                  </div>
+                  <p
+                    class="example-list-section mainModule"
+                    [ngStyle]="{
+                      'background-color': role?.role_module_master_completed
+                        ? '#ededed'
+                        : '#ededed'
+                    }"
+                  >
+                    <span class="m_count">{{ index + 1 }}</span>
+                    <mat-checkbox
+                      class="example-margin"
+                      color="primary"
+                      [name]="role?.HRMS_RBAC_MENU_MASTER"
+                      [checked]="role?.role_module_master_completed"
+                      (change)="
+                        changeRoleModule(
+                          $event,
+                          index,
+                          role,
+                          role?.HRMS_RBAC_MENU_MASTER,
+                          role?.role_module_master_id,
+                          role?.role_module_master_name
+                        )
+                      "
+                    >
+                      <p
+                        style="
+                          font-size: 14px;
+                          padding-top: 12px;
+                          margin-bottom: 5px;
+                          font-weight: 500;
+                        "
+                        [ngStyle]="{
+                          color: role?.role_module_master_completed
+                            ? '#00a1b1'
+                            : '#003569'
+                        }"
+                      >
+                        {{ role?.role_module_master_name }}
+                      </p>
+                    </mat-checkbox>
+                    <span
+                      class="upIcon example-accordion-item-header"
+                      (click)="accordionItem.toggle()"
+                    >
+                      <mat-icon>keyboard_arrow_down</mat-icon>
+                    </span>
+                  </p>
+                  <br />
+                  <span> </span>
+                  <div
+                    class="example-accordion-item-body submenurole"
+                    role="region"
+                    [style.display]="accordionItem.expanded ? '' : 'none'"
+                    [attr.id]="'accordion-body-' + index"
+                    [attr.aria-labelledby]="'accordion-header-' + index"
+                  >
+                    <span
+                      class="example-list-section parentMenu"
+                      *ngFor="
+                        let menu of role?.HRMS_RBAC_MENU_MASTER;
+                        index as i
+                      "
+                    >
+                      <mat-checkbox
+                        (change)="
+                          changeMenuAndSetAll(
+                            $event,
+                            role,
+                            menu,
+                            menu.HRMS_RBAC_SUBMENU_MASTER,
+                            menu.menu_master_id,
+                            i,
+                            role.role_module_master_id,
+                            menu.menu_master_name
+                          )
+                        "
+                        [name]="menu?.menu_master_name"
+                        [checked]="menu?.menu_completed"
+                      >
+                        <span
+                          style="
+                            font-size: 12px;
+                            padding-top: 12px;
+                            margin-bottom: 5px;
+                            font-weight: 500;
+                          "
+                          >{{ menu.menu_master_name }}
+                        </span> </mat-checkbox
+                      ><br />
+                      <div
+                        class="chiledPart"
+                        *ngIf="
+                          role?.HRMS_RBAC_MENU_MASTER[i]
+                            .HRMS_RBAC_SUBMENU_MASTER?.length > 0
+                        "
+                      >
+                        <span
+                          class="example-list-section childMenu"
+                          *ngFor="
+                            let subMenu of role?.HRMS_RBAC_MENU_MASTER[i]
+                              .HRMS_RBAC_SUBMENU_MASTER;
+                            index as j
+                          "
+                        >
+                          <mat-checkbox
+                            color="primary"
+                            [checked]="subMenu?.submenu_completed"
+                            [name]="subMenu?.submenu_master_name"
+                            (change)="
+                              changeSubModule(
+                                $event,
+                                role,
+                                menu,
+                                menu.HRMS_RBAC_SUBMENU_MASTER,
+                                subMenu?.submenu_master_id,
+                                menu.menu_master_id,
+                                j,
+                                i,
+                                role.role_module_master_id,
+                                subMenu?.submenu_master_name
+                              )
+                            "
+                          >
+                            <span
+                              style="
+                                font-size: 12px;
+                                padding-top: 12px;
+                                margin-bottom: 5px;
+                                font-weight: 500;
+                              "
+                              >{{ subMenu.submenu_master_name }}
+                            </span>
+                          </mat-checkbox>
+                        </span>
+                      </div>
+                      <br />
+                    </span>
+                  </div>
+                  <!-- <div [(ngModel)]="menu.menu_title" #menu_title="ngModel" name="menu_title">{{menu.menu_title}}</div> -->
+                </section>
+              </cdk-accordion-item>
+            </span>
+          </cdk-accordion>
+
+          <div class="save-style" *ngIf="btnActive">
+            <div class="mt-3 common_button_sub">
+              <button (click)="updateRoleAssign()">Save</button>
+              <button class="cancel_button_y" (click)="refresh()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</section>

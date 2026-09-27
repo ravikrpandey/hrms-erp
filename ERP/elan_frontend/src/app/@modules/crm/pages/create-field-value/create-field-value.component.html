@@ -1,0 +1,75 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>CRM</h1>
+    <p>Field Value <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+      </i><span> Field Value List </span></p>
+  </div>
+  <div class="add_button">
+    <button class="" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <!-- Dynamic form start -->
+  <section class="mt-4">
+      <form [formGroup]="leadValueForm">
+        <fieldset>
+          <div class="personalDetails">
+            <mat-card>
+              <div class="form_basic">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th maxlength="20" width="65px">
+                        S.No.
+                      </th>
+                      <th width="500px">
+                        Field Value
+                      </th>
+                      <th width="100px"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <ng-container formArrayName="leadValueList"
+                      *ngFor="let control of CF_1.leadValueList['controls']; index as i">
+                      <tr [formGroup]="control">
+                        <td width="65px">{{i+1}}</td>
+                        <td width="500px">
+                          <input onlyAlphabet type="text" maxlength="30" formControlName="field_value"
+                            class="form-control" [readOnly]="control?.controls['isDisabled']" />
+                          <!-- <span *ngIf="control.controls['field_value'].hasError('pattern')" style="color:red;">*Symbols
+                            Numerics Not Allowed</span>
+                          <span *ngIf="control.controls['field_value'].hasError('leadingSpaces')"
+                            style="color:red;">*LeadingSpaces Not Allowed</span> -->
+                        </td>
+
+                        <td *ngIf="icon == true" width="100px">
+                          <span *ngIf="!control?.controls?.isDisabled"
+                            style="margin-left: 10px !important;
+                            font-size: 16px; cursor: pointer;">
+                            <i *ngIf="i>0" class="fa fa-trash" (click)="deleteRow(i, control)"
+                              aria-hidden="true" style="margin-top: 15px;"></i></span>
+                          <span style="margin-left: 10px !important;
+                          font-size: 16px; cursor: pointer;">
+                            <i class="fa fa-plus" (click)="addrow()" aria-hidden="true" style="margin-top: 15px;"></i></span>
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </tbody>
+                </table>
+              </div>
+            </mat-card>
+          </div>
+        </fieldset>
+        <div class="common_button_sub mt-4">
+              <button (click)="onSubmit()">
+                Submit
+              </button>
+            <button class="cancel_button_y" (click)="goBack()">
+              Cancel
+            </button>
+        </div>
+      </form>
+  </section>
+  <!-- Dynamic form end -->
+</div>

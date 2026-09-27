@@ -1,0 +1,260 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Sales CRM</h1>
+        <p><span> View Sales Return</span></p>
+
+    </div>
+    <div class="add_button">
+        <button class="backBtn" type="button" (click)="location.back()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+
+<section class="right_data_all">
+
+    <div class="form_basic">
+        <div class="right_data_all">
+            <div class="heading_neo mt-4">
+                <h3>Basic Information</h3>
+            </div>
+            <div class="info-cards">
+
+                <div class="info-card">
+                    <span class="label">Reference Type</span>
+                    <span class="value">{{ responseData.reference_type || '-' }}</span>
+                </div>
+
+                <div class="info-card">
+                    <span class="label">Return No</span>
+                    <span class="value">{{ responseData.return_no || '-' }}</span>
+                </div>
+
+                <div class="info-card">
+                    <span class="label">Customer</span>
+                    <span class="value">{{ responseData.customer || '-' }}</span>
+                </div>
+
+                <div class="info-card">
+                    <span class="label">Warehouse</span>
+                    <span class="value">{{ responseData.warehouse || '-' }}</span>
+                </div>
+
+            </div>
+        </div>
+        <div class="right_data_all">
+            <div class="heading_neo mt-4">
+                <h3> Item Details</h3>
+            </div>
+            <div class="form_basic mb-0">
+                <div class="form_set">
+                    <div class="row">
+                        <div class="table-wrapper">
+
+                            <table class="table table-bordered">
+
+                                <thead>
+                                    <tr>
+                                        <th>S.N.</th>
+                                        <th>Item Name</th>
+                                        <th>HSN</th>
+                                        <th>GST %</th>
+                                        <th>Order Qty</th>
+                                        <th>Return Qty</th>
+                                        <th>Rate</th>
+                                        <th>Discount</th>
+                                        <th>Total</th>
+                                        <!-- <th style="width:130px">Action</th> -->
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <!-- PARENT LOOP -->
+                                    <ng-container *ngFor="let item of items; let i = index">
+
+                                        <!-- PARENT ROW -->
+                                        <tr style="font-weight:bold; background:#f5f5f5;">
+                                            <td>{{ i + 1 }}</td>
+
+                                            <td>
+                                                {{ item.item_name }}
+                                                <small style="color:gray;">
+                                                    ({{ item.item_type }})
+                                                </small>
+                                            </td>
+
+                                            <td style="text-align:center;">{{ item.hsncode }}</td>
+                                            <td style="text-align:center;">{{ item.gst }}</td>
+
+                                            <td style="text-align:center;">
+                                                {{ item.qty |number:'1.0-0' }} {{ item.UOM }}
+                                            </td>
+
+                                            <td>
+                                                {{ item.return_qty | number:'1.0-0' }}
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                {{ item.rate }}
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                {{ item.discount_per_unit }}
+                                            </td>
+
+                                            <td style="text-align:right;">
+                                                {{ (item.return_qty * item.rate) }}
+                                            </td>
+
+
+
+
+                                        </tr>
+
+                                        <!-- CHILD LOOP -->
+                                        <ng-container *ngFor="let child of item.children">
+
+                                            <!-- CHILD ROW -->
+                                            <tr style="background:#fff;">
+
+                                                <td></td>
+
+                                                <td style="padding-left:25px;">
+                                                    └ {{ child.item_name }}
+                                                    <small style="color:gray;">
+                                                        ({{ child.item_type }})
+                                                    </small>
+                                                </td>
+
+                                                <td style="text-align:center;">{{ child.hsncode }}</td>
+                                                <td style="text-align:center;">{{ child.gst }}</td>
+
+                                                <td style="text-align:center;">
+                                                    {{ child.qty |number:'1.0-0' }} {{ child.UOM }}
+                                                </td>
+
+                                                <td>
+
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ child.rate }}
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ child.discount_per_unit }}
+                                                </td>
+
+                                                <td style="text-align:right;">
+                                                    {{ child.return_qty * child.rate }}
+                                                </td>
+
+
+                                                <td>
+
+                                                </td>
+
+                                            </tr>
+
+
+                                            <ng-container *ngFor="let sub of child.children">
+
+
+                                                <tr style="background:#fafafa;">
+
+                                                    <td></td>
+
+                                                    <td style="padding-left:50px;">
+                                                        └─ {{ sub.item_name }}
+                                                    </td>
+
+                                                    <td style="text-align:center;">{{ sub.hsncode }}</td>
+                                                    <td style="text-align:center;">{{ sub.gst }}</td>
+
+                                                    <td style="text-align:center;">
+                                                        {{ sub.qty | number:'1.0-0' }} {{ sub.UOM }}
+                                                    </td>
+
+                                                    <td>
+
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ sub.rate }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ sub.discount_per_unit }}
+                                                    </td>
+
+                                                    <td style="text-align:right;">
+                                                        {{ sub.return_qty * sub.rate }}
+                                                    </td>
+
+
+                                                    <td></td>
+
+                                                </tr>
+
+                                            </ng-container>
+
+                                        </ng-container>
+
+                                    </ng-container>
+                                    <tr>
+                                        <td colspan="8" style="text-align:right;">
+                                            <b>Gross Amount</b>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{currencySign}}{{ grossTotal | number:'1.2-2' }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="8" style="text-align:right;">
+                                            <b>GST Value</b>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{currencySign}}{{ gstTotal | number:'1.2-2' }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="8" style="text-align:right;">
+                                            <b>Net Basic Offer Amount</b>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{currencySign}}{{ totalAMTAfterDiscount | number:'1.2-2' }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="8" style="text-align:right;">
+                                            <b>Discount Amount</b>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{currencySign}}{{ discountAmt | number:'1.2-2' }}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="8" style="text-align:right;">
+                                            <b>Final Offer Amount Including GST</b>
+                                        </td>
+                                        <td style="text-align:right;">
+                                            {{currencySign}}{{ grant_total | number:'1.2-2' }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</section>

@@ -1,0 +1,42 @@
+<div class="dialog-backdrop" *ngIf="visible" (click)="closeOnBackdropClick && close()">
+  <div
+    class="dialog-container"
+    [ngStyle]="style"
+    (click)="$event.stopPropagation()"
+    [@dialogAnimation]
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="dialog-title"
+    aria-describedby="dialog-desc"
+  >
+    <div class="dialog-header" *ngIf="headerTemplate">
+      <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+      <button *ngIf="closable" class="dialog-close" (click)="close()">×</button>
+    </div>
+
+    <div class="dialog-body">
+      <ng-container *ngTemplateOutlet="bodyTemplate"></ng-container>
+    </div>
+
+    <div class="dialog-footer" *ngIf="footerTemplate">
+      <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+    </div>
+  </div>
+</div>
+
+
+<!-- dialogue usabe-->
+ <!-- <app-dialog [(visible)]="showDialog" [width]="'600px'" [closable]="true">
+  <ng-template #dialogHeader>
+    <h2>Custom Dialog Header</h2>
+  </ng-template>
+
+  <ng-template #dialogBody>
+    <p>This is the body content</p>
+  </ng-template>
+
+  <ng-template #dialogFooter>
+    <button mat-button (click)="showDialog = false">Close</button>
+  </ng-template>
+</app-dialog> -->
+<!-- <p>dialog compoentnt initated! </p> -->

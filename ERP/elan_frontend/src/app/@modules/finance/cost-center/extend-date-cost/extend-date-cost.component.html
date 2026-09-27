@@ -1,0 +1,66 @@
+<div class="heading_top">
+    <div class="page-title">
+    <h1>Finance and Accounting </h1>
+    <p>Cost Center<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span> Extend List</span></p>
+  </div>
+  <div class="add_button">
+    <button  type="button" class=""  routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+  </div>
+
+  <div class="right_data_all">
+<div class="employ_sube mt-3">
+<mat-card>
+        <form class="form_set">
+            <div class="mat-inner">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <p class="head"><strong>Financial Year : </strong>{{finacialYear}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="head"><strong>Department : </strong>{{getData?.department_name}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="head"><strong>Type : </strong>{{getData?.cost_center_type}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="head"><strong>Total Budget : </strong>{{getData?.amount}}</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <p class="head"><strong>Remaning Budget : </strong>{{getData?.remainingAmount}}</p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+</mat-card>
+</div>
+
+<div class="common_button_sub mt-3" style="text-align: left;">
+    <button type="button"  (click)="openDialog()">Revised Budget</button>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>S No</th>
+        <th>Allocated Date</th>
+        <!-- <th>Allocated By</th> -->
+        <th>Type</th>
+        <th>Allocated Budget</th>
+        <th>Total Budget</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of logData; index as i">
+        <td>{{i + 1}}</td>
+        <td>{{data?.createdAt | date:'dd-MM-yyyy'}}</td>
+        <!-- <td>{{data?.createdAt}}</td> -->
+        <td>{{data?.extend_type}}</td>
+        <td>{{data?.cost_amount}}</td>
+        <td>{{data?.remaining_cost_amount}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

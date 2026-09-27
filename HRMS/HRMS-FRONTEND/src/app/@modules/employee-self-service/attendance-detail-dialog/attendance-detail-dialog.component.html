@@ -1,0 +1,43 @@
+<ng-container>
+  <h3 class="popHead"> Attendance Details</h3>
+  <div class="row" style="margin-left: 10px;">
+    <h1>{{ this.shiftname }}</h1>
+    <div class="col-md-5">
+      <p *ngIf="lateIn" class="late-status">
+        <span class="late-label">Late In:</span> {{ lateIn }}
+      </p>
+    </div>
+    <div class="col-md-5">
+      <p *ngIf="lateGo" class="late-status">
+        <span class="late-label">Early Going:</span> {{ lateGo }}
+      </p>
+    </div>
+  </div>
+
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S.No. </th>
+            <th>Time</th>
+            <th>IN/OUT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of dataList; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{data?.att_checktime}}</td>
+            <td>{{data?.entry_type}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()" class="btn btn-danger"
+      style="display: table-footer-group;margin: auto;">Close</button>
+  </div>
+
+</ng-container>

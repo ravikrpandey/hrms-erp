@@ -1,0 +1,567 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales Management</h1>
+    <p *ngIf="!view">Create Delivery Order</p>
+    <p *ngIf="view">View Delivery Order</p>
+  </div>
+  <p *ngIf="!view">
+    Delivery Order Number
+    <i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"> </i>
+    <span> {{ delivery_doc_code }} </span>
+  </p>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="heading_neo mt-2">
+    <h3 *ngIf="!view">Create Delivery Order</h3>
+    <h3 *ngIf="view">View Delivery Order</h3>
+  </div>
+  <form [formGroup]="deliveryFormGroup" (ngSubmit)="onSubmit()">
+    <div class="formBorder">
+      <div class="form_sePo">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Reference Invoice Number</mat-label>
+              <mat-form-field class="NewClass">
+                <mat-select
+                  (selectionChange)="getApprovedSalesInvoiceDetailById($event)"
+                  formControlName="sales_id_invoice"
+                >
+                  <mat-option
+                    *ngFor="let val of approvedSalesList"
+                    [value]="val?.id"
+                  >
+                    {{ val?.invoice_doc_code }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Customer Selection -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Customer</mat-label>
+              <mat-form-field>
+                <input readonly matInput formControlName="customer_name" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Date Selection -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Date <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input
+                  readonly
+                  matInput
+                  [matDatepicker]="sp"
+                  formControlName="create_date"
+                />
+                <mat-datepicker-toggle
+                  class="NewClass"
+                  matSuffix
+                  [for]="sp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #sp></mat-datepicker>
+                <mat-error
+                  *ngIf="
+                    deliveryFormGroup.get('create_date')?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label
+              >Sales Representative <span class="alertspan">*</span></mat-label
+            >
+            <mat-form-field>
+              <mat-select formControlName="sales_rep_id">
+                <mat-option
+                  *ngFor="let val of employeeList"
+                  [value]="val.employee_id"
+                >
+                  {{ val?.first_name }} {{ val?.middle_name }}
+                  {{ val?.last_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+          <!-- Category Selection -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Ship To <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <mat-select formControlName="shipped_customer">
+                <mat-select-filter
+                  [array]="customersList1"
+                  (filteredReturn)="customerSearch($event)"
+                ></mat-select-filter>
+                <mat-option *ngFor="let val of customersList" [value]="val?.id">
+                  {{ val?.business_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  deliveryFormGroup
+                    .get('shipped_customer')
+                    ?.hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label
+              >Category/Manufacture <span class="alertspan">*</span></mat-label
+            >
+            <mat-form-field>
+              <mat-select
+                formControlName="category_id"
+                [(ngModel)]="selectedCategory"
+              >
+                <mat-option
+                  *ngFor="let val of itemCategoryList"
+                  [value]="val?.asset_category_name"
+                >
+                  {{ val?.asset_category_name }}
+                </mat-option>
+              </mat-select>
+              <mat-error
+                *ngIf="
+                  deliveryFormGroup.get('category_id')?.hasError('required')
+                "
+              >
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label
+                >Source Warehouse <span class="alertspan">*</span></mat-label
+              >
+              <mat-form-field>
+                <mat-select formControlName="source_warehouse_id">
+                  <mat-select-filter
+                    [array]="warehouseList1"
+                    (filteredReturn)="warehouseSearch($event)"
+                  ></mat-select-filter>
+                  <mat-option
+                    *ngFor="let val of warehouseList"
+                    [value]="val?.id"
+                  >
+                    {{ val?.name }}
+                  </mat-option>
+                  <!-- <mat-option *ngFor="let val of warehouseList" [value]="val">
+                  {{ val }}
+                </mat-option> -->
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    deliveryFormGroup
+                      .get('source_warehouse_id')
+                      ?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item Table -->
+        <div class="item-table">
+          <!-- <button (click)="addItem()" type="button" class="add-item-button">
+          Add Item
+        </button> -->
+          <div class="table-responsive">
+            <table class="table half-width-column">
+              <thead>
+                <tr>
+                  <th>S No.</th>
+                  <th>Item Name</th>
+                  <th>Item Code</th>
+                  <th>UOM</th>
+                  <th>Quantity</th>
+                  <th>Delivery QTY</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="items">
+                <tr *ngFor="let item of items.controls; let i = index"
+                [formGroupName]="i">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <mat-form-field>
+                      <input readonly matInput formControlName="item_name"/>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field>
+                      <input readonly matInput formControlName="item_code"/>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field>
+                      <input readonly matInput formControlName="uom"/>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field>
+                      <input readonly matInput formControlName="quantity"/>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field>
+                      <input type="text" matInput formControlName="deliveryQty" onkeypress="return event.charCode >= 48 && event.charCode <= 57"/>
+                    </mat-form-field>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="container mt-3">
+            <div class="row">
+              <div class="col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Shipping Address </mat-label>
+                  <mat-form-field>
+                    <input
+                      readonly
+                      matInput
+                      maxlength="200"
+                      formControlName="shipping_address"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>City </mat-label>
+                  <mat-form-field>
+                    <input
+                      readonly
+                      matInput
+                      formControlName="city"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>State </mat-label>
+                  <mat-form-field>
+                    <input
+                      readonly
+                      matInput
+                      formControlName="state"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Pin Code </mat-label>
+                  <mat-form-field>
+                    <input
+                      readonly
+                      matInput
+                      formControlName="pincode"
+                      type="number"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Country </mat-label>
+                  <mat-form-field>
+                    <input
+                      readonly
+                      matInput
+                      formControlName="country"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Receiving Person Name
+                    <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="receiving_person_name"
+                      maxlength="30"
+                      type="text"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup
+                          .get('receiving_person_name')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls[
+                          'receiving_person_name'
+                        ].hasError('pattern')
+                      "
+                    >
+                      Please enter only alphabet characters
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls[
+                          'receiving_person_name'
+                        ].hasError('minlength')
+                      "
+                    >
+                      Minimum 1 characters required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Receiving Person Contact
+                    <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="receiving_person_contact"
+                      maxlength="30"
+                      type="number"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup
+                          .get('receiving_person_contact')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls[
+                          'receiving_person_contact'
+                        ].hasError('pattern')
+                      "
+                    >
+                      It is not a valid mobile number</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Transport <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="transport"
+                      maxlength="30"
+                      type="text"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.get('transport')?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Vehicle Number <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="vehicle_number"
+                      maxlength="30"
+                      type="text"
+                      (input)="onVehicleNumberInput($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup
+                          .get('vehicle_number')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Driver Name <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="driver"
+                      maxlength="30"
+                      type="text"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.get('driver')?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls['driver'].hasError('pattern')
+                      "
+                    >
+                      Please enter only alphabet characters
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls['driver'].hasError(
+                          'minlength'
+                        )
+                      "
+                    >
+                      Minimum 1 characters required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Driver Contact Number
+                    <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="driver_contact_number"
+                      maxlength="30"
+                      type="number"
+                    />
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup
+                          .get('driver_contact_number')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        deliveryFormGroup.controls[
+                          'driver_contact_number'
+                        ].hasError('pattern')
+                      "
+                    >
+                      It is not a valid mobile number</mat-error
+                    >
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Remarks</mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="remarks"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3 fileWithViewImg">
+                  <mat-label>Additional Details</mat-label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    style="padding-right: 19%"
+                    title="Upload"
+                    formControlName="upload_photo"
+                    (change)="uploadDoc($event)"
+                    accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+                  />
+                  <mat-icon
+                    *ngIf="upload_photo"
+                    class="formFileViewIcon"
+                    (click)="viewImg()"
+                    matTooltip="View"
+                    style="cursor: pointer"
+                    >visibility</mat-icon
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Submission -->
+    <div *ngIf="!view" class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="common_button_sub mt-3">
+        <button type="submit">Save Delivery Order</button>
+        <button class="cancel_button_y" type="button" (click)="back()">
+          Discard
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

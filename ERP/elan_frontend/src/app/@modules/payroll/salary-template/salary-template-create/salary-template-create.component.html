@@ -1,0 +1,449 @@
+<div class="right_data_all">
+  <div class="row mt-3">
+
+    <div class="page-title">
+      <h1>Create New Salary Template</h1>
+    </div>
+  </div>
+  <hr>
+
+
+  <mat-card>
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading">
+          <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'"
+            [attr.data-bs-target]="'#collapse'" [attr.aria-expanded]="'false'" [attr.aria-controls]="'collapse'">
+            Salary Componets
+          </button>
+        </h2>
+        <div id="collapse" class="accordion-collapse collapse" [attr.aria-labelledby]="'heading'"
+          data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="accordion" id="accordionSalaryComponent">
+              <div class="accordion-item">
+                <h2 class="accordion-header" [id]="'headingEarnings'">
+                  <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'"
+                    [attr.data-bs-target]="'#collapseEarnings'" aria-expanded="false"
+                    [attr.aria-controls]="'collapseEarnings'">
+                    Earnings Component
+                  </button>
+                </h2>
+                <div [id]="'collapseEarnings'" class="accordion-collapse collapse"
+                  [attr.aria-labelledby]="'headingEarnings'" [attr.data-bs-parent]="'#accordionSalaryComponent'">
+                  <div class="accordion-body">
+                    <div class="mat-inner">
+                      <div class="row">
+                        <div class="col-md-3 mt-3" *ngFor="let earningData of earningCompList">
+                          <button type="button" class="btn btn-primary"
+                            (click)="addEarningComp(earningData)">{{earningData.earning_name}}
+                            <span class="ms-3"><mat-icon>add</mat-icon></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" [id]="'headingDeductions'">
+                  <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'"
+                    [attr.data-bs-target]="'#collapseDeductions'" aria-expanded="false"
+                    [attr.aria-controls]="'collapseDeductions'">
+                    Deductions Component
+                  </button>
+                </h2>
+                <div [id]="'collapseDeductions'" class="accordion-collapse collapse"
+                  [attr.aria-labelledby]="'headingDeductions'" [attr.data-bs-parent]="'#accordionSalaryComponent'">
+                  <div class="accordion-body">
+                    <div class="mat-inner">
+                      <div class="row">
+                        <div class="col-md-3 mt-3" *ngFor="let deductionData of deductionCompList">
+                          <button type="button" class="btn btn-primary"
+                            (click)="addDeductionComp(deductionData)">{{deductionData?.deduction_plan}}
+                            <span class="ms-3"><mat-icon>add</mat-icon></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="accordion-item">
+                <h2 class="accordion-header" [id]="'headingReimbursements'">
+                  <button class="accordion-button collapsed" type="button" [attr.data-bs-toggle]="'collapse'"
+                    [attr.data-bs-target]="'#collapseReimbursements'" aria-expanded="false"
+                    [attr.aria-controls]="'collapseReimbursements'">
+                    Allowance Component
+                  </button>
+                </h2>
+                <div [id]="'collapseReimbursements'" class="accordion-collapse collapse"
+                  [attr.aria-labelledby]="'headingReimbursements'" [attr.data-bs-parent]="'#accordionSalaryComponent'">
+                  <div class="accordion-body">
+                    <div class="mat-inner">
+                      <div class="row">
+                        <div class="col-md-4 mt-3" *ngFor="let riembursementData of riembursementCompList">
+                          <button type="button" class="btn btn-primary"
+                            (click)="addRiembursementComp(riembursementData)">{{riembursementData.reimbursement_name}}
+                            <span class="ms-3"><mat-icon>add</mat-icon></span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="container">
+    <form [formGroup]="ctcForm" class="mt-4">
+      <!-- Template Name and Description -->
+      <div class="row">
+        <!-- <div class="col-md-4">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Company</mat-label>
+              <mat-select formControlName="company">
+                    <mat-option *ngFor="let company of companyList" [value]="company.id">{{company?.entity_name}}</mat-option >
+                  </mat-select>
+              <input matInput type="text" class="form-control" formControlName="company" readonly/>
+
+            </mat-form-field>
+          </div>
+        </div> -->
+        <div class="col-md-4">
+          <!-- <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Branch</mat-label>
+              <mat-select formControlName="branch" multiple>
+                
+           
+                <mat-option (click)="toggleAllSelection()" [value]="null">
+                  <mat-checkbox [checked]="isAllSelected()">All Select</mat-checkbox>
+                </mat-option>
+       
+                <mat-option *ngFor="let branch of branchList" [value]="branch.id">
+                  {{ branch?.branch_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Branch</mat-label>
+              <mat-select  #select multiple>
+                <div class="select-all">
+                    <mat-checkbox [(ngModel)]="allSelected"
+                                    [ngModelOptions]="{standalone: true}"
+                                    (change)="toggleAllSelection()">Select All</mat-checkbox>
+                </div>
+                <mat-option (click)="optionClick()" *ngFor="let branch of branchList" [value]="branch.id">
+                  {{ branch?.branch_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div> -->
+          
+          
+        </div>
+        
+        <!-- <div class="col-md-4">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Grade</mat-label>
+              <mat-select formControlName="grade">
+                <mat-option *ngFor="let grade of gradeList" [value]="grade.grade_id"> {{grade?.grade_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div> -->
+       
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label class="form-label">Template Name <span class="text-danger">*</span></label>
+
+            <input type="text" class="form-control" formControlName="templateName" />
+
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group ">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description" rows="2"
+              placeholder="Max 500 Characters"></textarea>
+
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <!-- Annual CTC -->
+      <div class="card p-3 mb-3">
+<div class="row">
+  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Currency</mat-label>
+      <mat-select formControlName="currency" (selectionChange)="currencySelect($event)">
+        <mat-option *ngFor="let cur of getCurrencyData" [value]="cur.Currency_Convert_id"> {{cur?.Currency_Type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+        <div class="row mt-3">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="row">
+              <div class="col-md-3">
+                <label for="bonusPercentage" class="custom-label mandatory">Annual CTC</label>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-2 custom-input-group">
+                  <div class="custom-input-container">
+                    <input matInput formControlName="annualCTC" type="number" class="custom-input-field"
+                      id="bonusPercentage" aria-label="Bonus Percentage"  (input)="enterSalary('fromAnnualCtc')">
+                    <div class="custom-addon">{{currencySymbol || '₹'}}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <p style="margin-top: 10px;">per year</p>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 mt-3">
+            <div class="row">
+              <div class="col-md-3">
+                <label for="bonusPercentage" class="custom-label mandatory">Gross CTC</label>
+              </div>
+              <div class="col-md-6">
+                <div class="mb-2 custom-input-group">
+                  <div class="custom-input-container">
+                    <input matInput formControlName="monthlyCTC" type="number" class="custom-input-field"
+                      aria-label="Bonus Percentage">
+                    <div class="custom-addon">{{currencySymbol || '₹'}}</div>
+                  </div>
+                </div>
+              </div>
+              <!-- <div class="col-md-3">
+                <p style="margin-top: 10px;">per Month</p>
+              </div> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Earnings -->
+        <div class="row mt-3">
+          <div class="col-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Salary Components</th>
+                  <th>Calculation Type</th>
+                  <th>Monthly Amount</th>
+                  <th>Annual Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="4">
+                    <h3 class="text-primary">Earnings</h3>
+                  </td>
+                </tr>
+
+                <ng-container formArrayName="earningComponentList">
+                  <tr *ngFor="let earning of earningComponentList.controls; let i = index" [formGroupName]="i">
+                    <td>
+                      {{ earning.get('componentName')?.value }}
+                      <ng-container *ngIf="earning.get('componentName')?.value == 'Fixed Allowance'">
+                        <mat-icon
+                          matTooltip="Fixed Allowance is a residual component of salary that is left after allocations are made for all other components.">info</mat-icon>
+                        <p class="text-muted">Monthly CTC - Sum of all other components</p>
+                      </ng-container>
+                    </td>
+                    <ng-container *ngIf="earning.get('basicPercentage')">
+                      <td>
+                        <div class="input-group w-75">
+                          <input type="number" class="form-control" formControlName="basicPercentage" />
+                          <span class="input-group-text">% of {{ earning.get('calculationType')?.value }}</span>
+                        </div>
+
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="monthlyBasic" readonly />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="annualBasic" readonly />
+                      </td>
+                    </ng-container>
+
+                    <ng-container *ngIf="earning.get('fixedAllowanceMonthly')">
+                      <td>Fixed amount</td>
+                      <td>
+                        <input type="number" class="form-control" formControlName="fixedAllowanceMonthly"
+                          (keyup)="updateFixedEarningAmount(i)" (input)="totalCountCreate()"/>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="fixedAllowanceAnnual" readonly />
+                      </td>
+                    </ng-container>
+
+                    <td>
+                      <button mat-icon-button color="warn" (click)="removeEarningComponent(i)"
+                        *ngIf="earning.get('earningTypeCode')?.value !== 'BASIC1' && earning.get('earningTypeCode')?.value !== 'FIXE33'">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <ng-container formArrayName="deductionComponentList">
+                  <tr *ngIf="deductionComponentList.length>0">
+                    <td colspan="4">
+                      <h3 class="text-primary">Deductions</h3>
+                    </td>
+                  </tr>
+
+                  <tr *ngFor="let deduction of deductionComponentList.controls; let i = index" [formGroupName]="i">
+                    <td>
+                      {{ deduction.get('componentName')?.value }}
+                      <ng-container
+                        *ngIf="deduction.get('componentName')?.value == 'EPF' || deduction.get('componentName')?.value == 'ESI'">
+                        <span class="text-muted"> - Employer Contribution</span>
+                      </ng-container>
+                    </td>
+                    <ng-container *ngIf="deduction.get('basicPercentage')">
+                      <td>
+                        <div class="input-group w-75">
+                          <input type="text" class="form-control" formControlName="basicPercentage"
+                            (keyup)="updateDeduction()" />
+                          <span class="input-group-text">% of {{ deduction.get('calculationType')?.value }}</span>
+                        </div>
+
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="monthlyBasic" readonly />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="annualBasic" readonly />
+                      </td>
+                    </ng-container>
+
+                    <ng-container *ngIf="deduction.get('fixedAllowanceMonthly')">
+                      <td>Fixed amount</td>
+                      <td>
+                        <input type="number" class="form-control" formControlName="fixedAllowanceMonthly"
+                          (keyup)="onMonthlyDeductionAmountKeyup(i)" />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="fixedAllowanceAnnual" readonly />
+                      </td>
+                    </ng-container>
+
+                    <td>
+                      <button mat-icon-button color="warn" (click)="removeDeductionComponent(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-container>
+
+                <ng-container formArrayName="reiembursementComponentList">
+                  <tr *ngIf="reiembursementComponentList.length > 0">
+                    <td colspan="4">
+                      <h3 class="text-primary">Allowances</h3>
+                    </td>
+                  </tr>
+
+                  <tr *ngFor="let reiembursement of reiembursementComponentList.controls; let i = index"
+                    [formGroupName]="i">
+                    <td>
+                      {{ reiembursement.get('componentName')?.value }} <br>
+                      <!-- <span class="text-muted">Amount : &nbsp;{{reiembursement.get('fixedAmountLimit')?.value}}</span> -->
+                    </td>
+                    <ng-container *ngIf="reiembursement.get('fixedAllowanceMonthly')">
+                      <td>Fixed amount</td>
+                      <td>
+                        <input type="number" class="form-control" formControlName="fixedAllowanceMonthly"
+                          (keyup)="onMonthlyAmountKeyup(i)" />
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" formControlName="fixedAllowanceAnnual" readonly />
+                      </td>
+                    </ng-container>
+
+                    <td>
+                      <button mat-icon-button color="warn" (click)="removeRiembursementComponent(i)">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+        <div *ngIf="negativeAlert" class="mt-2 alert alert-danger fw-bold" role="alert">
+          <div class="d-flex justify-content-between">
+            <div>
+              System Calculated Components' Total <br>
+              Amount must be greater than zero. Adjust the CTC or any of the component's amount. -
+            </div>
+            <div class="me-5">
+              {{negativeMonthly}}
+            </div>
+            <div class="me-5">
+              {{negativeAnualy}}
+            </div>
+          </div>
+
+        </div>
+        <!-- Cost to Company -->
+        <div class="row">
+          <div class="col-4">
+            <section class="example-section">
+              <mat-checkbox class="example-margin"  (change)="onCheckboxChange($event)">Add EPF/ESI</mat-checkbox>
+            </section>
+          </div>
+        </div>
+        <div class=" mt-3 alert alert-primary fs-6" role="alert">
+          <div class="row">
+            <div class="col-6">
+              Cost to Company
+            </div>
+            <div class="col-3 text-center">
+              {{currencySymbol || '₹'}} {{ totalMonthlyCTC }}
+            </div>
+            <div class="col-3 text-center">
+              {{currencySymbol || '₹'}} {{ totalAnnualCTC }}
+            </div>
+          </div>
+
+
+        </div>
+
+        
+      </div>
+
+      <!-- Save and Cancel Buttons -->
+      <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-primary me-2" (click)="formSubmit()">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="back()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+
+</div>

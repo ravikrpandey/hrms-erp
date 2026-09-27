@@ -1,0 +1,43 @@
+<!-- View Button with Tooltip -->
+<button
+  class="btn btn-view"
+  matTooltip="View Details"
+  matTooltipPosition="above"
+  (click)="ViewperformAction()">
+  <mat-icon>visibility</mat-icon>
+</button>
+
+<!-- Inward Button with Tooltip -->
+<button
+  *ngIf="showInward && this.params.data.driver_name"
+  class="btn btn-view"
+  matTooltip="Proceed Inward"
+  matTooltipPosition="above"
+  (click)="performAction('inward')">
+  <mat-icon>login</mat-icon>
+</button>
+
+<!-- Outward Button with Tooltip -->
+<button
+  *ngIf="showOutward && activeLabel==='outward'"
+  class="btn btn-view"
+  matTooltip="Proceed Outward"
+  matTooltipPosition="above"
+  (click)="performAction('outward')">
+  <mat-icon>logout</mat-icon>
+</button>
+<!-- <button *ngIf="!this.params.data.driver_name && showInward && activeLabel==='inward'" -->
+ <button *ngIf="activeLabel==='inward' && params?.data?.gate_inward_status!='Approved'"
+  class="btn btn-view"
+  matTooltip="Add/View Driver"
+  matTooltipPosition="above"
+  (click)="openDialog()">
+  <mat-icon>add</mat-icon>
+</button>
+<button
+  class="btn btn-view"
+  matTooltip="Download Pick Invoice"
+  matTooltipPosition="above"
+  (click)="downloadGateOutWordPdf($event)">
+  <mat-icon>file_download</mat-icon>
+</button>

@@ -1,0 +1,318 @@
+<section class="section">
+  <div class="row">
+    <div class="employee_top my-1">
+      Production
+      <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+        Schedule Production</span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head mt-2">
+      <h3>Schedule Production</h3>
+      <button class="backBtn" (click)="goBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+    <div class="form_basic px-4 pt-4">
+      <form [formGroup]="addProductionForm">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="doItem_id">
+            <div class="form-group mb-3">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Client Name</mat-label>
+                <input type="text" matInput formControlName="client_name" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Select Product Category</mat-label>
+                <mat-select  formControlName="product_category_id" (selectionChange)="getAllActiveProduct($event)">
+                  <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addProductionForm.get('cetegory')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+       
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Select Product Name</mat-label>
+                <mat-select formControlName="product_id" (selectionChange)="getProductItem($event)">
+                  <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="addProductionForm.get('product_id')?.hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group  ">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Product Code</mat-label>
+                <input type="text" matInput formControlName="product_code" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+          <div class="form-group" >
+              <mat-form-field appearance="outline" class="mt-1">
+                  <mat-label>Select Variant Name</mat-label>
+                  <mat-select formControlName="product_variant" >
+                      <mat-option *ngFor="let data of getAllVariantData" [value]="data.id"> {{ data?.variant_name }}</mat-option>
+                  </mat-select>
+                
+              </mat-form-field>
+          </div>
+      </div>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-4 col-sm-12 col-12">
+            <div class="form-group service_description ">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Product Description</mat-label>
+                <input type="text" matInput formControlName="product_description" readonly />
+
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-4">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="mt-1  ">
+                <mat-label>Total Qty</mat-label>
+                <input type="text" matInput formControlName="total_qty" readonly />
+                <!-- <mat-error *ngIf="form.get('workflowType')?.hasError('required')">
+                                     This field is required!
+                                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mt-2">
+              <input type="file" class="form-control" (change)="onChange($event)" formControlName="upload_file" />
+              <ng-container *ngIf="id">
+                <img [src]="imageToUpload" class="imgEmp">
+              </ng-container>
+              <span class="badge text-bg-primary ms-2" *ngIf="imageView" type="button" (click)="viewImage()">View
+                File</span>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Select Plants</mat-label>
+                <mat-select multiple formControlName="plantList" (selectionChange)="onSelectionChange($event)">
+                  <mat-option *ngFor="let data of getAllPlantsData; index as i"
+                    [value]="data.id">{{data.plant_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <hr />
+        </div>
+
+
+
+        <ng-container>
+          <mat-tab-group (selectedTabChange)="getTabVal($event)" formArrayName="plantListDetails">
+            <mat-tab *ngFor="let plant of plantListDetails.controls; index as i" label="Plant Name {{i+1}}">
+              <div class="mt-4" [formGroupName]="i">
+                <span class="plan_details mb-2 mt-2">Plant Details</span>
+                <div class="row mt-2">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Country</mat-label>
+                        <input type="text" matInput formControlName="country" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group ">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>State</mat-label>
+                        <input type="text" matInput formControlName="state" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group ">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Plant Name</mat-label>
+                        <input type="text" matInput formControlName="plant_name" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12">
+                    <div class="form-group ">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Plant Address</mat-label>
+                        <input type="text" matInput formControlName="plant_address" />
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Production Qty</mat-label>
+                        <input type="number" matInput formControlName="production_qty" min="0"
+                          (keyup)="calculateTotalQty()" />
+                      </mat-form-field>
+                      <mat-error *ngIf="addProductionForm.get('production_qty')?.hasError('min')">Quantity cannot be
+                        negative</mat-error>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Start Date</mat-label>
+                        <input matInput [matDatepicker]="picker" format="DD-MM-YY" formControlName="start_date"
+                          (dateChange)="setMinEndDate($event.value)" />
+
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>End Date</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="end_date" [min]="minEndDate" />
+
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Employee</mat-label>
+                        <mat-select formControlName="production_manager_id">
+                          <mat-option *ngFor="let data of getAllData" [value]="data.employee_id">{{data.first_name}}
+                            {{data.last_name}}</mat-option>
+                        </mat-select>
+
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <span class="plan_details mb-2 mt-2">Add Shift Details</span>
+                    <div class="form-group mt-2">
+                      <mat-form-field appearance="outline" class="mt-1">
+                        <mat-label>Select Shifts</mat-label>
+                        <mat-select multiple formControlName="shiftList">
+                          <mat-option *ngFor="let shift of shiftData; index as i"
+                            [value]="shift.id">{{shift.shift_name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class=" row">
+                  <div class=" col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <span class="plan_details mb-2 mt-2">Job Card</span>
+                    <table class="table table-bordered mt-2">
+                      <thead>
+                        <tr>
+                          <th scope="col">Work Station Name</th>
+                          <th scope="col">Type Of Workstation</th>
+                          <th scope="col">Running Cost per Hour</th>
+                          <th scope="col">Description</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="workstationList">
+                        <tr *ngFor="let workstation of getWorkStationFormArray(plant).controls; let j = index"
+                          [formGroupName]="j">
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <mat-label>Select Workstation</mat-label>
+                              <mat-select formControlName="workstation_id">
+                                <mat-option *ngFor="let data of getAllWorkStation" [value]="data.id"
+                                  (click)="getWorkStationValue(data,i, j)">{{data.name_of_workstation}}</mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="workstation_type"
+                                placeholder="Type Of Workstation" readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="running_cost"
+                                placeholder="Running cost per hour" readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-form-field appearance="outline">
+                              <input type="text" matInput formControlName="description" placeholder="Description"
+                                readonly />
+                            </mat-form-field>
+                          </td>
+                          <td>
+                            <mat-icon *ngIf="j === 0" matTooltip="Add Item"
+                              (click)="addWorkStation(i)">add_circle</mat-icon>
+                            <ng-container *ngIf="getWorkStationFormArray(plant).controls.length > 1">
+                              <mat-icon matTooltip="Delete Item"
+                                (click)="removeWorkStation(i,j)">delete_circle</mat-icon>
+                            </ng-container>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+        </ng-container>
+
+        <!-- <div class="d-flex justify-content-end mt-2 mb-4"  *ngIf="view!=='view'" >
+              <button mat-raised-button color="primary" (click)="onSubmit(this.addProductionForm.value)">
+                 Schedule Production
+              </button>
+              <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+          </div> -->
+        <div class="d-flex justify-content-end mt-4 mb-4" *ngIf="this.view!=='view'">
+          <button mat-raised-button color="primary" (click)="savePlantsData()">
+            Save Details
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+          <!-- <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button> -->
+
+        </div>
+      </form>
+
+    </div>
+  </mat-card>
+</section>

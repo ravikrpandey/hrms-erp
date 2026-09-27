@@ -1,0 +1,316 @@
+<mat-card>
+  <mat-card-header class="dialog-header">
+  <div class="header-content">
+    <mat-card-title class="dialog-title">
+      Sales Order Item Details
+    </mat-card-title>
+
+    <div class="dialog-subtitle">
+      <span><strong>PI No.:</strong> {{ getAllData.pi_number }}</span>
+      <span>|</span>
+      <span><strong>Customer Name:</strong> {{ getAllData.company_name }}</span>
+      <span>|</span>
+      <span><strong>Dispatch From:</strong> {{ data.dispatchFrom }}</span>
+    </div>
+  </div>
+
+  <button
+    mat-icon-button
+    class="close-btn"
+    (click)="onClose()"
+    matTooltip="Close"
+    aria-label="Close">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="row mb-3">
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Shipping Pincode</mat-label>
+          <input matInput type="text" formControlName="pincode" maxlength="6"/>
+          <mat-error *ngIf="form.get('pincode')?.hasError('required') === true">Required</mat-error>
+          <mat-error *ngIf="form.get('pincode')?.hasError('pattern') === true">6 digits</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12" *ngIf="postOffice.length > 0">
+          <mat-label>Choose Shipping Postal Address</mat-label>
+          <mat-select formControlName="postal_address">
+            <mat-option
+              *ngFor="let post of postOffice"
+              [value]="
+                post.Name +
+                ', ' +
+                post.District +
+                ', ' +
+                post.State +
+                ', ' +
+                post.Country
+              "
+              >{{
+                post.Name +
+                  ", " +
+                  post.District +
+                  ", " +
+                  post.State +
+                  ", " +
+                  post.Country
+              }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Shipping Address</mat-label>
+          <input matInput type="text" formControlName="address"/>
+          <mat-error *ngIf="form.get('address')?.hasError('required') === true">Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Expected Delivery Date</mat-label>
+          <input
+            matInput
+            formControlName="expected_delivery_date"
+            [matDatepicker]="expectedDeliveryPicker"
+            readonly
+            (click)="expectedDeliveryPicker.open()"
+          />
+          <mat-datepicker-toggle matSuffix [for]="expectedDeliveryPicker"></mat-datepicker-toggle>
+          <mat-datepicker #expectedDeliveryPicker></mat-datepicker>
+          <mat-error *ngIf="form.get('expected_delivery_date')?.hasError('required')">
+            Expected Delivery Date is required.
+          </mat-error>
+        </mat-form-field>
+
+        <!-- <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Contact Person Name</mat-label>
+          <input matInput type="text" formControlName="contact_person_name"/>
+          <mat-error *ngIf="form.get('contact_person_name')?.hasError('required') === true">Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Contact Person Mobile No.</mat-label>
+          <input matInput type="text" formControlName="mobile"/>
+          <mat-error *ngIf="form.get('mobile')?.hasError('required') === true">Required</mat-error>
+          <mat-error *ngIf="form.get('mobile')?.hasError('pattern') === true">10-14 digits</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="col-md-3 col-sm-12">
+          <mat-label>Contact Person Email ID</mat-label>
+          <input matInput type="text" formControlName="email_id"/>
+          <mat-error *ngIf="form.get('email_id')?.hasError('required') === true">Required</mat-error>
+        </mat-form-field> -->
+      </div>
+
+      <table class="table table-bordered table-striped">
+        <thead class="bg-secondary">
+          <tr>
+            <th>#</th>
+            <th>Item Name</th>
+            <th>Type</th>
+            <th>Order Qty</th>
+            <th>Available Qty</th>
+            <th>Dispatch Qty</th>
+            <th>Balance Qty</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="products">
+          <ng-container *ngFor="let productGroup of productsFormArray.controls; let i = index">
+           
+            <tr *ngIf="isFirstOccurrence(i)" class="product-summary">
+              <td colspan="2">
+                <div class="product-info">
+                  <i class="fa fa-cube product-icon"></i>
+                  <span class="product-name">
+                    {{ productGroup.get('product_name')?.value }}
+                  </span>
+                  <span class="product-code">
+                    ({{ productGroup.get('product_code')?.value }})
+                  </span>
+                </div>
+              </td>
+              <td class="text-start"><b>--</b></td>
+              <td class="text-start">
+                <b>{{ getTotalOrderQty(productGroup.get('product_master_id')?.value) }}</b>
+              </td>
+              <td class="text-start"><b>--</b></td>
+              <td class="text-start">
+                <b>
+                  {{
+                    getTotalOrderQty(productGroup.get('product_master_id')?.value)
+                    - getTotalPendingQty(productGroup.get('product_master_id')?.value)
+                  }}
+                </b>
+              </td>
+              <td class="text-start">
+                <b>{{ getTotalPendingQty(productGroup.get('product_master_id')?.value) }}</b>
+              </td>
+            </tr>
+
+            <tr [formGroupName]="i" [class.disabled-row]="productGroup.disabled">
+              <td>
+                <mat-checkbox formControlName="selected"
+                  (change)="onCheckboxChange(i)">
+                </mat-checkbox>
+              </td>
+              <td>{{ productGroup.get("product_name")?.value }} - {{ productGroup.get("product_code")?.value }}
+                <span
+                  *ngIf="productGroup.disabled"
+                  class="badge bg-success ms-2">
+                  Fully Dispatched
+                </span>
+                <span
+                  *ngIf="commonService.getType(productGroup.get('select_scheme')?.value) !== 'Standard'"
+                  class="badge badge-warning text-dark ms-2">
+                  <i class="fa fa-info-circle"></i>
+                  Linked Add-Ons are automatically adjusted based on the entered Dispatch Qty.
+                </span>
+              </td>
+              <td><span class="badge"
+                [ngClass]="{
+                  'badge-standard': commonService.getType(productGroup.get('select_scheme')?.value) === 'Standard',
+                  'badge-customization': commonService.getType(productGroup.get('select_scheme')?.value) !== 'Standard'
+                }">
+                {{ commonService.getType(productGroup.get("select_scheme")?.value) }}
+              </span></td>
+              <td>{{ productGroup.get("proposed_quantity")?.value }}</td>
+              <td>{{ productGroup.get("avlStock")?.value }}</td>
+              <td>
+                <mat-form-field appearance="outline" class="dispatch-field">
+                  <input 
+                    matInput 
+                    type="number" 
+                    formControlName="quantity" 
+                    (input)="onQuantityOrPriceChange(i)"
+                    min="0"/>
+                </mat-form-field>
+              </td>
+              <td>{{ productGroup.get("remaining_quantity")?.value - productGroup.get("quantity")?.value }}</td>
+            </tr>
+
+            <tr *ngFor="let c of productGroup.value.customisation_data" [class.disabled-row]="productGroup.disabled">
+              <td class="arrow-cell"><i class="fa fa-level-up fa-rotate-90"></i></td>
+              <td>{{ c.accessories_name || c.type_of_basket }} - {{ c.acc_item_code || c.bas_item_code }}
+              - <span
+                  matTooltip="Per Unit Qty × Total Qty"
+                  matTooltipPosition="above">
+                  ({{ c.qty / productGroup.get("proposed_quantity")?.value }} × {{ productGroup.get("proposed_quantity")?.value }})
+                </span>
+              </td>
+              <td><span class="badge badge-addons">{{ c.custome_type }}</span></td>
+              <td>{{ c.qty }}</td>
+              <td>{{ c.avlStock }}</td>
+              <td>{{ c.dispatchQty }}</td>
+              <td>{{ (c.qty / productGroup.get("proposed_quantity")?.value) * (productGroup.get("remaining_quantity")?.value -
+                productGroup.get("quantity")?.value) }}</td>
+            </tr>
+
+            <tr *ngFor="let b of productGroup.value.branding_data" [class.disabled-row]="productGroup.disabled">
+              <td class="arrow-cell"><i class="fa fa-level-up fa-rotate-90"></i></td>
+              <td>{{ b.branding_description }}, {{b.brandingName}} - Branding Sides: {{ b.branding_sides?.join(', ') }}
+                <!-- - <span
+                  matTooltip="Per Unit Qty × Total Qty"
+                  matTooltipPosition="above">
+                  ({{ b.qty / productGroup.get("proposed_quantity")?.value }} × {{ productGroup.get("proposed_quantity")?.value }})
+                </span> -->
+              </td>
+              <td><span class="badge badge-addons">Branding</span></td>
+              <td>As Per Item</td>
+              <td>As Per Item</td>
+              <td>As Per Item</td>
+              <td>As Per Item</td>
+              <!-- <td>{{ productGroup.get("quantity")?.value }}</td>
+              <td>{{ productGroup.get("remaining_quantity")?.value - productGroup.get("quantity")?.value }}</td> -->
+            </tr>
+
+            <ng-container *ngIf="isLastOccurrence(i)">
+              <ng-container *ngFor="let bom of bomMap[productGroup.get('item_list_id')?.value] || []">
+                <tr [class.disabled-row]="bom.disabled">
+                  <td>
+                    <mat-checkbox 
+                      [(ngModel)]="bom.selected" 
+                      [ngModelOptions]="{standalone: true}" 
+                      (change)="onBomCheckboxChange(bom)"
+                      [disabled]="bom.disabled">
+                    </mat-checkbox>
+                  </td>
+                  <td><strong style="color: #6D28D9;">{{ bom.bom_name }}</strong>
+                    <span *ngIf="bom.disabled" class="badge bg-success ms-2">
+                      Fully Dispatched
+                    </span>
+                    <span class="badge badge-warning text-dark ms-2">
+                      <i class="fa fa-info-circle"></i>
+                      Primary & Substitute items auto-adjust with Dispatch Qty.
+                    </span>
+                  </td>
+                  <td><span class="badge badge-kit">Installation Kit (BOM)</span></td>
+                  <td>{{ bom.bom_qty }}</td>
+                  <td>--</td>
+                  <td>
+                    <mat-form-field appearance="outline" class="dispatch-field">
+                      <input
+                        matInput
+                        type="number"
+                        [(ngModel)]="bom.enterDispatchQty"
+                        [ngModelOptions]="{ standalone: true }"
+                        (ngModelChange)="onBomDispatchQtyChange(bom)"
+                        [disabled]="!bom.selected || bom.disabled"
+                        min="0"
+                      />
+                    </mat-form-field>
+                  </td>
+                  <td>{{ bom.pending_qty }}</td>
+                </tr>
+
+                <ng-container *ngFor="let item of bom.bom_items">
+                  <tr [class.disabled-row]="bom.disabled">
+                    <td></td>
+                    <td style="padding-left:40px;">
+                      <i class="fa fa-angle-right"></i>
+                      {{ item.item_name }} - <span
+                        matTooltip="Per BOM Qty × Total BOM Qty"
+                        matTooltipPosition="above">
+                        ({{ item.qty_per_bom }} × {{ bom.bom_qty }})
+                      </span>
+                    </td>
+                    <td><span class="badge badge-bom-item">Primary Item</span></td>
+                    <td>{{ item.total_qty }}</td>
+                    <td>{{ item.avlStock }}</td>
+                    <td>{{ item.dispatchQty }}</td>
+                    <td>{{ item.qty_per_bom * bom.pending_qty}}</td>
+                  </tr>
+
+                  <tr *ngFor="let sub of item.substitute_items" [class.disabled-row]="bom.disabled">
+                    <td></td>
+                    <td style="padding-left:70px;">
+                      <i class="fa fa-random text-warning"></i>
+                      {{ sub.item_name }} 
+                      <!-- - <span
+                        matTooltip="Primary Item: Per BOM Qty × Total BOM Qty"
+                        matTooltipPosition="above">
+                        ({{ item.qty_per_bom }} × {{ bom.bom_qty }})
+                      </span> -->
+                    </td>
+                    <td><span class="badge badge-substitute">Substitute Item</span></td>
+                    <td>As Per Primary Item</td>
+                    <td>{{ sub.avlStock }}</td>
+                    <td>{{ sub.dispatchQty }}</td>
+                    <td>{{ item.qty_per_bom * bom.pending_qty}}</td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+
+          </ng-container>
+        </tbody>
+      </table>
+
+      <div class="footer-actions">
+        <div class="text-right mt-3 d-flex justify-content-end">
+          <button mat-raised-button color="primary" type="submit">Apply</button>
+        </div>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

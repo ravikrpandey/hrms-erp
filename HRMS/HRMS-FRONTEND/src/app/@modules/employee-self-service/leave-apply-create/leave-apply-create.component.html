@@ -1,0 +1,325 @@
+<!-- <pre>{{ leaveForm.value | json }}</pre> -->
+
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+
+      <span *ngIf="mode == 'viewMode'"> View Leaves</span>
+      <span *ngIf="mode == 'editMode'"> Edit Leave</span>
+      <span *ngIf="mode == 'addMode'"> Add Leave</span>
+
+    </p>
+  </div>
+
+  <div class="add_button">
+    <button type="button" class="btn_add" (click)="goBack()"> <i class="fa fa-arrow-circle-left"></i> Back </button>
+    <!-- <button class="backBtn" routerLink="../../"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+  </div>
+</div>
+
+<div class="right_data_all pt-4">
+  <form class="form" [formGroup]="leaveForm">
+
+    <mat-card>
+      <div class="form_group">
+        <div class="heading_neo">
+          <h3 *ngIf="mode !== 'viewMode'">Applying Leave For</h3>
+          <h3 *ngIf="mode == 'viewMode'">Applied Leave For</h3>
+        </div>
+
+        <!-- <div [ngClass]="{'disabled': mode === 'viewMode'}" class="row mt-2"> -->
+        <div class="row mt-2">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="!approvalEmployeeId">
+            <div class="form-group-name-cat">
+              <mat-radio-group formControlName="leaveFor" (change)="changeLeaveFor()">
+                <mat-radio-button class="radio-space" color="primary" value="ME">Me</mat-radio-button>
+                <mat-radio-button *ngIf="mode !== 'viewMode'" style="margin-left: 2rem;" class="radio-space"
+                  color="primary" value="TEAMMATE">Teammate</mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+
+          <div class="col-md-4" *ngIf="leaveForm?.get('leaveFor')?.value === 'TEAMMATE'">
+            <!-- <div *ngIf="mode === 'addMode' || 'editMode'" [ngClass]="{'disabled': mode === 'viewMode'}"> -->
+            <div *ngIf="mode === 'addMode' || 'editMode'">
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="employee_id" placeholder="Please Select Employee"
+                    (selectionChange)="handleChange($event)">
+
+                    <app-search-filter [array]="employees" [placeholder]="'Search by employee name'"
+                      [searchFields]="['first_name','last_name','employee_code']" (filteredReturn)="employeeSearch($event)">
+                    </app-search-filter>
+
+                    <!-- <mat-select-filter [array]="employees"
+                      (filteredReturn)="employeeSearch($event)"></mat-select-filter> -->
+                    <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                      {{ item?.first_name + ' ' + item?.last_name + ' ' + item?.employee_code}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formControls['employee_id'].invalid && formControls['employee_id'].touched">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" style="width:100%; height:17rem;" [columnDefs]="columnDefs"
+          [pagination]="true" [paginationPageSize]="10" [rowData]="rowData" (gridReady)="onGridReady($event)"
+          [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </mat-card>
+
+
+    <mat-card class="mt-2">
+      <div class="leaveFormArea">
+        <!-- ======RADIO BUTTONS [ For Me and For Other]================================================================= -->
+
+
+        <div class="row">
+          <!-- LEFT SIDE -->
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div *ngIf="(mode === 'addMode' || 'editMode')" [ngClass]="{'disable-pointer-events': mode == 'viewMode' }">
+              <div class="form-group mb-4">
+                <mat-label>Leave <span class="alertspan">*</span></mat-label>
+                <mat-form-field appearance="outline">
+                  <mat-select [(ngModel)]="inputOnly" formControlName="leaveName" placeholder="Please select the leave"
+                    (selectionChange)="onLeaveSelect($event.value)">
+                    <!-- <mat-option disabled>Please select the leave</mat-option> -->
+                    <!-- <mat-select-filter [array]="leaves" (filteredReturn)="leavesSearch($event)"></mat-select-filter> -->
+                    <app-search-filter [array]="leavesMaster" [placeholder]="'Search by Leave name'"
+                      [searchFields]="['leave_name', 'leave_code']" (filteredReturn)="filterLeaveType = $event.data">
+                    </app-search-filter>
+                    <mat-option *ngFor="let leave of filterLeaveType" [value]="leave.leave_id"
+                      (click)="resetDates(leave.leave_id)">
+                      {{ leave.leave_name + " - " + leave.leave_code }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="formControls['leaveName'].invalid && formControls['leaveName'].touched">
+                    This field is required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <h2 *ngIf="approvalEmployeeId">Applied For</h2>
+            <div class="form_field_i">
+              <div class="form-group mb-4" [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck }">
+                <mat-form-field appearance="outline" (click)="picker.open()" class="example-form-field1 ">
+                  <mat-label>From</mat-label>
+                  <input matInput readonly [disabled]="mode == 'viewMode' || !listCheck" [matDatepicker]="picker"
+                    [min]="now" [max]="max" formControlName="fromDate" />
+                  <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+                  <mat-datepicker-toggle [disabled]="mode == 'viewMode' || !listCheck" matIconSuffix
+                    [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker [disabled]="mode == 'viewMode' || !listCheck" #picker
+                    [disabled]="mode === 'viewMode'"></mat-datepicker>
+                  <mat-error *ngIf="leaveForm.controls['fromDate'].hasError('required')">Date is Required.</mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="form-group mb-4" [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck }">
+                <mat-form-field appearance="outline" (click)="picker1.open()" class="example-form-field1 mb-4">
+                  <mat-label>To</mat-label>
+                  <input readonly [min]="minDate" [max]="max" [disabled]="mode == 'viewMode' || !listCheck" matInput
+                    [matDatepicker]="picker1" formControlName="toDate" />
+                  <mat-datepicker-toggle [disabled]="mode == 'viewMode' || !listCheck" matIconSuffix
+                    [for]="picker1"></mat-datepicker-toggle>
+                  <mat-datepicker [disabled]="mode == 'viewMode' || !listCheck" #picker1
+                    [disabled]="mode === 'viewMode'"></mat-datepicker>
+                  <mat-error *ngIf="leaveForm.controls['toDate'].hasError('required')">Date is Required.</mat-error>
+                </mat-form-field>
+              </div>
+              <div [ngClass]="{'disable-pointer-events': mode == 'viewMode'}" class="form-group-name-cat borrder mb-3">
+                <mat-form-field class="example-form-field1" appearance="outline">
+                  <mat-label>No. of Days</mat-label>
+                  <input type="text" matInput formControlName="days_difference" readonly />
+                </mat-form-field>
+              </div>
+
+              <div>
+                <div [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck }">
+                  <mat-form-field appearance="outline" class="example-form-field1 mb-3">
+                    <mat-label>Reason of the leaves</mat-label>
+                    <input [readonly]="mode == 'viewMode' || !listCheck" matInput formControlName="reason"
+                      placeholder="Reason for applying leave" />
+                    <mat-error *ngIf="leaveForm.get('reason')?.hasError('required')">
+                      Please provide the reason for the leave
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+
+                <!-- ================DOCUMENT PROOFS========================================================================= -->
+                <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 mt-2">
+                  <div class="form-group-name-cat mb-2">
+                    <mat-label *ngIf="mode == 'viewMode'" style="font-size:14px;">Uploaded
+                      Proofs</mat-label>
+                    <mat-label *ngIf="mode != 'viewMode'" style="font-size:14px;">Document
+                      Proofs</mat-label>
+                  </div>
+                </div>
+
+                <div [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck }"
+                  *ngIf="mode !== 'viewMode' && !approvalEmployeeId" class="row">
+                  <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 gap"
+                    *ngFor="let file of fileArray; let i = index"
+                    style="padding: 0px 10px; display: flex; align-items: center;">
+                    <div style="margin-right: 0.4rem; display: flex; flex-direction: column; align-items: center;">
+                      <div *ngIf="!(i == 0 && closeDisable)"
+                        [ngClass]="{'disabled': closeDisable === true || mode === 'viewMode'}"
+                        (click)="removeFileInput(i)" style="cursor: pointer; margin-top: 6px;">
+                        <mat-icon matTooltip="Remove Item" color="warn">cancel_circle</mat-icon>
+                      </div>
+                    </div>
+                    <div style="position: relative; flex-grow: 1;">
+
+                      <input [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck } "
+                        class="form-control" type="file" matTooltip="Upload PDF, EXCEL or Image"
+                        accept=" .jpg, .jpeg, .png" (change)="onChange($event, i)" style="width: 100%;
+                    padding-right: 10px;
+                    font-size: 14px;
+                    height: 40px;
+                    padding-top: 8px;" />
+
+                      <span [attr.disabled]="mode === 'viewMode' ? true : null" *ngIf="!file.imagePath && file.url"
+                        (click)="openFileInNewTab(file.url)" class="file_view">View
+                        File {{i+1}}</span>
+                    </div>
+
+                    <div *ngIf="mode !== 'viewMode'"
+                      style="margin-left: 0.5rem; display: flex; flex-direction: column; align-items: center;">
+                      <div (click)="addFileInput(i)" style="cursor: pointer; margin-top: 5px;">
+                        <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="mode === 'viewMode' || approvalEmployeeId" class="row mt-1">
+                  <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+                    <span *ngFor="let file of fileArray; let i = index" style="position: relative; flex-grow: 1;">
+                      <span *ngIf="!file.imagePath && file.url" (click)="openFileInNewTab(file.url)"
+                        class="file_view_2">
+                        View File {{i+1}}
+                      </span>
+                    </span>
+
+                  </div>
+                </div>
+              </div>
+
+              <form class="form mt-2" [formGroup]="approvalForm"
+                *ngIf="(approvalEmployeeId && actionFor == 'APPROVED') || status=='APPROVED'">
+                <h2>Approved For</h2>
+                <div class="form-group mb-4" [ngClass]="{'disable-pointer-events': mode == !listCheck }">
+                  <mat-form-field appearance="outline" (click)="apPicker.open()" class="example-form-field1 ">
+                    <mat-label>From</mat-label>
+                    <input matInput readonly [matDatepicker]="apPicker" [min]="startDateVld" [max]="endDateVld"
+                      formControlName="approved_start_date" />
+                    <mat-datepicker-toggle matIconSuffix [for]="apPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #apPicker></mat-datepicker>
+                    <mat-error *ngIf="approvalForm.controls['approved_start_date'].hasError('required')">Date is
+                      Required.</mat-error>
+                  </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" (click)="apPicker1.open()" class="example-form-field1 mb-4">
+                  <mat-label>To</mat-label>
+                  <input readonly [min]="minDate" [max]="endDateVld" matInput [matDatepicker]="apPicker1"
+                    formControlName="approved_end_date" />
+                  <mat-datepicker-toggle matIconSuffix [for]="apPicker1"></mat-datepicker-toggle>
+                  <mat-datepicker #apPicker1></mat-datepicker>
+                  <mat-error *ngIf="approvalForm.controls['approved_end_date'].hasError('required')">Date is
+                    Required.</mat-error>
+                </mat-form-field>
+
+                <div class="form-group-name-cat borrder mb-3">
+                  <mat-form-field class="example-form-field1" appearance="outline">
+                    <mat-label>No. of Days</mat-label>
+                    <input type="text" matInput formControlName="approved_days" readonly />
+                  </mat-form-field>
+                </div>
+              </form>
+
+
+
+
+              <!-- ============================================================================================================ -->
+
+            </div>
+            <!-- </div> -->
+          </div>
+
+          <!-- RIGHT SIDE -->
+          <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-12" style="margin-top: 28px;"
+            [ngClass]="{'disable-pointer-events': mode == 'viewMode' || !listCheck}"
+            *ngIf="(leaveForm.get('fromDate')?.value && leaveForm.get('toDate')?.value)">
+            <div class="left_dta_y">
+              <div formArrayName="days_details">
+                <div class="right_sei" *ngFor="let control of formControls.days_details['controls']; let i = index"
+                  [formGroup]="control">
+                  <div class="input_b">
+                    <input type="text" style="font-size: 12px;" readonly formControlName="dayDate" class="formControls">
+                  </div>
+                  <div class="line_wi">
+                    <div class="blu_le"
+                      *ngIf="control.get('leave_day')?.value !== 'Sat' && control.get('leave_day')?.value !== 'Sun'">
+                    </div>
+                    <div class="gre_enn"
+                      *ngIf="control.get('leave_day')?.value === 'Sat' || control.get('leave_day')?.value === 'Sun'">
+                    </div>
+                  </div>
+
+
+
+                  <div class="chec_box_i"
+                    [ngClass]="{'disable-pointer-events':control.get('leave_day')?.value === 'Sat' || control.get('leave_day')?.value === 'Sun' || !listCheck}">
+                    <div class="form-group radio_set_o">
+                      <!-- Radio group will be repeated for each date, assuming same options for each date -->
+                      <mat-radio-group formControlName="leave_period" (change)="onLeavePeriodChange($event)">
+                        <mat-radio-button class="radio-space" value="0"
+                          [disabled]="!isFullDayActive() || (isWeeklyOffDay(control) && control.get('leave_period')?.value !== '0')">
+                          Full
+                        </mat-radio-button>
+                        <mat-radio-button style="margin-left: 10px;" class="radio-space" value="1"
+                          [disabled]="!isHalfActive() ||(isWeeklyOffDay(control) && control.get('leave_period')?.value !== '1')">
+                          1st Half
+                        </mat-radio-button>
+                        <mat-radio-button style="margin-left: 10px;" class="radio-space" value="2" [disabled]="!isHalfActive() ||(isWeeklyOffDay(control) && control.get('leave_period')?.value !== '2')
+  ">
+                          2nd Half
+                        </mat-radio-button>
+                      </mat-radio-group>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="col-12 mt-5 common_button_sub" *ngIf="!approvalEmployeeId">
+          <button type="button" (click)="onApplyLeave()" *ngIf="!showUpdate && !removeButton">Add</button>
+          <button type="button" (click)="onUpdateLeave()" *ngIf="showUpdate && !removeButton">Update</button>
+          <!-- <button mat-raised-button color="warn" type="button" class="mx-3">CANCEL</button> -->
+        </div>
+
+        <div class="col-12 mt-5 common_button_sub" *ngIf="approvalEmployeeId">
+          <button type="button" (click)="onApproveLeave()">{{approvalActinName}}</button>
+        </div>
+      </div>
+    </mat-card>
+  </form>
+</div>

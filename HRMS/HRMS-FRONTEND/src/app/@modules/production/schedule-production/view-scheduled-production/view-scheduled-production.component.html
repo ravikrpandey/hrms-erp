@@ -1,0 +1,156 @@
+<section class="section">
+  <div class="row">
+    <div class="employee_top my-1">
+      Scheduled Production
+      <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"></i>
+        View Scheduled Production</span>
+    </div>
+  </div>
+  <mat-card>
+    <div class="form_head mt-2">
+      <h3>View Scheduled Production</h3>
+      <button class="backBtn" (click)="goBack()">
+        <i class="fa fa-arrow-circle-left"></i> Back
+      </button>
+    </div>
+    <div class="form_basic px-4 pt-4">
+      <form [formGroup]="viewScheduledProduction">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Product Order Number</mat-label>
+                <input type="text" matInput formControlName="product_order_no" readonly />
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group ">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Select Product Name</mat-label>
+                <input type="text" matInput formControlName="product_name" readonly />
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Select Product Variant</mat-label>
+                <input type="text" matInput formControlName="product_variant" readonly />
+
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group ">
+              <mat-form-field appearance="outline" class="">
+                <mat-label>Product Code</mat-label>
+                <input type="text" matInput formControlName="product_code" readonly />
+                <!-- <mat-error *ngIf="addProductionForm.get('product_variant')?.hasError('required')">
+                    This field is required!
+                  </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-4 col-sm-12 col-12">
+            <div class="form-group service_description ">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Product Description</mat-label>
+                <input type="text" matInput formControlName="product_description" readonly />
+
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+        <div class=" row">
+          <div class=" col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" style="overflow: auto;">
+            <table class="table table-bordered mt-2">
+              <thead>
+                <tr>
+                  <th scope="col">S.No</th>
+                  <th scope="col">Item Name</th>
+                  <th scope="col">Item Code</th>
+                  <th scope="col">BOM Qty</th>
+                  <th scope="col">Total Required Qty</th>
+                  <th scope="col">Unit</th>
+                </tr>
+              </thead>
+              <tbody formArrayName="bomDetails">
+                <ng-container *ngIf="bomDetailsData.length==0">
+                  <tr>
+                     <td colspan="6">
+                      <p  class="text-center mt-4 text-sm">Bom Details not found !</p>
+                     </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="bomDetailsData.length!=0">
+                  <tr *ngFor="let bomDetails of bomDetailsFormArray['controls']; let i = index" [formGroupName]="i">
+                    <td>
+                      {{i+1}}
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="itemName" placeholder="Item Name" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="itemCode" placeholder="Item Code" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="bomQty" placeholder="Bom Qty" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="total_required_qty"
+                          placeholder="Ttoal Required Qty" readonly />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field appearance="outline">
+                        <input type="text" matInput formControlName="unit" placeholder="Unit" readonly />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+            <div class="form-group service_description ">
+              <mat-form-field appearance="outline" class="mt-1">
+                <mat-label>Remarks</mat-label>
+                <input type="text" matInput formControlName="remark"  />
+
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-end mt-3 mb-4">
+          <button mat-raised-button color="primary" (click)="ngSubmitRaiseIndent(viewScheduledProduction.value)">
+            Raise Indent
+          </button>
+          <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Back</button>
+        </div>
+      </form>
+
+    </div>
+  </mat-card>
+</section>
+
+

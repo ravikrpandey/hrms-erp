@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <style>
+        @page {
+            margin-bottom: 20mm;
+        }
+
+.footer {
+    position: fixed;
+    bottom: 0px;
+}
+
+.table {
+    width: 100%;
+    break-inside: auto;
+    border-collapse: collapse;
+}
+.table th {
+    background-color: #ccc;
+    border: 1px solid #ccc;
+       padding: 5px 10px;
+}
+.table td {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    
+}
+
+
+        @media print {
+
+            body{
+                -webkit-print-color-adjust: exact;
+}
+            
+            thead {
+                display: table-header-group;
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            .content {
+                page-break-inside: auto;
+                
+            }
+
+            ul {
+                page-break-inside: avoid;
+            }
+        }
+		
+		 /* Tables styling */
+        .section-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            table-layout: fixed;
+        }
+
+        .section-table th,
+        .section-table td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .section-table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Product images */
+        .model-table img {
+            max-width: 100px;
+        }
+        .page-number::after {
+            content: "Page " counter(page) " of " counter(pages);
+        }
+        @page {
+            size: A4;
+            margin: 100px 30px 120px 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table width="900" style="border-collapse: collapse; margin:auto;" cellpadding="0" cellspacing="0">
+
+        <thead>
+            <tr>
+                <th style="text-align:left;">
+                    <img src="logo.png" alt="ELANPRO">
+                </th>
+            </tr>
+            
+        </thead>
+
+        <tbody>
+          <main>
+            <table class="section-table">
+                <tr>
+                    <td><b>Dispatch Location:</b> {{invoice.dispatchLocation}}</td>
+                    <td><b>PI No:</b> {{invoice.piNumber}}</td>
+                    <td><b>Date:</b> {{invoice.date}}</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">
+                        <b>{{company_name}}</b><br />
+                        {{company.fullAddress}}<br />
+                        GSTIN: {{company.gstin}}<br />
+                        Email: {{mail_id}}<br />
+                        Mobile No: {{company.phone}}
+                    </td>
+                    <td><b>PO No:</b> {{proposal_no}}</td>
+                    <td><b>Other Reference(s):</b> {{invoice.otherReferences}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <b>Sales Manager:</b> {{invoice.salesManager.name}} | Contact No:
+                        {{invoice.salesManager.phone}}<br />
+                        Email: {{invoice.salesManager.email}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>Invoice To</b><br />
+                        {{customer.name}}<br />
+                        {{customer.city}} , {{customer.state}}<br />
+                        Contact Person : {{customer.contactPerson}}<br />
+                        Contact No : {{customer.contactNo}}
+                    </td>
+                    <td colspan="2">
+                        <b>Delivery Address</b><br />
+                        {{customer.deliveryAddress}}<br />
+                        {{customer.city}}, {{customer.state}}
+                    </td>
+                </tr>
+            </table>
+    
+            <table class="section-table model-table">
+                <thead>
+                    <tr>
+                        <td colspan="9">
+                            <h3 style="margin: 10px 0">Model Details</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>S.N</th>
+                        <th>Model</th>
+                        <th>Description Of Goods</th>
+                        <th>Product Image</th>
+                        <th>HSN/SAC</th>
+                        <th>GST Rate (%)</th>
+                        <th>Qty</th>
+                        <th>Offer Basic Price/Unit (Rs)</th>
+                        <th>Grand Total with GST (Rs)</th>
+                    </tr>
+                </thead>
+                <tbody id="item-rows">
+                    {{product_rows}}
+                    <tr>
+                        <td colspan="8" style="text-align:right;"><b>Total Basic Amount</b></td>
+                        <td>{{totalAMTAfterDiscount}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" style="text-align:right;"><b>Total GST</b></td>
+                        <td>{{igst}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="8" style="text-align:right;"><b>Total Including GST</b></td>
+                        <td>{{grant_total}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="9"><b>{{amountInWords}}</b></td>
+                    </tr>
+                    <tr>
+                        <td colspan="9"><b>{{note}}</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    
+        <div style="page-break-before: always;"></div>
+    
+        <main>
+            <div class="terms-conditions">
+                <h3>Terms and Conditions:-</h3>
+                <p><b>Terms of Delivery:</b> {{terms.delivery}}</p>
+                <p><b>Freight:</b> {{terms.freight}}</p>
+                <p><b>Payment:</b> {{terms.payment}}</p>
+                <p><b>Insurance:</b> {{terms.insurance}}</p>
+                <p><b>Validity:</b> {{terms.validity}}</p>
+                <p><b>Note:</b> {{terms.note}}</p>
+                <p>{{terms.additionalNote}}</p>
+            </div>
+    
+            <div class="bank-details">
+                <h3>Our Bank Details</h3>
+                <table class="section-table model-table">
+                    <tr>
+                        <td colspan="2" style="padding: 5px; text-align: center;">Name of the Beneficiary: ELAN PROFESSIONAL
+                            APPLIANCES PVT LTD</td>
+                    </tr>
+                    <tr>
+                        <td>Bank Name</td>
+                        <td>{{bank.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Bank A/c No.</td>
+                        <td>{{bank.accountNumber}}</td>
+                    </tr>
+                    <tr>
+                        <td>Account Type</td>
+                        <td>{{bank.accountType}}</td>
+                    </tr>
+                    <tr>
+                        <td>RTGS / NEFT IFSC CODE</td>
+                        <td>{{bank.ifsc}}</td>
+                    </tr>
+                </table>
+            </div>
+    
+            <div class="financing">
+                <hr />
+                <p>Easy Finance Scheme Available</p>
+                <img src="bajaj-logo.png" alt="Bajaj Finserv" />
+            </div>
+    
+            <!-- You can add detailed Terms and Conditions table/content here -->
+    
+            <table width="100%" cellspacing="0" cellpadding="5"
+                style="border-collapse: collapse; page-break-before: always">
+                <tr>
+                    <td colspan="2">
+                        <h3 style="margin-bottom: 5px">TERMS AND CONDITIONS OF SALE</h3>
+    
+                        <p>
+                            <strong>1. Governing Provisions and Cancellation:</strong> All sales by
+                            Elan Professional Appliances PVT LTD ("Seller") to the buyer identified
+                            in this document ("Buyer") are subject to, and are expressly conditioned
+                            upon assent to, these Terms and Conditions of Sale. No additional or
+                            different terms or conditions will be binding upon Seller unless
+                            specifically agreed to in writing and signed by Seller. Buyer shall be
+                            deemed to have assented to all such terms and conditions upon acceptance
+                            of delivery of the goods.
+                        </p>
+    
+                        <p>
+                            <strong>2. Credit Approval; Payment Terms:</strong> Payment Terms: All payment terms set forth
+                            in these Terms and Conditions of Sale
+                            are subject to Sellers sole approval of Buyers credit, in Sellers discretion; and if such
+                            approval is withheld,
+                            payment shall be due in advance of Sellers performance. Except as otherwise provided on the face
+                            of
+                            these Terms and Conditions of Sale or in the preceding sentence, payment is due as per agreed
+                            payment
+                            terms. Interest will be charged at the lesser of (a) 18% per year, or (b) as per the standard
+                            market rates,
+                            on accounts more than 30 calendar days past due. If Buyer fails to make any payments in
+                            accordance with
+                            these Terms and Conditions of Sale, Seller may, in addition to its rights and remedies provided
+                            hereunder
+                            or at law or equity, (i) defer or suspend further shipments or provision of goods until Buyer
+                            re-establishes
+                            satisfactory credit, (ii) cancel the unshipped or unperformed portion of any order and invoice
+                            Buyer for
+                            incurred costs and reasonable profit without any liability on the part of Seller for failure to
+                            ship or provide
+                            goods, or (iii) make the shipment of goods to Buyer on a C.O.D. or cash in advance basis.
+                            If production or shipment of completed goods, or other Seller performance, is delayed by Buyer,
+                            and upon
+                            refusal to accept and/ or delay to respond within a reasonable time to Sellers request to take
+                            delivery of
+                            such completed goods, Seller may immediately invoice, and Buyer shall pay, the percentage of the
+                            purchase price corresponding to the percentage of completion; in addition, Buyer shall
+                            compensate Seller
+                            for storage of completed goods or work in process during any such delay, whether stored at
+                            Sellers facility
+                            or an independent storage company's facilities.
+                        </p>
+    
+                        <p>
+                            <strong>3. Taxes and Other Charges: </strong> Any manufacturers tax, occupation tax, use tax,
+                            goods and services tax,
+                            sales tax, excise tax, value-added tax, duty, custom, inspection or testing fee, or any other
+                            tax, fee,
+                            interest or charge of any nature whatsoever imposed by any governmental authority on or measured
+                            by
+                            the transaction between Seller and Buyer shall be paid by Buyer in addition to the pricesquoted
+                            or
+                            invoiced. In the event Seller is required to pay any such taxes or other charges, Buyer shall
+                            reimburse
+                            Seller therefor on demand.
+                        </p>
+    
+                        <p>
+                            <strong>4. Retention of Title:</strong>
+                            (a) In spite of delivery having been made property in the goods sold hereunder
+                            shall not pass to the Buyer until: (i) the Buyer shall have paid the price and any applicable
+                            taxes in full;
+                            and (ii) no other sums whatsoever shall be due from the Buyer to the Seller. (b) Until property
+                            in the goods
+                            passes to the Buyer in accordance with the above clause (i), the Buyer shall hold the goods and
+                            each of
+                            them on a fiduciary basis as bailee for the Seller. The Buyer shall store the goods (at no cost
+                            to the Seller)
+                            separately from all other goods in its possession and marked in such a way that they are clearly
+                            identified
+                            as the Sellers property. (ii) Notwithstanding that the goods (or any of them) remain the
+                            property of the
+                            Seller, the Buyer may sell or use the goods in the ordinary course of the Buyers business at
+                            full market
+                            value for the account of the Seller. Any such sale or dealing shall be a sale or use of the
+                            Sellers property
+                            by the Buyer on the Buyers own behalf and the Buyer shall deal as principal when making such
+                            sales or
+                            dealings. Until property in the goods passes from the Seller, the entire proceeds of sale or
+                            otherwise of the
+                            goods shall be held in trust for the Seller and shall not be mixed with other monies or paid
+                            into any
+                            overdrawn bank account and shall be at all material times identified as the Sellers money. (iii)
+                            Until such
+                            time as property in the goods passes from the Seller, the Buyer shall upon request deliver up
+                            such of the
+                            goods as have not ceased to be in existence or resold to the Seller. If the Buyer fails to do
+                            so, the Seller
+                            may enter upon any premises owned, occupied or controlled by the Buyer where the goods are
+                            situated
+                            and repossess the goods. On the making of such a request, the rights of the Buyer under clause
+                            (c) above
+                            shall cease. (i) The Buyer shall not pledge or in any way charge by way of security for any
+                            indebtedness
+                            any of the goods which are the property of the Seller. Without prejudice to the other rights of
+                            the Seller, if
+                            the Buyer does so all sums whatsoever owing by the Buyer to the Seller shall forthwith become
+                            due and
+                            payable. (ii) The Buyer shall insure and keep insured the goods to the full price against all
+                            risks to the
+                            reasonable satisfaction of the Seller until the date that property in the goods passes from the
+                            Seller, and
+                            shall whenever requested by the Seller produce a copy of the policy of insurance. Without
+                            prejudice to the
+                            other rights of the Seller, if the Buyer fails to do so, all sums whatever owing by the Buyer to
+                            the Seller
+                            shall forthwith become due and payable. (iii) Notwithstanding anything stated above, until the
+                            goods
+                            passes from the Seller to the Buyer in accordance with clause (a) above, the Seller has the
+                            right of resale
+                            of the goods that is in possession of the Buyer. (d)In case the buyer starts using the machines
+                            but has not
+                            paid for the machines he will be liable to pay an actual Invoice value along with the interest @
+                            18% till the
+                            last date of final payment.
+                        </p>
+    
+                        <p>
+                            <strong>5. Delivery, Claims and Force Majeure:</strong> Claims and Force Majeure: Unless
+                            otherwise agreed to in writing, goods shall be delivered to
+                            Buyer when placed at the disposal of the Buyer and/ or its agent, and in case of a sale to a
+                            Buyer located
+                            outside of India ex works Sellers loading dock (as the latter shipping term is defined in
+                            incoterms 2010).
+                            Delivery of products to the carrier shall constitute delivery to Buyer; and regardless of
+                            shipping terms or
+                            freight payment, Buyer shall bear all risk of loss or damage in transit. Seller reserves the
+                            right to make
+                            delivery in instalments, unless otherwise expressly stipulated herein; all such instalments to
+                            be invoiced
+                            upon shipment of the first instalment and paid for when due per invoice, without regard to
+                            subsequent
+                            deliveries. Delay in delivery of any instalment shall not relieve Buyer of its obligations to
+                            accept remaining
+                            deliveries. In case of delay by Buyer from agreed pickup date, warehousing charges at the rate
+                            of 1% per
+                            month or part thereof will be applicable.Unless otherwise examined previously by the Buyer, all
+                            claims for
+                            shortages or other errors in delivery must be made in writing to Seller within 10 calendar days
+                            after
+                            receipt of shipment; and failure to give such notice shall constitute unqualified acceptance and
+                            a waiver of
+                            all such claims by Buyer. Claims for loss of or damage to goods in transit must be made to the
+                            carrier, and
+                            not to Seller.Goods once sold cannot be taken back or exchanged. All delivery dates are
+                            approximate.
+                            Seller shall not be liable (or any losses or damages as a result of any delay or failure to
+                            deliver due to any
+                            cause beyond Sellers reasonable control, including but not limited to any act of God, act of
+                            Buyer,
+                            embargo or other governmental act, regulation or request, fire, accident, strike, slowdown, war,
+                            act of
+                            terrorism, riot, delay in transportation, or inability to obtain necessary labour, materials or
+                            manufacturing
+                            facilities. In the event of any such delay, the date of delivery shall be extended for a period
+                            equal to the
+                            time lost because of the delay. Buyers exclusive remedy for other delays and for Sellers
+                            inability to deliver
+                            for any reason (other than as provided in this paragraph) shall be rescission of its agreement
+                            to purchase.
+                        </p>
+    
+                        <p>
+                            <strong>6. Changes:</strong> Seller may at any time make such changes in design and construction
+                            of products,
+                            components or parts as Seller deems appropriate, without notice to Buyer. Seller may furnish
+                            suitable
+                            substitutes for materials unobtainable because of priorities or regulations established by
+                            governmental
+                            authority or non-availability of materials from suppliers
+                        </p>
+    
+                        <p>
+                            <strong>7. Warranties:</strong> The goods sold by Seller to Buyer hereunder are warranted by
+                            Seller directly to the end
+                            user, on the terms of Sellers applicable written warranty in effect at the time of shipment to
+                            Buyer (the
+                            "Warranty"). SELLER MAKES NO WARRANTY (EXCEPT OF TITLE) TO ANY DISTRIBUTOR OR OTHER
+                            INTERMEDIARY PURCHASER OF GOODS WHERE SUCH DISTRIBUTOR OR OTHER INTERMEDIARY
+                            PURCHASER IS NOT THE END USER OF SUCH GOODS. Buyer shall indemnify and hold harmless Seller from
+                            and against any and all losses, liabilities, damages and expenses (including but not limited to
+                            attorneys
+                            fees and other costs of defence) that Seller may incur as a result of Buyer or any intermediary
+                            purchaser
+                            extending any warranties to its customers beyond the Warranty. Performance of the remedy
+                            provided in
+                            the Warranty shall be Sellers sole obligation and the end-users exclusive remedy with respect to
+                            defective
+                            goods. Any parts repaired or replaced under the Warranty are warranted only for the balance of
+                            the
+                            warranty period on the part that was repaired or replaced. The above warranties are exclusive
+                            and in lieu
+                            of all other representations and warranties, express or implied; and seller expressly disclaims
+                            and
+                            excludes any implied warranty of merchantability or fitness for any particular purpose, and any
+                            warranties
+                            arising from course of dealing or usage of trade.
+    
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <br /><br />
+                        <h3 style="margin-bottom: 5px">WARRANTY DETAILS</h3>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 12px" border="1">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 4px">Model</th>
+                                    <th style="padding: 4px">Warranty - Comprehensive</th>
+                                    <th style="padding: 4px">Warranty - Compressor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 4px">
+                                        Chest & Glass top Freezer 12 Months 36 Months
+                                    </td>
+                                    <td style="padding: 4px">12 Months</td>
+                                    <td style="padding: 4px">48 Months</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 4px">All other products</td>
+                                    <td style="padding: 4px">12 Months</td>
+                                    <td style="padding: 4px">12 Months</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>
+                            <strong>8.Patents: </strong> Trademarks and Copyrights: Seller will, at its own expense, defend
+                            any suits that may be
+                            instituted by anyone against Buyer for alleged infringement of any patent, trademark or
+                            copyright under
+                            any applicable law relating to goods or services provided by Seller, and pay any final damage
+                            award
+                            therein, provided Buyer shall have made all payments then due hereunder, shall give Seller
+                            immediate
+                            notice in writing of any such suit, shall transmit to Seller immediately upon receipt all
+                            processes and
+                            papers served upon Buyer, and shall permit Seller, through its counsel, to defend or settle the
+                            same either
+                            in the name of Buyer or in the name of Seller, giving Seller all needed information, assistance
+                            and
+                            authority to enable Seller to do so. Further, if the result of any such suit is a determination
+                            or
+                            acknowledgement of infringement, Seller shall, at Sellers option, (a) obtain for Buyer the right
+                            to continue
+                            to use the goods or products of the services purchased from Seller, or (b) replace the same with
+                            noninfringing goods or services, or (c) modify such goods or services so that they are
+                            non-infringing, or (di
+                            remove such goods or products of services and refund to Buyer the undepreciated portion of the
+                            purchase
+                            price, determined on the basis of a five-year useful life. To the extent that any goods or
+                            services that
+                            Seller furnishes to Buyer are (i) manufactured in accordance with drawings, designs or
+                            specifications
+                            proposed or furnished by Buyer or (ii) modified by Buyer or any of Buyers customers subsequent
+                            to the
+                            delivery of the goods or services, Seller shall not be liable, and Buyer shall indemnify and
+                            hold harmless
+                            Seller from and against any and all losses, liabilities, damages, claims and expenses (including
+                            but not
+                            limited to Sellers reasonable attorneys fees and other costs of defence) incurred by Seller as a
+                            result of
+                            any claim of patent, trademark, copyright or trade secret infringement, or infringement or any
+                            other
+                            proprietary rights of third parties.
+                        </p>
+                        <p>
+    
+                            <strong> 9. Consequential Damages and Other Liability; </strong> Indemnity: Buyer has considered
+                            and agrees that the
+                            foregoing terms in these Terms and Conditions of Sale and in particular this clause 9 are
+                            reasonable.
+                            Sellers liability with respect to the goods or services sold hereunder shall be limited to the
+                            warranty and
+                            indemnity provided in sections 8 and 9 of these Terms and Conditions and, with respect to any
+                            other
+                            breaches of its contract with Buyer, shall be limited to the contract price. SELLER SHALL NOT BE
+                            SUBJECT
+                            TO ANY OTHER OBLIGATIONS OR LIABILITIES, WHETHER ARISING OUT OF BREACH OF CONTRACT,
+                            WARRANTY, TORT (INCLUDING NEGLIGENCE AND STRICT LIABILITY) OR UNDER OTHER THEORIES OF LAW
+                            OR EQUITY, WITH RESPECT TO GOODS OR SERVICES SOLD BY SELLER, OR ANY UNDERTAKINGS, ACTS OR
+                            OMISSIONS RELATING THERETO. Without limiting the generality of the foregoing, Seller
+                            specifically
+                            disclaims any liability for property damages, penalties, special or punitive damages, damages
+                            for lost
+                            profits or revenues, down-time, lost good will, cost of capital, cost of substitute goods or
+                            services, or for
+                            any other types of economic loss, or for claims of Buyers customers or any third party for any
+                            such
+                            damages, costs or losses. SELLER SHALL NOT BE LIABLE FOR AND DISCLAIMS ALL CONSEQUENTIAL,
+                            INCIDENTAL, INDIRECT AND CONTINGENT DAMAGES WHATSOEVER. Buyer shall indemnify and hold
+                            harmless Seller from and against any and all losses, liabilities, damages and expenses
+                            (including but not
+                            limited to attorneys fees and other costs of defence) that Seller may incur as a result of any
+                            claim by
+                            Buyer or by Buyers customers or by any third party arising out of or in connection with the
+                            goods or
+                            services sold hereunder, including but not limited to any such claim based upon the negligence
+                            of Seller
+                            in, performing and/or selling such goods or services, unless such losses, liabilities, damages
+                            or expenses
+                            are ultimately determined to be attributable solely to the wilful misconduct of Seller.
+    
+                        </p>
+    
+                        <p>
+                            <strong> 10.Installation:</strong> If Buyer purchases any goods that require installation, Buyer
+                            shall, at its expense, make
+                            all arrangements necessary to install and operate the goods unless it is included in Sellers
+                            scope as per
+                            agreed terms. Buyer shall install the goods in accordance with any Seller instructions. Buyer
+                            shall
+                            indemnify and hold harmless Seller from and against any and all losses, liabilities, damages and
+                            expenses
+                            (including but not limited to attorneys fees and other costs of defence) arising from or
+                            otherwise
+                            connected with Buyers or its agents failure to properly install the goods
+                        </p>
+    
+    
+    
+                        <p>
+                            <strong>11.Work by Others; Safety Devices:</strong> Unless agreed to in writing by Seller,
+                            Seller has no responsibility for
+                            labour or work performed by Buyer or others, of any nature, relating to design, manufacture,
+                            fabrication,
+                            use, installation or provision of goods. Buyer is solely responsible for furnishing, and
+                            requiring its
+                            employees and customers to use, all safety devices, guards and safe operating procedures
+                            required by
+                            law and as set forth in manuals and instruction sheets furnished by Seller. Buyer is responsible
+                            for
+                            consulting all operators manuals, and all applicable sources of safety standards and regulations
+                            including
+                            but not limited to any relevant safety standards as applicable in India from time to time and
+                            all relevant
+                            labour welfare laws as applicable in India.
+                        </p>
+                        <p>
+                            <strong>12. Technical Information: Any sketches,</strong> models or samples submitted by Seller
+                            shall remain the
+                            property of Seller, and shall be treated as confidential information unless Seller has in
+                            writing indicated a
+                            contrary intent. No use or disclosure of such sketches, models or samples, or any design or
+                            production
+                            techniques revealed thereby, shall be made without the express, prior written consent of Seller.
+                        </p>
+                        <p>
+                            <strong>13. Tools:</strong> Any dies, jigs or tools that Seller acquires in connection with its
+                            performance hereunder shall
+                            remain the property of Seller, notwithstanding any charges to Buyer therefor. Any such charges
+                            convey to
+                            Buyer the right to have the tools, dies or jigs used by Seller for performance hereunder, but do
+                            not convey
+                            title or right of possession or any other right.
+                        </p>
+                        <p>
+                            <strong>14. Assignment:</strong> Buyer may not assign any of its rights, duties or obligations
+                            under this Agreement
+                            without Sellers prior written consent, and any attempted assignment without such consent will be
+                            void and
+                            of no effect or consequence.
+                        </p>
+                        <p>
+                            <strong>15. No Waiver:</strong>
+                            No waiver of this Agreement or any of its provisions is valid unless expressly agreed to in
+                            a writing signed by Seller. No waiver by Seller of any default under this Agreement is a waiver
+                            of any other
+                            or subsequent default. The failure of Seller to insist upon strict and timely performance of any
+                            term or
+                            condition of this Agreement shall not be deemed a waiver of any right or remedy that Seller may
+                            have
+                            under this Agreement or at law or equity, and shall not be deemed a waiver of any subsequent
+                            default in
+                            performance of the terms and conditions of this Agreement.
+                        </p>
+                        <p>
+                            <strong>16. Cost of Collection:</strong> In the event legal action is necessary to recover
+                            monies due from Buyer or to
+                            enforce any provision of these Terms and Conditions of Sale or Sellers contract with Buyer,
+                            Buyer shall be
+                            liable to Seller for all costs and expenses associated therewith, including, without limitation,
+                            Sellers actual
+                            attorneys fees and costs
+                        </p>
+                    </td>
+                </tr>
+            </table>
+    
+        </main>
+        </tbody>
+
+
+<tfoot >
+    <tr>
+        <td>
+		Starex Logistics India Pvt Ltd Godown No.B Gala No.1,2,3 & 4, Hissa No.776/1G, Near Me & Mom Warehouse, Indian
+Corporation, opp. Gajanand petrol pump Gundavli, Dapoda Bhiwandi Phone:9015106925 Email:enquiry@elanpro.net   </td>
+    </tr>
+	<tr>
+	<td>
+	Printed On : 24-07-2025 01:54 PM || Powered By : VedaERP || Support No : 0124-4310735 || Sales No : 0124-4310736, +91-9810018735 || Page 1 of 8
+	</td>
+	</tr>
+</tfoot>
+
+
+    </table>
+
+</body>
+
+</html>

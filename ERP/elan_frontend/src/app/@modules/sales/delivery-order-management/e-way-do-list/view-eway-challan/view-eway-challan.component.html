@@ -1,0 +1,284 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales</h1>
+    <p>
+      E-way Challan
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #063178">
+      </i
+      ><span>View E-way Challan List </span>
+    </p>
+  </div>
+</div>
+
+<div class="form_head">
+  <h3>View E-way Challan</h3>
+  <button class="backBtn" routerLink="/master/sales/delivery-e-way-list">
+    <i class="fa fa-arrow-circle-left"></i> Back
+  </button>
+</div>
+<div class="d-flex gap-2 m-2">
+  <button class="my_class d-flex" (click)="printPdf()" matTooltip="Print">
+    <mat-icon class="mt-1">print</mat-icon>
+    <p class="">Print</p>
+  </button>
+  <button
+    class="my_class d-flex"
+    (click)="downloadData()"
+    matTooltip="Download as PDF"
+  >
+    <mat-icon class="mt-1" [ngClass]="downloadPdf ? 'download-icon' : ''"
+      >download</mat-icon
+    >
+    <p class="">{{ downloadPdf ? "Downloading.." : "Download" }}</p>
+  </button>
+</div>
+<div>
+  <div class="heading_neo">
+    <h3>E-WAY BILL</h3>
+  </div>
+  <section class="right_data_all">
+    <mat-card>
+      <table>
+        <tr>
+          <th>Bill No:</th>
+          <td>{{ vieweWayData?.EwbNo }}</td>
+          <th>Date:</th>
+          <td>{{ vieweWayData?.EwbDt }}</td>
+          <th>Valid Till:</th>
+          <td>{{ vieweWayData?.EwbValidTill }}</td>
+        </tr>
+        <tr>
+          <th>Mode:</th>
+          <td>{{ vieweWayData?.transportMode }}</td>
+          <th>Distance:</th>
+          <td>{{ vieweWayData?.distance }} KM</td>
+          <th>Type:</th>
+          <td>{{ vieweWayData?.vehicleType }}</td>
+        </tr>
+      </table>
+    </mat-card>
+  </section>
+
+  <div class="heading_neo">
+    <h3>Address Details</h3>
+  </div>
+  <section class="right_data_all">
+    <mat-card>
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="heading_neo">
+            <h3>From</h3>
+          </div>
+          <table style="width: 100%">
+            <tr>
+              <th>GSTIN:</th>
+              <td>{{ invoiceData?.SellerDtls?.Gstin || vieweWayData?.dispatch_from_gstin}}</td>
+            </tr>
+            <tr>
+              <th>Billing Branch:</th>
+              <td>{{ invoiceData?.SellerDtls?.LglNm || vieweWayData?.dispatch_from_trade_name}}</td>
+            </tr>
+            <tr>
+              <th>State:</th>
+              <td>{{ invoiceData?.SellerDtls?.Loc || vieweWayData.seller_states_name}}</td>
+            </tr>
+            <tr>
+              <th>Dispatch From:</th>
+              <td *ngIf="invoice_id">{{ invoiceData?.DispDtls?.Addr1 +' - '+ invoiceData?.DispDtls?.Pin }}</td>
+              <td *ngIf="!invoice_id">{{ vieweWayData?.sup_address +'- '+ vieweWayData?.sup_pincode }}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <div class="heading_neo">
+            <h3>To</h3>
+          </div>
+          <table style="width: 100%">
+            <tr>
+              <th>GSTIN:</th>
+              <td>{{ invoiceData?.BuyerDtls?.Gstin || vieweWayData?.ship_to_gstin}}</td>
+            </tr>
+            <tr>
+              <th>Company Name:</th>
+              <td>{{ invoiceData?.BuyerDtls?.LglNm || vieweWayData?.dispatch_to_trade_name}}</td>
+            </tr>
+            <tr>
+              <th>State:</th>
+              <td>{{ invoiceData?.BuyerDtls?.Loc || vieweWayData.buyer_states_name}}</td>
+            </tr>
+            <tr>
+              <th>Ship To:</th>
+              <td *ngIf="invoice_id">{{ invoiceData?.BuyerDtls?.Addr1 +' - '+ invoiceData?.BuyerDtls?.Pin }}</td>
+              <td *ngIf="!invoice_id">{{ vieweWayData?.rec_address +'- '+vieweWayData?.rec_pincode}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </mat-card>
+  </section>
+
+  <div class="heading_neo">
+    <h3>Goods Details</h3>
+  </div>
+  <section class="right_data_all">
+    <mat-card *ngIf="invoice_id">
+      <table>
+        <tr>
+          <th>S. No.</th>
+          <th>HSN Code</th>
+          <th>Product Name & Description</th>
+          <th>Quantity</th>
+          <th>Taxable Value</th>
+          <!-- <th>Tax Rate (C+S+I + Cess+ Cess Non.Advol)</th> -->
+          <th>Tax Rate %</th>
+        </tr>
+        <tr *ngFor="let item of invoiceData?.ItemList let i= index">
+          <td>{{i+1}}</td>
+          <td>{{item.HsnCd}}</td>
+          <td>{{item.PrdDesc}}</td>
+          <td>{{item.Qty}}</td>
+          <td>{{item.PreTaxVal}}</td>
+          <td>{{item.GstRt}}</td>
+        </tr>
+      </table>
+      <!-- <hr /> -->
+      <!-- <table>
+       <tr>
+        <th>S. No.</th>
+        <th>Service Name</th>
+        <th>Description</th>
+        <th>HSN Code</th>
+        <th>Amount</th>
+        <th>Rate</th>
+       </tr>
+       <tr *ngFor="let item of additionalCharges; let i = index">
+        <td>{{i+1}}</td>
+        <td>{{item.charge_name}}</td>
+        <td>{{item.description}}</td>
+        <td>{{item?.MASTER_HSN_SAC_CODE?.hsn_sac_code}}</td>
+        <td>{{item.amount}}</td>
+        <td>{{item.tax_rate}}</td>
+       </tr>
+      </table> -->
+      <!-- <hr /> -->
+      <table>
+        <tr>
+          <th>Tot. Tax'ble Amt</th>
+          <th>CGST Amt</th>
+          <th>SGST Amt</th>
+          <th>IGST Amt</th>
+          <th>Cess Amt</th>
+          <!-- <th>Cess Non.Advol</th> -->
+          <th>Other Amt</th>
+          <th>Tot.Inv.Amt</th>
+        </tr>
+        <tr>
+          <td>{{invoiceData?.ValDtls?.AssVal}}</td>
+          <td>{{invoiceData?.ValDtls?.CgstVal}}</td>
+          <td>{{invoiceData?.ValDtls?.SgstVal}}</td>
+          <td>{{invoiceData?.ValDtls?.IgstVal}}</td>
+          <td>{{invoiceData?.ValDtls?.CesVal}}</td>
+          <!-- <td>NA</td> -->
+          <td>{{invoiceData?.ValDtls?.OthChrg}}</td>
+          <td>{{invoiceData?.ValDtls?.TotInvVal}}</td>
+        </tr>
+      </table>
+    </mat-card>
+
+    <mat-card *ngIf="!invoice_id">
+      <table>
+        <tr>
+          <th>S. No.</th>
+          <th>HSN Code</th>
+          <th>Product Name & Description</th>
+          <th>Quantity</th>
+          <th>Taxable Value</th>
+          <!-- <th>Tax Rate (C+S+I + Cess+ Cess Non.Advol)</th> -->
+          <th>Tax Rate %</th>
+        </tr>
+        <tr *ngFor="let item of ewayDataList let i= index">
+          <td>{{i+1}}</td>
+          <td>{{item.HsnCd}}</td>
+          <td>{{item.PrdDesc}}</td>
+          <td>{{item.Qty}}</td>
+          <td>{{item.PreTaxVal}}</td>
+          <td>{{item.GstRt}}</td>
+        </tr>
+      </table>
+      <hr />
+      <table>
+        <tr>
+          <th>Tot. Tax'ble Amt</th>
+          <th>CGST Amt</th>
+          <th>SGST Amt</th>
+          <th>IGST Amt</th>
+          <th>Cess Amt</th>
+          <th>Other Amt</th>
+          <th>Tot.Inv.Amt</th>
+        </tr>
+        <tr>
+          <td>{{vieweWayData?.AssVal}}</td>
+          <td>{{vieweWayData?.CgstVal}}</td>
+          <td>{{vieweWayData?.SgstVal}}</td>
+          <td>{{vieweWayData?.IgstVal}}</td>
+          <td>{{vieweWayData?.CesVal}}</td>
+          <td>{{vieweWayData?.OthChrg}}</td>
+          <td>{{vieweWayData?.TotInvVal}}</td>
+        </tr>
+      </table>
+    </mat-card>
+  </section>
+
+  <div class="heading_neo">
+    <h3>Transport Details</h3>
+  </div>
+  <section class="right_data_all">
+    <mat-card>
+      <div class="row">
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <table style="width: 100%">
+            <tr>
+              <th>Transport Name:</th>
+              <td>{{ vieweWayData?.transportName }}</td>
+            </tr>
+          </table>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+          <table style="width: 100%">
+            <tr>
+              <th>Transport Date:</th>
+              <td>{{ formatDate(vieweWayData?.transportDate) }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </mat-card>
+  </section>
+
+  <div class="heading_neo">
+    <h3>Vehicle Details</h3>
+  </div>
+  <section class="right_data_all">
+    <mat-card>
+      <table>
+        <tr>
+          <th>Mode</th>
+          <th>Vehicle Type</th>
+          <th>Vehicle No.</th>
+          <th>Transport Bilty No.</th>
+          <th>CEWB No. (if any)</th>
+          <th>Multi Veh.Info (if any)</th>
+        </tr>
+        <tr>
+          <td>{{ vieweWayData?.transportMode }}</td>
+          <td>{{ vieweWayData?.vehicleType }}</td>
+          <td>{{ vieweWayData?.vehicleNo }}</td>
+          <td>{{ vieweWayData?.transportBiltyNo }}</td>
+          <td>NA</td>
+          <td>NA</td>
+        </tr>
+      </table>
+    </mat-card>
+  </section>
+</div>

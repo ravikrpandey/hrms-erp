@@ -1,0 +1,32 @@
+<div class="edd-del">
+  <ng-container>
+    <mat-icon
+      class="storageIcon"
+      *ngIf="cellValue.grnStatus !== 'COMPLETED'"
+      matTooltip="Generate GRN"
+      (click)="navigateToPaymentCheck($event)"
+      >storage</mat-icon
+    >
+    <mat-icon
+      class="viewButton"
+      matTooltip="View"
+      *ngIf="cellValue?.grnStatus == 'COMPLETED'"
+      (click)="navigateToPaymentCheck($event)"
+      >visibility</mat-icon
+    >
+    <mat-icon
+      class="viewButton"
+      matTooltip="Download"
+      *ngIf="
+        cellValue?.grnStatus == 'COMPLETED' &&
+        cellValue?.grn_status !== 'PENDING'
+      "
+      (click)="downloadPDF($event)"
+      >download</mat-icon
+    >
+  </ng-container>
+  <!-- <mat-icon matTooltip="Generate GRN for Rejected Quantity" *ngIf="cellValue.discardStatus=='OPEN'"
+        (click)="addNewGRNForReject()" style="color: #e68d07ef;">add_circle</mat-icon>
+    <mat-icon matTooltip="Discard Rejected Quantity" style="color: red;" *ngIf="cellValue.discardStatus=='OPEN'"
+        (click)="rejectFile()">cancel</mat-icon> -->
+</div>

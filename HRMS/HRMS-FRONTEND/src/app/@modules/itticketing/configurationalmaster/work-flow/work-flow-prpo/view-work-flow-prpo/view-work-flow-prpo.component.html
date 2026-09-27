@@ -1,0 +1,34 @@
+<h3 mat-dialog-title class="popHead">Work Flow Record</h3>
+<mat-dialog-content class="mat-typography">
+    <div class="cotain">
+        <div class="emp_key">
+            <p *ngIf="getRecordById?.workflow_type">WorkFlow Type :</p>
+            <p *ngIf="getRecordById?.service_name">Service Name :</p>
+            <p *ngIf="getRecordById?.item_name">Item Name :</p>
+            <p *ngIf="getRecordById?.department_name">Department :</p>
+            <p *ngIf="getRecordById?.item_code">Item Code : </p>
+            <p *ngIf="getRecordById?.service_code">Service Code :</p>
+            <ng-container *ngFor="let data of getAllEmployeeDetails">
+                <hr />
+                <p class="ms-5">User Designation : </p>
+                <p class="ms-5">Employee Name : </p>
+            </ng-container>
+        </div>
+        <div class="emp_value">
+            <p>{{getRecordById?.workflow_type}}</p>
+            <p *ngIf="getRecordById?.service_name">{{getRecordById?.service_name }}</p>
+            <p *ngIf="getRecordById?.item_name">{{getRecordById?.item_name}}</p>
+            <p>{{getRecordById?.department_name}}</p>
+            <p *ngIf="getRecordById?.item_code">{{getRecordById?.item_code}}</p>
+            <p *ngIf="getRecordById?.service_code">{{getRecordById?.service_code}}</p>
+            <ng-container *ngFor="let data of getAllEmployeeDetails">
+                <hr />
+                <p>{{data.user_role}}</p>
+                <p>{{data.employeeName}}</p>
+            </ng-container>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">Close</button>
+</mat-dialog-actions>

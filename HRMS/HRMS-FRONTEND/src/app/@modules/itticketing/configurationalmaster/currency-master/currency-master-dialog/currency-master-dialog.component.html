@@ -1,0 +1,50 @@
+<div class="deparment-dialoge">
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!departmentId?"Add
+        Currency":"Update
+        Currency"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px"> Currency Record</h3>
+
+    <fieldset>
+        <div class="m-3" [formGroup]="currencyForm">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row align-items-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Currency Name</mat-label>
+                            <input matInput type="text" formControlName="Currency_Type"  [readonly]="view === 'view'"/>
+                            <mat-error *ngIf="currencyForm.get('Currency_Type')?.hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="currencyForm.get('Currency_Type')?.hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row align-items-center">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Rate</mat-label>
+                            <input matInput type="text" formControlName="rate"  [readonly]="view === 'view'"/>
+                            <mat-error *ngIf="currencyForm.get('rate')?.hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="currencyForm.get('rate')?.hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <mat-dialog-actions align="end">
+            <button *ngIf="!view" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                {{data?.id?.Currency_Convert_id ? 'Update' : 'Submit'}}
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

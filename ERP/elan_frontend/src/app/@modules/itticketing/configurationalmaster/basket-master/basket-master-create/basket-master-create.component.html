@@ -1,0 +1,130 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Configurational Master</h1>
+    <p>
+      Basket Details
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586"></i>
+      <span *ngIf="!id"> Create Basket </span>
+      <span *ngIf="action_type=='edit'"> Update Basket </span>
+      <span *ngIf="action_type=='view'"> View Basket </span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="onBack()">
+      <i class="fa fa-arrow-circle-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<mat-card style="box-shadow: none">
+  <div class="mb-0">
+    <form class="form_set" [formGroup]="LocationForm">
+      <div class="row">
+
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+            <mat-label>Baskets</mat-label>
+             
+              <input matInput type="text" formControlName="baskets" />
+
+            </mat-form-field>
+          </div>
+        </div> -->
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+            <mat-label>Type of Basket</mat-label>
+             
+              <input matInput type="text" formControlName="type_of_basket" />
+
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+            <mat-label>No. of Partition</mat-label>
+           
+              <input matInput type="text" formControlName="no_of_partition" />
+
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline" >
+            <mat-label>Qty of Baskets</mat-label>
+              <input matInput type="text" formControlName="basket_qty" />
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Price Per Unit</mat-label>
+              <input matInput type="text" formControlName="price_per_unit" />
+              <!-- <mat-error *ngIf="LocationForm.get('location_code')?.hasError('required')">
+                 This field is required
+              </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>HSN Code</mat-label>
+              <mat-select  formControlName="hsn_code_id">
+                <mat-select-filter
+                  [array]="searchListHSN"
+                  (filteredReturn)="searchFilterHSN($event)"
+                ></mat-select-filter>
+                <mat-option (click)="onHSNCodeChange(data)"
+                  *ngFor="let data of hsnCodeList"
+                  [value]="data.id">
+                  {{ data?.hsn_sac_code }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>GST (%)</mat-label>
+              <input
+                matInput
+                type="number"
+                placeholder="%"
+                formControlName="igst"
+                readonly
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+         <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>UOM</mat-label>
+              <mat-select formControlName="uom_id">
+                <mat-option *ngFor="let data of uomList" [value]="data.uom_id">
+                  {{ data?.uom_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub" align="end">
+        <button (click)="onSubmit()"> {{ id ? "Update" : "Save"}} </button>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+  </div>
+</mat-card>

@@ -1,0 +1,52 @@
+<div class="page-container">
+  <!-- Heading -->
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Warehouse Management</h1>
+      <p>Lorry Receipt List</p>
+    </div>
+  </div>
+
+  <!-- Tab Buttons -->
+<div class="tabs-section mb-3">
+  <button
+    class="tab-btn"
+    [class.active]="currentTab === 'Pending'"
+    (click)="setTab('Pending')">
+    Pending List
+  </button>
+  <button
+    class="tab-btn"
+    [class.active]="currentTab === 'Approved'"
+    (click)="setTab('Approved')">
+    Approved List
+  </button>
+</div>
+
+
+  <!-- Filters -->
+  <div class="row d-flex mb-2 justify-content-between align-items-center">
+    <div class="col-auto">
+      <select class="form-select" style="width: auto;" (change)="onPageSizeChanged($event)">
+        <option value="10" selected>10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Search..." (input)="onFilterTextBoxChanged($event)" />
+    </div>
+  </div>
+
+  <!-- AG Grid -->
+  <ag-grid-angular
+    class="ag-theme-alpine"
+    style="width: 100%; height: 465px"
+    [rowData]="filteredRowData"
+    [columnDefs]="columnDefs"
+    [frameworkComponents]="frameworkComponents"
+    [pagination]="true"
+    [paginationPageSize]="paginationPageSize"
+    [context]="{ componentParent: this }">
+  </ag-grid-angular>
+</div>

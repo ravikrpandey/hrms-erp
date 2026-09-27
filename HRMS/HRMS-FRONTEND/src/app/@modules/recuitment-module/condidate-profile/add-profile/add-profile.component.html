@@ -1,0 +1,156 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Recruitment</h1>
+    <p>Recruitment Candidate Add Profile <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Candidate Add Profile </span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+
+  <div class="form_basic mb-0">
+    <form class="form_set formBorder " [formGroup]="createComplaint">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3 fileWithViewImg">
+            <mat-label>Upload CV<span class="alertspan">*</span></mat-label>
+            <input class="form-control" type="file"
+  style="padding-right: 10px; height:42px; font-size:14px; padding:8px 10px;"
+  title="Termination Copy Upload" (change)="uploadDoc($event)" />
+            <mat-icon *ngIf="cv_upload" class="file_icon" (click)="viewImg()">visibility</mat-icon>
+            <mat-error
+              *ngIf="createComplaint.controls['cv_upload'].hasError('required') && 
+                              (createComplaint.controls['cv_upload'].touched || createComplaint.controls['cv_upload'].dirty)">
+              This field is required!
+            </mat-error>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>First Name <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" formControlName="first_name" />
+              <mat-error *ngIf="createComplaint.controls['first_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Middle Name</mat-label>
+            <mat-form-field>
+              <input matInput type="text" formControlName="middle_name" />
+              <mat-error *ngIf="createComplaint.controls['middle_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Last Name <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" formControlName="last_name" />
+              <mat-error *ngIf="createComplaint.controls['last_name'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="codeArea">
+            <div class="form-group addCoding">
+              <mat-form-field class="country-codes">
+                <mat-select formControlName="country_code">
+                  <mat-select-filter [array]="codes" (filteredReturn)="codeSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let countryCode of countryCodeList"
+                    [value]="countryCode?.dialing_code">{{countryCode?.dialing_code}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="form-group">
+              <mat-label>Contact Number <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="number" formControlName="contact_number">
+                <mat-error *ngIf="createComplaint.controls['contact_number'].hasError('required')">
+                  This field is
+                  required</mat-error>
+                <mat-error *ngIf=" createComplaint.controls['contact_number'].hasError('pattern')">
+                  It is not a valid mobile
+                  number</mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Email <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" style="text-transform:lowercase" formControlName="email" />
+              <mat-error *ngIf="
+              createComplaint.controls['email'].hasError('email')
+            ">
+                Please enter a valid email
+              </mat-error>
+              <mat-error *ngIf="createComplaint.controls['email'].hasError('required')">
+                This field is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>LinkedIn Profile</mat-label>
+            <mat-form-field>
+              <input matInput formControlName="linkedin_profile">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Current Employer</mat-label>
+            <mat-form-field>
+              <input matInput formControlName="current_employer">
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Years of Experience</mat-label>
+            <mat-form-field>
+              <input matInput type="number" formControlName="years_of_experience">
+            </mat-form-field>
+          </div>
+        </div>
+       <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+  <div class="form-group mb-3">
+    <mat-label>Skills & Tools</mat-label>
+
+    <mat-form-field appearance="outline" class="w-100">
+
+    <textarea
+    matInput
+    rows="8"
+    formControlName="skills_and_tools">
+</textarea>
+
+    </mat-form-field>
+  </div>
+</div>
+
+      </div>
+
+      <div class="common_button_sub">
+        <button *ngIf="!complaintId" (click)="onSubmitForm()">
+          Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

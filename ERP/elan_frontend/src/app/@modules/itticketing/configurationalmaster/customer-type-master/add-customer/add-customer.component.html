@@ -1,0 +1,76 @@
+<!-- <ng-container *ngIf="mode=='view'">
+    <h3 mat-dialog-title class="popHead">Seal Type Record</h3>
+    <mat-dialog-content class="mat-typography mt-3">
+      <div class="cotain">
+        <div class="emp_key">
+          <p>Seal Type :</p>
+          <p>Manual :</p>
+        </div>
+        <div class="emp_value">
+          <p>{{ getData?.seal_type }}</p>
+          <p>{{ getData?.seal_manual ? "Yes" : "No" }}</p>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub">
+      <button  mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </ng-container> -->
+  
+  <ng-container  >
+    <h3 mat-dialog-title class="popHead" *ngIf="id && mode=='view'">View Customer Type</h3>
+    <h3 mat-dialog-title class="popHead" *ngIf="id && mode=='edit'">Update Customer Type</h3>
+    <h3 mat-dialog-title class="popHead" *ngIf="!id">Add Customer Type</h3>
+    <mat-dialog-content class="mat-typography mt-3">
+      <form [formGroup]="addCustomerForm">
+        <div class="form-group row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Level Type</mat-label>
+              <input matInput type="text" formControlName="lavel" />
+              <mat-error
+                  *ngIf="
+                    addCustomerForm
+                      .get('customer_type_name')
+                      ?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              <mat-error *ngIf="addCustomerForm.controls['lavel'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <mat-form-field appearance="outline" class="mt-2">
+              <mat-label>Customer Type Name</mat-label>
+              <input matInput type="text" formControlName="customer_type_name" />
+              <mat-error
+                  *ngIf="
+                    addCustomerForm
+                      .get('customer_type_name')
+                      ?.hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              <mat-error *ngIf="addCustomerForm.controls['customer_type_name'].hasError('leadingSpaces')">
+                *No leading spaces!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" class="common_button_sub">
+      <button   (click)="submitData(addCustomerForm.value)" *ngIf="mode!='view'" >
+        {{ id ? "Update" : "Create"}}
+      </button>
+      <button  mat-dialog-close class="cancel_button_y">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </ng-container>

@@ -1,0 +1,50 @@
+<div>
+
+    <form [formGroup]="form" class="form_set">
+        <div class="row">
+
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Course Cayegory</mat-label>
+                        <mat-select formControlName="category">
+                            <mat-option *ngFor="let category of categoryList" [value]="category.category_name">
+                                {{ category.category_name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Course</mat-label>
+                        <mat-select formControlName="course_id">
+                            <mat-option *ngFor="let course of courses" [value]="course.id">
+                                {{ course.course_name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Remark</mat-label>
+                        <input matInput placeholder="Remark" formControlName="remark">
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+       
+    </form>
+        <!-- <mat-dialog-actions align="end" *ngIf="data?.id">
+            <button class="submit-button" style="background-color: hsl(140, 49%, 47%); "  (click)="onupdate()" class="mx-2">Update</button>
+            <button class="close-botton" mat-button mat-dialog-close style="float: right">Close</button>
+        </mat-dialog-actions> -->
+        <mat-dialog-actions align="end" *ngIf="!data?.id">
+            <button class="submit-button"  (click)="onSubmit()" style="background-color: hsl(236, 52%, 58%);" class="mx-2">Submit</button>
+            <button class="close-botton" mat-button mat-dialog-close style="float: right">Close</button>
+        </mat-dialog-actions>
+    
+</div>

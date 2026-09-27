@@ -1,0 +1,41 @@
+<div class="row" style="margin-bottom: 20px;">
+
+  <div class="row" style="margin-bottom: 20px; justify-content: center;">
+    <div class="col-sm-3 col-md-3 col-lg-3 col-12" *ngFor="let metric of metrics">
+      <div class="dashboard-card" [ngClass]="getMetricClass(metric.title)" (click)="navigateToMetric(metric)">
+        <div class="card-content">
+          <h3>{{ metric.title }}</h3>
+          <p style="font-weight: 600;">{{ metric.value }}</p>
+        </div>
+        <div class="icon">
+          <img src="../../../../../assets/invoice-count.png" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin-bottom: 20px; display: flex;">
+    <div class="chart-container" style="flex: 0 0 50%; ">
+      <h3 class="text-center"><i class="fas fa-chart-pie"></i> Lead Source Analysis</h3>
+      <app-lead-source-chart></app-lead-source-chart>
+    </div>
+  
+    <div class="chart-container" style="flex: 0 0 50%; ">
+      <!-- <h3 class="text-center"><i class="fas fa-chart-pie"></i> Conversion Rate</h3> -->
+      <h3 class="text-center"><img class="gauge-icon" src="../../../../../assets/gauge-icon.png" alt=""> Conversion Rate</h3>
+      <app-conversion-rate-chart></app-conversion-rate-chart>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 20px;">
+    <div class="ag-container" style="width: 100%; padding: 0;">
+      <h3 class="text-center"><i class="fas fa-calendar-check"></i> Lead Activity Tracker</h3>
+      <div class="ag_grid">
+        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 600px;" [rowData]="rowData"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="rowData"
+            (gridReady)="onGridReady($event)" [rowClass]="rowClass">
+        </ag-grid-angular>
+      </div>
+    </div>
+  </div>
+  
+  </div>

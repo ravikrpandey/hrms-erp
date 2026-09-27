@@ -1,0 +1,94 @@
+<div>
+    <h3 *ngIf="!view" mat-dialog-title class="popHead" style="padding-left: 5px">{{!budgetId?"Add Budget Plan":"Update Budget Plan"}}</h3>
+    <h3 *ngIf="view" mat-dialog-title class="popHead" style="padding-left: 5px">View Budget</h3>
+    <fieldset [disabled]="view == 'view'">
+        <div class="m-3" [formGroup]="budgetForm">
+            <div class="row">
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+                    <mat-label>Financial Year</mat-label>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group row" [ngClass]="view =='view'?'readonly-select':''">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label *ngIf="view != 'view'">Financial Year</mat-label>
+                            <mat-select formControlName="financial_year_id">
+                                <mat-option value="2025-2026">2025-2026</mat-option>
+                                <mat-option value="2024-2025">2024-2025</mat-option>
+                                <mat-option value="2023-2024">2023-2024</mat-option>
+                                <mat-option value="2022-2023">2022-2023</mat-option>
+                                <mat-option value="2021-2022">2021-2022</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="budgetForm.controls['financial_year_id'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+                    <mat-label>Department</mat-label>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group row" [ngClass]="view =='view'?'readonly-select':''">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label *ngIf="view != 'view'">Department</mat-label>
+                            <mat-select formControlName="department_id">
+                                <mat-option *ngFor="let department of getAllDepartment"
+                                    [value]="department.dept_id">{{
+                                    department.department_name }}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="budgetForm.controls['department_id'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+                    <mat-label>Type</mat-label>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group row" [ngClass]="view =='view'?'readonly-select':''">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label *ngIf="view != 'view'">Type</mat-label>
+                            <mat-select formControlName="type">
+                                <mat-option value="Capex">Capex</mat-option>
+                                <mat-option value="Opex">Opex</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="budgetForm.controls['type'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                            <mat-error *ngIf="budgetForm.controls['type'].hasError('leadingSpaces')">
+                                *No leading spaces!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12 mb-3">
+                    <mat-label>Budget Allocated</mat-label>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-3">
+                    <div class="form-group row">
+                        <mat-form-field appearance="outline" readonly>
+                            <mat-label>Budget Allocated</mat-label>
+                            <input matInput type="number" formControlName="amount" />
+                            <mat-error *ngIf="budgetForm.controls['amount'].hasError('required')">
+                                *Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!budgetId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <button *ngIf="budgetId" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button>
+            <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+                Close
+            </button>
+        </mat-dialog-actions>
+    </fieldset>
+</div>

@@ -1,0 +1,102 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            Material
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+               Allocate Material </span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head mt-3">
+            <h3> Allocate Material</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+       <fieldset>
+        <form [formGroup]="AddNewForm">
+            <div class="row mt-4 mx-3">
+                <!-- <div class="row mt-2 mx-3"> -->
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Item Name</mat-label>
+                                <input type="text" matInput formControlName="item_name" readonly>
+                                <mat-error *ngIf="AddNewForm.get('item_name')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Required Quantity</mat-label>
+                                <input type="text" matInput formControlName="quantity" readonly>
+                                <mat-error *ngIf="AddNewForm.get('quantity')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Available Quantity</mat-label>
+                                <input type="text" matInput formControlName="Total_inventory" readonly>
+                                <mat-error *ngIf="AddNewForm.get('Total_inventory')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                <!-- </div> -->
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Allocate Quantity</mat-label>
+                            <input type="number" matInput formControlName="allocate_quantity">
+                            <mat-error *ngIf="AddNewForm.get('allocate_quantity')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Awb</mat-label>
+                            <input type="text" matInput formControlName="awb_mup">
+                            <mat-error *ngIf="AddNewForm.get('awb_mup')?.hasError('required')">
+                                This field is required!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+              
+            </div>
+            <div class="row mt-2 mx-3">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                  <div class="form-group">
+                    <label class="mt-1">Lifo/Fifo</label>
+                    <mat-radio-group formControlName="lifo_fifo" class="d-flex flex-row gap-3">
+                      <mat-radio-button value="LIFO">Lifo</mat-radio-button>
+                      <mat-radio-button value="FIFO">Fifo</mat-radio-button>
+                    </mat-radio-group>
+                    <mat-error *ngIf="AddNewForm.get('lifo_fifo')?.hasError('required')">
+                        This field is required!
+                    </mat-error>
+                  </div>
+                </div>
+              </div>
+              
+            <div class="submit_btn">
+                <button mat-raised-button color="primary" [disabled]="!AddNewForm.valid" (click)="submit()">
+                    Submit
+                </button>
+                <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Cancel</button>
+            </div>
+            
+          
+        </form>
+       </fieldset>
+    </mat-card>
+</section>

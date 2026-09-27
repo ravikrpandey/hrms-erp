@@ -1,0 +1,56 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Configurational Master </h1>
+        <p>Trip Expense<i class="fa fa-angle-right" aria-hidden="true">
+            </i><span>Trip Expense Category List</span></p>
+    </div>
+    <div class="add_button">
+        <!-- <div *ngIf="isShortcutVisible()" class="shortcut-container add-department-shortcut">
+            Alt + c → Download CSV
+          </div>
+          <div *ngIf="isShortcutVisible()" class="shortcut-container add-holiday-shortcut">
+            Alt + A → Add Reason
+          </div> -->
+        <!-- <button type="button" (click)="downloadCSV()">Download CSV </button>
+        <button type="button" (click)="openDialog()" *ngIf="assignAction?.Write">Add Reason</button> -->
+      </div>
+</div>
+
+<div class="right_data_all">
+    <div class="employ_sube py-2">
+        <div class="searchSelector">
+          <div class="employee_2" align="end">
+            <div class="customSearchbar">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control border-0" id="filter-text-box" placeholder="Search....."
+              (input)="onFilterTextBoxChanged()">
+          </div>
+        </div>
+          <div class="example-header">
+            <select (change)="onPageSizeChanged()" id="page-size">
+              <option value="10" selected="">10</option>
+              <option value="100">100</option>
+              <option value="500">500</option>
+              <option value="1000">1000</option>
+            </select>
+            <!-- <span class="pag_size">Per Page</span> -->
+          </div>
+          </div>
+          <div class="downloadAddButton">
+
+          <div class="add_button">
+            <button type="button" (click)="downloadCSV()"> <i class="bi bi-arrow-down-circle"></i> Download CSV</button>
+            <button type="button" (click)="openDialog()" *ngIf="assignAction?.Write"> <i class="bi bi-person-add"></i> Add Trip Expense Category</button>
+          </div>
+
+        </div>
+        </div>
+
+
+    <div class="ag_grid ag_final_dat tableGroup">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style="width: 100%; height: 426px"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]=10 [rowData]="rowData"
+            [gridOptions]="gridOptions" (gridReady)="onGridReady($event)" >
+        </ag-grid-angular>
+    </div>
+</div>

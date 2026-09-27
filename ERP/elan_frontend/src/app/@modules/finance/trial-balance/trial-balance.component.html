@@ -1,0 +1,103 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Finance & Accounting</h1>
+    <p>Trial Balance <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+      </i><span>Trial Balance List</span></p>
+  </div>
+  <div class="add_button" *ngIf="currencyCode">
+    <span style="font-size: 14px; color: #666; margin-right: 15px;">
+      Currency: {{ currencyCode }} {{ currencySymbol }}
+      <span *ngIf="currencyRate && currencyRate !== 1">(Rate: 1 {{ currencyCode }} = {{ currencyRate }})</span>
+    </span>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="ag_grid">
+    <div class="container-fluid">
+      <div class="row mb-3 align-items-center">
+        <div class="col-md-4">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search account..."
+            [(ngModel)]="searchText"
+            (input)="onSearch()"
+          >
+        </div>
+        <div class="col-md-8 text-end">
+          <button
+            (click)="onBtnExportDataAsExcel()"
+            class="btn btn-success"
+            style="background-color:#00644d">
+            <i class="fa fa-file-excel-o"></i>
+            Export Excel
+          </button>
+          <div class="form-check d-inline-block ms-3" style="vertical-align: middle;">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="expandCollapseAll"
+              [(ngModel)]="expandCollapseAll"
+              (change)="onExpandCollapseAll()"
+            >
+            <label class="form-check-label" for="expandCollapseAll" style="font-size: 14px;">
+              Expand / Collapse All
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm trial-table">
+          <thead>
+            <tr class="table-header">
+              <th>Account Name</th>
+              <th class="text-end">Debit ({{ currencySymbol }})</th>
+              <th class="text-end">Credit ({{ currencySymbol }})</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-template #recursiveTemplate let-items let-level="level">
+              <ng-container *ngFor="let item of items">
+                <tr>
+                  <td [style.padding-left.px]="(level * 20) + 10">
+                    <span *ngIf="item.children?.length" class="toggle-btn" (click)="toggleNode(item)">
+                      <mat-icon *ngIf="item.expanded">keyboard_arrow_down</mat-icon>
+                      <mat-icon *ngIf="!item.expanded">keyboard_arrow_right</mat-icon>
+                    </span>
+                    <span *ngIf="!item.children?.length" class="empty-space"></span>
+                    <strong *ngIf="item.children?.length">{{ item.name }}</strong>
+                    <span *ngIf="!item.children?.length">{{ item.name }}</span>
+                  </td>
+                  <td class="text-end">
+                    {{ currencySymbol }} {{ (item.debit || item.debit_amount || 0) | number:'1.2-2' }}
+                  </td>
+                  <td class="text-end">
+                    {{ currencySymbol }} {{ (item.credit || item.credit_amount || 0) | number:'1.2-2' }}
+                  </td>
+                </tr>
+                <ng-container *ngIf="item.children?.length && item.expanded">
+                  <ng-container *ngTemplateOutlet="recursiveTemplate; context: { $implicit: item.children, level: level + 1 }">
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-template>
+
+            <ng-container *ngTemplateOutlet="recursiveTemplate; context: { $implicit: filteredData, level: 0 }">
+            </ng-container>
+            <tr class="total-row">
+              <td><strong>Total</strong></td>
+              <td class="text-end">
+                <strong>{{ currencySymbol }} {{ totalDebit | number:'1.2-2' }}</strong>
+              </td>
+              <td class="text-end">
+                <strong>{{ currencySymbol }} {{ totalCredit | number:'1.2-2' }}</strong>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

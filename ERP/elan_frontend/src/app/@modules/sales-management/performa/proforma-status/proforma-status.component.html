@@ -1,0 +1,106 @@
+<div *ngIf="isViewStatus">
+  <h3 mat-dialog-title class="popHead">Status Details</h3>
+
+
+<mat-dialog-content class="mat-typography mt-4">
+  <div class="emp_key">
+
+    <div class="not_created" *ngIf="this.notCreatedFlow">
+      <p>Work Flow Is Not Created!</p>
+
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered" If="!this.notCreatedFlow">
+        <thead>
+          <tr>
+            <th>Approver</th>
+            <th>Level</th>
+            <th>Status</th>
+            <th>Action</th>
+
+          </tr>
+        </thead>
+        <tbody *ngFor="let control of getdataCopy; index as i">
+          <tr>
+            <td>{{control?.name}} </td>
+            <td>{{control?.level}}</td>
+
+            <td>{{control?.status}}</td>
+            <td>
+              <mat-icon matTooltip="View Remark" style="cursor: pointer;" (click)="view2(control)">visibility</mat-icon>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <p style=" font-size: 16px;"><b>{{employee}}</b>{{remarkshow}}</p>
+
+    </div>
+  </div>
+  <div class="emp_value">
+
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button class="cancel_button_y" mat-dialog-close>
+    Close
+  </button>
+
+</mat-dialog-actions>
+
+</div>
+
+<div *ngIf="!isViewStatus">
+
+
+
+<h3 mat-dialog-title class="popHead">Remark</h3>
+
+
+<mat-dialog-content class="mat-typography mt-3">
+  <div class="" [formGroup]="remarksForm">
+
+    <div class="row" >
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="approval_status" readonly>
+                <mat-option [value]="'APPROVED'">Approved</mat-option>
+                <mat-option [value]="'REJECTED'">Rejected</mat-option>
+                <!-- <mat-option [value]="'PUSH BACK'">Push Back</mat-option> -->
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+      </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+        <div class="form-group mb-2">
+          <mat-form-field appearance="outline">
+            <mat-label>Remark</mat-label>
+            <input matInput type="text" formControlName="remarks" />
+          </mat-form-field>
+        </div>
+
+    </div>
+    </div>
+
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button mat-dialog-close (click)="updatePrRemarkApprove()">
+    Submit
+  </button>
+
+  <button mat-dialog-close class="cancel_button_y">
+    Close
+  </button>
+</mat-dialog-actions>
+</div>

@@ -1,0 +1,114 @@
+<div>
+  <form [formGroup]="formModel" class="form_set">
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee Name</mat-label>
+            <input matInput formControlName="employee_name" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Employe Code</mat-label>
+            <input matInput formControlName="employee_code" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Department</mat-label>
+            <input matInput formControlName="department" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Designation</mat-label>
+            <input matInput formControlName="designation" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Manager</mat-label>
+            <input matInput formControlName="reporting_manager" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Approval Manager</mat-label>
+            <input matInput formControlName="approval_manager" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Course Category</mat-label>
+            <input matInput formControlName="course_category" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Course Name</mat-label>
+            <input matInput formControlName="course_name" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Remark</mat-label>
+            <input matInput formControlName="req_remark" readonly/>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+  <div class="form-group mb-3">
+    <mat-form-field appearance="outline" style="width: 100%;">
+      <mat-label>Remark</mat-label>
+      <input 
+        matInput 
+        formControlName="remark"
+        [ngStyle]="{
+          'border': formModel.get('remark')?.invalid && formModel.get('remark')?.touched ? '1px solid red' : '',
+          'border-radius': '4px'
+        }"
+      />
+    </mat-form-field>
+  </div>
+</div>
+
+
+    <mat-dialog-actions align="end">
+      <button class="btn-approve" (click)="onSubmit()">Approved</button>
+      <button class="btn-reject" (click)="onReject()">Reject</button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn" style="display: flex;align-items: center;justify-content: center ;"class="btn-close">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>

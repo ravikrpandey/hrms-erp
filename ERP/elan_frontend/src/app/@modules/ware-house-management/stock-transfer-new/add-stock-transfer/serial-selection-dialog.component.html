@@ -1,0 +1,73 @@
+<h2 mat-dialog-title class="dialog-header">
+  Select {{ activeTab === 'serial' ? 'Serial Numbers' : 'Batch' }} for {{ data.item_name }}
+</h2>
+<mat-dialog-content class="dialog-content">
+  <div class="info-banner mb-3">
+    <span><strong>Required Quantity:</strong> {{ requiredQty }}</span>
+    <span class="ms-4" *ngIf="activeTab === 'serial'"><strong>Selected:</strong> {{ selectedSerials.length }} / {{ requiredQty }}</span>
+    <span class="ms-4" *ngIf="activeTab === 'batch'"><strong>Selected Batch:</strong> {{ selectedBatch || 'None' }}</span>
+  </div>
+
+  <!-- Tabs: show only when both serial and batch data are available -->
+  <div *ngIf="!isLoading && showTabs" class="tab-container mb-3">
+    <button class="tab-btn" [class.active]="activeTab === 'serial'" (click)="switchTab('serial')">
+      Serial Numbers ({{ serials.length }})
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'batch'" (click)="switchTab('batch')">
+      Batches ({{ batches.length }})
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="d-flex justify-content-center p-4">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <!-- Serial Numbers List -->
+    <div *ngIf="activeTab === 'serial'">
+      <div *ngIf="serials.length === 0" class="text-danger p-3 text-center">
+        No serial numbers available in this warehouse location for this item.
+      </div>
+      <div class="serial-grid" *ngIf="serials.length > 0">
+        <div class="serial-item" *ngFor="let serial of serials">
+          <mat-checkbox 
+            [(ngModel)]="serial.checked" 
+            [disabled]="isReadOnly"
+            (change)="onSerialChange(serial, $event)">
+            {{ serial.itemSerialNo }} <small class="text-muted">({{ serial.batchNo }})</small>
+          </mat-checkbox>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batch Selection List -->
+    <div *ngIf="activeTab === 'batch'">
+      <div *ngIf="batches.length === 0" class="text-danger p-3 text-center">
+        No batches available in this warehouse location for this item.
+      </div>
+      <table class="table table-hover table-striped alignment-table" *ngIf="batches.length > 0">
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Batch Number</th>
+            <th>Available Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of batches" (click)="selectBatch(b)" [class.table-primary]="selectedBatch === b.batchNo" [style.cursor]="isReadOnly ? 'default' : 'pointer'">
+            <td>
+              <mat-radio-button [checked]="selectedBatch === b.batchNo" [disabled]="isReadOnly" (change)="selectBatch(b)"></mat-radio-button>
+            </td>
+            <td>{{ b.batchNo }}</td>
+            <td>{{ b.availableQty }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-button class="cancel-btn" (click)="close()">{{ isReadOnly ? 'Close' : 'Cancel' }}</button>
+  <button mat-raised-button color="primary" class="save-btn" *ngIf="!isReadOnly" [disabled]="isLoading" (click)="save()">Confirm Selection</button>
+</mat-dialog-actions>

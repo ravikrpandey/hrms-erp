@@ -1,0 +1,20 @@
+<div class="edd-del">
+    <!-- <mat-icon class="qrButton" 
+    matTooltip="QR Code" 
+    (click)="generateQRCode($event)">
+    qr_code
+  </mat-icon> -->
+
+  <mat-icon class="viewButton"
+  *ngIf="assignAction?.Read" 
+  matTooltip="View" 
+  (click)="view($event)">
+  visibility
+</mat-icon>
+
+  <mat-icon class="editButton" matTooltip="Edit" (click)="edit()" *ngIf="assignAction?.Write">edit</mat-icon>
+  
+    <mat-icon class="cloneButton" matTooltip="Allocate Asset" (click)="openDialog($event)" [hidden]="singleData?.asset_loc_status == 'ALLOCATED' && singleData?.allocation_type == 'allocated to employee'" *ngIf="params.selectedTab == 0 && assignAction?.Write">pie_chart</mat-icon>
+
+  </div>
+  

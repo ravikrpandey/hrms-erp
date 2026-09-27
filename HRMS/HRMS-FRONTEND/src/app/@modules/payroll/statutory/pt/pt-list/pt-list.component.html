@@ -1,0 +1,47 @@
+<div class="right_data_all">
+  <div class="heading_top">
+    <div class="page-title">
+      <h1>Professional Tax</h1>
+    </div>
+    <div class="add_button">
+      <button type="button" routerLink="pt-create">Add PT</button>
+    </div>
+  </div>
+
+  <div class="employ_sube py-2">
+    <div class="example-header">
+      <select (change)="onPageSizeChanged()" id="page-size">
+        <option value="10" selected="">10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+    <div class="employee_2" align="end">
+      <input
+        type="text"
+        class="form-control"
+        id="filter-text-box"
+        placeholder="Search"
+        (input)="onFilterTextBoxChanged()"
+      />
+    </div>
+  </div>
+
+  <div class="ag_grid ag_final_dat tableGroup">
+    <ag-grid-angular
+      class="ag-theme-alpine"
+      id="myGrid"
+      style="width: 100%; height: 400px"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowData]="rowData"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)"
+      [rowClass]="rowClass"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

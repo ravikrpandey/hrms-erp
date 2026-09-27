@@ -1,0 +1,66 @@
+<h3 mat-dialog-title class="popHead">Workflow Details</h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography">
+   
+    <div class="container p-3">
+        <p class="key-value"><strong>Workflow Type:</strong> {{ singleEmpData?.job_name || '-' }}  </p>
+        <p class="key-value" *ngIf="singleEmpData?.job_name == 'Quotation'"><strong>Branch:</strong> {{ singleEmpData?.branch_name || '-' }}  </p>
+      
+        <p class="key-value" *ngIf="singleEmpData?.job_name !== 'Quotation'">
+          <strong>Department:</strong> {{ singleEmpData?.department_name || '-' }}
+        </p>
+        <p class="key-value" *ngIf="singleEmpData?.job_name === 'Budget Planning'">
+          <strong>Budget Type:</strong> {{ singleEmpData?.budget_planning_type || '-' }}
+        </p>
+      
+        <ng-container *ngFor="let data of roleData">
+          <hr />
+      
+          <p class="key-value" *ngIf="singleEmpData?.job_name !== 'Quotation'">
+            <strong>User Role:</strong> {{ data.role_master_name }}
+          </p>
+      
+          <p class="key-value">
+            <strong>Employee Name:</strong> {{ data.first_name }} {{ data.last_name }}
+            [{{ data.employee_code }}]
+          </p>
+      
+          <p class="key-value" *ngIf="singleEmpData?.job_name === 'Quotation'">
+            <strong>Level:</strong> {{ data.level_type }}
+          </p>
+          <p class="key-value" *ngIf="singleEmpData?.job_name === 'Quotation'"><strong>Branch:</strong>{{data?.branch_name||'-'}}  </p>
+          <p class="key-value" *ngIf="singleEmpData?.job_name === 'Quotation'" >
+            <strong>Remark:</strong> {{ data.remark }}
+          </p>
+      
+          <!-- Item List Table -->
+          <!-- <div *ngIf="data.itemList?.length" class="table-responsive mt-2">
+            <table class="table table-bordered table-sm">
+              <thead class="table-light">
+                <tr>
+                  <th>Product Category ID</th>
+                  <th>Product Subcategory ID</th>
+                  <th>Discount Flat</th>
+                  <th>Discount Percent %</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of data.itemList">
+                  <td>{{ item.MASTER_ASSET?.asset_category_name }}</td>
+                  <td>{{ item.MASTER_SUB_CATEGORY?.sub_category_name }}</td>
+                  <td>{{ item.discount_flat }}</td>
+                  <td>{{ item.discount_percent }}%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
+        </ng-container>
+      </div>
+      
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub pb-3">
+    <button   mat-dialog-close class="cancel_button_y">Close</button>
+    <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>
+

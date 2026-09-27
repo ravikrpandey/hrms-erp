@@ -1,0 +1,461 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Finance and Accounting </h1>
+  <p>Cost Center<i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+  </i><span>Create Cost Center Master</span></p>
+</div>
+<div class="add_button">
+  <button  type="button" class=""  routerLink="../"><i class="fa fa-arrow-left"></i> Back</button>
+</div>
+</div>
+
+<section class="right_data_all mt-3">
+  <!-- <div class="row py-1">
+    <div class="employee_top">Cost Center Master
+      <span *ngIf="mode!='view' && !id" class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+        </i>
+        Update </span>
+    </div>
+  </div>
+  <div class="form_head">
+    <h3 *ngIf="mode!='view'"> Update Cost Center</h3>
+    <h3 *ngIf="mode=='view'"> View Cost Center</h3>
+
+  </div> -->
+
+  <form [formGroup]="costCenterForm" (submit)="onSubmit()">
+    <div class="form_basic mb-0">
+      <div class="heading_neo">
+        <h3>Cost Center Master</h3>
+      </div>
+      <div class="row p-3 mt-2">
+
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Cost Center Code</mat-label>
+              <input [readonly]="mode === 'view'" matInput type="text" formControlName="cost_center_code" />
+              <mat-error *ngIf="costCenterForm.get('cost_center_code')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Cost Center Name</mat-label>
+              <input [readonly]="mode === 'view'" matInput type="text" formControlName="cost_center_name"
+                />
+              <mat-error *ngIf="costCenterForm.get('cost_center_name')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+        <div class="form-group mb-4">
+      <mat-form-field appearance="outline">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date" [max]="maxDate" readonly
+          (dateChange)="Date($event)"/>
+        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp></mat-datepicker>
+        <!-- <button mat-icon-button *ngIf="costCenterForm.get('date')?.value" matSuffix (click)="clearDate('date')">
+          <mat-icon>close</mat-icon>
+        </button> -->
+      </mat-form-field>
+      </div>
+        </div>
+
+<!-- capex -->
+<div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+  <div class="form-group mb-4">
+    <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+      <mat-label>Cost Center Type</mat-label>
+      <mat-select formControlName="type" (valueChange)="selectedType($event)">
+        <mat-option value="department">Department</mat-option>
+        <mat-option value="employee">Employee</mat-option>
+        <mat-option   [value]="data.id" *ngFor="let data of rowData" >{{data.name}}</mat-option>
+        <!-- <mat-option>
+          <div class="add_button"   >
+            <button type="button"  >
+             Add New
+            </button>
+          </div></mat-option> -->
+      </mat-select>
+      <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="typeCloseIcon" matSuffix (click)="clearType()">close</mat-icon>
+
+      <mat-error *ngIf="costCenterForm.get('type')?.hasError('required')" class="error-message">
+        * Required!
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
+        <div *ngIf="mode !== 'view' && typeName== 'department'"  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Department</mat-label>
+              <mat-select #select2 formControlName="department_id" name="department_id"  >
+                <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+
+                <mat-option *ngFor="let data of departments"
+                  [value]="data.dept_id">{{data?.department_name}}</mat-option>
+                  <!-- <div class="add_button">
+                    <button type="button" (click)="openDeptDialog()">
+                      + Create New
+                    </button>
+                  </div> -->
+              </mat-select>
+              <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="deptCloseIcon" matSuffix (click)="clearDept()">close</mat-icon> -->
+
+              <!-- <mat-error *ngIf="costCenterForm.get('department_id')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="mode !== 'view' && typeName == 'employee'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Employee</mat-label>
+              <mat-select #select2 formControlName="employee_id" name="employee_id"  >
+                <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+
+                <mat-option *ngFor="let data of reportingManagerList"
+                  [value]="data.employee_id">{{data?.first_name}} {{data?.last_name}}</mat-option>
+              </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="deptCloseIcon" matSuffix (click)="clearDept()">close</mat-icon>
+
+              <!-- <mat-error *ngIf="costCenterForm.get('employee_id')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error> -->
+            </mat-form-field>
+          </div>
+        </div>
+
+<ng-container *ngIf="isCostCenterActive">
+  <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+    <div class="form-group mb-4">
+  <mat-form-field appearance="outline">
+    <mat-label>Cost Center Type</mat-label>
+    <input matInput type="text" formControlName="cost_profit_center_name" />
+   
+  </mat-form-field>
+  </div>
+    </div>
+</ng-container>
+
+
+
+<!-- 
+        <div *ngIf="" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': false}">
+                <mat-label> </mat-label>
+                <input matInput type="text"  [placeholder]="typeName"   />
+              </mat-form-field>
+
+              
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Capex/Opex</mat-label>
+              <mat-select formControlName="cost_centre_type" >
+                <mat-option value="capex">Capex</mat-option>
+                <mat-option value="opex">Opex</mat-option>
+               
+              </mat-select>
+              <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="typeCloseIcon" matSuffix (click)="clearType()">close</mat-icon> -->
+        
+              <mat-error *ngIf="costCenterForm.get('cost_centre_type')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        
+
+
+  
+
+       
+
+      
+
+        <!-- <div *ngIf="mode !== 'view'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Currency</mat-label>
+              <mat-select #select2 formControlName="currency_id" name="currency_id"  >
+                <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+
+                <mat-option *ngFor="let data of getAllCurrencyData"
+                  [value]="data.Currency_Convert_id">{{data?.Currency_Type}}</mat-option>
+              </mat-select>
+            
+
+              <mat-error *ngIf="costCenterForm.get('currency_id')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error> 
+            </mat-form-field>
+          </div>
+        </div> -->
+
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+          <div class="form-group mb-4">
+        <mat-form-field appearance="outline">
+          <mat-label>Valid From</mat-label>
+          <input matInput [matDatepicker]="dp1" (click)="dp1.open()" formControlName="valid_from" [max]="maxDate" readonly
+            (dateChange)="Date($event)"/>
+          <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+          <mat-datepicker #dp1></mat-datepicker>
+        
+        </mat-form-field>
+        </div>
+          </div>
+
+
+
+
+          <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 ">
+            <div class="form-group mb-4">
+          <mat-form-field appearance="outline">
+            <mat-label>Valid To</mat-label>
+            <input matInput [matDatepicker]="dp2" (click)="dp2.open()" formControlName="valid_to" [max]="maxDate" readonly
+              (dateChange)="Date($event)"/>
+            <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+            <mat-datepicker #dp2></mat-datepicker>
+            
+          </mat-form-field>
+          </div>
+            </div>
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Manager: </mat-label>
+                  <mat-select formControlName="manager_id"  >
+                    <mat-option *ngFor="let data of reportingManagerList"
+                  [value]="data.employee_id">{{data?.first_name}} {{data?.last_name}}</mat-option>
+                  </mat-select>
+                   
+                  <!-- <mat-error *ngIf="costCenterForm.get('manager')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Status: </mat-label>
+                  <mat-select formControlName="status" (valueChange)="selectedType($event)">
+                    <mat-option value="ACTIVE">Active</mat-option>
+                    <mat-option value="INACTIVE">Inactive</mat-option>
+                  </mat-select>
+                  <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="typeCloseIcon" matSuffix (click)="clearType()">close</mat-icon> -->
+            
+                  <mat-error *ngIf="costCenterForm.get('status')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+      </div>
+            <div class="heading_neo">
+              <h3>Maintain Hierarchy</h3>
+            </div>
+            <div class="row p-3 mt-2">
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Is Group: </mat-label>
+                  <mat-select formControlName="is_group"  (selectionChange)="IsGroupData($event)">
+                    <mat-option value="YES">Yes</mat-option>
+                    <mat-option value="NO">No</mat-option>
+                  </mat-select>
+                  <!-- <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="typeCloseIcon" matSuffix (click)="clearType()">close</mat-icon> -->
+            
+                  <mat-error *ngIf="costCenterForm.get('is_group')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div *ngIf="mode !== 'view'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Parent Cost Center</mat-label>
+                  <mat-select #select2 formControlName="parent_cost_center_id" name="parent_cost_center"  >
+                    <mat-select-filter *ngIf="select2.focused" [array]="departmentList2" (filteredReturn)="deptSearch($event)"></mat-select-filter>
+    
+                    <mat-option  
+                     *ngFor="let data of getAllIsGroup" [value]="data.id">{{data.cost_center_name}}</mat-option>
+                  </mat-select>
+                  <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="deptCloseIcon" matSuffix (click)="clearDept()">close</mat-icon>
+    
+                  <!-- <mat-error *ngIf="costCenterForm.get('parent_cost_center')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            </div>
+
+          <div class="heading_neo">
+            <h3>Budget Master</h3>
+          </div>
+
+          <div class="row p-3 mt-2">
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Budget Amount</mat-label>
+                  <input matInput type="number" formControlName="budget_amount" (input)="getDataValues($event)"  />
+    
+                  <mat-error *ngIf="costCenterForm.get('budget_amount')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Budget Utilized</mat-label>
+                  <input matInput type="number" formControlName="budget_utilized"  readonly/>
+    
+                  <!-- <mat-error *ngIf="costCenterForm.get('budget_utilized')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group mb-4">
+                <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+                  <mat-label>Remaining Budget</mat-label>
+                  <input matInput type="number" formControlName="remaining_budget" readonly  />
+    
+                  <!-- <mat-error *ngIf="costCenterForm.get('remaining_budget')?.hasError('required')" class="error-message">
+                    * Required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+
+
+
+    <!-- <div *ngIf="mode !== 'view'" class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-groupv mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Region</mat-label>
+              <mat-select #select3 formControlName="region_id" (selectionChange)="genCode($event)">
+                <mat-select-filter *ngIf="select3.focused" [array]="regions2" (filteredReturn)="regionSearch($event)"></mat-select-filter>
+
+                <mat-option *ngFor="let data of regions" [value]="data.id">{{data?.region_name}}</mat-option>
+                <div class="add_button">
+                  <button type="button" (click)="openRegionDialog()">
+                    + Create New
+                  </button>
+                </div>
+              </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="regionCloseIcon" matSuffix (click)="clearRegion()">close</mat-icon>
+
+              <mat-error *ngIf="costCenterForm.get('region_id')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+
+            
+
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+          <div class="row p-3 mt-2">
+
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"   [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Remark</mat-label>
+              <input matInput type="text" formControlName="remark" />
+            </mat-form-field>
+          </div>
+        </div>
+
+
+        <!-- Example with another input field -->
+
+        <!-- <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline"  [ngClass]="{'readonly-wrapper': false}">
+              <mat-label>Financial Year</mat-label>
+              <mat-select #select4 formControlName="finacial_year" (valueChange)="selectedFinancialYear($event)">
+                <mat-select-filter *ngIf="select4.focused" [array]="fianceYear2" (filteredReturn)="fianceYearSearch($event)"></mat-select-filter>
+
+                <mat-option *ngFor="let budget of fianceYear" [value]="budget.id">{{budget?.financial_year}}</mat-option>
+                <div class="add_button">
+                  <button type="button" (click)="openfianceYearDialog()">
+                    + Create New
+                  </button>
+                </div>
+              </mat-select>
+              <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="financialCloseIcon" matSuffix (click)="clearFinancial()">close</mat-icon>
+
+              <mat-error *ngIf="costCenterForm.get('finacial_year')?.hasError('required')" class="error-message">
+                * Required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div> -->
+
+        <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+          <div *ngIf="mode!='view'" class="common_button_sub" style="text-align: left;">
+            <button  type="submit">
+              {{ !id ? 'Submit' : 'Update' }}
+            </button>
+          </div>
+        </div>
+
+          </div>
+    
+    </div>
+
+    
+  </form>
+
+</section>

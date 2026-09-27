@@ -1,0 +1,74 @@
+<div class="right_data_all candidateOffer">
+  <div class="candidate_Details">
+  <mat-card>
+    <h2>Basic Details</h2>
+    <div class="basic_details">
+      <div class="row mb-4">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Candidate Name</h5>
+        <p>{{basicDetails?.first_name}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Contact No</h5>
+        <p>{{basicDetails?.contact_number}}</p>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+        <h5>Email ID</h5>
+        <p>{{basicDetails?.candidate_email}}</p>
+      </div>
+    </div>
+ 
+
+
+<mat-accordion >
+  <mat-expansion-panel *ngFor="let data of dataList; let i = index">
+    <mat-expansion-panel-header class="tableTab">
+      <mat-panel-title>
+        <b>{{i + 1}}. {{data?.company_name}}</b>
+        <span class="ml100px"><b>From Date - {{data?.start_date}}</b></span>
+        <span class="ml100px"><b>To Date - {{data?.end_date}}</b></span>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="handleTwoTable">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Check List</th>
+            <th>Answer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let subData of companyCheckList; let si = index">
+            <td>{{subData?.quality_type_name}}</td>
+            <td>
+              <mat-form-field>
+                <mat-select [(ngModel)]="subData.rating_value" name="rating_value_{{i}}_{{si}}">
+                  <mat-option *ngFor="let option of subData?.ratingList" [value]="option?.self_rating">
+                    {{option?.self_rating}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <label class="mt-3">Remark</label>
+    <textarea class="form-control" rows="4" [(ngModel)]="data.remarks" name="remarks_{{i}}"></textarea>
+    <div class="common_button_sub mt-3">
+      <button  (click)="handleSave(data)">
+        Save
+      </button>
+    </div>
+  </mat-expansion-panel>
+  <div class="common_button_sub mt-3">
+    <button [disabled]="isDisabled"
+      (click)="handleSubmit()">
+      Save
+    </button>
+  </div>
+</mat-accordion>
+</div>
+</mat-card>
+</div>
+</div>

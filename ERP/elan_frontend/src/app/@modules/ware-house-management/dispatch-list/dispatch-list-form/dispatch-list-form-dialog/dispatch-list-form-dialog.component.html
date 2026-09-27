@@ -1,0 +1,38 @@
+<div style="width: 600px;">
+    <form class="form_set" [formGroup]="create_fglist_Form">
+        <div class="row">
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+              <mat-label>Opening Stock</mat-label>
+              <input matInput type="text"
+                  />
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-6">
+            <div class="form-group">
+              <mat-form-field appearance="outline">
+              <mat-label>Dispatch Quantity</mat-label>
+              <input matInput type="text"
+                  />
+              </mat-form-field>
+            </div>
+          </div>
+          </div>
+      </form>
+
+
+      <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+          [rowData]="rowData" [columnDefs]="columnDefs"
+        >
+        </ag-grid-angular>
+      </div>
+
+        <mat-dialog-actions align="end" *ngIf="!view">
+            <button *ngIf="!departmentId" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+                Allocate
+            </button>
+        </mat-dialog-actions>
+</div>

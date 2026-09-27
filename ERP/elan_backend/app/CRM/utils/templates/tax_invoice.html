@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 10mm;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        color: #000;
+      }
+
+      /* 🔲 Outer Invoice Box */
+      .invoice-box {
+        border: 1px solid #000; /* only outer frame */
+        padding: 5px;
+        margin: 5px;
+      }
+
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;   /* ✅ Fix inner gap */
+        width: 100%;
+        page-break-inside: auto;
+      }
+
+      td,
+      th {
+        border: 1px solid #000;
+        padding: 2px 3px;
+        vertical-align: top;
+        word-break: break-word;
+      }
+
+      /* remove border for layout/inner detail tables */
+      .no-border td,
+      .no-border th,
+      .inner-table td,
+      .inner-table th {
+        border: none !important;
+      }
+
+      /* ✅ Ensure inner tables stick without gap */
+      .inner-table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+      }
+      td > .inner-table {
+        margin: 0;
+        padding: 0;   /* ✅ Remove parent padding */
+      }
+
+      .header-table {
+        border: none;
+        width: 100%;
+        margin-bottom: 5px;
+        border-spacing: 0;
+      }
+
+      .header-table td {
+        border: none;
+        font-size: 12px;
+      }
+
+      .title {
+        font-size: 14px;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        margin: 10px 0;
+      }
+
+      .section-title {
+        background: #d9d9d9;
+        font-weight: bold;
+        margin-top: 15px;
+      }
+
+      .right {
+        text-align: right;
+        
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .tax-summary th {
+        background: #f2f2f2;
+        font-weight: bold;
+      }
+
+      .footer {
+        margin-top: 15px;
+        font-size: 11px;
+        page-break-inside: avoid;   
+      }
+
+      /* Force page break after large sections if needed */
+      .page-break {
+        page-break-before: always;
+      }
+
+      /* Prevent row split in between pages */
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+      .summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+.summary-table td {
+  border: 1px solid #000;
+  padding: 4px 8px;
+  font-size: 13px;
+}
+
+.summary-table .label {
+  text-align: right;
+  font-weight: bold;
+  width: 150px; /* fixed width for alignment */
+}
+
+.summary-table .value {
+  text-align: left;
+  width: 100px; /* optional: adjust as needed */
+}
+    </style>
+  </head>
+  <body>
+   
+      <!-- Top Header -->
+      <table class="header-table">
+        <tr>
+          <td>Page : 1/1</td>
+          <td class="right">Original For Recipient</td>
+        </tr>
+      </table>
+       <div class="invoice-box">
+
+      <!-- Company Header -->
+      <table class="no-border">
+        <tr>
+          <td rowspan="3" style="width: 20%; text-align: center">
+            <img src={{company_logo}} alt="Logo" style="height: 50px; width: 180px;" />
+          </td>
+          <td style="text-align: center">
+            <b>Elan Professional Appliances Pvt Ltd</b><br />
+            Khasra No.11/1, 12//5/2,, Village Begampur Khatola,<br />
+            Begampur Industrial Area, Gurgaon, Haryana - 122004<br />
+            PAN No : AACCE1748C
+          </td>
+          <td rowspan="3" style="width: 20%; text-align: center">
+            <img src={{elanQR_logo}} alt="QR" style="height: 100px; width: 100px;" />
+          </td>
+        </tr>
+      </table>
+
+      <!-- Invoice Title -->
+      <div class="title">Tax Invoice</div>
+
+      <!-- Invoice Info -->
+      <table class="no-border" style="margin-top:5px; table-layout:fixed;">
+        <tr>
+          <td style="width:25%;"><b>IRN No.</b></td>
+          <td style="width:25%;">: a6f0e7e1d4c7bf5e69a06e85</td>
+          <td style="width:25%;"><b>Ack No & Date</b></td>
+          <td style="width:25%;">: 132522049386922 &nbsp;&nbsp;30/04/2025</td>
+        </tr>
+        <tr>
+          <td><b>GSTIN</b></td>
+          <td>: 06AACCE1748C1Z3</td>
+          <td><b>Packing List No.</b></td>
+          <td>: HRF/PL/25/0098</td>
+        </tr>
+        <tr>
+          <td><b>Invoice No</b></td>
+          <td>: HRF/TI/25/0099</td>
+          <td><b>E-Way Bill No</b></td>
+          <td>: 351990521559</td>
+        </tr>
+        <tr>
+          <td><b>Invoice Date</b></td>
+          <td>: 30/04/2025</td>
+          <td><b>Destination</b></td>
+          <td>: Indore</td>
+        </tr>
+        <tr>
+          <td><b>Party PO No.</b></td>
+          <td>: Hotel World/PO/Apr/28</td>
+          <td><b>Ship From</b></td>
+          <td>: Gurgaon , Haryana</td>
+        </tr>
+        <tr>
+          <td><b>Party PO Date</b></td>
+          <td>: 28/04/2025</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <!-- Bill To / Ship To -->
+      <table>
+        <tr>
+          <td class="section-title" style="width:50%;"><b>Bill To</b></td>
+          <td class="section-title" style="width:50%;"><b>Ship To</b></td>
+        </tr>
+        <tr>
+          <!-- Bill To -->
+          <td style="vertical-align: top; padding:0;">   <!-- ✅ No padding -->
+            <table class="inner-table">
+              <tr>
+                <td style="width:35%;"><b>Party Name</b></td>
+                <td>: HOTEL WORLD</td>
+              </tr>
+              <tr>
+                <td><b>& Address</b></td>
+                <td>: 215-1, Jawahar Marg,<br/>Indore, Madhya Pradesh - 452002 (India)</td>
+              </tr>
+              <tr>
+                <td><b>GSTIN</b></td>
+                <td>: 23ADBP6221H1Z9</td>
+              </tr>
+              <tr>
+                <td><b>Place Of Supply</b></td>
+                <td>: Madhya Pradesh</td>
+              </tr>
+              <tr>
+                <td><b>State Code</b></td>
+                <td>: 23</td>
+              </tr>
+              <tr>
+                <td><b>Pay Terms</b></td>
+                <td>: 1 Days</td>
+              </tr>
+            </table>
+          </td>
+
+          <!-- Ship To -->
+          <td style="vertical-align: top; padding:0;">  <!-- ✅ No padding -->
+            <table class="inner-table">
+              <tr>
+                <td style="width:35%;"><b>Party Name</b></td>
+                <td>: HOTEL WORLD</td>
+              </tr>
+              <tr>
+                <td><b>& Address</b></td>
+                <td>: 215-1, Jawahar Marg,<br/>Indore, Madhya Pradesh - 452002 (India)</td>
+              </tr>
+              <tr>
+                <td><b>GSTIN</b></td>
+                <td>: 23ADBP6221H1Z9</td>
+              </tr>
+              <tr>
+                <td><b>Contact Person</b></td>
+                <td>: FREIGHT ON TO PAY BASIS</td>
+              </tr>
+              <tr>
+                <td><b>Contact No.</b></td>
+                <td>: 8827277098</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Item Table -->
+      <table>
+        <tr class="section-title">
+          <td>S No</td>
+          <td>Description of Goods</td>
+          <td>HSN Code</td>
+          <td>Qty</td>
+          <td>Basic Rate (Per Unit)</td>
+          <td>Disc1 (Per Unit)</td>
+          <td>Disc2 (Per Unit)</td>
+          <td>Disc3 (Per Unit)</td>
+          <td>Cash Disc (Per Unit)</td>
+          <td>Tax Rate %</td>
+          <td>Net Amount</td>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>EHTC 100 (000345)</td>
+          <td>84185000</td>
+          <td>1</td>
+          <td>49,900</td>
+          <td>(7,485)</td>
+          <td>0</td>
+          <td>0</td>
+          <td>(1,272)</td>
+          <td>18</td>         
+          <td>41,143</td>
+        </tr>
+        <tr>
+          <td colspan="10" class="right bold">Total</td>
+          <td>41,143</td>
+        </tr>
+      </table>
+
+      <!-- Totals -->
+     <table class="summary-table">
+  <tr>
+    <td class="label">Taxable Amt :</td>
+    <td class="value">41,143.00</td>
+  </tr>
+  <tr>
+    <td class="label">GST Amount :</td>
+    <td class="value">7,406.00</td>
+  </tr>
+  <tr>
+    <td class="label">Bill Amount :</td>
+    <td class="value">48,549.00</td>
+  </tr>
+</table>
+
+
+      <p>
+        <b>Amount in Words:</b> Forty Eight Thousand Five Hundred Forty Nine Only
+      </p>
+
+      <!-- TAX Summary -->
+      <table class="tax-summary">
+        <tr>
+          <th>HSN</th>
+          <th>Taxable Amount</th>
+          <th>TaxAmount</th>
+          <th>SGST</th>
+          <th>CGST</th>
+          <th>IGST</th>
+        </tr>
+        <tr>
+          <td>84185000</td>
+          <td>41,143</td>
+          <td>7,406</td>
+          <td></td>
+          <td></td>
+          <td>7,406</td>
+        </tr>
+      </table>
+
+      <!-- Advance Detail -->
+      <table style="margin-top: 25px;">
+        <tr class="section-title">
+          <td colspan="4">Advance Detail:-</td>
+        </tr>
+        <tr>
+          <td>Receipt Date</td>
+          <td>Receipt No</td>
+          <td>Receipt Amt</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Date</td>
+          <td>Instrument No.</td>
+          <td>Amount:</td>
+          <td></td>
+        </tr>
+      </table>
+
+      <!-- Bank Detail -->
+      <table>
+        <tr>
+          <td><b>Bank Name</b><br />HSBC BANK</td>
+          <td><b>Account No.</b><br />054783527001</td>
+          <td><b>Branch</b><br />GURGAON</td>
+          <td><b>IFSC Code</b><br />HSBC0110005</td>
+          <td><b>Account Holder Name</b><br />Elan Professional Appliances Pvt Ltd</td>
+        </tr>
+      </table>
+
+      <!-- Terms -->
+      <table>
+        <tr>
+          <td>
+            <b>Terms & Conditions</b><br />
+            1 The absolute title to and ownership of the goods shall remain in shall until Buyer pays the Invoice amount in full.<br />
+            2 Seller’s responsibility ceases once goods leave its premises. In case the consignment remains undelivered, Buyer will be responsible for all claims preferred by the Transporter.<br />
+            3 Material once sold will not be returned.<br />
+            4 Refer annexure for detailed Terms and Conditions.<br />
+            5 All disputed are subject to Jurisdiction of Gurugram Court only.
+          </td>
+          <td style="width: 30%; text-align: center">
+            For Elan Professional Appliances Pvt Ltd<br /><br /><br /><br />
+            Authorised Signatory
+          </td>
+        </tr>
+      </table>
+    </div>
+      <div class="footer">
+        Registered Address - Unit No. 802, Tower-2, DLF Corporate Greens, Sector 74A, Gurugram - 122004, Haryana. CIN:U52310HR2009PTC039104, MSME Certificate No. – DL10E0001429<br />
+        Email - info@elanpro.net, Website - www.elanpro.net, Customer Care No. – 0124-4120261 / 262 / 263 / 26.<br />
+        Please mail on us to info@elanpro.net revalidate any email request for change in our Bank A/C.<br /><br />
+        <center><i>This is computer generated invoice hence no signature required</i></center>
+      </div>
+
+  </body>
+</html>

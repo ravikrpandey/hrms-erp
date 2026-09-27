@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 11px;
+        color: #000;
+        line-height: 1.3;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .no-border td, .no-border th {
+        border: none;
+        padding: 2px 4px;
+      }
+
+      .right {
+        text-align: right;
+      }
+
+      .center {
+        text-align: center;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      @page {
+        margin: 20px 25px;
+      }
+
+      /* Main items table */
+      .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .items-table th {
+        border: 1px solid #000;
+        padding: 6px;
+        background: #f2f2f2;
+        font-weight: bold;
+        font-size: 10px;
+        text-align: center;
+      }
+
+      .items-table td {
+        border: 1px solid #000;
+        padding: 6px;
+        font-size: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- HEADER SECTION -->
+    <table class="no-border" style="margin-bottom: 10px;">
+      <tr>
+        <!-- LEFT: LOGO -->
+        <td style="width: 25%; vertical-align: top;">
+          <img src="{{entityLogo}}" style="max-height: 55px;" alt="Logo" />
+        </td>
+
+        <!-- CENTER: COMPANY DETAILS & TITLE -->
+        <td style="width: 70%; text-align: center; vertical-align: top; padding-right: 15%;">
+          <div style="font-size: 15px; font-weight: bold; margin-bottom: 2px;">{{entityName}}</div>
+          <div style="font-size: 10px; font-weight: normal; line-height: 1.4;">
+            {{entityAddress}}
+          </div>
+          <div style="font-size: 13px; font-weight: bold; text-decoration: underline; margin-top: 10px;">
+            {{heading}}
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- METADATA GRID -->
+    <table class="no-border" style="width: 100%; margin-top: 15px; margin-bottom: 10px; font-size: 11px;">
+      <tr>
+        <td style="width: 15%; font-weight: bold; padding: 3px 4px;">Req No. :</td>
+        <td style="width: 45%; padding: 3px 4px;">: {{pr_number}}</td>
+        <td style="width: 10%; font-weight: bold; padding: 3px 4px;">Date</td>
+        <td style="width: 30%; padding: 3px 4px;">: {{pr_date}}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold; padding: 3px 4px;">Req. By :</td>
+        <td style="padding: 3px 4px;">: {{requested_by}}</td>
+        <td style="font-weight: bold; padding: 3px 4px;">Ref.</td>
+        <td style="padding: 3px 4px;">: {{ref_no}}</td>
+      </tr>
+      <tr>
+        <td style="font-weight: bold; padding: 3px 4px;">Supplier :</td>
+        <td style="padding: 3px 4px;" colspan="3">: {{vendor_name}}</td>
+      </tr>
+    </table>
+
+    <!-- ITEMS TABLE -->
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th style="width: 5%;">SNO</th>
+          <th style="width: 20%;">Sub Group</th>
+          <th style="width: 40%;">ITEM DESCRIPTION</th>
+          <th style="width: 10%;">UNIT</th>
+          <th style="width: 10%;">QTY</th>
+          <th style="width: 7%;">Rate</th>
+          <th style="width: 8%;">REMARK</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{itemsTable}}
+      </tbody>
+    </table>
+
+    <!-- NARRATION ROW -->
+    <div style="margin-top: 10px; font-size: 11px; padding: 4px 6px;">
+      <b>Narration :</b> {{po_remark}}
+    </div>
+
+    <!-- SIGNATURE FOOTER -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 60px; margin-bottom: 20px;">
+      <tr>
+        <td style="width: 33%; text-align: center; border: none; vertical-align: bottom;">
+          <div style="border-top: 1px solid #000; display: inline-block; width: 80%; padding-top: 4px; font-weight: bold;">INDENT BY</div>
+        </td>
+        <td style="width: 34%; text-align: center; border: none; vertical-align: bottom;">
+          <div style="border-top: 1px solid #000; display: inline-block; width: 80%; padding-top: 4px; font-weight: bold;">STORE INCHARGE</div>
+        </td>
+        <td style="width: 33%; text-align: center; border: none; vertical-align: bottom;">
+          <div style="border-top: 1px solid #000; display: inline-block; width: 80%; padding-top: 4px; font-weight: bold;">AUTHORIZED BY</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- FOOTER BANNER -->
+    <div style="background-color: #e2e2e2; color: #000; padding: 8px; text-align: center; font-size: 11px; font-weight: bold; margin-top: 45px; border: 1px solid #000;">
+      {{entityName}} - {{entityName}}
+    </div>
+  </body>
+</html>

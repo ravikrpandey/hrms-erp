@@ -1,0 +1,395 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Inventory Management</h1>
+        <p>
+            Stock Transfer<i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c">
+            </i><span>Add Stock Transfer</span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+<section class="right_data_all mt-3">
+    <mat-card>
+        <div class="form_basic mb-0">
+            <form class="" [formGroup]="createStockTransfer">
+                <div class="heading_neo">
+                    <h3>Basic Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Stock Entry Type</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Stock Entry Type</mat-label>
+                                    <mat-select formControlName="stock_entry_type">
+                                      <!-- <mat-select-filter [array]="accountList1" (filteredReturn)="accountFilter($event)"></mat-select-filter> -->
+
+                                        <mat-option value="transfer">Transfer</mat-option>
+                                        <!-- <mat-option value="receiving">Receiving</mat-option> -->
+                                    </mat-select>
+                                    <mat-error *ngIf="createStockTransfer.controls['stock_entry_type'].hasError('required')">
+                                        Stock Entry Type is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="createStockTransfer.controls['stock_entry_type'].hasError('leadingSpaces')">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Date</mat-label>
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Date</mat-label>
+                                    <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp4></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['date'].hasError('required')
+                    ">
+                                        Date is Required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Reason</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Reason</mat-label>
+                                    <input matInput type="text" formControlName="reason" maxlength="100"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['reason'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Reason is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['reason'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="heading_neo">
+                    <h3>Item Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>S. No.</th>
+                                        <th>Item</th>
+                                        <th>Item code</th>
+                                        <th>Quantity</th>
+                                        <th [hidden]="id">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody formArrayName="item_details">
+                                    <tr *ngFor="
+                      let stakeHolderRow of stakeHoldersFormArray.controls;
+                      let i = index
+                    " [formGroupName]="i">
+                                        <td>
+                                            <div class="form-group-name-cat center">
+                                                <div>{{ i + 1 }}</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Item list</mat-label>
+                                                    <mat-select formControlName="item_id">
+                                                        <mat-form-field>
+                                                            <input matInput [formControl]="filterItemControl" type="text" placeholder="Search" />
+                                                        </mat-form-field>
+                                                      <mat-option *ngFor="let item of itemsList" [value]="item.id" (click)="getItemDetail(item,i)">
+                                                        {{ item?.item_name }}
+                                                      </mat-option>
+                                                    </mat-select>
+                                                    <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="itemCloseIcon[i]" matSuffix (click)="clearItem(i)">close</mat-icon>
+
+
+                                                    <mat-error *ngIf="createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('required') &&
+                                                    !createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('leadingSpaces')">
+                                                      Required!
+                                                    </mat-error>
+
+                                                    <mat-error *ngIf="createStockTransfer.get('item_details').at(i)?.get('item_id')?.hasError('leadingSpaces')">
+                                                      No Leading Spaces!
+                                                    </mat-error>
+
+                                                  </mat-form-field>
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Item Code</mat-label>
+                                                    <input matInput type="text" formControlName="item_code"   readonly/>
+
+
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group-name-cat">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Quantity</mat-label>
+                                                    <input matInput type="text" formControlName="quantity" maxlength="15" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || event.charCode === 0" (input)="onQuantity()"/>
+                                                    <mat-error *ngIf="
+                              createStockTransfer
+                                .get('item_details')
+                                ?.get(i.toString())
+                                ?.get('quantity')
+                                ?.hasError('required')
+                            ">
+                                                        Required!
+                                                    </mat-error>
+                                                    <mat-error *ngIf="
+                              createStockTransfer
+                                .get('item_details')
+                                ?.get(i.toString())
+                                ?.get('quantity')
+                                ?.hasError('leadingSpaces')
+                            ">
+                                                        No Leading Spaces!
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </td>
+
+
+                                        <td [hidden]="id">
+                                            <div class="edit_del flexRow">
+                                                <div (click)="addNewItem()" [ngClass]="
+                            createStockTransfer.get('item_details')
+                              ?.invalid
+                              ? 'readonly-select'
+                              : ''
+                          ">
+                                                    <mat-icon class="addButton"
+                                                        matTooltip="Add Item">add_circle</mat-icon>
+                                                </div>
+                                                <div>
+                                                    <ng-container *ngIf="i + 1 !== 1">
+                                                        <mat-icon class="deleteButton" matTooltip="delete Item"
+                                                            (click)="removeStakeHoldersRow(i)">delete_circle</mat-icon>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="heading_neo">
+                    <h3>Source Transfer Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <!-- <mat-label>Source Store</mat-label> -->
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Source Store</mat-label>
+                                    <mat-select #select2 formControlName="source_store_id" (selectionChange)="onSourceSelectionChange($event)">
+                                        <mat-form-field>
+                                            <input matInput [formControl]="filterSourceStockControl" type="text" placeholder="Search" />
+                                          </mat-form-field>
+                                        <mat-option *ngFor="let store of sourseStoreList" [value]="store.id" [hidden]="store.hidden">
+                                          {{ store?.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="closeIcon" matSuffix (click)="clearWarehouse()">close</mat-icon>
+
+                                    <mat-error *ngIf="createStockTransfer.controls['source_store_id'].hasError('required')">
+                                        Source store is required.
+                                    </mat-error>
+                                    <mat-error *ngIf="createStockTransfer.controls['source_store_id'].hasError('leadingSpaces')">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="heading_neo">
+                    <h3>Target Transfer Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Target Store</mat-label>
+                                    <mat-select #select6 formControlName="target_store_id" (selectionChange)="onTargetSelectionChange($event)">
+                                        <mat-form-field>
+                                            <input matInput [formControl]="filterTargetStockControl" type="text" placeholder="Search" />
+                                          </mat-form-field>
+                                        <mat-option *ngFor="let store of targetStoreList" [value]="store.store_id" [hidden]="store.hidden">
+                                          {{ store?.store_name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-icon class="text-dark" style="font-size: 20px;" *ngIf="targetWarehouseCloseIcon" matSuffix (click)="clearTargetWarehouse()">close</mat-icon>
+                                    <mat-error *ngIf="createStockTransfer.controls['target_store_id'].hasError('required')">
+                                        Target store is required.
+                                    </mat-error>
+                                    <mat-error *ngIf="createStockTransfer.controls['target_store_id'].hasError('leadingSpaces')">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+
+                                <mat-form-field appearance="outline" readonly>
+                                    <mat-label>Expected Transfer Date</mat-label>
+                                    <input matInput [matDatepicker]="dp5" (click)="dp5.open()"
+                                        formControlName="expected_transfer_date" />
+                                    <mat-datepicker-toggle matSuffix [for]="dp5"></mat-datepicker-toggle>
+                                    <mat-datepicker #dp5></mat-datepicker>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls[
+                        'expected_transfer_date'
+                      ].hasError('required')
+                    ">
+                                        Date is required.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+
+                <div class="heading_neo">
+                    <h3>Transporter Details</h3>
+                </div>
+                <div class="formBasicArea">
+                    <div class="row">
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Driver Name</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Driver Name</mat-label>
+                                    <input matInput type="text" formControlName="driver_name" maxlength="100"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['driver_name'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Driver Name is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['driver_name'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                            <div class="form-group mb-3">
+                                <mat-label>Vehicle Number</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Vehicle Number</mat-label>
+                                    <input matInput type="text" formControlName="vehicle_no" maxlength="100"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['vehicle_no'].hasError(
+                        'required'
+                      )
+                    ">
+                                        Vehicle Number is Required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['vehicle_no'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mt-2">
+                            <mat-label>Upload Documents</mat-label>
+                            <input class="form-control" type="file" multiple="true" title="Choose File" #fileInput
+                                (change)="onChange($event)" formControlName="uploadedFile" />
+
+                            <mat-error *ngIf="
+                  createStockTransfer.controls['uploadedFile'].hasError(
+                    'required'
+                  ) &&
+                  (createStockTransfer.controls['uploadedFile'].dirty ||
+                    createStockTransfer.controls['uploadedFile'].touched)
+                ">
+                                File is required
+                            </mat-error>
+                            <mat-error *ngIf="
+                  createStockTransfer.controls['uploadedFile'].hasError(
+                    'acceptTypes'
+                  )
+                ">
+                                Only Image files are allowed
+                            </mat-error>
+                        </div>
+
+                        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="form-group">
+                                <mat-label>Remarks</mat-label>
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Remarks</mat-label>
+                                    <input matInput type="text" formControlName="remarks" maxlength="150"/>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['remarks'].hasError(
+                        'required'
+                      )
+                    ">
+                                        remarks is required.
+                                    </mat-error>
+                                    <mat-error *ngIf="
+                      createStockTransfer.controls['remarks'].hasError(
+                        'leadingSpaces'
+                      )
+                    ">
+                                        *No leading spaces!
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="common_button_sub mt-4" align="end" >
+                    <button (click)="onSubmitForm()" *ngIf="!id">Create Stock Transfer</button>
+                    <button class="cancel_button_y" (click)="goBack()">Discard</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

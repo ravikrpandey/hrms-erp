@@ -1,0 +1,107 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Asset Warranty</h1>
+        <p>Warranty<i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i>
+        <span>{{id && mode === 'view' ? 'View Warranty' : id && mode !== 'view' ? 'Update Warranty' : 'Create Warranty'}}</span>
+        </p>
+      </div>
+    
+  </div>
+  
+  <mat-card style="box-shadow: none;">
+    <form class="form_set" [formGroup]="createwarrantyForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Asset Tag ID</mat-label>
+              <mat-select formControlName="assetTagId" [disabled]="mode === 'view'">
+                <mat-option *ngFor="let assetTag of Asset" [value]="assetTag.id">
+                  {{ assetTag.asset_tagId }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Supplier Name</mat-label>
+              <mat-select formControlName="supplierNameId" [disabled]="mode === 'view'">
+                <mat-option *ngFor="let v of vendor" [value]="v.id">
+                  {{ v.vendor_name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width" >
+              <mat-label>Invoice/Ref Number</mat-label>
+              <input matInput type="text" formControlName="invoiceRefNumber" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Warranty Number</mat-label>
+              <input matInput type="number" placeholder="0" formControlName="warrantyNumber" [readonly]="mode === 'view'" />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>Invoice Date</mat-label>
+              <input matInput [matDatepicker]="dp1" formControlName="invoiceDate" (click)="dp1.open()" readonly class="readonly-wrapper"/>
+              <mat-datepicker-toggle matSuffix [for]="dp1" class="readonly-wrapper"></mat-datepicker-toggle>
+              <mat-datepicker #dp1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>From Date</mat-label>
+              <input matInput [matDatepicker]="dp2" formControlName="fromDate" (click)="dp2.open()" [readonly]="mode === 'view'" />
+              <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+              <mat-datepicker #dp2></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline">
+              <mat-label>To Date</mat-label>
+              <input matInput [matDatepicker]="dp3" formControlName="toDate" (click)="dp3.open()" [readonly]="mode === 'view'" />
+              <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+              <mat-datepicker #dp3></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group mb-4">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Remark</mat-label>
+              <input matInput type="text" formControlName="remarks" [readonly]="mode === 'view'" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="common_button_sub" align="end">
+        <span *ngIf="mode !== 'view'">
+          <button (click)="onSubmit()" type="submit">{{ !id ? 'Save' : 'Update' }}</button>
+        </span>
+        <button class="cancel_button_y" routerLink="../">Cancel</button>
+      </div>
+    </form>
+    
+  </mat-card>
+  
+  
+  
+  
+  

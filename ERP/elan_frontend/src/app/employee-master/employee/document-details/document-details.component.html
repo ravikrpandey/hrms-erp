@@ -1,0 +1,112 @@
+<section>
+  <div class="conatiner">
+    <mat-card>
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="documentForm">
+
+          <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <mat-label>Document Name</mat-label>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="document_name" />
+                  <mat-error *ngIf="
+                  documentForm.controls['document_name'].hasError('pattern')
+                ">
+                    Please enter only alphabet characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <mat-label>Document Description</mat-label>
+                <mat-form-field appearance="outline">
+
+                  <input matInput type="text" formControlName="document_description" />
+                  <mat-error *ngIf="
+                  documentForm.controls['document_description'].hasError('pattern')
+                ">
+                    Please enter only alphabet characters
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group fileWithViewImg">
+                <mat-label>Upload Image <span class="alertspan">*</span></mat-label>
+                <input class="form-control" type="file" style="padding-right: 19%" title="Termination Copy Upload"
+                  (change)="uploadDoc($event)" formControlName="documents"
+                  accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc" />
+                  <mat-icon *ngIf="documents" class="formFileViewIcon" (click)="viewImg()">visibility</mat-icon>
+                <!-- <img *ngIf="documents" [src]="baseUrl + '/' + documents" alt="" class="fileViewImage"
+                  (click)="viewImg()"> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="add_button mt-3">
+                <button type="button" (click)="addDocument()">Add</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="personalDetails pt-5">
+          <mat-card>
+            <div class="form_head">
+              <h3>List of Documents</h3>
+              <button class="backBtn" (click)="prevTab()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+            </div>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Si.No</th>
+                  <th>Document Name</th>
+                  <th>Document Description</th>
+                  <th>Download File</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let document of documents_detail; let i = index">
+                  <td>{{i+1}}</td>
+                  <td>{{document?.document_name}}</td>
+                  <td>{{document?.document_description}}</td>
+                  <td>
+                    <div class="flexRow">
+                      <div style="cursor:pointer;" (click)="downloadFile(baseUrl + '/' + document?.documents)"
+                        matTooltip="Download File">
+                        <span class="icon_img"><img src="assets/icons/top3.png"></span>
+                      </div>
+                      <div style="width:10px"></div>
+                      <div style="cursor:pointer;margin-top: 5px;" (click)="viewImage(document?.documents)"
+                        matTooltip="View Doc/Image">
+                        <mat-icon>visibility</mat-icon>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <button mat-raised-button color="primary" class="mx-3"
+                      (click)="editRecord(i, document)">Edit</button>
+                    <button mat-raised-button color="warn" (click)="deleteRecord(i)">Delete</button>
+                  </td>
+                </tr>
+                <tr class="text-center">
+                  <td colspan="4" *ngIf="!documents_detail?.length">No record found</td>
+                </tr>
+              </tbody>
+            </table>
+          </mat-card>
+        </div>
+        <div class="mt-3" *ngIf="!action_type">
+          <button mat-raised-button color="primary" class="mx-3" (click)="onSubmitForm()">Save & Next</button>
+          <button mat-raised-button color="warn" (click)="Skip()">Skip</button>
+        </div>
+      </div>
+    </mat-card>
+    <!-- <div align="start"  class="btn_employ">
+            <button mat-raised-button class="btn1" color="primary" (click)="onSubmitForm()">Save</button>
+            <button mat-raised-button class="btn2 mx-2" color="warn">Cancel</button>
+        </div> -->
+  </div>
+</section>

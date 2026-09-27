@@ -1,0 +1,101 @@
+<header class="topbar">
+  <div class="topbar-brand">
+    <img src="../../../assets/company-logo.png" alt="company-logo" />
+  </div>
+
+  <div class="portal-title">
+    <mat-icon>store</mat-icon>
+    <span>Vendor Portal</span>
+  </div>
+
+  <nav class="topbar-right">
+    <a
+      *ngIf="hideMenu"
+      mat-button
+      (click)="navigateTo('/vendor-dashboard')"
+      [class.active-link]="isActive('/vendor-dashboard')"
+    >
+      <mat-icon>space_dashboard</mat-icon>
+      <span class="txt-decoration">Dashboard</span>
+    </a>
+
+    <a
+      *ngIf="hideMenu"
+      mat-button
+      (click)="navigateTo('/vendor-polist')"
+      [class.active-link]="isActive('/vendor-polist')"
+    >
+      <mat-icon>shopping_cart</mat-icon>
+      <span class="txt-decoration">PO List</span>
+    </a>
+
+    <a
+      *ngIf="hideMenu"
+      mat-button
+      (click)="navigateTo('/vendor-rfplist')"
+      [class.active-link]="isActive('/vendor-rfplist')"
+    >
+      <mat-icon>request_quote</mat-icon>
+      <span class="txt-decoration">RFP List</span>
+    </a>
+
+    <a
+      *ngIf="hideMenu"
+      mat-button
+      (click)="navigateTo('/vendor-negotiationlist')"
+      [class.active-link]="isActive('/vendor-negotiationlist')"
+    >
+      <mat-icon>handshake</mat-icon>
+      <span class="txt-decoration">Negotiation List</span>
+    </a>
+
+    <a
+      *ngIf="hideMenu"
+      mat-button
+      (click)="navigateTo('/vendor-return-list')"
+      [class.active-link]="isActive('/vendor-return-list')"
+    >
+      <mat-icon>assignment_return</mat-icon>
+      <span class="txt-decoration">PO Return</span>
+    </a>
+
+    <span class="divider"></span>
+
+    <div class="vendor-type" title="{{ vendorDetails?.vendor_category }}">
+      <mat-icon class="txt-decoration" style="cursor: text">
+        {{ vendorDetails?.vendor_category === "Domestic" ? "store" : "public" }}
+      </mat-icon>
+    </div>
+
+    <!-- <div class="currency">
+        {{ currencySymbols }} {{vendorDetails?.Currency_Type}}
+        </div> -->
+
+    <span class="divider"></span>
+
+    <div class="user-info">
+      <mat-icon class="txt-decoration">account_circle</mat-icon>
+      <span class="txt-decoration">
+        {{ vendorDetails?.vendor_name }} - {{ vendorDetails?.vendor_code }}
+      </span>
+
+      <mat-icon
+        *ngIf="hideMenu"
+        class="logout-icon"
+        title="Logout"
+        (click)="logout('logout')"
+      >
+        logout
+      </mat-icon>
+
+      <mat-icon
+        *ngIf="!hideMenu"
+        class="logout-icon"
+        title="Login"
+        (click)="logout('login')"
+      >
+        login
+      </mat-icon>
+    </div>
+  </nav>
+</header>

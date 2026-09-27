@@ -1,0 +1,8 @@
+<div class="edd-del d-flex align-items-center gap-1" style="display: flex; gap: 8px; align-items: center;">
+    <mat-icon class="viewButton text-primary" style="cursor: pointer;" matTooltip="View Details" (click)="view($event)">visibility</mat-icon>
+    <mat-icon class="editButton text-secondary" style="cursor: pointer;" matTooltip="Edit Draft" *ngIf="singleData?.can_edit" (click)="edit($event)">edit</mat-icon>
+    <mat-icon class="text-success" style="cursor: pointer; color: green;" matTooltip="Submit Request" *ngIf="singleData?.can_submit" (click)="updateStatus('Submitted', $event)">send</mat-icon>
+    <mat-icon class="text-info" style="cursor: pointer; color: #17a2b8;" matTooltip="Approve Request" *ngIf="singleData?.can_approve" (click)="updateStatus('Approved', $event)">check_circle</mat-icon>
+    <mat-icon class="text-warning" style="cursor: pointer; color: #ffc107;" matTooltip="Dispatch (Transit)" *ngIf="singleData?.can_dispatch" (click)="updateStatus('Dispatched', $event)">local_shipping</mat-icon>
+    <mat-icon class="text-danger" style="cursor: pointer; color: red;" matTooltip="Cancel Request" *ngIf="singleData?.can_cancel" (click)="updateStatus('Cancelled', $event)">cancel</mat-icon>
+</div>

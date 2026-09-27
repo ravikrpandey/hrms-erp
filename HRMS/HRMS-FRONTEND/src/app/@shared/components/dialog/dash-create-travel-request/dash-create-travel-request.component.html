@@ -1,0 +1,480 @@
+<form [formGroup]="formModel" *ngIf="cities.length > 0" class="travel-form">
+  <div class="card shadow-lg rounded-3 border-0">
+    <!-- Header -->
+    <!-- {{formModel.value | json}} -->
+    <div *ngIf="cappingErrors.length > 0" class="alert alert-danger mt-3">
+      <h5>Validation Errors:</h5>
+      <ul>
+        <li *ngFor="let err of cappingErrors">
+          <strong>{{ err.category | titlecase }}:</strong> {{ err.message }}
+        </li>
+      </ul>
+    </div>
+
+    <div
+      class="card-header d-flex justify-content-between align-items-center bg-primary text-white rounded-top"
+    >
+      <div>
+        <strong>{{
+          travelRequests?.travel_request_number || "New Travel Request"
+        }}</strong>
+      </div>
+      <div>
+        <span>{{ travelRequests?.current_date | date : "dd-MM-yyyy" }}</span>
+      </div>
+      <button
+        *ngIf="!view"
+        type="button"
+        mat-raised-button
+        color="primary"
+        (click)="addJourney()"
+      >
+        <mat-icon>add</mat-icon>
+        Add Journey
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+      <!-- <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="section-title">Travel Journeys</h5>
+        <button
+          *ngIf="!view"
+          type="button"
+          mat-raised-button
+          color="primary"
+          (click)="addJourney()"
+        >
+          <mat-icon>add</mat-icon>
+          Add Journey
+        </button>
+      </div> -->
+
+      <!-- Journeys -->
+      <div
+        *ngIf="isJourneyLoading"
+        class="d-flex flex-column justify-content-center align-items-center p-3"
+        style="min-height: 200px"
+      >
+        <!-- Angular Material Loader -->
+        <mat-spinner diameter="40"></mat-spinner>
+
+        <p class="mt-2 mb-0 text-muted">Fetching data...</p>
+      </div>
+
+      <div *ngIf="!isJourneyLoading" formArrayName="journeyBifurcation">
+        <ng-container
+          *ngFor="let journey of journeyBifurcation.controls; let i = index"
+        >
+          <mat-expansion-panel
+            [formGroupName]="i"
+            class="journey-panel mb-3"
+            [expanded]="true"
+          >
+            <mat-expansion-panel-header>
+              <!-- <mat-panel-title>Journey {{ i + 1 }}</mat-panel-title>
+                <span *ngIF> </span> SHOW 17 March to 20 March (Delhi - Maneshar) and handle null or empty and add from and to city -->
+              <mat-panel-description>
+                <span
+                  *ngIf="
+                    journey.value.domestic_from_date &&
+                    journey.value.domestic_to_date
+                  "
+                >
+                  {{ journey.value.domestic_from_date | date : "dd MMMM" }} to
+                  {{ journey.value.domestic_to_date | date : "dd MMMM" }} ({{
+                    getCityName(cities, journey.value.domestic_from_city_id)
+                  }}
+                  -
+                  {{ getCityName(cities, journey.value.domestic_to_city_id) }})
+                </span>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+
+            <div class="row g-3">
+              <!-- Dates -->
+              <div class="col-md-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>From Date</mat-label>
+                  <!-- From Date -->
+                  <input
+                    matInput
+                    formControlName="domestic_from_date"
+                    [matDatepicker]="fromDatepicker"
+                    (dateChange)="calculateDays()"
+                    (click)="fromDatepicker.open()"
+                    readonly
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="fromDatepicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #fromDatepicker></mat-datepicker>
+                  <mat-error
+                    *ngIf="
+                      journey
+                        .get('domestic_from_date')
+                        ?.hasError('sequenceInvalid')
+                    "
+                  >
+                    From Date must be after previous journey's To Date
+                  </mat-error>
+                </mat-form-field>
+              </div>
+
+              <div class="col-md-2">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>To Date</mat-label>
+                  <!-- To Date -->
+                  <input
+                    matInput
+                    formControlName="domestic_to_date"
+                    [matDatepicker]="toDatepicker"
+                    (dateChange)="calculateDays()"
+                    (click)="toDatepicker.open()"
+                    readonly
+                  />
+
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="toDatepicker"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #toDatepicker></mat-datepicker>
+                </mat-form-field>
+              </div>
+
+              <!-- States -->
+              <div class="col-md-2">
+                <app-mat-form-select-filter
+                  formControlName="domestic_from_city_id"
+                  [key]="'city_id'"
+                  [items]="cities"
+                  [displayKey]="['city_name', 'states_name']"
+                  placeholder="From City"
+                ></app-mat-form-select-filter>
+              </div>
+
+              <div class="col-md-2">
+                <app-mat-form-select-filter
+                  formControlName="domestic_to_city_id"
+                  [key]="'city_id'"
+                  [items]="cities"
+                  [displayKey]="['city_name', 'states_name']"
+                  placeholder="To City"
+                ></app-mat-form-select-filter>
+              </div>
+              <!-- Action Buttons -->
+              <div class="col-md-2 d-flex align-items-center">
+                <button
+                  *ngIf="travelRequests && travelRequests.id"
+                  mat-mini-fab
+                  color="primary"
+                  class="ms-2"
+                  (click)="toggleExpenseForm(i)"
+                  matTooltip="Add Expense"
+                >
+                  <mat-icon>{{
+                    showExpenseForm[i] ? "remove" : "payments"
+                  }}</mat-icon>
+                </button>
+              </div>
+              <div class="col-md-2 d-flex align-items-center">
+                <button
+                  *ngIf="!view"
+                  mat-mini-fab
+                  color="warn"
+                  [disabled]="i === 0"
+                  (click)="removeJourney(i)"
+                  matTooltip="Remove Journey"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+              <!-- Cities -->
+              <!-- <div class="col-md-2">
+                <app-mat-form-select-filter
+                  *ngIf="fromCityLists[i] && fromCityLists[i].length > 0"
+                  formControlName="domestic_from_city_id"
+                  [key]="'city_id'"
+                  [items]="fromCityLists[i]"
+                  [displayKey]="'city_name'"
+                  placeholder="From City"
+                ></app-mat-form-select-filter>
+              </div>
+
+              <div class="col-md-2">
+                <app-mat-form-select-filter
+                  *ngIf="toCityLists[i] && toCityLists[i].length > 0"
+                  formControlName="domestic_to_city_id"
+                  [key]="'city_id'"
+                  [items]="toCityLists[i]"
+                  [displayKey]="'city_name'"
+                  placeholder="To City"
+                ></app-mat-form-select-filter>
+              </div> -->
+            </div>
+            <mat-error *ngIf="journey.hasError('dateRangeInvalid')">
+              To Date must be greater than or equal to From Date
+            </mat-error>
+
+            <!-- Expense Section -->
+            <div *ngIf="showExpenseForm[i]" class="expense-section">
+              <h6 class="fw-bold">Expenses</h6>
+              <div formArrayName="expenses">
+                <ng-container
+                  *ngFor="
+                    let exp of getExpensesFormArray(i).controls;
+                    let expIndex = index
+                  "
+                  [formGroupName]="expIndex"
+                >
+                  <div class="row g-3 align-items-center mb-2 expense-row">
+                    <div class="col-md-2">
+                      <app-mat-form-select-filter
+                        [key]="'id'"
+                        [items]="expenseType"
+                        [displayKey]="'expense_type'"
+                        placeholder="Expense Category"
+                        formControlName="exp_category_id"
+                      ></app-mat-form-select-filter>
+                    </div>
+
+                    <div class="col-md-1">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Amount</mat-label>
+                        <input
+                          matInput
+                          type="number"
+                          formControlName="exp_amount"
+                          min="0"
+                        />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Expense Name</mat-label>
+                        <input matInput formControlName="exp_name" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-2">
+                      <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Remarks</mat-label>
+                        <input matInput formControlName="remarks" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-center">
+                      <!-- Upload Icon Button -->
+                      <button
+                        mat-icon-button
+                        color="primary"
+                        (click)="fileInput.click()"
+                        [disabled]="getExpenseImages(i, expIndex).length >= 3"
+                        matTooltip="Upload Bill"
+                      >
+                        <mat-icon>upload</mat-icon>
+                      </button>
+                      <input
+                        #fileInput
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        (change)="onFileSelected($event, i, expIndex)"
+                        hidden
+                      />
+
+                      <!-- Thumbnails -->
+                      <div class="thumb-preview ms-2 d-flex gap-1 flex-wrap">
+                        <div
+                          class="thumb"
+                          *ngFor="
+                            let doc of getExpenseDocumentData(i, expIndex)
+                              .controls;
+                            let k = index
+                          "
+                          [formGroupName]="k"
+                        >
+                          <a
+                            role="button"
+                            [href]="
+                              fileUrl +
+                              '/uploaded_files/' +
+                              doc.get('url')?.value
+                            "
+                            target="_blank"
+                            class="ms-2"
+                          >
+                            <img
+                              [src]="
+                                fileUrl +
+                                '/uploaded_files/' +
+                                doc.get('url')?.value
+                              "
+                              alt="Preview"
+                              accept="image/*"
+                            /> </a
+                          ><button
+                            type="button"
+                            class="remove-btn"
+                            aria-label="Remove"
+                            (click)="removeImage(i, expIndex, k)"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-1 text-end">
+                      <button
+                        *ngIf="!view"
+                        mat-icon-button
+                        color="warn"
+                        (click)="removeExpenseAt(i, expIndex)"
+                      >
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </ng-container>
+                <button
+                  *ngIf="!view"
+                  mat-stroked-button
+                  color="primary"
+                  (click)="addNewExpense(i)"
+                >
+                  <mat-icon>add</mat-icon> Add More Expense
+                </button>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Budgets Section -->
+    <mat-expansion-panel
+      [(expanded)]="showAllDetails"
+      class="m-3 budget-panel"
+      *ngIf="travelRequests && travelRequests.id"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon class="me-2">account_balance_wallet</mat-icon>
+          Travel Budget Limits
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="p-3" *ngIf="budgetData">
+        <div class="row g-3 mb-4">
+          <div class="col-lg-4 col-md-6">
+            <mat-card class="info-card">
+              <mat-card-title>Local Max Limit</mat-card-title>
+              <mat-card-content>
+                <span class="value-text text-success">{{
+                  budgetData.local_max_limit
+                }}</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <mat-card class="info-card">
+              <mat-card-title>DA Night Allowance</mat-card-title>
+              <mat-card-content>
+                <span class="value-text text-primary">{{
+                  budgetData.daily_allowance
+                }}</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <mat-card class="info-card p-2">
+              <mat-card-title>Other Town</mat-card-title>
+              <mat-card-content>
+                <span class="value-text text-secondary">{{
+                  budgetData.other_towns
+                }}</span>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle budget-table">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>City</th>
+                <th class="text-end">Budget Limit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of budgetData.domesticBudgetLimits">
+                <td>{{ item.state?.states_name || "—" }}</td>
+                <td>{{ item.city?.city_name || "—" }}</td>
+                <td class="text-end">
+                  <span
+                    class="badge rounded-pill px-3 py-2"
+                    [ngClass]="
+                      item.budgetLimit > 1000
+                        ? 'bg-success text-white'
+                        : 'bg-light text-dark'
+                    "
+                  >
+                    {{ item.budgetLimit }}
+                  </span>
+                </td>
+              </tr>
+              <tr
+                *ngIf="
+                  !budgetData.domesticBudgetLimits ||
+                  budgetData.domesticBudgetLimits.length === 0
+                "
+              >
+                <td colspan="3" class="text-center text-muted py-4">
+                  <i class="bi bi-inbox fs-1 d-block mb-2 opacity-50"></i>
+                  No domestic budget limits configured
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="!budgetData" class="text-center py-4 text-muted">
+        <i class="bi bi-wallet-fill fs-1 d-block mb-2 opacity-50"></i>
+        No Budget Data Available
+      </div>
+    </mat-expansion-panel>
+  </div>
+
+  <!-- Footer -->
+  <div class="d-flex justify-content-end gap-2 pt-3">
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="isButtonShow"
+      (click)="onSubmit(true)"
+    >
+      Submit for Approval
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+    >
+      {{ travelRequests?.id ? "Update" : "Save" }}
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="proceed($event)"
+      *ngIf="typeCheck === 'process-approval'"
+    >
+      Proceed
+    </button>
+  </div>
+</form>

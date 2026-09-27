@@ -1,0 +1,295 @@
+<div class="view-details-card">
+  <!-- Print Header block (Only visible on window.print()) -->
+  <div class="print-invoice-header print-only">
+    <div class="company-brand">
+      <h1>ELAN ERP SYSTEM</h1>
+      <p>Procurement & Inventory Adjustments Division</p>
+      <p>GSTIN: 07AAAEC0923F1Z5</p>
+    </div>
+    <div class="document-badge">
+      <h2>DEBIT NOTE</h2>
+      <p class="badge-no">Ref No: {{ selectedReturn.return_no }}</p>
+      <p class="badge-date">
+        Date: {{ selectedReturn.return_date | date: "dd-MMM-yyyy" }}
+      </p>
+    </div>
+  </div>
+
+  <hr class="print-only page-divider" />
+
+  <!-- Header Actions panel (Hidden in print) -->
+  <div class="details-action-bar no-print">
+    <div class="record-meta">
+      <span class="record-no">{{ selectedReturn.return_no }}</span>
+      <span
+        class="status-badge"
+        [ngClass]="selectedReturn.status.toLowerCase()"
+      >
+        {{ selectedReturn.status }}
+      </span>
+    </div>
+
+    <div class="action-buttons">
+      <!-- Submit Record (DRAFT) -->
+      <button
+        *ngIf="!isVendor && selectedReturn.status === 'DRAFT'"
+        class="btn primary-btn"
+        (click)="onSubmit.emit(selectedReturn.id)"
+      >
+        <i class="fa fa-paper-plane"></i> Submit Approval
+      </button>
+
+      <!-- Approve / Reject Workflow (SUBMITTED) -->
+      <button
+        *ngIf="!isVendor && selectedReturn.status === 'SUBMITTED'"
+        class="btn btn-approve"
+        (click)="onApprove.emit(selectedReturn.id)"
+      >
+        <i class="fa fa-check"></i> Approve Return
+      </button>
+      <button
+        *ngIf="!isVendor && selectedReturn.status === 'SUBMITTED'"
+        class="btn btn-reject"
+        (click)="onReject.emit(selectedReturn.id)"
+      >
+        <i class="fa fa-times"></i> Reject Return
+      </button>
+
+      <!-- Cancel Option (DRAFT / SUBMITTED) -->
+      <button
+        *ngIf="
+          !isVendor &&
+          (selectedReturn.status === 'DRAFT' ||
+            selectedReturn.status === 'SUBMITTED')
+        "
+        class="btn btn-cancel"
+        (click)="onCancelRecord.emit(selectedReturn.id)"
+      >
+        <i class="fa fa-ban"></i> Cancel Return
+      </button>
+
+      <!-- Print Note Button -->
+      <button class="btn secondary-btn" (click)="printReturn()">
+        <i class="fa fa-print"></i> Print Debit Note
+      </button>
+
+      <!-- Vendor Complete Action (APPROVED) -->
+      <button
+        *ngIf="isVendor && selectedReturn.status === 'APPROVED'"
+        class="btn btn-approve"
+        (click)="onComplete.emit(selectedReturn.id)"
+      >
+        <i class="fa fa-check"></i> Acknowledge & Approve
+      </button>
+
+      <!-- <button class="btn secondary-btn" (click)="onBack.emit()">
+                Back to List
+            </button> -->
+    </div>
+  </div>
+
+  <!-- Meta Grid Information -->
+  <div class="details-meta-grid">
+    <div class="meta-section">
+      <h4>Vendor Information</h4>
+      <div class="meta-value bold-text">
+        {{ selectedReturn.vendor?.vendor_name }}
+      </div>
+      <div class="meta-sub">Code: {{ selectedReturn.vendor?.vendor_code }}</div>
+      <div class="meta-sub">
+        Contact: {{ selectedReturn.vendor?.vendor_contact_person }}
+      </div>
+      <div class="meta-sub">
+        GSTIN: {{ selectedReturn.vendor?.vendor_gst_no || "N/A" }}
+      </div>
+    </div>
+
+    <div class="meta-section">
+      <h4>Source References</h4>
+      <div class="meta-row">
+        <span class="meta-label">GRN Reference:</span>
+        <span class="meta-value">{{ selectedReturn.grn?.grn_number }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Invoice Ref:</span>
+        <span class="meta-value">{{
+          selectedReturn.grn?.invoiceNo || "N/A"
+        }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Purchase Order:</span>
+        <span class="meta-value">{{
+          selectedReturn.purchaseOrder?.po_number || "N/A"
+        }}</span>
+      </div>
+    </div>
+
+    <div class="meta-section">
+      <h4>Return Details</h4>
+      <div class="meta-row">
+        <span class="meta-label">Return Date:</span>
+        <span class="meta-value">{{
+          selectedReturn.return_date | date: "dd-MMM-yyyy"
+        }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Created By:</span>
+        <span class="meta-value">{{
+          selectedReturn.creator
+            ? selectedReturn.creator.first_name +
+              " " +
+              selectedReturn.creator.last_name
+            : "Admin"
+        }}</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Reason:</span>
+        <span class="meta-value">{{
+          selectedReturn.return_reason_id === 1
+            ? "Defective"
+            : selectedReturn.return_reason_id === 2
+              ? "Incorrect Supply"
+              : selectedReturn.return_reason_id === 3
+                ? "Excess Qty"
+                : "Other"
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remarks Section -->
+  <div class="remarks-box-container">
+    <h4>Remarks / Instructions</h4>
+    <div class="remarks-body">
+      {{ selectedReturn.remarks || "No notes added" }}
+    </div>
+  </div>
+
+  <!-- Return Items Table -->
+  <div class="details-items-section">
+    <h4>Returned Items Inventory Specification</h4>
+
+    <div class="table-responsive">
+      <table class="details-items-table">
+        <thead>
+          <tr>
+            <th>Item Code / Name</th>
+            <th>Warehouse</th>
+            <th>Allocations (Batch / Serial)</th>
+            <th>Received Qty</th>
+            <th>Returned Qty</th>
+            <th>Gross Rate</th>
+            <th>Discount %</th>
+            <th>Net Rate</th>
+            <th>Tax Rate</th>
+            <th>Tax Amount</th>
+            <th>Total Credit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedReturn.items">
+            <td>
+              <div class="item-name bold-text">{{ item.item?.item_name }}</div>
+              <div class="item-code">
+                {{ item.item?.item_code }} ({{ item.item?.manage_by }})
+              </div>
+            </td>
+            <td>{{ item.warehouse?.name || "N/A" }}</td>
+            <td>
+              <span class="badge-serial" *ngIf="item.batch_no"
+                >B: {{ item.batch_no }}</span
+              >
+              <span class="badge-serial" *ngIf="item.serial_no"
+                >S/N: {{ item.serial_no }}</span
+              >
+              <span
+                class="badge-serial text-muted"
+                *ngIf="!item.batch_no && !item.serial_no"
+                >FIFO / None</span
+              >
+            </td>
+            <td>{{ item.received_qty }}</td>
+            <td class="bold-text text-red">{{ item.return_qty }}</td>
+            <td>₹ {{ (item.grnItem?.PROCUREMENT_PURCHASE_ORDER_ITEM?.unit_price || item.rate) | number: "1.2-2" }}</td>
+            <td>{{ (item.grnItem?.PROCUREMENT_PURCHASE_ORDER_ITEM?.discount_percentage || 0) }}%</td>
+            <td>₹ {{ item.rate | number: "1.2-2" }}</td>
+            <td>{{ item.tax_percent }}%</td>
+            <td>₹ {{ item.tax_amount | number: "1.2-2" }}</td>
+            <td class="bold-text text-teal">
+              ₹ {{ item.amount | number: "1.2-2" }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary Totals Grid -->
+  <div class="details-totals-section">
+    <div class="details-totals-box">
+      <div class="total-line">
+        <span>Taxable Value:</span>
+        <span>₹ {{ selectedReturn.sub_total | number: "1.2-2" }}</span>
+      </div>
+      <div class="total-line">
+        <span>Total Tax:</span>
+        <span>₹ {{ selectedReturn.tax_amount | number: "1.2-2" }}</span>
+      </div>
+      <div class="total-line final-adjustment">
+        <span>Grand Total Adjusted Value:</span>
+        <span>₹ {{ selectedReturn.final_amount | number: "1.2-2" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit / Status History Log Trail -->
+  <div class="status-logs-section no-print">
+    <h4>Workflow Audit Log & History</h4>
+    <div class="logs-timeline">
+      <div class="log-item" *ngFor="let log of selectedReturn.statusLogs">
+        <div class="log-dot" [ngClass]="log.status.toLowerCase()"></div>
+        <div class="log-content">
+          <div class="log-header">
+            <span class="log-status">{{ log.status }}</span>
+            <span class="log-time">{{
+              log.createdAt | date: "dd-MMM-yyyy hh:mm a"
+            }}</span>
+          </div>
+          <div class="log-remarks">{{ log.remarks }}</div>
+          <div class="log-actor">
+            By:
+            {{
+              log.creator
+                ? log.creator.first_name + " " + log.creator.last_name
+                : "User"
+            }}
+          </div>
+        </div>
+      </div>
+      <div
+        class="log-item empty"
+        *ngIf="
+          !selectedReturn.statusLogs || selectedReturn.statusLogs.length === 0
+        "
+      >
+        <p>No status transition logs recorded</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Print Signatures (Only visible on window.print()) -->
+  <div class="print-signatures print-only">
+    <div class="sig-box">
+      <div class="line"></div>
+      <p>Prepared By</p>
+    </div>
+    <div class="sig-box">
+      <div class="line"></div>
+      <p>Checked By</p>
+    </div>
+    <div class="sig-box">
+      <div class="line"></div>
+      <p>Vendor Signature & Stamp</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,390 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Manpower Request <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+      </i><span> New Request</span></p>
+  </div>
+  <div class="add_button">
+    <!-- <button routerLink="../achievement" type="button">List</button> -->
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+<mat-card>
+  <form class="form_set" [formGroup]="requestNewPositionForm">
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline"
+          [ngClass]="{'readonly-wrapper': (paramsData === 'view' || paramsData === 'approval')}">
+          <mat-label>Job Title </mat-label>
+          <input type="text" matInput formControlName="job_title">
+          <!-- <mat-select formControlName="job_title">
+          <mat-option *ngFor="let data of typeData"
+          [value]="data.type">{{data.type}}</mat-option>
+      </mat-select> -->
+          <mat-error *ngIf="requestNewPositionForm.get('job_title')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData != 'view'">
+        <mat-form-field appearance="outline"
+          [ngClass]="{'readonly-wrapper': (paramsData === 'view' || paramsData === 'approval')}">
+          <mat-label>Department</mat-label>
+          <mat-select formControlName="department" (selectionChange)="getAllAreas($event)">
+            <app-search-filter [array]="departments" [placeholder]="'Search by department'"
+              [searchFields]="['department_name']" (filteredReturn)="filterBydepartmentName($event)">
+            </app-search-filter>
+            <mat-option *ngFor="let department of filterDepartment"
+              [value]="department.dept_id">{{department.department_name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('department')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData === 'view'">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Department</mat-label>
+
+          <input type="text" matInput value="{{jobData.department_name}}">
+          <mat-error *ngIf="requestNewPositionForm.get('department')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData != 'view'">
+        <mat-form-field appearance="outline"
+          [ngClass]="{'readonly-wrapper': (paramsData === 'view' || paramsData === 'approval')}">
+          <mat-label>Sub Department</mat-label>
+          <mat-select formControlName="area">
+            <app-search-filter [array]="newAreaList" [placeholder]="'Search by SubDepartment'"
+              [searchFields]="['area_name']" (filteredReturn)="filterBySubdepartment($event)">
+            </app-search-filter>
+            <mat-option *ngFor="let area of filterBysubdepartment" [value]="area.id">{{area.area_name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('area')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData === 'view'">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Sub Department</mat-label>
+          <input type="text" matInput value="{{jobData.area_name}}">
+          <mat-error *ngIf="requestNewPositionForm.get('area')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline"
+          [ngClass]="{'readonly-wrapper': (paramsData === 'view' || paramsData === 'approval')}">
+          <mat-label>Select Position</mat-label>
+          <mat-select formControlName="selectPosition">
+            <app-search-filter [array]="designationList" [placeholder]="'Search by designation_name'"
+              [searchFields]="['designation_name']" (filteredReturn)="filterbydesignation_name($event)">
+            </app-search-filter>
+            <mat-option *ngFor="let contract of desigantionfilter"
+              [value]="contract.designation_id">{{contract.designation_name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('selectPosition')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Reason For Recruitment</mat-label>
+          <mat-select formControlName="recruitmentReason">
+            <mat-option *ngFor="let reason of getAllReasonData"
+              [value]="reason.id">{{reason.reason_for_recruitment}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('recruitmentReason')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Salary</mat-label>
+          <input type="text" matInput formControlName="salary">
+          <mat-error *ngIf="requestNewPositionForm.get('salary')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+    </div>
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Application Date</mat-label>
+          <input [matDatepicker]="dp" (click)="dp.open()" [max]="maxDate" [min]="minDate" matInput type="text"
+            formControlName="expectedStartDate" />
+          <mat-datepicker-toggle matSuffix [for]="dp"
+            [ngClass]="{'readonly-wrapper': paramsData === 'view'}"></mat-datepicker-toggle>
+          <mat-datepicker #dp></mat-datepicker>
+          <mat-error *ngIf="requestNewPositionForm.get('expectedStartDate')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-4">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Application End date</mat-label>
+          <input [matDatepicker]="dp1" (click)="dp1.open()" [min]="minEndDate" matInput type="text"
+            formControlName="expectedEndDate" />
+          <mat-datepicker-toggle matSuffix [for]="dp1"
+            [ngClass]="{'readonly-wrapper': paramsData === 'view'}"></mat-datepicker-toggle>
+          <mat-datepicker #dp1></mat-datepicker>
+          <mat-error *ngIf="requestNewPositionForm.get('expectedEndDate')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData == 'view'">
+        <mat-form-field appearance="outline"
+          [ngClass]="{'readonly-wrapper': (paramsData === 'view' || paramsData === 'approval')}">
+          <mat-label>Reporting Manager </mat-label>
+          <input type="text" matInput formControlName="hierarchicalSuperior">
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" *ngIf="paramsData != 'view'">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Reporting Manager</mat-label>
+          <mat-select formControlName="hierarchicalSuperior">
+            <app-search-filter [array]="getAllSuperviserData" [placeholder]="'Search by name'"
+              [searchFields]="['first_name', 'last_name']" (filteredReturn)="filterReportingmanger($event)">
+            </app-search-filter>
+            <mat-option *ngFor="let emp of filteremployee" [value]="emp.employee_id">{{emp.first_name}}
+              {{emp.last_name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('hierarchicalSuperior')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row job_css">
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-label>Location</mat-label>
+          <mat-select formControlName="location">
+            <app-search-filter [array]="locations" [placeholder]="'Search by location'" [searchFields]="['branch_name']"
+              (filteredReturn)="filterBylocation($event)">
+            </app-search-filter>
+            <mat-option *ngFor="let location of filterbybranchname"
+              [value]="location.id">{{location.branch_name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="requestNewPositionForm.get('location')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Skill</mat-label>
+          <input type="text" matInput formControlName="skill">
+          <mat-error *ngIf="requestNewPositionForm.get('skill')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Qualification</mat-label>
+          <input type="text" matInput formControlName="qualification">
+          <mat-error *ngIf="requestNewPositionForm.get('qualification')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>Experience (In Year)</mat-label>
+          <input type="text" matInput formControlName="experience">
+          <mat-error *ngIf="requestNewPositionForm.get('experience')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>No of Position</mat-label>
+          <input type="text" matInput formControlName="no_of_position">
+          <mat-error *ngIf="requestNewPositionForm.get('no_of_position')?.hasError('required')">
+            This field is required!
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Employee Type</mat-label>
+            <mat-select formControlName="emplyoment_type_id">
+              <mat-option *ngFor="let employement of employementTypeList" [value]="employement?.emptype_id">{{
+                employement?.emptype_name }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="
+            requestNewPositionForm.controls['emplyoment_type_id'].hasError('required')
+    ">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="row job_css">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 p-0">
+        <mat-label>
+          <p style="margin-top: 5px; font-size: 14px; text-align: left;">Do you have job specification?</p>
+        </mat-label>
+        <mat-radio-group formControlName="jobSpecification" [ngClass]="{'readonly-wrapper': paramsData === 'view'}"
+          (change)="onSelectedJobSpecification($event)" style="margin-top: 4px;">
+          <mat-radio-button value="YES">Yes</mat-radio-button>
+          <mat-radio-button value="NO">No</mat-radio-button>
+        </mat-radio-group>
+        <mat-error *ngIf="requestNewPositionForm.get('jobSpecification')?.hasError('required')">
+          This field is required!
+        </mat-error>
+      </div>
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12" *ngIf="selectJob">
+        <mat-label>Upload Job Description File</mat-label>
+        <input [ngClass]="{'readonly-wrapper': paramsData === 'view'}" class="form-control" type="file" multiple="true"
+          style="padding-right: 19%" title="CHOOSE FILE" #fileInput (change)="onChange($event)" formControlName="file"
+          accept=".pdf,.doc,.docx" />
+        <a *ngIf="this.fileBind" href="{{generateImageUrl()+fileBind}}" download target="_blank">
+          <mat-icon class="imgEmp">
+
+            folder_open</mat-icon>
+        </a>
+        <p style="padding: 5px 12px;
+                color: #4c4c98;">Upload(.pdf, .doc, .docx)</p>
+        <div *ngIf="requestNewPositionForm.get('file').invalid && requestNewPositionForm.get('file').touched">
+          <small class="text-danger">
+            File is required.
+          </small>
+        </div>
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 p-0">
+        <!-- <p>Download JD</p>
+        <mat-icon matTooltip="Download" 
+        (click)="download_offer_letter()">download</mat-icon> -->
+      </div>
+    </div>
+
+    <div class="row job_css">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12" *ngIf="!selectJob">
+        <!-- <mat-label>Type JD Here</mat-label>
+      <div class="form-group attach_file">
+        <ckeditor #editer id="ckediter" formControlName="jdEditor"></ckeditor>
+        <mat-error *ngIf="requestNewPositionForm?.get('jdEditor')?.hasError('required')">
+          This field is required!
+        </mat-error>
+      </div> -->
+        <div class="form-group attach_file">
+          <ckeditor #editer id="ckediter" [ngClass]="{'readonly-wrapper': paramsData === 'view'}"
+            formControlName="text">
+          </ckeditor>
+
+        </div>
+        <!-- <div *ngIf="requestNewPositionForm.get('text').invalid && requestNewPositionForm.get('text').touched"
+          class="text-danger">
+          Text is required
+        </div> -->
+      </div>
+    </div>
+
+    <div class="row job_css">
+      <!--   <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 p-0">
+        <mat-label>
+          <p style="margin-top: 5px; font-size: 14px; text-align: left;">Budget:-</p>
+        </mat-label>
+        <mat-radio-group [ngClass]="{'readonly-wrapper': paramsData === 'view'}" formControlName="budget"
+          (change)="onSelectedBudget()" style="margin-top: 4px;">
+          <mat-radio-button value="YES">Yes</mat-radio-button>
+
+          <mat-radio-button value="NO">No</mat-radio-button>
+        </mat-radio-group>
+      </div> -->
+
+
+      <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12"
+        *ngIf="requestNewPositionForm?.get('budget')?.value === 'YES'">
+        <mat-label> Cost Center</mat-label>
+        <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+          <mat-select formControlName="cost_center_id">
+            <mat-option *ngFor="let data of newCostList" [value]="data.id">{{data?.cost_center_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> -->
+      <!-- <input type="text" matInput formControlName="cost_center_id" *ngIf="paramsData === 'view'"> -->
+
+
+      <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+        <mat-label>Enter Remark and Justification</mat-label>
+        <div>
+          <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': paramsData === 'view'}">
+            <mat-label>Remark</mat-label>
+            <input type="text" matInput formControlName="budget_Justification">
+            <!-- <mat-error *ngIf="requestNewPositionForm.get('remark')?.invalid">
+              invalid!
+            </mat-error> -->
+          </mat-form-field>
+        </div>
+        <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <mat-form-field appearance="outline">
+              <mat-label>justification</mat-label>
+              <input type="text" matInput formControlName="justification">
+              <mat-error *ngIf="requestNewPositionForm.get('justification')?.invalid">
+                  invalid!
+              </mat-error>
+            </mat-form-field>
+          </div> -->
+      </div>
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+
+        <!-- <mat-error *ngIf="requestNewPositionForm.get('budget')?.hasError('required')">
+        This field is required!
+      </mat-error> -->
+      </div>
+    </div>
+    <div class="row m-3" *ngIf="!paramsData">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub">
+          <button type="button" (click)="ngSubmit()">
+            Submit
+          </button>
+          <!-- <button  (click)="onSubmitForm(this.requestNewPositionForm.value)">
+          Update
+        </button> -->
+          <button style="background: #b04646 !important" color="warn" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row m-3" *ngIf="paramsData == 'approval'">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="common_button_sub">
+          <button (click)="ngSubmitForApproval()">
+            Process To Approve/Reject
+          </button>
+          <button style="background: #b04646 !important" color="warn" (click)="reject()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>

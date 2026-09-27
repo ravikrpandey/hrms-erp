@@ -1,0 +1,446 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Sales Management</h1>
+    <p *ngIf="!view">Create Salrrrres Invoice</p>
+    <p *ngIf="view">View Sales Invoice</p>
+  </div>
+  <p>
+    Document Number
+    <i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"> </i
+    ><span> {{ invoiceDocCode }} </span>
+  </p>
+  <div class="add_button">
+    <button class="backBtn" (click)="back()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+<div class="right_data_all">
+  <div class="heading_neo mt-2">
+    <h3 *ngIf="!view">Create Sales Invoice</h3>
+    <h3 *ngIf="view">View Sales Invoice</h3>
+  </div>
+  <form [formGroup]="salesInvoiceFormGroup" (ngSubmit)="onSubmit()">
+    <div class="formBorder">
+      <div class="form_sePo">
+        <div class="row">
+          <!-- Customer Selection -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label
+                >Proforma Code <span class="alertspan">*</span></mat-label
+              >
+              <mat-form-field class="NewClass">
+                <mat-select
+                  formControlName="proforma_id"
+                  (valueChange)="selectedProforma($event)"
+                >
+                  <mat-option
+                    *ngFor="let val of proformaDocCodeList"
+                    [value]="val?.id"
+                  >
+                    {{ val?.proforma_doc_code }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Customer</mat-label>
+              <mat-form-field>
+                <input readonly matInput formControlName="business_name" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Date Selection -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Date </mat-label>
+              <mat-form-field>
+                <input
+                  readonly
+                  matInput
+                  [matDatepicker]="sp"
+                  formControlName="create_date"
+                />
+                <mat-datepicker-toggle
+                  class="NewClass"
+                  matSuffix
+                  [for]="sp"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #sp></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Sales Representative -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Sales Representative </mat-label>
+              <mat-form-field>
+                <input readonly matInput formControlName="employee_name" />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Category Selection -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Category </mat-label>
+              <mat-form-field>
+                <input
+                  readonly
+                  matInput
+                  formControlName="asset_category_name"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- ship to -->
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Ship To </mat-label>
+            <mat-form-field>
+              <input readonly matInput formControlName="ship_to_customer_name" />
+            </mat-form-field>
+          </div>
+        </div> -->
+
+          <!-- delevery date -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group mb-3">
+              <mat-label>Delivery Date </mat-label>
+              <mat-form-field>
+                <input
+                  readonly
+                  matInput
+                  [matDatepicker]="spd"
+                  [min]="now"
+                  formControlName="delivery_date"
+                />
+                <mat-datepicker-toggle
+                  class="NewClass"
+                  matSuffix
+                  [for]="spd"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #spd></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item Table -->
+        <div class="item-table">
+          <!-- <button (click)="addItem()" type="button" class="add-item-button">Add Item</button> -->
+          <div class="table-responsive">
+            <table class="table half-width-column">
+              <thead>
+                <tr>
+                  <th>S No.</th>
+                  <th>Item Name</th>
+                  <th>Item Code</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+
+                  <th>Discount</th>
+                  <th>Total Discount</th>
+                  <th>Amount</th>
+                  <!-- <th>Action</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of quotationItemList; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    {{ item.item_name }}
+                  </td>
+                  <td>
+                    {{ item.item_code }}
+                  </td>
+                  <td>
+                    {{ item.quantity }}
+                  </td>
+                  <td>
+                    {{ item.price }}
+                  </td>
+
+                  <td>
+                    {{ item.discount }}
+                  </td>
+                  <td>
+                    {{ item.total_discount }}
+                  </td>
+                  <td>
+                    {{ item.amount }}
+                  </td>
+                  <!-- <td>
+                                  <mat-icon (click)="removeItem(i)">delete</mat-icon>
+                              </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="container mt-3">
+            <div class="row">
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Tax </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="tax_temp"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Rate </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="rate"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Tax Amount <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="tax_amount"
+                      maxlength="30"
+                      type="text"
+                    />
+                    <mat-error
+                      *ngIf="
+                        salesInvoiceFormGroup
+                          .get('tax_amount')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Delivery </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="delivery"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Delivery Days </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="delivery_days"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Charges Amount </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="charges_amount"
+                      readonly
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Payment Due Days
+                    <span class="alertspan">*</span></mat-label
+                  >
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="payment_due_days"
+                      maxlength="30"
+                      type="text"
+                    />
+                    <mat-error
+                      *ngIf="
+                        salesInvoiceFormGroup
+                          .get('payment_due_days')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label
+                    >Due Charges <span class="alertspan">*</span>
+                  </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      formControlName="due_charges"
+                      maxlength="30"
+                      type="number"
+                      (keydown)="restrictNegative($event)"
+                    />
+                    <mat-error
+                      *ngIf="
+                        salesInvoiceFormGroup
+                          .get('due_charges')
+                          ?.hasError('required')
+                      "
+                    >
+                      This field is required!
+                    </mat-error>
+                    <mat-error
+                      *ngIf="
+                        salesInvoiceFormGroup
+                          .get('due_charges')
+                          ?.hasError('min')
+                      "
+                    >
+                      Amount must be a non-negative number.
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Grand Total </mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="grand_total"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3 fileWithViewImg">
+                  <mat-label>Additional Details</mat-label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    style="padding-right: 19%"
+                    title="Upload"
+                    formControlName="additionalDetails"
+                    accept=".png, .jpg, .jpeg"
+                  />
+                </div>
+              </div> -->
+
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Terms</mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="terms"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group mb-3">
+                  <mat-label>Remarks</mat-label>
+                  <mat-form-field>
+                    <input
+                      matInput
+                      readonly
+                      formControlName="remarks"
+                      maxlength="30"
+                      type="text"
+                    />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group fileWithViewImg">
+                  <mat-label>Additional Details</mat-label>
+                  <input
+                    class="form-control"
+                    type="file"
+                    style="padding-right: 19%"
+                    title="Upload"
+                    (change)="uploadDoc($event)"
+                    formControlName="details_photo"
+                    accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc"
+                  />
+                  <mat-icon
+                    *ngIf="details_photo"
+                    class="formFileViewIcon"
+                    (click)="viewImg()"
+                    matTooltip="View"
+                    style="cursor: pointer"
+                    >visibility</mat-icon
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Submission -->
+    <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-9 col-12"></div>
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="Supply-btn" style="float: right">
+        <a>Supply Now</a>
+        <mat-slide-toggle
+          formControlName="isChecked"
+          (change)="toggle($event, isChecked)"
+        ></mat-slide-toggle>
+      </div>
+      <div class="common_button_sub mt-3" *ngIf="!isView">
+        <button type="submit">Save Sales Invoice</button>
+        <button class="cancel_button_y" type="button" (click)="back()">
+          Discard
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

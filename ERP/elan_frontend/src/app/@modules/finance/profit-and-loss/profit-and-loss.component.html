@@ -1,0 +1,124 @@
+<div class="heading_top mb-3">
+  <div class="page-title">
+    <h1>Profit & Loss</h1>
+  </div>
+  <div class="add_button" *ngIf="currencyCode">
+    <span style="font-size: 14px; color: #666; margin-right: 15px;">
+      Currency: {{ currencyCode }} {{ currencySymbol }}
+      <span *ngIf="currencyRate && currencyRate !== 1">(Rate: 1 {{ currencyCode }} = {{ currencyRate }})</span>
+    </span>
+  </div>
+</div>
+
+
+<div class="d-flex justify-content-end align-items-center gap-2">
+
+    <button
+      (click)="exportToExcel()"
+      class="btn btn-success"
+      style="background-color:#00644d">
+      <i class="fa fa-file-excel-o"></i>
+      Export Excel
+    </button>
+  </div>
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div style="overflow-x:auto; max-width:970px; margin:15px auto;">
+      <table class="table table-bordered table-sm profit-loss-table" id="tableID2">
+        <tbody>
+          <tr class="section-header">
+            <td colspan="2">
+              <strong>Income</strong>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Revenue from operations</td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ revenueFromOperations | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Other Income</td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ otherIncome | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="total-row">
+            <td>
+              <strong>Total Income</strong>
+            </td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ totalIncome | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="section-header">
+            <td colspan="2">
+              <strong>Expenses</strong>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Trading Expenses</td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ costOfGoodsSold | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr>
+            <td>Other Expenses</td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ otherExpenses | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="total-row">
+            <td>
+              <strong>Total Expenses</strong>
+            </td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ totalExpenses | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="total-row">
+            <td>
+              <strong>Profit/(Loss) before tax</strong>
+            </td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ profitBeforeTax | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+
+          <tr class="total-row">
+            <td>
+              <strong>Profit/(Loss) for the year</strong>
+            </td>
+            <td class="text-end">
+              <strong>
+                {{ currencySymbol }} {{ profitForYear | number:'1.2-2' }}
+              </strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

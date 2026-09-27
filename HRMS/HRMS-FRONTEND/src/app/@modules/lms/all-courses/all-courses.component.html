@@ -1,0 +1,66 @@
+<div class="heading_top">
+  <div class="page-title ">
+    <h1>{{ translate('pageTitle') }}</h1>
+    <p>
+      {{ translate('CourseMaster') }}
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>{{ translate('CourseMasterTable') }}</span>
+    </p>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="add_btn">
+    <button type="button" class="btn_add" routerLink="/master/lms/course/add_course"> Add Course</button>
+  </div>
+  <div class="employ_sube py-2">
+    <!-- <div class="example-header">
+              <select id="page-size" (change)="onPageSizeChanged()">
+                  <option value="10" selected="">10</option>
+                  <option value="100">100</option>
+                  <option value="500">500</option>
+                  <option value="1000">1000</option>
+              </select>
+          </div> -->
+    <div class="employee_2" align="end">
+      <input id="searchText" type="text" placeholder="Search by course name"
+        class="input-group form-control search-input form-control" (input)="filterSupplier($event)">
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3" *ngFor="let column of rowData">
+      <div class="course_contact">
+        <div class="course_pic">
+          <img [src]="baseUrl + '/' + column.thumbnail">
+          <div class="icon-actions">
+            <mat-icon class="edit-btn" (click)="edit(column)">edit</mat-icon>
+            <mat-icon class="delete-btn" (click)="delete(column.id)">delete</mat-icon>
+          </div>
+        </div>
+
+        <ul class="course_dayslist" (click)="View(column)">
+          <li>
+            <div class="day_title">Title</div>
+            <div class="day_number">{{column.course_name}}</div>
+          </li>
+          <li>
+            <div class="day_title">Category</div>
+            <div class="day_number">{{column.category}}</div>
+          </li>
+          <li>
+            <div class="day_title">Total Content</div>
+            <div class="day_number">{{column.contentCount}}</div>
+          </li>
+          <li>
+            <div class="day_title">Type</div>
+            <div class="day_number">{{(column.course_type == 'CommonContent') ? 'Content' : 'Assessment'}}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
+</div>

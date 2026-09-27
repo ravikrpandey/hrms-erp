@@ -1,0 +1,58 @@
+<!-- attendance-request.component.html -->
+<div class="attendance-page">
+  <header class="topbar">
+    <div class="title-area">
+      <h1 class="title">ESS</h1>
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <span>Attendance Request</span>
+        <i class="fa fa-angle-right" aria-hidden="true" ></i>
+        <span class="current">Attendance Request List</span>
+      </nav>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" (click)="goToList()">Attendance Request</button>
+    </div>
+  </header>
+
+  <section class="controls">
+    <div class="controls-left">
+      <label for="page-size" class="sr-only">Rows per page</label>
+      <select id="page-size" class="select" (change)="onPageSizeChanged($event)">
+        <option value="10" selected>10</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+        <option value="1000">1000</option>
+      </select>
+    </div>
+
+    <div class="controls-right">
+      <input
+        id="filter-text-box"
+        type="text"
+        class="input search"
+        placeholder="Search"
+        (input)="onFilterTextBoxChanged($event)"
+        aria-label="Search attendance"
+      />
+      <!-- optional icon button -->
+      <!-- <button type="button" class="btn outline" (click)="onBtPrint()">Print</button> -->
+    </div>
+  </section>
+
+  <main class="grid-wrap">
+    <ag-grid-angular
+      class="ag-theme-alpine ag-grid-custom"
+      id="myGrid"
+      style="width: 100%; height: 60vh;"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="pageSize"
+      (gridReady)="onGridReady($event)"
+      (cellClicked)="onCellClicked($event)"
+      [rowClassRules]="rowClassRules"
+    >
+    </ag-grid-angular>
+  </main>
+</div>

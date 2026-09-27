@@ -1,0 +1,56 @@
+<div class="edd-del" *ngIf="assignAction">
+  <ng-container *ngIf="assignAction.Read">
+    <mat-icon matTooltip="View" (click)="onCellClicked($event)"
+      >visibility</mat-icon
+    >
+  </ng-container>
+  <ng-container *ngIf="assignAction.Write">
+    <mat-icon
+      matTooltip="Edit"
+      *ngIf="
+        paramsData.final_status !== 'APPROVED' &&
+        paramsData.final_status !== 'REJECTED' &&
+        tab !== 'po-issued'
+      "
+      (click)="edit($event)"
+      >edit</mat-icon
+    >
+  </ng-container>
+  <ng-container *ngIf="assignAction.Delete">
+    <mat-icon
+      matTooltip="Delete"
+      color="danger"
+      *ngIf="
+        paramsData.final_status !== 'APPROVED' &&
+        paramsData.final_status !== 'REJECTED' &&
+        tab !== 'po-issued'
+      "
+      (click)="onDelete($event)"
+      >delete</mat-icon
+    >
+  </ng-container>
+  <ng-container *ngIf="assignAction.Write">
+    <mat-icon
+      matTooltip="Create Shipping Alert"
+      *ngIf="
+        paramsData.final_status == 'APPROVED' &&
+        paramsData.final_status !== 'REJECTED'
+      "
+      (click)="createShippingAlert($event)"
+      >link</mat-icon
+    >
+  </ng-container>
+  <ng-container *ngIf="assignAction.Write && tab === 'po-issued'">
+    <mat-icon (click)="proceedToApp($event)" matTooltip="Proceed To Approval"
+      >check_circle</mat-icon
+    >
+  </ng-container>
+  <ng-container *ngIf="assignAction.Read">
+    <mat-icon
+      class="viewButton"
+      matTooltip="Download"
+      (click)="downloadPDF($event)"
+      >download</mat-icon
+    ></ng-container
+  >
+</div>

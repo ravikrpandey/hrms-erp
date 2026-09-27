@@ -1,0 +1,51 @@
+<div class="heading_top">
+  <div class="page-title">
+  <h1>ESS</h1>
+
+  <p>Overtime Request <i class="fa fa-angle-right" aria-hidden="true"></i>
+    <span> Overtime Request List</span></p>
+</div>
+
+<div class="add_button" >
+  <button type="button"  (click)='addRedirect()'> <i class="bi bi-person-add"></i> Add Request</button>
+</div>
+</div>
+<div class="right_data_all">
+  <div class="ag_grid">
+    <mat-tab-group mat-stretch-tabs animationDuration="0ms" [selectedIndex]="selected.value"
+    (selectedIndexChange)="selected.setValue($event)">
+
+      <mat-tab label="All Request">
+        <div>
+
+          <app-all-overtime-list></app-all-overtime-list>
+
+        </div>
+      </mat-tab>
+      <mat-tab label="To Be Approved">
+        <div>
+
+          <app-to-be-approved></app-to-be-approved>
+
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Approved">
+        <div>
+          <app-overtime-approve #Approve></app-overtime-approve>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Rejected">
+        <div>
+        <app-overtime-reject #rejected></app-overtime-reject>
+        </div>
+      </mat-tab>
+
+
+
+    </mat-tab-group>
+
+
+  </div>
+</div>

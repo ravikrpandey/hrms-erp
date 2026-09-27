@@ -1,0 +1,186 @@
+<h2 mat-dialog-title>{{ isSell ? 'Sell Assets' : 'Write-Off Assets' }}</h2>
+<form [formGroup]="assetForm" (ngSubmit)="submit()">
+  <mat-dialog-content>
+
+    <!-- Shared Fields -->
+    <div *ngIf="isSell">
+      <mat-form-field appearance="outline">
+        <mat-label>Sale Date</mat-label>
+        <input matInput [matDatepicker]="salePicker" (click)="salePicker.open()" formControlName="saleDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="salePicker"></mat-datepicker-toggle>
+        <mat-datepicker #salePicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Buyer Name</mat-label>
+        <input matInput formControlName="buyerName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Buyer Contact</mat-label>
+        <input matInput formControlName="buyerContact">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Buyer Company</mat-label>
+        <input matInput formControlName="buyerCompany">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Mode</mat-label>
+        <mat-select formControlName="paymentMode">
+          <mat-option value="Cash">Cash</mat-option>
+          <mat-option value="Bank Transfer">Bank Transfer</mat-option>
+          <mat-option value="Cheque">Cheque</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- <div>
+        <label>Upload Invoice/Receipt</label>
+        <input type="file" (change)="onFileChange($event, 'invoiceUpload')">
+      </div> -->
+    </div>
+
+    <div *ngIf="!isSell">
+      <mat-form-field appearance="outline">
+        <mat-label>Discard Date</mat-label>
+        <input matInput [matDatepicker]="discardPicker" formControlName="discardDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="discardPicker"></mat-datepicker-toggle>
+        <mat-datepicker #discardPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Reason for Discard</mat-label>
+        <mat-select formControlName="writeoffReason">
+          <mat-option value="Damaged">Damaged</mat-option>
+          <mat-option value="Obsolete">Obsolete</mat-option>
+          <mat-option value="Theft">Theft</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Disposal Method</mat-label>
+        <mat-select formControlName="disposalMethod">
+          <mat-option value="Sold for scrap">Sold for scrap</mat-option>
+          <mat-option value="Destroyed">Destroyed</mat-option>
+          <mat-option value="Returned to Vendor">Returned to Vendor</mat-option>
+          <mat-option value="Theft">Theft</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- <div>
+        <label>Upload Supporting Document</label>
+        <input type="file" (change)="onFileChange($event, 'supportingDocs')">
+      </div> -->
+    </div>
+
+    <!-- Asset-specific fields (loop) -->
+    <div class="ag_grid">
+      <ag-grid-angular class="ag-theme-alpine" style="width: 100%; height: 150px;" [rowData]="rowData"
+        [columnDefs]="columnDefs" [defaultColDef]="defaultColDef" (cellValueChanged)="onCellValueChanged($event)"
+        [stopEditingWhenCellsLoseFocus]="true">
+      </ag-grid-angular>
+    </div>
+
+    <!-- Footer -->
+     <div style="margin-top: 12px;">
+    <mat-form-field appearance="outline">
+      <mat-label>Approval Status</mat-label>
+      <mat-select formControlName="approvalStatus">
+        <mat-option value="Pending">Pending</mat-option>
+        <mat-option value="Approved" [hidden]="lastSegment == 'asset-sale-writeoff'">Approved</mat-option>
+        <mat-option value="Rejected" [hidden]="lastSegment == 'asset-sale-writeoff'">Rejected</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Notes / Comments</mat-label>
+      <textarea matInput formControlName="notes"></textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="heading_neo mt-3">
+    <h3>Account Details </h3>
+</div>
+<div formArrayName="Account_details">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">S.No.</th>
+                    <th scope="col">Account</th>
+                    <th scope="col">Debit</th>
+                    <th scope="col">Credit</th>
+                    <th scope="col" [hidden]="actionMode == 'view'">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of Account_details.controls; let i = index" [formGroupName]="i">
+                    <td>{{ i + 1 }}</td>
+                    <td>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Account</mat-label>
+                            <mat-select #select2 formControlName="chart_account_id"
+                            (selectionChange)="onAccountChange()" >
+
+                                <mat-select-filter *ngIf="select2.focused" [array]="chartedAccount1"
+                                    (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                                <ng-container>
+                                    <mat-option [value]="data.id" *ngFor="let data of chartedAccount"
+                                        [hidden]="data.hidden">
+                                         {{data.account_code}} - {{data.account_name}}
+                                    </mat-option>
+                                </ng-container>
+
+                            </mat-select>
+                            <button mat-icon-button
+                                *ngIf="this.Account_details.controls[i].get('chart_account_id')?.value"
+                                matSuffix (click)="clearDropdown('chart_account_id',i)" >
+                                <mat-icon class="text-dark" style="font-size: 20px;">close</mat-icon>
+                            </button>
+                            <mat-error
+                                *ngIf="this.Account_details.controls[i].get('chart_account_id')?.touched && this.Account_details.controls[i].get('chart_account_id')?.errors?.['required']">
+                                * Required!
+                            </mat-error>
+                        </mat-form-field>
+                    </td>
+                  
+                    <td>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Debit</mat-label>
+                            <input matInput  formControlName="debit_amount"
+                                
+                                 />
+                        </mat-form-field>
+                    </td>
+                    <td>
+                        <mat-form-field appearance="outline" >
+                            <mat-label>Credit</mat-label>
+                            <input matInput  formControlName="credit_amount"
+                                
+                                 />
+                        </mat-form-field>
+                    </td>
+                    <td [hidden]="actionMode == 'view'">
+                        <div class="edit_del flexRow">
+                            <div (click)="AddRow()">
+                                <mat-icon matTooltip="Add Item">add_circle</mat-icon>
+                            </div>
+                            <div *ngIf="i !== 0">
+                                <mat-icon matTooltip="Delete Item"
+                                    (click)="removeRow(i)">delete_circle</mat-icon>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit" [hidden]="actionMode =='view'">Submit</button>
+  </mat-dialog-actions>
+</form>

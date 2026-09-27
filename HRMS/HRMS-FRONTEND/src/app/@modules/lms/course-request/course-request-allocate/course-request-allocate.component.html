@@ -1,0 +1,145 @@
+<div>
+    <form [formGroup]="formModel" class="form_set">
+  
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Employee Name</mat-label>
+              <input matInput formControlName="employee_name" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Employe Code</mat-label>
+              <input matInput formControlName="employee_code" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Department</mat-label>
+              <input matInput formControlName="department" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Designation</mat-label>
+              <input matInput formControlName="designation" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Manager</mat-label>
+              <input matInput formControlName="reporting_manager" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Approval Manager</mat-label>
+              <input matInput formControlName="approval_manager" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Course Category</mat-label>
+              <input matInput formControlName="category" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Course Name</mat-label>
+              <input matInput formControlName="course_name" />
+            </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group mb-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Remark</mat-label>
+              <input matInput formControlName="req_remark" />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [min]="getTodayDate()" [matDatepicker]="startPicker"
+                        formControlName="startDate" />
+                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <mat-form-field appearance="outline">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [min]="getEndDate()" [matDatepicker]="endPicker" formControlName="endDate" />
+                    <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <div  class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+      <div class="course_contact" >
+          <div class="course_pic">
+            <img
+              [src]="baseUrl + '/' + column?.thumbnail">
+          </div>
+      
+          <ul class="course_dayslist">
+            <li>
+              <div class="day_title">Title</div>
+              <div class="day_number">{{column?.course_name}}</div>
+            </li>
+            <li>
+              <div class="day_title">Category</div>
+              <div class="day_number">{{column?.category}}</div>
+            </li>
+            <li>
+              <div class="day_title">Total Content</div>
+              <div class="day_number">{{column?.contentCount}}</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+   <div align="end">
+    <button class="btn-approve" mat-button mat-raised-button style="background-color: #181e2e; color :white" (click)="onSubmit()">Allocate</button>
+    <!-- <button class="btn-reject" (click)="onReject()">Reject</button> -->
+  </div>
+  
+    </form>
+  </div>
+  

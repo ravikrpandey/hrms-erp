@@ -1,0 +1,172 @@
+<div class="main section">
+
+    <div class="heading_top">
+        <div class="page-title">
+        <h1>HRMS</h1>
+        <p>Recruitment Module <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+        </i><span routerLink="../">{{candidate_id?"Update Candidate Profile":"Fixed Interview List"}}</span></p>
+      </div>
+        <div class="add_button">
+         
+        </div>
+      </div>
+
+      <div class="right_white_bg">
+        <div class="page_heading">
+            <h3>Fix Interview</h3>
+          </div>
+          <div class="right_data_bg_white form_mar_top">
+                <div class="form_basic">
+                    <form [formGroup]="profileDetailsForm"
+                        (ngSubmit)="saveDetails(profileDetailsForm)">
+                        <div class="row">
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Candidate Name <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <!-- <input matInput type="text" formControlName="manager" required /> -->
+                                        <mat-select formControlName="name">
+                                            <mat-select-filter [array]="variables" (filteredReturn)="productFilter($event)"></mat-select-filter>
+                                        <mat-option *ngFor="let val of checkData" [value]="val.candidate_id" (click)="getSingleCandidateData(val.candidate_id)">{{val.condidate_name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Email Id <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <input matInput type="email" formControlName="email" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['email'].errors?.['required']">Email
+                                            is required</mat-error>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['email'].errors?.['pattern']">Please
+                                            enter valid email</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Mobile Number <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <input matInput type="text" formControlName="mobile" required/>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['mobile'].errors?.['required']">Please
+                                            enter mobile number</mat-error>
+                                        <mat-error
+                                            *ngIf="  profileDetailsForm.controls['mobile'].errors?.['pattern']">Mobile
+                                            number is not 10 digit</mat-error>
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">             
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Job Designation <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                      
+                                        <input matInput type="text" formControlName="job_role" required />
+                                       
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Assigned Manager <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                      
+                                        <input matInput type="text" formControlName="assigned_hiring_manager" required />
+                                        
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Spoc Name <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <input matInput type="name" formControlName="spoc_name" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['required']">name
+                                            is required</mat-error>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['pattern']">Please
+                                            enter valid name</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                       
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <mat-label class="label_o">Location <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <input matInput type="text" formControlName="address" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['required']">name
+                                            is required</mat-error>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['pattern']">Please
+                                            enter valid name</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12 mb-2">
+                                <div class="form-group">
+                                    <!-- <mat-form-field appearance="outline">
+                                        <mat-label>Round Level</mat-label>
+                                        <input matInput type="number" formControlName="round_level" min="0" max="3" required />
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['required']">name
+                                            is required</mat-error>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['name'].errors?.['pattern']">Please
+                                            enter valid name</mat-error>
+                                    </mat-form-field> -->
+                                    <mat-label class="label_o">Round Level <span>*</span></mat-label>
+                                    <mat-form-field appearance="outline">
+                                       
+                                        <!-- <mat-select formControlName="round_level">
+                                            <mat-option value="1">1st Round</mat-option>
+                                            <mat-option value="2">2nd Round</mat-option>
+                                            <mat-option value="3">3rd Round</mat-option>
+                                        </mat-select> -->
+
+                                        <mat-select formControlName="round_level">
+                                            <mat-option *ngFor="let levelup of roundResult" [value]="levelup?.levelCount">{{levelup?.level}}</mat-option>
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="profileDetailsForm.controls['round_level'].errors?.['required']">Round level
+                                            is required</mat-error>
+                        
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+ 
+
+                        <div class="footer_button">
+                            <button [class.spinner]="loading"
+                                [disabled]="loading">
+                                {{candidate_id?'Fix':'Fix'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+       </div>
+       </div>
+
+</div>

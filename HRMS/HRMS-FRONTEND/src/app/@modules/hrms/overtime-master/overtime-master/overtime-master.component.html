@@ -1,0 +1,101 @@
+<div class="container mt-4">
+  <div class="dash">
+    <div>
+      <h1>Over Time Master</h1>
+      <p>
+        HRMS <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span> Over Time Master</span>
+      </p>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        (click)="back()"
+        style="background-color: #0c85c0"
+      >
+        &#x2190; Back to home
+      </button>
+    </div>
+  </div>
+</div>
+<form [formGroup]="overTime" (ngSubmit)="onSubmit()" class="overtime-form">
+  <h2>Overtime Master Setup</h2>
+
+  <div formArrayName="overtimeData">
+    <div
+      *ngFor="let range of overtimeData.controls; let i = index"
+      [formGroupName]="i"
+      class="range-row row"
+    >
+      <!-- <div class="col-12 col-sm-6 col-md-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                              <mat-label>Range From (hrs)</mat-label>
+                              <input matInput formControlName="range_from" type="number" />
+                        </mat-form-field>
+                  </div>
+                  <div class="col-12 col-sm-6 col-md-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                              <mat-label>Range To (hrs)</mat-label>
+                              <input matInput formControlName="range_to" type="number" />
+                        </mat-form-field>
+                  </div> -->
+      <div class="col-12 col-sm-6 col-md-2">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Range From (hrs)</mat-label>
+          <input
+            matInput
+            formControlName="from_range"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-12 col-sm-6 col-md-2">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Range To (hrs)</mat-label>
+          <input
+            matInput
+            formControlName="to_range"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+      <div class="col-12 col-sm-6 col-md-2">
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Rate(hrs)</mat-label>
+          <input matInput formControlName="rate" type="number" step="0.1" />
+        </mat-form-field>
+      </div>
+
+      <div
+        class="col-12 col-md-1 d-flex align-items-center justify-content-center mt-2 mt-md-0"
+      >
+        <button
+          type="button"
+          mat-icon-button
+          color="warn"
+          (click)="removeRange(i)"
+          aria-label="Remove Range"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <div
+        class="col-12 col-md-1 d-flex align-items-center justify-content-center mt-2 mt-md-0"
+      >
+        <button
+          type="button"
+          mat-raised-button
+          color="accent"
+          (click)="addRange()"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3 text-center">
+    <button type="submit" mat-raised-button color="primary">
+      {{ overTimedata?.length ? "Update" : "Save" }}
+    </button>
+  </div>
+</form>

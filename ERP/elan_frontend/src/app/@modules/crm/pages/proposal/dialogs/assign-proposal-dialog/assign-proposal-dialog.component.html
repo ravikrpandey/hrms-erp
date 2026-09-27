@@ -1,0 +1,78 @@
+<div class="section">
+  <h3 class="popHead">Product Details</h3>
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+  <!-- <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:300px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div> -->
+
+  <section>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S No.</th>
+            <th>Item Name</th>
+            <th>Item Code</th>
+            <th>Qty</th>
+            <th>Item Price</th>
+            <th>Maximum Discount (%)</th>
+            <th>Discount Required (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let data of rowData; let i = index">
+            <tr>
+              <td>{{i+1}}</td>
+              <td>{{data?.name_product}}</td>
+              <td>{{data?.product_code}}</td>
+              <td>{{data?.qty}}</td>
+              <td>{{data?.price_per_unit}}</td>
+              <td>{{data?.maximum_discount}}</td>
+              <td>
+                  <input [(ngModel)]="data.discount_request" name="discount_request{{i}}" type="text" maxlength="5"
+                  (keypress)="keyPress($event)" (ngModelChange)="validateDiscount(data)" />
+                <div *ngIf="data.discount_request && data.discount_request <= data.maximum_discount" class="error-message">
+                 <span class="text-danger_text">
+                  Discount can exceed maximum discount.
+                 </span>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <form class="form_set" [formGroup]="assignProposalForm" (ngSubmit)="createProposal()">
+      <div class="row">
+        <!-- <div class="col-md-4">
+          <mat-form-field appearance="outline" *ngIf="employeeList">
+            <mat-label>Select Employee Name</mat-label>
+            <mat-select formControlName="employee_id" (closed)="onPanelClose()" disableOptionCentering
+              class="cdk-overlay-pane deepdrop">
+              <mat-form-field>
+                <input matInput [formControl]="filterControl" type="text" name="filter-options" id="filter-options"
+                  placeholder="Search" [(ngModel)]="nameSearch" name="nameSearch">
+              </mat-form-field>
+              <mat-option *ngFor="let data of filteredEmployees" [value]="data?.employee_id">
+                {{data?.first_name + ' ' + data?.last_name}}
+              </mat-option>
+              <mat-option class="noDataFound" *ngIf="!filteredEmployees?.length">
+                <p class="noDataFound">Employee Name Not Found</p>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+        <div class="col-md-12 common_button_sub">
+          <button [class.spinner]="loading"
+            [disabled]="loading">Submit</button>
+            <button  mat-dialog-close class="cancel_button_y">Close</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</div>

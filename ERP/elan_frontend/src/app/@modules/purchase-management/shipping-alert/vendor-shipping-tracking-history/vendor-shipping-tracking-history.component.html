@@ -1,0 +1,205 @@
+<h3 mat-dialog-title class="popHead">
+  <span class="title-text">Shipment History</span>
+
+  <button mat-icon-button mat-dialog-close class="close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</h3>
+
+<mat-dialog-content class="mat-typography">
+
+  <div class="container">
+
+    <div class="alert-card">
+
+      <!-- Header -->
+
+      <div class="card-header">
+
+        <div class="card-left">
+
+          <div class="card-id">
+
+            {{ historyData?.shiped_no }}
+
+            <span class="badge" [ngClass]="historyData?.mode?.toLowerCase()">
+
+              {{ historyData?.mode }}
+
+            </span>
+
+            <span class="badge" [ngClass]="historyData?.buyer_status?.toLowerCase()">
+
+              {{ historyData?.buyer_status }}
+
+            </span>
+
+          </div>
+
+          <div class="card-desc">
+
+            {{ historyData?.vendor_name }}
+
+            •
+
+            {{ historyData?.purchaseOrder?.po_number }}
+
+          </div>
+
+        </div>
+
+        <div class="card-right">
+
+          <div class="card-value">
+
+            {{ currencySymbols }} {{ historyData?.invoice_amount }}
+
+          </div>
+
+          <div class="card-eta">
+
+            ETA {{ historyData?.expected_arrival | date:'dd-MM-yyyy' }}
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Body -->
+
+      <div class="history-body">
+
+        <!-- Timeline -->
+
+        <div class="timeline">
+
+          <div class="timeline-row" [ngClass]="getStatusClass(h.shipped_status)"
+            *ngFor="let h of historyData?.shippingAlertHistory">
+
+            <div class="timeline-status" [ngClass]="getStatusClass(h.shipped_status)">
+
+              {{ formatStatus(h.shipped_status) }}
+
+            </div>
+
+            <div class="timeline-meta">
+
+              By {{h.userDetail? (
+              (h.userDetail?.first_name || '') + ' ' +
+              (h.userDetail?.middle_name || '') + ' ' +
+              (h.userDetail?.last_name || '')
+              ).trim(): (historyData?.vendor_name || 'System')}}
+
+
+            </div>
+
+            <div class="timeline-remark">
+              {{ h.createdAt | date:'dd-MM-yyyy hh:mm a' }}
+              <!-- {{ h.remark || '-' }} -->
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Transport Details -->
+
+        <!-- Transport Details -->
+
+        <div class="transport-section">
+
+          <div class="section-title">
+
+            Transport Details
+
+            <span class="mode-badge" [ngClass]="historyData?.mode?.toLowerCase()">
+
+              {{ historyData?.mode }}
+
+            </span>
+
+          </div>
+
+          <div class="transport-grid">
+            <ng-container *ngFor="let key of objectKeys(transportDetails)">
+
+              <div class="transport-card" *ngIf="
+      transportDetails[key] !== null &&
+      transportDetails[key] !== '' &&
+      key !== 'id' &&
+      key !== 'createdAt' &&
+      key !== 'updatedAt' &&
+      key !== 'shipping_alert_id' &&
+      key !== 'status'
+    ">
+
+                <div class="transport-label">
+                  {{ labelMap[key] || (key.replaceAll('_', ' ') | titlecase) }}
+                </div>
+
+                <div class="transport-value">
+
+                  <!-- Date fields -->
+                  <ng-container *ngIf="
+          key.toLowerCase().includes('date') ||
+          key.toLowerCase().includes('time') ||
+          key.toLowerCase().includes('at') ||
+          key.toLowerCase() === 'etd' ||
+          key.toLowerCase() === 'eta'
+        ; else normalValue">
+
+                    {{ transportDetails[key] | date:'dd-MM-yyyy' }}
+
+                  </ng-container>
+
+                  <!-- Normal fields -->
+                  <ng-template #normalValue>
+                    {{ transportDetails[key] }}
+                  </ng-template>
+
+                </div>
+
+              </div>
+
+            </ng-container>
+            <!-- <ng-container *ngFor="let key of objectKeys(transportDetails)">
+
+              <div class="transport-card" *ngIf="
+          transportDetails[key] !== null &&
+          transportDetails[key] !== '' &&
+          key !== 'id' &&
+          key !== 'createdAt' &&
+          key !== 'updatedAt' &&
+          key !== 'shipping_alert_id' &&
+          key !== 'status'
+        ">
+
+                <div class="transport-label">
+
+                  {{ labelMap[key] || (key.replaceAll('_', ' ') | titlecase) }}
+
+                </div>
+
+                <div class="transport-value">
+
+                  {{ transportDetails[key] }}
+
+                </div>
+
+              </div>
+
+            </ng-container> -->
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</mat-dialog-content>

@@ -1,0 +1,56 @@
+<h3 mat-dialog-title class="popHead">Status Details</h3>
+<!-- <button mat-button mat-dialog-close>Cancel</button> -->
+
+<mat-dialog-content class="mat-typography mt-4">
+    <div class="emp_key">
+
+      <div class="not_created" *ngIf="this.notCreatedFlow">
+        <p >Work Flow Is Not Created!</p>
+
+      </div>
+      <div class="table-responsive">
+        <table class="table table-bordered mb-0" *ngIf="!this.notCreatedFlow">
+            <thead>
+              <tr>
+                <th>Approver</th>
+                <th>Level</th>
+                <th>Status</th>
+                <th>Remark</th>
+              </tr>
+            </thead>
+            <tbody  *ngFor="let control of getdataCopy; index as i">
+              <tr>
+                <td>{{control?.name}}</td>
+                <td>{{control?.level}}</td>
+                <!-- <td><button [disabled]="cellData.approvel_status =='APPROVED' || cellData.approvel_status =='TO BE APPROVED'" mat-button mat-dialog-close mat-raised-button color="primary" (click)="updatePrStatus($event)">
+                  Approve LV{{i+1}}
+                </button></td> -->
+                <td>{{control?.status}}</td>
+                <td>
+                  <mat-icon matTooltip="View Remark" style="cursor: pointer;" (click)="view(control)" >visibility</mat-icon>
+                              
+                              </td>
+              </tr>
+              <!-- <tr>
+                <td>{{getData[1]?.registered_user.user_role}}</td>
+                <td>{{getData[1]?.approvel_level}}</td>
+                <td><button [disabled]="cellData.approvel_status !='TO BE APPROVED'" mat-button mat-dialog-close mat-raised-button color="primary" (click)="updatePrStatusLv2($event)">
+                  Approve LV2
+                </button></td>
+              </tr> -->
+            </tbody>
+          </table>
+          </div>
+          <div class="para">
+            <p style=" font-size: 16px;">{{remarkshow}}</p>
+
+          </div>
+    </div>
+ 
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+  <button mat-dialog-close class="cancel_button_y">
+    Close
+  </button>
+  <!-- <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button> -->
+</mat-dialog-actions>

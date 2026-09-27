@@ -1,0 +1,30 @@
+<div class="page-header heading_top p-3">
+  <div class="page-title">
+    <h1 class="title">{{ title }}</h1>
+    <p class="subtitle" *ngIf="subTitle">
+      {{ subTitle }}
+      <i class="fa fa-angle-right" aria-hidden="true" style="color: #858586">
+      </i
+      ><span>{{ subheading }}</span>
+    </p>
+  </div>
+  <div *ngIf="showActions" class="actions add_button">
+    <button
+      *ngFor="let action of actions; let i = index; trackBy: trackIndex"
+      class="btn"
+      [ngClass]="action.color || 'primary'"
+      (click)="action.callback()"
+    >
+      <i *ngIf="action.icon" class="material-icons">{{ action.icon }}</i>
+      {{ action.label }}
+    </button>
+
+    <button *ngIf="isBack" mat-flat-button color="warn" (click)="back()">
+      <i class="material-icons">arrow_back</i>
+      Back
+    </button>
+  </div>
+</div>
+<div class="px-3">
+  <ng-content></ng-content>
+</div>

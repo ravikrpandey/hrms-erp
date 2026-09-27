@@ -1,0 +1,184 @@
+<div class="page-wrapper">
+
+    <app-customer-header [login_id]="login_id_header">
+    </app-customer-header>
+
+    <div class="page-heading-wrapper">
+
+        <h1 class="main-heading">
+            Sales Booking List
+        </h1>
+
+        <p class="main-sub">
+            Track your sales booking and stay updated on their current status.
+        </p>
+
+        <mat-card class="form-card">
+
+            <mat-card-header style="justify-content: space-between;">
+
+                <mat-card-title>
+
+                    <mat-icon class="card-icon">
+                        shopping_cart
+                    </mat-icon>
+
+                    Sales Booking List
+
+                </mat-card-title>
+                <!-- <button mat-raised-button color="primary" type="button" (click)="createNew()" >
+
+                    <mat-icon>create</mat-icon>
+                    Create New
+
+                </button> -->
+            </mat-card-header>
+
+
+            <mat-card-content>
+
+                <div class="mat-elevation-z1 table-wrap">
+
+                    <div class="ag_grid">
+
+                        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 500px"
+                            [columnDefs]="columnDefs" [rowData]="rowData" [pagination]="false"
+                            (gridReady)="onGridReady($event)">
+                        </ag-grid-angular>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================= PAGINATION ================= -->
+
+                <div class="pagination-wrapper" *ngIf="totalRecords > 0">
+
+                    <!-- Page Size -->
+
+                    <div class="page-size">
+
+                        <label>
+                            Show
+                        </label>
+
+                        <select [value]="limit" (change)="onPageSizeChange($event)">
+
+                            <option value="10">
+                                10
+                            </option>
+
+                            <option value="25">
+                                25
+                            </option>
+
+                            <option value="50">
+                                50
+                            </option>
+
+                            <option value="100">
+                                100
+                            </option>
+
+                        </select>
+
+                        <span>
+                            entries
+                        </span>
+
+                    </div>
+
+
+                    <!-- Total Records -->
+
+                    <div class="total-records">
+
+                        Total Records:
+                        <strong>
+                            {{ totalRecords }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Pagination Buttons -->
+
+                    <div class="pagination-buttons">
+
+                        <!-- Previous -->
+
+                        <button type="button" mat-stroked-button [disabled]="page === 1"
+                            (click)="onPageChange(page - 1)">
+
+                            Previous
+
+                        </button>
+
+
+                        <!-- Pages -->
+
+                        <button type="button" mat-stroked-button *ngFor="let pageNo of pages"
+                            [class.active-page]="pageNo === page" (click)="onPageChange(pageNo)">
+
+                            {{ pageNo }}
+
+                        </button>
+
+
+                        <!-- Next -->
+
+                        <button type="button" mat-stroked-button [disabled]="page === totalPages"
+                            (click)="onPageChange(page + 1)">
+
+                            Next
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- No Data -->
+
+                <div class="no-data" *ngIf="totalRecords === 0">
+
+                    No records found.
+
+                </div>
+
+            </mat-card-content>
+
+        </mat-card>
+
+    </div>
+
+</div>
+<!-- <div class="page-wrapper">
+    <app-customer-header [login_id]="login_id_header"></app-customer-header>
+    
+    <div class="page-heading-wrapper">
+        <h1 class="main-heading">Sales Booking List</h1>
+        <p class="main-sub">Track your sales booking and stay updated on their current status.</p>
+
+        <mat-card class="form-card">
+            <mat-card-header>
+                <mat-card-title>
+                    <mat-icon class="card-icon">shopping_cart</mat-icon> Sales Booking List
+                </mat-card-title>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="mat-elevation-z1 table-wrap">
+                    <div class="ag_grid">
+                        <ag-grid-angular class="ag-theme-alpine" id="myGrid" style="width: 100%; height: 500px"
+                            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10" [rowData]="rowData"
+                            (gridReady)="onGridReady($event)">
+                        </ag-grid-angular>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div> -->

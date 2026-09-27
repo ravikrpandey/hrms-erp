@@ -1,0 +1,126 @@
+<div class="right_data_all">
+    <div class="row">
+        <div class="page-title-nps">
+            <h1>NPS</h1>
+        </div>
+    </div>
+
+    <form class="scheme-form" [formGroup]="npsForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+
+            <!-- Scheme Name -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Scheme Name</mat-label>
+                        <input matInput formControlName="schemeName" placeholder="Enter scheme name" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- CRA Provider -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>CRA Provider</mat-label>
+                        <mat-select formControlName="craProvider">
+                            <mat-option *ngFor="let provider of craProviders" [value]="provider.id">
+                                {{ provider.craProvider }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput formControlName="description" placeholder="Enter description"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Employee Contribution -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Employee Contribution (%)</mat-label>
+                        <input matInput type="number" formControlName="employeeContribution" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Employer Contribution -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Employer Contribution (%)</mat-label>
+                        <input matInput type="number" formControlName="employerContribution" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <!-- Status -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Status</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option value="ACTIVE">ACTIVE</mat-option>
+                            <mat-option value="INACTIVE">INACTIVE</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+            <!-- Minimum Amount Checkbox + Input -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-checkbox formControlName="IsMinimum">Enable Minimum Amount</mat-checkbox>
+
+                    <!-- Agar checkbox tick ho to neeche input dikhe -->
+                    <mat-form-field *ngIf="npsForm.get('IsMinimum')?.value" appearance="outline" class="w-100 mt-2">
+                        <mat-label>Minimum Amount</mat-label>
+                        <input matInput type="number" formControlName="minimumAmount"
+                            placeholder="Enter Minimum Amount" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Capping Amount Checkbox + Input -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <mat-checkbox formControlName="Iscapping">Enable Capping Amount</mat-checkbox>
+
+                    <!-- Agar checkbox tick ho to neeche input dikhe -->
+                    <mat-form-field *ngIf="npsForm.get('Iscapping')?.value" appearance="outline" class="w-100 mt-2">
+                        <mat-label>Capping Amount</mat-label>
+                        <input matInput type="number" formControlName="cappingAmount"
+                            placeholder="Enter Capping Amount" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Employer Contribution in CTC -->
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-12 col-12">
+                <div class="form-group mb-3">
+                    <mat-checkbox formControlName="employerContributionInCtc">
+                        Enable Employer's Contribution in CTC
+                    </mat-checkbox>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="button-row mt-3 d-flex justify-content-end">
+            <button mat-raised-button color="primary" type="submit">
+                {{ getAllData?.length ? 'Update' : 'Submit' }}
+            </button>
+        </div>
+
+    </form>
+</div>

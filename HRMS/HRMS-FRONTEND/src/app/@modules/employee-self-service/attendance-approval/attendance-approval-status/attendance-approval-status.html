@@ -1,0 +1,52 @@
+<div class="">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>
+      Attendance Approval
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+      <span>Attendance Status</span>
+    </p>
+  </div>
+</div>
+
+<section class="tab-bar section1">
+  <div class="page-container">
+    <div class="tab_menu" role="tablist" aria-label="Attendance status tabs">
+      <button
+        class="main-button"
+        [ngClass]="{ active: activeTab === 'pending' }"
+        (click)="changeTab('pending')">
+        Attendance Pending
+      </button>
+
+      <button
+        class="main-button"
+        [ngClass]="{ active: activeTab === 'approved' }"
+        (click)="changeTab('approved')">
+        Attendance Approved
+      </button>
+
+      <button
+        class="main-button"
+        [ngClass]="{ active: activeTab === 'rejected' }"
+        (click)="changeTab('rejected')">
+        Attendance Rejected
+      </button>
+    </div>
+  </div>
+</section>
+
+<div class="right_data_all page-container">
+  <div class="ag_grid card">
+    <ag-grid-angular
+      class="ag-theme-alpine"
+      id="myGrid"
+      style="width: 100%; height: 480px;"
+      [rowData]="filteredData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>

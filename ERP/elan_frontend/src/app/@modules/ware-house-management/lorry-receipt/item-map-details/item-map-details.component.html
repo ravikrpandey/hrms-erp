@@ -1,0 +1,85 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="header-left">
+      <h2 class="title">Item Serial Mapping</h2>
+      <mat-checkbox
+        [(ngModel)]="selectAllChecked"
+        (change)="toggleSelectAll()">
+        Auto Select Serial/Batch <span class="summary-info"> Total Items: {{ getTotalItems() }} | Total Qty: {{ getTotalQty() }}</span>
+      </mat-checkbox>
+    </div>
+    <div class="mapping-note">
+      <strong>Note:</strong>
+      Serial/Batch data is displayed in FIFO order. Auto Select follows FIFO, while Manual Selection allows FIFO/LIFO selection.
+    </div>
+    <span class="close-icon" (click)="closeDialog()">X</span>
+  </div>
+
+  <div class="dialog-content">
+    <div class="item-card" *ngFor="let item of sale_orders">
+      <div class="item-header">
+        <div class="info">
+          <div class="info-item">
+            <strong>Item Name:</strong> {{ item.item_name }}{{ item.item_code ? ' - ' + item.item_code : '' }}
+            <div class="so-number">
+              SO Number: {{ item.sales_order_no }}
+            </div>
+          </div>
+          <div class="info-item">
+            <strong>Manage By :</strong> {{ item.manage_by }}
+          </div>
+          <div class="info-item">
+            <strong>Qty :</strong> {{ item.quantity }}
+          </div>
+        </div>
+
+        <div class="counter" [class.completed]="isItemCompleted(item)">
+          {{ getSelectedCount(item) }}/{{ item.quantity }}
+        </div>
+      </div>
+
+      <div class="serial-wrapper">
+        <div
+          class="serial-tile"
+          *ngFor="let serial of item.serialBatch"
+          [class.disabled]="usedSerials.has(serial.id) && !isSelected(item, serial)"
+          [class.selected]="isBatchItem(item)
+          ? isBatchSelected(item,serial)
+          : isSelected(item,serial)"
+
+          (click)="isBatchItem(item)
+          ? toggleBatch(item,serial)
+          : toggleSerial(item,serial)"
+          >
+
+          <div class="serial-no" *ngIf="serial.itemSerialNo">
+            Serial No.: {{ serial.itemSerialNo }}
+          </div>
+
+          <div class="batch-no">
+            Batch No.: {{ serial.batchNo }}
+          </div>
+
+          <div class="batch-info" *ngIf="isBatchItem(item)">
+            Available: {{ serial.available_qty }} |
+            Allocated: {{ getUsedQty(item, serial) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span
+      [matTooltip]="!canSave() ? 'Please select required serial numbers for all items' : ''">
+      <button
+        mat-raised-button
+        class="mapping-btn"
+        [disabled]="!canSave()"
+        (click)="save()">
+        Confirm Mapping
+      </button>
+    </span>
+  </div>
+
+</div>

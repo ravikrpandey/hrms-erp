@@ -1,0 +1,163 @@
+<div class="batch-serial-dialog">
+    <div class="dialog-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <mat-icon>inventory_2</mat-icon>
+            </div>
+
+            <div class="header-text">
+                <h2>Batch / Serial Mapping</h2>
+                <span>Manage By: <strong>{{ data.manageBy }}</strong></span>
+                <span class="header-divider">|</span>
+                <span>Quantity: <strong>{{ data.quantity }}</strong></span>
+            </div>
+        </div>
+
+        <button mat-icon-button class="close-btn" mat-dialog-close type="button" aria-label="Close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+
+    <div class="dialog-body">
+        <div class="item-summary">
+            <div class="summary-item item-name-summary">
+                <span class="label">Item Name</span>
+                <span class="value">
+                {{ data.itemName || '-' }}
+                </span>
+            </div>
+        </div>
+
+        <div class="price-row">
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Unit Per Price</mat-label>
+                <input
+                    matInput
+                    type="number"
+                    min="1"
+                    placeholder="Enter unit price"
+                    [formControl]="unitPrice"
+                />
+                <span matPrefix>₹&nbsp;</span>
+            </mat-form-field>
+
+            <div class="price-summary" *ngIf="unitPrice.value !== null">
+                <span>Total Price</span>
+                <strong>
+                    ₹ {{ (data.quantity * (+unitPrice.value || 0)) | number:'1.2-2' }}
+                </strong>
+            </div>
+        </div>
+
+        <div class="location-row">
+            <div class="location-field">
+                <app-mat-form-select-filter
+                    [key]="'id'"
+                    [items]="zoneTypes"
+                    [displayKey]="'zone_type'"
+                    placeholder="Select Sub Location Type"
+                    [formControl]="zone_type_id"
+                ></app-mat-form-select-filter>
+            </div>
+
+            <div class="location-field" *ngIf="zone_type_id.value">    
+                <app-mat-form-select-filter
+                    [key]="'id'"
+                    [items]="sublocationList"
+                    [displayKey]="'name'"
+                    placeholder="Select Sub Location"
+                    [formControl]="zone_id"
+                ></app-mat-form-select-filter>
+            </div>
+
+            <div class="location-field" *ngIf="zone_id.value">
+                <app-mat-form-select-filter
+                    [key]="'id'"
+                    [items]="bayList"
+                    [displayKey]="'name'"
+                    placeholder="Select Bay"
+                    [formControl]="bay_id"
+                ></app-mat-form-select-filter>
+            </div>
+
+            <div class="location-field" *ngIf="bay_id.value">
+                <app-mat-form-select-filter
+                    [key]="'id'"
+                    [items]="rackList"
+                    [displayKey]="'name'"
+                    placeholder="Select Rack"
+                    [formControl]="rack_id"
+                ></app-mat-form-select-filter>
+            </div>
+
+            <div class="location-field" *ngIf="rack_id.value">
+                <app-mat-form-select-filter
+                    [key]="'id'"
+                    [items]="binList"
+                    [displayKey]="'name'"
+                    placeholder="Select Bin"
+                    [formControl]="bin_id"
+                ></app-mat-form-select-filter>
+            </div>
+        </div>
+
+        <!-- Batch Only -->
+        <ng-container *ngIf="data.manageBy === 'Batch Only'">
+            <div class="section-title" style="display: none;">
+                <mat-icon>qr_code_2</mat-icon>
+                <div>
+                    <h3>Batch Details</h3>
+                    <p>Enter the expiry date for this batch.</p>
+                </div>
+            </div>
+
+            <div class="form-row" style="display: none;">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Expiry Date</mat-label>
+                    <input matInput [matDatepicker]="expiryPicker" placeholder="Select expiry date" [formControl]="expiryDate" readonly [min]="today">
+                    <mat-datepicker-toggle matSuffix [for]="expiryPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #expiryPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="info-box">
+                <mat-icon>info</mat-icon>
+                <span>Batch number will be generated automatically when the inventory is saved.</span>
+            </div>
+        </ng-container>
+
+
+        <!-- Serial Only -->
+        <ng-container *ngIf="data.manageBy === 'S.No. Only'">
+            <div class="section-title">
+                <mat-icon>format_list_numbered</mat-icon>
+                <div>
+                    <h3>Serial Number Details</h3>
+                    <p>Enter {{ data.quantity }} unique serial number(s).</p>
+                </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width" style="display: none;">
+                <mat-label>Expiry Date</mat-label>
+                <input matInput [matDatepicker]="serialExpiryPicker" placeholder="Select expiry date" [formControl]="expiryDate" readonly [min]="today">
+                <mat-datepicker-toggle matSuffix [for]="serialExpiryPicker"></mat-datepicker-toggle>
+                <mat-datepicker #serialExpiryPicker></mat-datepicker>
+            </mat-form-field>
+
+            <div class="serial-list">
+                <div class="serial-row" *ngFor="let serialControl of serialNumbers; let i = index">
+                    <div class="serial-number">{{ i + 1 }}</div>
+                    <mat-form-field appearance="outline" class="serial-input">
+                        <mat-label>Serial Number {{ i + 1 }}</mat-label>
+                        <input matInput placeholder="Enter serial number" [formControl]="serialControl" (blur)="onSerialChange(i)">
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="dialog-footer">
+        <button mat-stroked-button type="button" (click)="close()">Cancel</button>
+        <button mat-flat-button color="primary" type="button" (click)="confirm()"><mat-icon>check</mat-icon>Confirm</button>
+    </div>
+</div>

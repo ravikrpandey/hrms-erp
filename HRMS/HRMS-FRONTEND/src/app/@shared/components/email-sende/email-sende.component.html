@@ -1,0 +1,218 @@
+<section  *ngIf="!editMode">
+    <div class="row email_header form_head" >
+        <div class="col-md-6">
+<p>New Message</p>
+        </div>
+        <div class="col-md-6">
+            <div class="icons_email">
+<span class="email_icon" style="padding: 0 10px;">
+    <mat-icon style="margin: 0 12px" matTooltip="Full Screen" (click)="minimize()"> launch</mat-icon>
+    <mat-icon matTooltip="Close" mat-dialog-close>clear</mat-icon>
+</span>
+            </div>
+        </div>
+    </div>
+
+    
+      
+    <form [formGroup]="emailorm">
+        <div class="form_basic">
+                
+            <div class="form_set">
+                <div class="email_fileds">
+                 
+                    <span (click)="ccOpen()" class="cc_mail" >CC</span>
+                    <span  (click)="bccOpen()" class="bcc_mail">BCC</span>
+                 </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>To</mat-label>
+                        <input type="email" matInput formControlName="to_email" >
+                        
+                     
+                    </mat-form-field>
+                  
+                    
+                   
+                </div>
+           <div  *ngIf="ccOpenClick">
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>CC</mat-label>
+                    <input type="email" matInput formControlName="cc_email">
+
+                </mat-form-field>
+            </div>
+           </div>
+               <div *ngIf="bccOpenClick">
+                <div class="form-group" >
+                    <mat-form-field>
+                        <mat-label>BCC</mat-label>
+                        <input type="email" matInput formControlName="bcc_email">
+
+                    </mat-form-field>
+                </div>
+               </div>
+                
+               
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Subject</mat-label>
+                        <input type="text" matInput formControlName="subject">
+                      
+                    </mat-form-field>
+                </div>
+              
+                <div class="form-group attach_file">
+                    
+                    <ckeditor [editor]="Editor" formControlName="text"></ckeditor>
+                </div>
+
+<div class="file_name" style="padding: 4px 0 0 0;">
+    <span style="font-size: 15px;
+    font-weight: 500;
+    color: #4a4545;" *ngIf="filename">Attached File Name:</span><span style="font-size: 13px;
+    color: #5c5858">{{filename}}</span>
+</div>
+            </div>
+            
+           
+            <input type="file" class="file-input"
+            (change)="onFileSelected($event)" #file>
+            <div class="row">
+                <div class="col-md-12" align=right>
+              <button mat-mini-fab color="primary" class="upload-btn"
+                 (click)="file.click()" matTooltip="File Attach">
+                   <mat-icon >attach_file</mat-icon>
+               </button>
+           
+                
+                <span class="mt-3 mail_button" >
+                    <button mat-raised-button color="primary" (click)="sendMail()">Send <i class='fas fa-angle-right'></i></button>
+                </span>
+                </div>
+                   
+            </div>
+
+    </div>
+    </form>
+
+           
+       
+
+        
+</section> 
+
+<section *ngIf="editMode">
+    <div class="row email_header form_head" >
+        <div class="col-md-6">
+<p style="font-size: 15px;">New Message</p>
+        </div>
+        <div class="col-md-6">
+            <div class="icons_email">
+<span class="email_icon" style="padding: 0 10px;">
+    <!-- <mat-icon >minimize</mat-icon> -->
+    <!-- <span class="backBtn" >launch</span> -->
+    <mat-icon style="margin: 0 12px"  matTooltip="Exit Full Screen" (click)="maximaize()">launch</mat-icon>
+    <mat-icon matTooltip="Close" mat-dialog-close>clear</mat-icon>
+</span>
+            </div>
+        </div>
+    </div>
+
+    
+      
+    <form [formGroup]="emailorm">
+        <div class="form_basic">
+                
+            <div class="form_set">
+                <div class="email_fileds">
+                 
+                    <span (click)="ccOpen()" class="cc_mail" >CC</span>
+                    <span  (click)="bccOpen()" class="bcc_mail">BCC</span>
+                 </div>
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>To</mat-label>
+                        <input type="email" matInput formControlName="to_email" >
+                        
+                     
+                    </mat-form-field>
+                  
+                    
+                   
+                </div>
+           <div  *ngIf="ccOpenClick">
+            <div class="form-group">
+                <mat-form-field>
+                    <mat-label>CC</mat-label>
+                    <input type="email" matInput formControlName="cc_email">
+
+                </mat-form-field>
+            </div>
+           </div>
+               <div *ngIf="bccOpenClick">
+                <div class="form-group" >
+                    <mat-form-field>
+                        <mat-label>BCC</mat-label>
+                        <input type="email" matInput formControlName="bcc_email">
+
+                    </mat-form-field>
+                </div>
+               </div>
+                
+               
+                <div class="form-group">
+                    <mat-form-field>
+                        <mat-label>Subject</mat-label>
+                        <input type="text" matInput formControlName="subject">
+                      
+                    </mat-form-field>
+                </div>
+              
+                <div class="form-group attach_file">
+                    
+                    <ckeditor [editor]="Editor" formControlName="text"></ckeditor>
+                </div>
+
+                <div class="file_name" style="padding: 4px 0 0 0;">
+                    <span style="font-size: 15px;
+                    font-weight: 500;
+                    color: #4a4545;" *ngIf="filename">Attached File Name:</span><span style="font-size: 13px;
+                    color: #5c5858">{{filename}}</span>
+                </div>
+            </div>
+            
+           
+            <input type="file" class="file-input"
+            (change)="onFileSelected($event)" #file>
+            <div class="row">
+                <div class="col-md-12" align=right>
+ 
+              <button mat-mini-fab color="primary" class="upload-btn"
+                 (click)="file.click()" matTooltip="File Attach">
+                   <mat-icon >attach_file</mat-icon>
+               </button>
+           
+                
+                <span class="mt-3 mail_button" >
+                    <button mat-raised-button color="primary" (click)="sendMail()">send</button>
+                </span>
+                </div>
+                   
+            </div>
+
+    </div>
+    </form>
+
+           
+       
+
+        
+</section> 
+
+
+
+
+
+

@@ -1,0 +1,112 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Payroll </h1>
+        <p> Fine Management
+            <span class="employee_2">
+                <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586"></i>
+                {{ id && actionType === 'edit' ? 'Update' : actionType === 'view' ? 'View' : 'Add' }}
+            </span>
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+    </div>
+</div>
+
+<mat-card>
+    <div class="form_basic">
+        <form class="form_set" [formGroup]="fineManagementForm">
+            <div class="row">
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Department</mat-label>
+                            <mat-select formControlName="department_list" [(ngModel)]="selectedDepartment" multiple
+                                (selectionChange)="getAllArea($event.value)">
+                                <mat-select-filter [array]="departments"
+                                    (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                                <mat-checkbox class="check" [checked]="isAllSelectDepartment"
+                                    (click)="selectAllDepartment($event)">Select
+                                    All</mat-checkbox>
+                                <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                                    {{department?.department_name }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Employee</mat-label>
+                            <mat-select formControlName="employee_id">
+                                <mat-option *ngFor="let item of employeeList" [value]="item?.employee_id">
+                                    {{ item?.first_name }} {{ item?.middle_name || '' }} {{ item?.last_name }} {{
+                                    item?.employee_code }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Payroll Year</mat-label>
+                            <mat-select formControlName="financial_year_id">
+                                <mat-option *ngFor="let year of financialYearList" [value]="year?.id">
+                                    {{ year?.financial_year }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Payroll Month</mat-label>
+                            <mat-select formControlName="month">
+                                <mat-option *ngFor="let data of monthList" [value]="data?.value">
+                                    {{ data?.label }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group mb-3">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Amount</mat-label>
+                            <input matInput type="text" formControlName="amount" />
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                    <div class="form-group">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Fine Date</mat-label>
+                            <input [readonly]="isDisabled" matInput [matDatepicker]="startDatePicker"
+                                placeholder="Start Date" name="startDate" formControlName="fine_date"
+                                [(ngModel)]="startDate" />
+                            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startDatePicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group service_description">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <input matInput type="text" formControlName="description" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+            <div class="common_button_sub">
+                <button (click)="onSubmitForm()" *ngIf="actionType !== 'view'">
+                    {{ actionType === 'edit' ? 'Update' : 'Submit' }}
+                </button>
+                <button class="cancel_button_y" (click)="back()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</mat-card>

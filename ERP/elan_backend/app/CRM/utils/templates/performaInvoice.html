@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Proforma Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f7f7f7;
+    }
+
+    .invoice-container {
+      background: white;
+      padding: 20px;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      height: 60px;
+    }
+
+    .header h1 {
+      color: #006b46;
+      margin: 10px 0 0;
+    }
+
+    .section {
+      margin-top: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      background: #006b46;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .section-content {
+      padding: 15px;
+      background: #f9f9f9;
+    }
+
+    .section-content table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .section-content td, .section-content th {
+      padding: 8px;
+      text-align: left;
+    }
+
+    .section-content th {
+      background: #e6e6e6;
+    }
+
+    .section-content tr:nth-child(even) {
+      background: #fff;
+    }
+
+    .section-content tr:nth-child(odd) {
+      background: #f2f2f2;
+    }
+
+    .summary-table td {
+      padding: 8px;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="invoice-container">
+  <div class="header">
+    <img src="{{logo}}" alt="Company Logo">
+    <h1>Proforma Invoice</h1>
+  </div>
+
+  <!-- Basic Information -->
+  <div class="section">
+    <div class="section-title">Basic Information</div>
+    <div class="section-content">
+      <table>
+        <tr>
+          <td><strong>Proposal Number</strong><br>{{proposal_no}}</td>
+          <td><strong>Proposal Type</strong><br>{{proposal_type}}</td>
+          <td><strong>Company Name</strong><br>{{company_name}}</td>
+          <td><strong>Customer Name</strong><br>{{contact_person_name}}</td>
+        </tr>
+        <tr>
+          <td><strong>Contact Number</strong><br>{{contact_number}}</td>
+          <td><strong>Mail ID</strong><br>{{mail_id}}</td>
+          <td><strong>Address</strong><br>{{address}}</td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Item Information -->
+  <div class="section">
+    <div class="section-title">Item Information</div>
+    <div class="section-content">
+      <table border="1">
+        <thead>
+          <tr>
+            <th>S.No</th>
+            <th>Item Name</th>
+            <th>Item Code</th>
+            <th>HSN Code</th>
+            <th>GST(%)</th>
+            <th>Description</th>
+            <th>UOM</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{product_rows}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Summary & Charges -->
+  <div class="section">
+    <div class="section-title">Summary & Charges</div>
+    <div class="section-content">
+      <table class="summary-table">
+        <tr>
+          <td><strong>Discount:</strong></td>
+          <td>{{discount}}</td>
+          <td><strong>GST:</strong></td>
+          <td>{{igst}}</td>
+        </tr>
+        <tr>
+          <td><strong>Total Amount:</strong></td>
+          <td>{{totalAMTAfterDiscount}}</td>
+          <td><strong>Grand Total:</strong></td>
+          <td>{{grant_total}}</td>
+        </tr>
+        <tr>
+          <td><strong>Payment T&C:</strong></td>
+          <td>{{paymentTC}}</td>
+          <td><strong>Follow-Up Date:</strong></td>
+          <td>{{follow_up_date}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Allowances / Remarks -->
+  <div class="section">
+    <div class="section-title">Additional Details</div>
+    <div class="section-content">
+      {{allowance_details}}
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

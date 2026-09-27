@@ -1,0 +1,147 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>ESS</h1>
+    <p>Employee Master <i class="fa fa-angle-right" aria-hidden="true">
+    </i><span> Apply Resignation </span></p>
+  </div>
+  <div class="add_button">
+    <button routerLink="../resignation" type="button">Resignation List</button>
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+  </div>
+</div>
+
+  <div class="right_data_all">
+  <div class="heading_neo">
+    <h3>Apply Resignation</h3>
+  </div>
+      <div class="form_basic">
+        <form class="form_set" [formGroup]="resignDetailsForm">
+          <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <p class="form-new-name">Employee ID</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline" readonly>
+                  <input matInput type="text" formControlName="employee_id"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <p class="form-new-name">Employee</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="employee_name"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <p class="form-new-name">Department</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="department"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12 mb-3">
+              <p class="form-new-name">Job Role</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="jobRole"/>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <p class="form-new-name">Join Date</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline" readonly>
+                  <input matInput type="text" formControlName="date_of_joining"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <p class="form-new-name">Years of Experience</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="years_of_service"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <p class="form-new-name">Job Location</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="job_location"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <p class="form-new-name">Manager</p>
+              <div class="form-group form-new">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="manager"/>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-4">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <p>Resign Date</p>
+                <mat-form-field appearance="outline">
+                  <input matInput [matDatepicker]="picker3" (click)="picker3.open()"
+                    formControlName="resign_date" />
+
+                  <mat-datepicker-toggle matIconSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <p>Notice Period Date</p>
+                <mat-form-field appearance="outline">
+                  <input matInput [matDatepicker]="picker4" (click)="picker4.open()"
+                    formControlName="joining_date" />
+
+                  <mat-datepicker-toggle matIconSuffix [for]="picker4"></mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <p>Notice Period Days</p>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="reason"/>
+                 
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+              <div class="form-group">
+                <p>Reason</p>
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="reason"/>
+                 
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="common_button_sub mt-3" *ngIf="!job_id">
+            <button (click)="onSubmitForm()">
+              Save
+            </button>
+          </div>
+          <div class="common_button_sub mt-3" *ngIf="resignId">
+            <button  (click)="onUpdateForm()">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+  
+  </div>
+

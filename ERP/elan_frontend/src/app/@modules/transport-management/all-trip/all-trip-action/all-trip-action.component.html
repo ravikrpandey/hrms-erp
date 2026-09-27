@@ -1,0 +1,73 @@
+<div class="edd-del">
+  <!-- When showViewButton is false -->
+
+  <!-- If not SCHEDULED -->
+  <div *ngIf="status.status_type === 'APPROVED'">
+    <button
+      mat-raised-button
+      color="primary"
+      aria-label="Schedule Trip"
+      matTooltip="Schedule Trip"
+      (click)="scheduleTrip($event)"
+      class="fancy-btn"
+    >
+      <mat-icon class="btn-icon">event</mat-icon>
+      <span>Schedule Trip</span>
+    </button>
+  </div>                 
+
+  <!-- If SCHEDULED -->
+  <div *ngIf="status.status_type === 'SCHEDULED'">
+    <button
+      *ngIf="activeTab === 'Schedule Trip' && assignAction?.Write"
+      mat-raised-button
+      color="accent"
+      aria-label="Start Trip"
+      matTooltip="Start Trip"
+      (click)="StartTrip($event)"
+      class="fancy-btn"
+    >
+      <mat-icon class="btn-icon">check_circle</mat-icon>
+      <span>Start Trip</span>
+    </button>
+  </div>
+
+  <div *ngIf="status.status_type === 'SCHEDULED'">
+    <button mat-icon-button matTooltip="View" (click)="shecduleNavigateview($event)">
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </div>
+
+  <div *ngIf="status.status_type === 'CLOSED' && status.status_type === 'SCHEDULED'">
+    <button mat-icon-button matTooltip="View" (click)="view($event)">
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </div>
+  <!-- When showViewButton is true -->
+  <div *ngIf="showViewtripButton" class="button-group">
+    <button mat-icon-button matTooltip="View-Trip" (click)="viewTripDetails()">
+      <mat-icon>view_list</mat-icon>
+    </button>
+  </div>
+
+  <div class="button-group" *ngIf="showViewtripInfoButton">
+    <button
+      mat-icon-button
+      matTooltip="View-Trip"
+      (click)="showViewLivetripInfo()"
+    >
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </div>
+
+  <div class="edd-del" *ngIf="showViewtripInfoButton">
+    <mat-icon
+      class="deleteButton"
+      matTooltip="Delete"
+      *ngIf="assignAction?.Delete"
+      (click)="delete($event)"
+    >
+      delete
+    </mat-icon>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="heading_neo">
+                <h3>Add Details</h3>
+              </div>
+              <section class="right_data_all">
+    <mat-card>
+       
+        <div class="form_basic">
+            <div class="d-flex justify-content-center p-2 mt-2">
+            <div style="font-size: 17px;font-weight: 500;">Invoice Amount:</div>
+            <div style="font-size: 17px;font-weight: 500; margin-left: 3px;">{{total_invoice_amt | currency:'INR':'symbol':'1.0-2'}}</div>
+            </div>
+            <hr>
+            <form class="form_set" [formGroup]="form">
+                <div class="row">
+                    <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                        <div class="form-group">
+                            <mat-label>Select Bank</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Bank</mat-label>
+                                <mat-select formControlName="bank_id">
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of getAccount_data" (click)="getAccountList(data)"
+                                            [value]="data.id">{{data.bank_name}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('bank_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+              <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                        <div class="form-group">
+                            <mat-label>Bank Account Name</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Account Name</mat-label>
+                                <mat-select formControlName="bank_account_id">
+                                    <ng-container>
+                                        <mat-option *ngFor="let data of getAccountListData"
+                                            [value]="data.id">{{data.account_name}}</mat-option>
+                                    </ng-container>
+                                </mat-select>
+                                <mat-error *ngIf="form.get('bank_account_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div> -->
+
+          
+
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-label>Amount</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Amount</mat-label>
+                                <input matInput type="number" formControlName="amount" />
+                                <mat-error *ngIf="form.get('amount')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('amount')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+<div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12 ">
+                        <div class="form-group">
+                            <mat-label>Invoice Number</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Invoice Number</mat-label>
+                                <input matInput type="text" formControlName="invoice_number" readonly/>
+                               
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                     
+                    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12 ">
+                        <div class="form-group">
+                            <mat-label>Remarks</mat-label>
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Remarks</mat-label>
+                                <input matInput type="text" formControlName="remarks" />
+                                <mat-error *ngIf="form.get('remarks')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                                <mat-error *ngIf="form.get('remarks')?.hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button mat-raised-button color="primary" (click)="onSubmit(this.form.value)" style="padding: 4px;">
+                        {{this.subtypeId?'Update':'Submit'}}
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="goBack()">Close</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+</section>

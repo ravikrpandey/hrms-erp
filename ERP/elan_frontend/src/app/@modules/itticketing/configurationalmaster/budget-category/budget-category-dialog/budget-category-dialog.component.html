@@ -1,0 +1,49 @@
+<ng-container *ngIf="mode=='view'">
+  <h3 class="popHead">Budget Category Record</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <div class="emp_key">
+        <p>Budget Category :</p>
+      </div>
+      <div class="emp_value">
+        <p>{{ getData?.budget_category }}</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button  mat-dialog-close class="cancel_button_y">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>
+
+<ng-container  *ngIf="mode!='view'">
+  <h3 mat-dialog-title class="popHead" *ngIf="id">Update Budget Category</h3>
+  <h3 mat-dialog-title class="popHead" *ngIf="!id">Add Budget Category</h3>
+  <mat-dialog-content class="mat-typography mt-3">
+    <form [formGroup]="budgetCategoryForm">
+      <div class="form-group row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <mat-form-field appearance="outline" class="mt-2">
+            <mat-label>Budget Category</mat-label>
+            <input matInput type="text" formControlName="budget_category" />
+            <mat-error *ngIf="budgetCategoryForm.controls['budget_category'].hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error *ngIf="budgetCategoryForm.controls['budget_category'].hasError('leadingSpaces')">
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button  (click)="submitData(budgetCategoryForm.value)" >
+      {{ id ? "Update" : "Create"}}
+    </button>
+    <button mat-dialog-close class="cancel_button_y">
+      Close
+    </button>
+  </mat-dialog-actions>
+</ng-container>

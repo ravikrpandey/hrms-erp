@@ -1,0 +1,149 @@
+<div class="heading_top">
+    <div class="page-title">
+        <h1>Profit Center Ledger</h1>
+        <p> Profit Center Ledger <i class="fa fa-angle-right" aria-hidden="true" style="color:#063178">
+        </i><span>List</span></p>
+    </div>
+    <div class="add_button">
+        <button type="button" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+</div>
+
+<div class="right_data_all">
+    <form [formGroup]="JournalForm" class="mt-2">
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-3 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>From Date</mat-label>
+                    <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" [max]="maxDate"
+                        (dateChange)="fromDate($event)" readonly />
+                    <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                    <mat-datepicker #dp></mat-datepicker>
+                    <mat-error *ngIf="JournalForm.controls['from_date'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                    <button mat-icon-button *ngIf="JournalForm.get('from_date')?.value" matSuffix (click)="clearDate('from_date')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-4 col-md-4 col-lg-3 col-12">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>To Date</mat-label>
+                    <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="to_date" [max]="maxDate"
+                        [min]="FromDate || minDate" (dateChange)="ToDate($event)" readonly />
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="JournalForm.controls['to_date'].hasError('required')">
+                        This field is required!
+                    </mat-error>
+                    <button mat-icon-button *ngIf="JournalForm.get('to_date')?.value" matSuffix (click)="clearDate('to_date')">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+                <div class="form-group">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Profit Center</mat-label>
+                        <mat-select #select2 formControlName="profit_center_id" (selectionChange)="onAccountChange()">
+                            <mat-option [value]="null">All</mat-option>
+                            <mat-select-filter *ngIf="select2.focused" [array]="profitCentre1" (filteredReturn)="profitCenterFilter($event)"></mat-select-filter>
+                            <mat-option *ngFor="let val of profitCentreList" [value]="val?.id">
+                                {{val?.profit_center_name}} ({{val?.profit_center_id}})
+                            </mat-option>
+                        </mat-select>
+                        <button mat-icon-button *ngIf="JournalForm.get('profit_center_id')?.value" matSuffix (click)="clearDate('profit_center_id')">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-md-4 col-lg-2 col-12 d-flex align-items-center">
+                <button mat-raised-button color="primary" (click)="getProfitCenterLedger()" class="mr-2">
+                    <mat-icon>search</mat-icon> Search
+                </button>
+                <button mat-raised-button color="accent" (click)="onBtnExportDataAsExcel()">
+                    <mat-icon>download</mat-icon> Export
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards mt-3" *ngIf="rowData1 && rowData1.length > 0">
+        <div class="row">
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Total Debit</div>
+                    <div class="summary-value text-danger">{{ totalDebit | number:'1.2-2' }}</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Total Credit</div>
+                    <div class="summary-value text-success">{{ totalCredit | number:'1.2-2' }}</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Net Balance</div>
+                    <div class="summary-value" [class.text-danger]="totalBalance < 0" [class.text-success]="totalBalance >= 0">
+                        {{ totalBalance | number:'1.2-2' }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Total GST</div>
+                    <div class="summary-value">{{ totalGST | number:'1.2-2' }}</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Total TDS</div>
+                    <div class="summary-value">{{ totalTDS | number:'1.2-2' }}</div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-4 col-6">
+                <div class="summary-card">
+                    <div class="summary-label">Transactions</div>
+                    <div class="summary-value">{{ totalTransactions }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="employ_sube py-2">
+        <div>
+            <select (change)="onPageSizeChanged()" id="page-size" class="form-control-sm">
+                <option value="10" selected>10</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="500">500</option>
+                <option value="1000">1000</option>
+            </select>
+        </div>
+        <div>
+            <input type="text" class="form-control form-control-sm" id="filter-text-box"
+                placeholder="Search" (input)="onFilterTextBoxChanged()">
+        </div>
+    </div>
+
+    <div class="ag_grid">
+        <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine"
+            style="width:100%; height:426px;" [rowData]="rowData1"
+            [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10"
+            (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+        </ag-grid-angular>
+    </div>
+
+    <div *ngIf="!rowData1 || rowData1.length === 0" class="text-center p-5">
+        <mat-icon class="no-data-icon">info</mat-icon>
+        <h5>No transactions found</h5>
+        <p class="text-muted">Please adjust your filters or select a different profit center</p>
+    </div>
+</div>

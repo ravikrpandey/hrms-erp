@@ -1,0 +1,1247 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Transport Management</h1>
+    <p>
+      Transport Request <i class="fa fa-angle-right" aria-hidden="true"></i>
+      <span *ngIf="!id">Create Transport Request</span>
+      <span *ngIf="id && typeStatus === 'view'">View Transport Request</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i> Back
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="heading_neo">
+    <h3 *ngIf="!id">Create Transport Request</h3>
+    <h3 *ngIf="typeStatus === 'view'">View Transport Request</h3>
+    <h3 *ngIf="typeStatus === 'update'">Update Transport Request</h3>
+  </div>
+  <form [formGroup]="newRequestForm">
+    <div class="row">
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12" *ngIf="this.id">
+        <div class="form-group">
+          <mat-label>Request ID <span class="alertspan">*</span></mat-label>
+
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input matInput formControlName="requestId" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Request Date & Time -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label
+            >Request Date  <span class="alertspan">*</span></mat-label
+          >
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="requestDateTime"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Requested By -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Requested By <span class="alertspan">*</span></mat-label>
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+
+          >
+            <input matInput formControlName="requestedBy" readonly />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Requesting Department -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group mb-4">
+          <mat-label>Department<span class="alertspan">*</span></mat-label>
+          <mat-form-field appearance="outline">
+            <!-- <mat-label>Department</mat-label> -->
+            <mat-select formControlName="department">
+              <mat-select-filter
+                [array]="departments"
+                (filteredReturn)="departmentFilter($event)"
+              ></mat-select-filter>
+              <!-- <mat-option>
+                <div class="add_button">
+                  <button type="button" (click)="openDepartmentDialog()">
+                    + Add New
+                  </button>
+                </div>
+              </mat-option> -->
+              <mat-option
+                *ngFor="let department of departmentList"
+                [value]="department.dept_id"
+                >{{ department.department_name }}</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="newRequestForm.get('department')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Priority Level Dropdown -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Priority Level <span class="alertspan">*</span></mat-label>
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-select formControlName="priority">
+              <mat-option value="Low">Low</mat-option>
+              <mat-option value="Medium">Medium</mat-option>
+              <mat-option value="High">High</mat-option>
+              <mat-option value="Urgent">Urgent</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Transported By -->
+
+      <div
+        class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12"
+        style="margin-top: 5px"
+      >
+        <mat-label>Transported By <span class="alertspan">*</span></mat-label>
+        <mat-form-field
+          appearance="outline"
+          class="w-100"
+          [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+        >
+          <mat-select
+            formControlName="transported_by"
+            (selectionChange)="changeTransaport($event)"
+          >
+            <mat-option value="self">Self</mat-option>
+            <mat-option value="vendor">Third Party</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <ng-container *ngIf="transportedByValue === 'self'">
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group">
+            <mat-label
+              >Vehicle<span class="alertspan">*</span>
+              <button style="padding: 0px;margin:
+              0px;"
+                *ngIf="viewVehicleDetails"
+                mat-icon-button
+                color="accent"
+                (click)="openVehicleDetailsDialog(); $event.stopPropagation()"
+                matTooltip="View Details"
+              >
+                <mat-icon style="margin-top: 5px;">visibility</mat-icon>
+              </button>
+            </mat-label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select
+                formControlName="vehicle_master_id"
+                placeholder="Select Vehicle "
+                (selectionChange)="onVehicleSelect($event.value)"
+              >
+                <mat-option
+                  *ngFor="let vehicle of vehicleTypeList"
+                  [value]="vehicle.id"
+                >
+                  {{ vehicle.TM_VEHICAL_CATEGORY?.vehical_category_name }} ---
+                  {{ vehicle.vehicle_number }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="transportedByValue === 'vendor'">
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group">
+            <mat-label>Vendor <span class="alertspan">*</span></mat-label>
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+            >
+              <mat-select
+                formControlName="vendor_id"
+                placeholder="Select Vendor"
+              >
+                <mat-select-trigger>
+                  {{ getSelectedVendorText() }}
+                </mat-select-trigger>
+                  <mat-select-filter
+                [array]="vendors"
+                (filteredReturn)="vendorFilter($event)"
+              ></mat-select-filter>
+                <mat-option
+                  *ngFor="let vendor of vendorList"
+                  [value]="vendor.id"
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      width: 100%;
+                      gap: 120px;
+                    "
+                  >
+                    <span>{{ vendor.vendor_name }}</span>
+                  </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Vehicle Type - For Vendor -->
+      <ng-container *ngIf="transportedByValue === 'vendor' && selectedVendorId">
+        <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+          <div class="form-group">
+            <mat-label
+              >Vehicle Type <span class="alertspan">*</span>
+              <button
+                *ngIf="viewVehicleDetails"
+                mat-icon-button
+                color="accent"
+                (click)="openVehicleDetailsDialog(); $event.stopPropagation()"
+                matTooltip="View Details"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </mat-label>
+            <mat-form-field
+              appearance="outline"
+              class="w-100"
+              appearance="outline"
+              class="w-100"
+              [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+            >
+
+              <mat-select
+                formControlName="vehicle_master_id"
+                placeholder="Select Vehicle"
+                (selectionChange)="onVehicleSelect2($event.value)"
+              >
+               <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="openVendorDialog(); $event.stopPropagation()"
+                  style="
+                    height: 28px;
+                    line-height: 16px;
+                    font-size: 12px;
+                    padding: 0 12px;
+                  "
+                >
+                  Add Vehicle
+                </button>
+                <mat-select-trigger>
+                  {{ getSelectedVehicleText() }}
+                </mat-select-trigger>
+                 <mat-select-filter
+                [array]="vehicles"
+                (filteredReturn)="vehicleFilter($event)"
+              ></mat-select-filter>
+                <mat-option value="" disabled *ngIf="!vehicleTypeList2?.length">Add Vehicles</mat-option>
+                <mat-option
+                  *ngFor="let vehicle of vehicleTypeList2"
+                  [value]="vehicle.id"
+                >
+                  <div
+                    class="d-flex justify-content-between align-items-center"
+                    style="gap: 180px"
+                  >
+                    <span>
+                      {{ vehicle.TM_VEHICAL_CATEGORY?.vehical_category_name }}
+                      --- {{ vehicle.vehicle_number }}
+                    </span>
+                  </div>
+                </mat-option>
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Via -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Via <span class="alertspan">*</span></mat-label>
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input matInput formControlName="via" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Type of Delivery  -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label
+            >Type of Delivery <span class="alertspan">*</span></mat-label
+          >
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input matInput formControlName="type_of_delivey" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Type of Sub delivery   -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label
+            >Type of Sub Delivery <span class="alertspan">*</span></mat-label
+          >
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input matInput formControlName="type_of_sub_delivey" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Type of supply   -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-label>Type of Supply <span class="alertspan">*</span></mat-label>
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <input matInput formControlName="type_of_supply" />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- product section start-->
+      <!-- <div class="common_button_sub">
+        <button type="button" (click)="productChargeTab('product')">
+          Product
+        </button>
+        <button type="button" (click)="productChargeTab('item')">Item</button>
+      </div> -->
+
+      <div class="row mb-4">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <form [formGroup]="newRequestForm">
+            <!-- <mat-checkbox formControlName="isProduct"> Product </mat-checkbox> -->
+
+            <mat-checkbox formControlName="isItem"> Item </mat-checkbox>
+          </form>
+        </div>
+      </div>
+      <div class="heading_neo mb-3" *ngIf="newRequestForm.get('isItem')?.value">
+        <h3>Items</h3>
+      </div>
+
+      <div
+        class="row mt-3 mx-1 mb-3"
+        *ngIf="newRequestForm.get('isItem')?.value"
+      >
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Item Type</th>
+                <th>Item Category</th>
+                <th>Item Name</th>
+                <th>Item Code</th>
+                <th>Qty</th>
+                <th>Type</th>
+                <th>Price</th>
+                <th>UOM</th>
+                <th *ngIf="viewDetails != 'view'">Action</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="ItemDetails">
+              <tr
+                *ngFor="
+                  let roleFieled of ItemDetails['controls'];
+                  let i = index
+                "
+                [formGroupName]="i"
+              >
+                <td>
+                  <div class="form-group-name-cat">
+                    <mat-form-field appearance="outline">
+                      <mat-select formControlName="item_type_id">
+                        <mat-option
+                          *ngFor="let data of itemType"
+                          (click)="getCategoryVal(data.id, i)"
+                          [value]="data.id"
+                          >{{ data.itemType }}</mat-option
+                        >
+                      </mat-select>
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('item_type_id')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name-cat">
+                    <mat-form-field appearance="outline">
+                      <mat-select formControlName="asset_id">
+                        <mat-option
+                          *ngFor="let data of assetData[i]"
+                          (click)="getAssetCateVal(data.id, i)"
+                          [value]="data.id"
+                          >{{ data.asset_category_name }}</mat-option
+                        >
+                      </mat-select>
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('asset_id')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <mat-select formControlName="item_master_id">
+                        <mat-option
+                          *ngFor="let data of getItemById[i]"
+                          [value]="data.MASTER_ITEM?.id"
+                          (onSelectionChange)="getItemData(data, i)"
+                        >
+                          {{ data.MASTER_ITEM?.item_name }}
+                        </mat-option>
+                      </mat-select>
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('item_master_id')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="item_code"
+                        readonly
+                      />
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('item_code')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <input type="number" matInput formControlName="bom_qty" />
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('bom_qty')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <mat-select formControlName="type">
+                        <mat-option value="Fixed">Fixed</mat-option>
+                        <mat-option value="Round of">Round of</mat-option>
+                      </mat-select>
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('type')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <input type="number" matInput formControlName="price" />
+                      <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('price')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error>
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="form-group-name">
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="uom_id"
+                        readonly
+                      />
+                      <!-- <mat-error
+                        *ngIf="
+                          newRequestForm
+                            .get('ItemDetails')
+                            ?.get(i.toString())
+                            ?.get('uom_id')?.invalid
+                        "
+                      >
+                        required!
+                      </mat-error> -->
+                    </mat-form-field>
+                  </div>
+                </td>
+                <td>
+                  <div class="edd-del">
+                    <mat-icon
+                      class="addButton"
+                      matTooltip="Add Item"
+                      (click)="addItem2()"
+                      >add_circle</mat-icon
+                    >
+                    <ng-container *ngIf="i + 1 !== 1">
+                      <mat-icon
+                        class="deleteButton"
+                        matTooltip="delete Item"
+                        (click)="removeItem(i)"
+                        >delete</mat-icon
+                      >
+                    </ng-container>
+                    <mat-icon
+                      class="viewButton"
+                      matTooltip="View Item"
+                      (click)="viewItem(i)"
+                      *ngIf="
+                        newRequestForm
+                          .get('ItemDetails')
+                          ?.get(i.toString())
+                          ?.get('item_type_id')?.value == '3'
+                      "
+                      >visibility</mat-icon
+                    >
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- <div
+        class="heading_neo mb-3"
+        *ngIf="newRequestForm.get('isProduct')?.value"
+      >
+        <h3>Products</h3>
+      </div> -->
+
+      <!-- <div class="form_table" *ngIf="newRequestForm.get('isProduct')?.value">
+        <mat-card>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>S.No.</th>
+                  <th>Product Category</th>
+                  <th>Product Name</th>
+                  <th>Product Varient</th>
+                  <th>Product Description</th>
+                  <th>HSN Code</th>
+                  <!-- <th>Delivered Qty</th> -->
+                  <!-- <th>Remaining Quantity</th> -->
+                  <!-- <th>UOM</th>
+                  <th>Quantity</th>
+                  <th>Price Per Unit</th>
+                  <th>Total Price</th>
+                  <th>Action</th> -->
+
+                  <!-- <th *ngIf="
+                  isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                CGST (%)
+              </th>
+              <th *ngIf="
+                  isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                SGST (%)
+              </th>
+              <th *ngIf="
+                  !isSameState &&
+                  frmDeliveryChallan.get('customer_billing_state')?.value &&
+                    frmDeliveryChallan.get('billing_state')?.value
+                ">
+                IGST (%)
+              </th> -->
+                <!-- </tr>
+              </thead>
+              <tbody formArrayName="productItems">
+                <tr
+                  *ngFor="let item of productItems.controls; let i = index"
+                  [formGroupName]="i"
+                >
+                  <td>{{ i + 1 }}</td>
+                  <td>
+                    <mat-form-field appearance="outline" class="disaablefield">
+                      <mat-select
+                        (selectionChange)="getAllActiveProduct($event, i)"
+                        formControlName="product_category_id"
+                      >
+                        <mat-form-field>
+                          <input
+                            matInput
+                            (input)="filterCategories($event, i)"
+                            placeholder="Search"
+                          />
+                        </mat-form-field>
+                        <mat-option *ngIf="!categoryList[i]?.length" disabled>
+                          <p>Category Not Found</p>
+                        </mat-option>
+                        <mat-option
+                          *ngFor="let data of categoryList[i]"
+                          [value]="data.id"
+                          >{{ data.category_name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field
+                      appearance="outline"
+                      class="disaablefield"
+                      [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+                    >
+                      <mat-select
+                        (selectionChange)="getAllProductVariant($event, i)"
+                        formControlName="product_master_id"
+                      >
+                        <mat-form-field>
+                          <input
+                            matInput
+                            (input)="filterProduct($event, i)"
+                            placeholder="Search"
+                          />
+                        </mat-form-field>
+                        <mat-option *ngIf="!productList[i]?.length" disabled>
+                          <p>Product Not Found</p>
+                        </mat-option>
+                        <mat-option
+                          *ngFor="let item of productList[i]"
+                          [value]="item?.id"
+                          >{{ item?.product_name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline" class="disaablefield">
+                      <mat-select
+                        (valueChange)="selectedVarient($event, i)"
+                        formControlName="variant_id"
+                      >
+                        <mat-form-field>
+                          <input
+                            matInput
+                            (input)="filterProductVariant($event, i)"
+                            placeholder="Search"
+                          />
+                        </mat-form-field>
+                        <mat-option *ngIf="!varientList[i]?.length" disabled>
+                          <p>Varient Not Found</p>
+                        </mat-option>
+                        <mat-option
+                          *ngFor="let varient of varientList[i]"
+                          [value]="varient?.id"
+                          >{{ varient?.variant_name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        formControlName="product_description"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <input matInput formControlName="hsn_code" readonly />
+                    </mat-form-field>
+                  </td>
+                  <-- <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="delivered_qty"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td> -->
+                  <!-- <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="remaining_quantity"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td> -->
+                  <!-- <td> -->
+                    <!-- <mat-form-field appearance="outline">
+                      <input matInput formControlName="uom_name" readonly />
+                    </mat-form-field>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="quantity"
+                        (keyup)="checkQuantity($event, i)"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                      />
+                    </mat-form-field>
+                    <div
+                      *ngIf="
+                        item.get('quantity')?.touched &&
+                        item.get('quantity')?.invalid
+                      "
+                      class="text-danger"
+                    >
+                      <div *ngIf="item.get('quantity')?.errors?.['required']">
+                        Item quantity is required
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        type="text"
+                        matInput
+                        formControlName="price_per_unit"
+                        oninput="this.value=this.value.replace(/[^0-9,]/g,'');"
+                      />
+                    </mat-form-field>
+                    <div
+                      *ngIf="
+                        item.get('price_per_unit')?.touched &&
+                        item.get('price_per_unit')?.invalid
+                      "
+                      class="text-danger"
+                    >
+                      <div
+                        *ngIf="item.get('price_per_unit')?.errors?.['required']"
+                      >
+                        Item price is required
+                      </div>
+                    </div>
+                  </td> -->
+                  <!-- Total Price Field (Read-Only) -->
+                  <!-- <td>
+                    <mat-form-field appearance="outline">
+                      <input
+                        matInput
+                        formControlName="total_price"
+                        placeholder="Total Price"
+                        readonly
+                      />
+                    </mat-form-field>
+                  </td>
+
+                  <td>
+                    <div
+                      style="
+                        display: flex;
+                        gap: 8px;
+                        justify-content: center;
+                        align-items: center;
+                      "
+                    >
+                      <!-- Add Button Conditions -->
+                      <!-- <button
+                        class="btn btn-add"
+                        *ngIf="i === 0 || i === productItems.length - 1"
+                        (click)="addItem(i); getAllCategory(i)"
+                      >
+                        Add
+                      </button> -->
+
+                      <!-- <-- Delete Button Conditions --> 
+                      <!-- <button
+                        class="btn btn-delete"
+                        *ngIf="productItems.length > 1 && i !== 0"
+                        (click)="removeItem(i)"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-card>  -->
+      <!-- </div> --> 
+
+      <!-- product section end -->
+      <!--  Address Heading -->
+      <div class="col-12">
+        <div class="heading_neo mb-3 mt-2">
+          <h3>Pickup Address</h3>
+        </div>
+      </div>
+
+      <!-- Address Input -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label
+              >Pickup Address <span class="alertspan">*</span></mat-label
+            >
+            <input matInput formControlName="pickaddress" maxlength="100" />
+            <mat-error
+              *ngIf="newRequestForm.get('pickaddress')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- new country start -->
+
+      <!-- new country end -->
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>Country</mat-label>
+            <mat-select
+              formControlName="pickcountry_id"
+              (selectionChange)="onChangeCountry($event)"
+            >
+               <mat-select-filter
+                [array]="countryList3"
+                (filteredReturn)="countryFilterPick($event)"
+              ></mat-select-filter>
+              <mat-option *ngIf="!countryList?.length">
+                <p>Country Not Found</p>
+              </mat-option>
+              <mat-option
+                *ngFor="let country of countryList"
+                [value]="country?.countryss_id"
+                >{{ country?.countryss_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="newRequestForm.get('pickcountry_id')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>State</mat-label>
+            <mat-select
+              formControlName="pickstate_id"
+              (selectionChange)="stateChange($event)"
+            >
+            <mat-select-filter
+                [array]="states"
+                (filteredReturn)="stateFilter($event)"
+              ></mat-select-filter>
+
+              <mat-option
+                *ngFor="let state of AllStateList"
+                [value]="state?.states_id"
+                >{{ state?.states_name }}</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="newRequestForm.get('pickstate_id')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>City</mat-label>
+            <mat-select formControlName="pick_city_id">
+              <mat-select-filter
+                [array]="cities"
+                (filteredReturn)="cityFilter($event)"
+              ></mat-select-filter>
+              <mat-option
+                *ngFor="let city of cityList"
+                [value]="city.city_id"
+                >{{ city.city_name }}</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="newRequestForm.get('pick_city_id')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>Pin</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="pickup_pincode"
+              maxlength="6"
+            />
+            <mat-error
+              *ngIf="newRequestForm.get('pickup_pincode')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label
+              >Request Pickup Date
+              <span class="alertspan">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="picker1"
+              formControlName="picktDateTime"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker1"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!--  Address Heading -->
+      <div class="col-12">
+        <div class="heading_neo mb-3 mt-2">
+          <h3>Delivery Address</h3>
+        </div>
+      </div>
+
+      <!-- Address Input -->
+      <div class="col-xxl-4 col-lg-4 col-md-6 col-sm-12 col-12">
+        <div class="form-group">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label
+              >Delivery Address <span class="alertspan">*</span></mat-label
+            >
+            <input matInput formControlName="address" maxlength="100" />
+            <mat-error
+              *ngIf="newRequestForm.get('address')?.hasError('required')"
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>Country</mat-label>
+            <mat-select
+              formControlName="delivery_country_id"
+              (selectionChange)="onChangeCountryD($event)"
+            >
+
+              <mat-select-filter
+                [array]="countryList3"
+                (filteredReturn)="countryFilterDeliver($event)"
+              ></mat-select-filter>
+              <mat-option *ngIf="!countryListD?.length">
+                <p>Country Not Found</p>
+              </mat-option>
+              <mat-option
+                *ngFor="let country of countryListD"
+                [value]="country?.countryss_id"
+                >{{ country?.countryss_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                newRequestForm.get('delivery_country_id')?.hasError('required')
+              "
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>State</mat-label>
+            <mat-select
+              (selectionChange)="stateChangeD($event)"
+              formControlName="delivery_state_id"
+            >
+              <mat-select-filter
+                [array]="statesD"
+                (filteredReturn)="stateFilterD($event)"
+              ></mat-select-filter>
+              <mat-option
+                *ngFor="let state of AllStateListD"
+                [value]="state.states_id"
+                >{{ state.states_name }}</mat-option
+              >
+            </mat-select>
+            <mat-error
+              *ngIf="
+                newRequestForm.get('delivery_state_id')?.hasError('required')
+              "
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>City</mat-label>
+            <mat-select formControlName="delivery_city_id">
+              <!-- <mat-option *ngIf="!allCityList?.length">
+                <p>City Not Found</p>
+              </mat-option> -->
+              <mat-select-filter
+                [array]="citiesD"
+                (filteredReturn)="cityFilterD($event)"
+              ></mat-select-filter>
+              <mat-option
+                *ngFor="let city of cityListD"
+                [value]="city?.city_id"
+                >{{ city?.city_name }}
+              </mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="
+                newRequestForm.get('delivery_city_id')?.hasError('required')
+              "
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label>Pin</mat-label>
+            <input
+              matInput
+              type="number"
+              formControlName="delivery_pincode"
+              maxlength="6"
+            />
+            <mat-error
+              *ngIf="
+                newRequestForm.get('delivery_pincode')?.hasError('required')
+              "
+            >
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group mb-3">
+          <mat-form-field
+            appearance="outline"
+            class="w-100"
+            [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+          >
+            <mat-label
+              >Request Delivery Date
+              <span class="alertspan">*</span></mat-label
+            >
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              formControlName="deliverDateTime"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="picker2"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <mat-label>Remark</mat-label>
+      <textarea
+        [ngClass]="{ 'readonly-wrapper': typeStatus === 'view' }"
+        placeholder="Comments"
+        class="form-control"
+        formControlName="remarks"
+      ></textarea>
+    </div>
+  </form>
+  <div class="common_button_sub">
+    <button (click)="onSubmit()">
+      {{ typeStatus == "update" ? "Update Request" : "New Request" }}
+    </button>
+    <button class="cancel_button_y" (click)="goBack()">Cancel</button>
+  </div>
+</div>

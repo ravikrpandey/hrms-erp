@@ -1,0 +1,109 @@
+<div class="container mt-4">
+  <div class="dash">
+    <div>
+      <h1>Leave Management</h1>
+      <p>
+        HRMS <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span> Leave Quota</span>
+      </p>
+    </div>
+    <div>
+      <!-- <button
+        class="btn btn-primary"
+        (click)="back()"
+        style="background-color: #0c85c0"
+      >
+        &#x2190; Back to home
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<div class="col-12 col-sm-6">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Select Employee</mat-label>
+    <mat-select [(value)]="selectedEmployee" (selectionChange)="onEmployeeSelect($event)">
+      <app-search-filter [array]="employees" [placeholder]="'Search employee'"
+        [searchFields]="['first_name','last_name','employee_id']" (filteredReturn)="onEmployeeFilter($event.data)">
+      </app-search-filter>
+      <mat-option *ngFor="let employee of filteredEmployees" [value]="employee.employee_id">
+        {{ employee.first_name }} {{ employee.last_name }} ({{ employee.employee_id }})
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="selectedEmployee === null">*Required!</mat-error>
+  </mat-form-field>
+</div>
+
+<div class="table-wrapper mat-elevation-z8">
+  <table mat-table [dataSource]="leaveData" class="custom-table">
+
+    <!-- S No -->
+    <ng-container matColumnDef="sno">
+      <th mat-header-cell *matHeaderCellDef> S No. </th>
+      <td mat-cell *matCellDef="let row; let i = index"> {{ i + 1 }} </td>
+    </ng-container>
+
+    <!-- Leave Name -->
+    <ng-container matColumnDef="leave_name">
+  <th mat-header-cell *matHeaderCellDef> Leave Name </th>
+  <td mat-cell *matCellDef="let row; let i = index">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-select [(ngModel)]="row.leave_id" name="leave_name_{{i}}" (selectionChange)="onLeaveNameChange(row)">
+        <mat-option *ngFor="let leave of leaveOptions" [value]="leave.leave_id" 
+                    [disabled]="isLeaveSelected(leave, row)">
+          {{ leave.leave_name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </td>
+</ng-container>
+
+
+
+    <!-- Leave Code -->
+    <ng-container matColumnDef="leave_code">
+      <th mat-header-cell *matHeaderCellDef> Leave Code </th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        <input matInput [(ngModel)]="row.leave_code" name="leave_code_{{i}}" readonly>
+      </td>
+    </ng-container>
+
+    <!-- Leaves In Quota -->
+    <ng-container matColumnDef="no_of_days">
+      <th mat-header-cell *matHeaderCellDef> Leaves In Quota </th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        <input matInput type="number" [(ngModel)]="row.no_of_days" name="no_of_days_{{i}}">
+      </td>
+    </ng-container>
+
+    <!-- Leave Available -->
+    <ng-container matColumnDef="available_days">
+      <th mat-header-cell *matHeaderCellDef> Leave Available </th>
+      <td mat-cell *matCellDef="let row; let i = index">
+        <input matInput type="number" [(ngModel)]="row.available_days" name="available_days_{{i}}">
+      </td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let row; let i = index" class="action-buttons">
+        <button mat-icon-button color="primary" (click)="addLeave()" matTooltip="Add Row">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="deleteLeave(i)" matTooltip="Delete Row">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns" class="custom-header"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="custom-row"></tr>
+  </table>
+
+  <!-- Submit Button -->
+  <div style="display:flex; justify-content:flex-end; margin-top: 15px;">
+    <button mat-raised-button color="primary" (click)="submit()">Submit</button>
+  </div>
+</div>

@@ -1,0 +1,170 @@
+<div class="main section">
+
+  <div class="heading_top">
+    <div class="page-title">
+    <h1>HRMS</h1>
+    <p>Recruitment Module <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+    </i><span routerLink="../">Interview Status</span></p>
+  </div>
+    <div class="add_button a_at_bg">
+      <button routerLink="../interview-status-list">List</button>
+    </div>
+  </div>
+
+
+  <div class="right_white_bg">
+    <div class="page_heading">
+     <h3>Final Interview Status</h3>
+    </div>
+
+    <div class="right_data_bg_white form_mar_top">
+
+
+      <div class="form_basic">
+        <form [formGroup]="interviewStatusForm">
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label class="label_o">Candidate Name</mat-label>
+                <mat-form-field appearance="outline" readonly>
+                
+                    <mat-select formControlName="candidateName">
+                      <mat-select-filter [array]="candidateListSearch" (filteredReturn)="productFilter($event)"  ></mat-select-filter>
+                    
+                      <mat-option *ngFor="let item of shorListedCandidate" [value]="item.candidate_id" (click)="candidateClick(item.candidate_id)">{{item.condidate_name}}</mat-option>
+                    </mat-select>
+                    <span *ngIf="shorListedCandidate.length == 0" class="errorSpn">Candidate not found</span>
+                  </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label class="label_o">Email ID <span>*</span></mat-label>
+                <mat-form-field appearance="outline">
+                
+                  <input matInput type="email" formControlName="email"/>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Mobile Number <span>*</span></mat-label>
+                    <mat-form-field appearance="outline">
+                      
+                      <input matInput type="number" min="1" formControlName="mobile"/>
+                    </mat-form-field>
+                  </div>
+            </div>
+          </div>
+
+          <div class="row">
+            
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Job Designation <span>*</span></mat-label>
+                    <mat-form-field appearance="outline">
+                     
+                      <input matInput type="text" formControlName="jobRole"/>
+                    </mat-form-field>
+                  </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Assigned Manager <span>*</span></mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                     
+                      <input matInput type="text" formControlName="assignedManager"/>
+                    </mat-form-field>
+                  </div>
+              </div>
+              <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">SPOC Name <span>*</span></mat-label>
+                    <mat-form-field appearance="outline" readonly>
+                     
+                      <input matInput type="text" formControlName="spocName"/>
+                    </mat-form-field>
+                  </div>
+              </div>
+          </div>
+
+          <div class="row">
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label class="label_o">Location <span>*</span></mat-label>
+                <mat-form-field appearance="outline">
+                 
+                  <input matInput type="text" formControlName="location"/>
+
+                </mat-form-field>
+              </div>
+            </div>
+           
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Round Level <span>*</span></mat-label>
+                    <mat-form-field appearance="outline">
+                   
+                  <input matInput type="number" min="1" formControlName="roundLevel"/>
+
+                    </mat-form-field>
+                  </div>
+            </div>
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Job Title <span>*</span></mat-label>
+                  <mat-form-field appearance="outline">
+                   
+                    <input matInput type="text" formControlName="jobTitle"/>
+                  </mat-form-field>
+                  </div>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                <div class="form-group">
+                  <mat-label class="label_o">Status <span>*</span></mat-label>
+                    <mat-form-field appearance="outline">
+                     
+                      <mat-select formControlName="status">
+                        <mat-option value="Pending">Pending</mat-option>
+                        <mat-option value="Shortlisted">Shortlisted</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>    
+            </div>
+            <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+              <div class="form-group">
+                <mat-label class="label_o">Date Of Joining <span>*</span></mat-label>
+                <mat-form-field appearance="outline">
+                 
+                  <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date_of_joining"
+                  [max]="maxDate"  [min]="minDate" />
+                  <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                  <mat-datepicker #dp></mat-datepicker>
+                  <!-- <mat-error *ngIf="
+                  basicForm.controls['date_of_birth'].hasError('required')
+                ">
+                    This field is required!
+                  </mat-error> -->
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer_button">
+            <button  (click)="submitForm()" >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+    
+<!-- <div class="upload-btn" *ngIf="job_id">
+  <button class="iploadBtn" (click)="updateAll()">Update</button>
+</div> -->
+</div>
+</div>
+</div>

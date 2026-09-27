@@ -1,0 +1,114 @@
+<div class="right_data_all">
+
+  <!-- Trip Information Card -->
+  <div class="trip-info-card p-3 mb-3 border rounded bg-white shadow-sm">
+    <h5 class="mb-2">Trip Information</h5>
+    <p class="mb-0">
+      <strong>Vehicle:</strong> {{rowData[0]?.TM_VEHICLE_MASTER.vehicle_number}} |
+      <strong>Driver:</strong> {{rowData[0]?.vendor_driver_name ? rowData[0]?.vendor_driver_name :  rowData[0]?.TM_VEHICAL_DRIVER?.full_name}} |
+   <strong>Status:
+  <span [style.color]="'green'">
+    {{ rowData[0]?.status_type === 'STARTED' ? 'IN PROGRESS' : rowData[0]?.status_type }}
+  </span>
+</strong>
+
+
+    </p>
+    <p class="mb-0">
+      <strong>Origin:</strong> {{rowData[0]?.TRANSPORT_REQUEST?.pickup_location}}|
+      <strong>Destination:</strong> {{rowData[0]?.TRANSPORT_REQUEST?.delivery_location}}
+    </p>
+  </div>
+
+ <ng-container *ngIf="rowData[0]?.status_type === 'STARTED'">
+   <app-create-schedule-trip [tripId]="tripId" [liveStatus]="rowData[0]?.status_type"></app-create-schedule-trip>
+ </ng-container>
+  <!-- Action Bar -->
+  <div class="employ_sube py-2 d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+
+      <!-- Search -->
+      <div class="customSearchbar me-3">
+        <i class="bi bi-search"></i>
+        <input type="text" class="form-control border-0" id="filter-text-box" placeholder="Search....."
+          (input)="onFilterTextBoxChanged()">
+      </div>
+
+      <!-- Page Size Dropdown -->
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size" class="form-select">
+          <option value="10" selected>10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+
+    </div>
+
+    <!-- Add Button -->
+    <div>
+      <button type="button" class="btn btn-success" (click)="openDialog()">
+        + ADD
+      </button>
+    </div>
+  </div>
+
+  <!-- ag-Grid Table -->
+  <div class="ag_grid ag_final_dat tableGroup">
+    <ag-grid-angular
+      class="ag-theme-alpine"
+      id="myGrid"
+      style="width: 100%; height: 400px"
+      [rowData]="allExpensesInfoData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="paginationPageSize"
+      (gridReady)="onGridReady($event)"
+      [gridOptions]="gridOptions">
+    </ag-grid-angular>
+  </div>
+<form [formGroup]="completeForm" (ngSubmit)="submitForm()" class=" mt-4">
+
+  <!-- Upload POD -->
+  <div class="mb-3 row" style="margin-top: 15px;">
+    <label class="col-sm-2 col-form-label">Upload POD</label>
+    <div class="col-sm-6">
+      <input type="file" class="form-control" (change)="onFileChange($event)" />
+    </div>
+  </div>
+
+  <!-- Remark -->
+  <div  class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Remark</label>
+    <div class="col-sm-6">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Remark</mat-label>
+        <textarea matInput formControlName="remark" rows="5" placeholder="Enter remark"></textarea>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Trip End KM -->
+  <div class="mb-3 row">
+    <label class="col-sm-2 col-form-label">Trip End KM</label>
+    <div class="col-sm-6">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Trip End KM</mat-label>
+        <input matInput type="text" formControlName="tripEndKM" placeholder="Enter Trip End KM" />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <div class="text-center">
+    <button mat-raised-button color="primary" type="submit" [disabled]="completeForm.invalid">
+      Mark this Trip As Complete
+    </button>
+  </div>
+
+</form>
+
+
+
+</div>

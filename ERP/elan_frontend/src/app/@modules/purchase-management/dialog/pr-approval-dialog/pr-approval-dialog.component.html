@@ -1,0 +1,28 @@
+<h3 class="popHead">Remark</h3>
+<mat-dialog-content class="mat-typography">
+    <div class="row">
+        <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <form class="" [formGroup]="form">
+                <div class="form-group">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Remark</mat-label>
+                        <input matInput type="text" formControlName="remarks" />
+                        <mat-error *ngIf="
+                form.controls['remarks'].hasError(
+                  'required'
+                )
+              ">
+                            This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="common_button_sub mb-3">
+    <button (click)="updatePrRemarkApprove()">
+        Approve
+    </button>
+    <button class="cancel_button_y" (click)="updatePrRemarkReject()">Reject</button>
+</mat-dialog-actions>

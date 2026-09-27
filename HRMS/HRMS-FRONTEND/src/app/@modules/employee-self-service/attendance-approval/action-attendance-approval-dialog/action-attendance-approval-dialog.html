@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>Attendance Request</h2>
+
+<mat-dialog-content class="dialog-content">
+<div class="details-card" role="group" aria-label="Attendance request details">
+  <div class="details-grid">
+    <div class="detail">
+      <div class="label">Employee</div>
+      <div class="value">
+        {{ data.employee?.first_name }} {{ data.employee?.last_name }}
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="label">Entity</div>
+      <div class="value">
+        {{ data.ENTITY_MASTER?.entity_name || ('ID: ' + data.entity_id) }}
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="label">Attendance Month</div>
+      <div class="value">
+        {{ data.attendance_month ? (data.attendance_month | number) : '-' }}
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="label">Selected Date</div>
+      <div class="value">
+        {{ data.selected_date ? (data.selected_date | date:'longDate') : '-' }}
+      </div>
+    </div>
+
+    <div class="detail">
+      <div class="label">Request Created</div>
+      <div class="value">
+        {{ data.createdAt ? (data.createdAt | date:'short') : '-' }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- attendance_data: show as a small table -->
+  <div class="attendance-section" *ngIf="data.attendance_data && data.attendance_data.length">
+    <h3>Attendance Details ({{ data.attendance_data.length }})</h3>
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Date</th>
+          <th>In Time</th>
+          <th>Out Time</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+<tbody>
+<ng-container *ngFor="let group of groupedAttendance">
+  <tr>
+    <td colspan="6" class="fw-bold bg-light">
+      {{ group.date | date:'mediumDate' }}
+    </td>
+  </tr>
+
+  <tr *ngFor="let ad of group.entries">
+    <td>
+      <span *ngIf="ad._status === 'new'" class="badge badge-new">*</span>
+      <span *ngIf="ad._status === 'changed'" class="badge badge-changed">CHANGED</span>
+      <span *ngIf="ad._status === 'same'"></span>
+      <span *ngIf="ad._status === 'removed'" class="badge badge-removed">REMOVED</span>
+    </td>
+    <td>{{ ad.entry_type }}</td>
+    <td>{{ ad.att_checktime }}</td>
+    <td>{{ ad.att_mode }}</td>
+    <td>{{ ad.att_day }}</td>
+  </tr>
+</ng-container>
+
+
+</tbody>
+
+
+
+    </table>
+  </div>
+
+  <!-- fallback show raw json if nothing else -->
+  <div class="raw-json" *ngIf="!data.attendance_data || data.attendance_data.length === 0">
+    <pre>{{ data | json }}</pre>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()" [disabled]="loading">Close</button>
+
+  <ng-container *ngIf="data.approval_status?.toLowerCase() === 'pending'">
+
+    <button mat-raised-button color="warn" (click)="reject()" [disabled]="loading">Reject</button>
+    <button mat-raised-button color="primary" (click)="approve()" [disabled]="loading">Approve</button>
+  </ng-container>
+
+  <ng-container *ngIf="data.approval_status?.toLowerCase() !== 'pending'">
+  
+  </ng-container>
+</mat-dialog-actions>

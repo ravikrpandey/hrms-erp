@@ -1,0 +1,106 @@
+<ng-container *ngIf="view">
+    <h3 mat-dialog-title class="popHead">{{translate('header')}}</h3>
+<mat-dialog-content class="mat-typography">
+    <div class="cotain">
+        <div class="emp_key">
+            <!-- <p>Country ID : </p> -->
+            <p>{{ translate('countryCode') }} : </p>
+            <p>{{ translate('countryName') }} : </p>
+            <p>{{ translate('status') }} :</p>
+        </div>
+        <div class="emp_value">
+            <!-- <p>{{singleCountryData?.countryss_id}}</p> -->
+            <p>{{singleCountryData?.country_code}}</p>
+            <p>{{singleCountryData?.countryss_name}}</p>
+            <p> {{singleCountryData?.status}}</p>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close mat-raised-button color="primary">{{translate('closeButton')}}</button>
+</mat-dialog-actions>
+</ng-container>
+<fieldset *ngIf="!view">
+    <div class="m-3" [formGroup]="countryForm">
+      <div class="row">
+        <!-- First Row -->
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+          <!-- Country Name -->
+          <div class="row align-items-center">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8">
+              <!-- <mat-label class="label-above">Country Name</mat-label> -->
+            </div>
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+              <mat-form-field appearance="outline">
+                <mat-label>Country Name</mat-label>
+                <input matInput type="text" formControlName="countryss_name" />
+                <mat-error *ngIf="countryForm.get('countryss_name')?.hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="countryForm.get('countryss_name')?.hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+          <!-- CC Code -->
+          <div class="row align-items-center">
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8">
+              <!-- <mat-label class="label-above">CC Code</mat-label> -->
+            </div>
+            <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+              <mat-form-field appearance="outline">
+                <mat-label>Country Code</mat-label>
+                <input matInput type="text" formControlName="country_code" />
+                <mat-error *ngIf="countryForm.get('country_code')?.hasError('required')">
+                  *Required!
+                </mat-error>
+                <mat-error *ngIf="countryForm.get('country_code')?.hasError('leadingSpaces')">
+                  *No leading spaces!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8 mt-3">
+            <!-- CC Code -->
+            <div class="row align-items-center">
+              <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-8">
+                <!-- <mat-label class="label-above">CC Code</mat-label> -->
+              </div>
+              <div class="col-xxl-8 col-lg-8 col-md-8 col-sm-8 col-8">
+                <mat-form-field appearance="outline">
+                  <mat-label>Phone Code</mat-label>
+                  <input matInput type="text" formControlName="phone_code" />
+                  <mat-error *ngIf="countryForm.get('phone_code')?.hasError('required')">
+                    *Required!
+                  </mat-error>
+                  <mat-error *ngIf="countryForm.get('phone_code')?.hasError('leadingSpaces')">
+                    *No leading spaces!
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+      </div>
+
+
+    </div>
+
+
+
+    <mat-dialog-actions align="end" *ngIf="!view">
+      <button *ngIf="!country_id" mat-raised-button color="primary" (click)="onSubmitForm()" class="mx-2">
+        Submit
+      </button>
+      <button *ngIf="country_id" mat-raised-button color="primary" (click)="onUpdateForm()" class="mx-2">
+        Update
+      </button>
+      <button mat-button mat-dialog-close mat-raised-button color="warn" style="float: right">
+        Close
+      </button>
+    </mat-dialog-actions>
+  </fieldset>

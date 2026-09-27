@@ -1,0 +1,72 @@
+<app-wrapper [title]="'Configurational Master'" [subTitle]="'Reimbursement Master'"
+    [subheading]="'Add Reimbursement Budget Limit'" [showActions]="true" [isBack]="true">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="travel-type-form">
+        <div class="form-group row">
+            <div class="col-12 px-2">
+                <mat-label>Reimburse Type</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-select formControlName="travel_type_id" placeholder="Select Type">
+                        <mat-option *ngFor="let item of travelData" [value]="item.id">{{
+                            item.name
+                            }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <tbody formArrayName="reimbursementBudgets">
+                <tr class="row" *ngFor="let limit of reimbursementBudgets.controls; let i = index" [formGroupName]="i">
+                    <td class="col-6 px-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Grade</mat-label>
+                            <mat-select formControlName="travel_grade_ids" placeholder="Select Grade" multiple>
+                                <mat-option *ngFor="let item of gradeData" [value]="item.id">{{
+                                    item.name
+                                    }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </td>
+                    <td class="col-2 px-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Budget Limit</mat-label>
+                            <input matInput type="tel" formControlName="budget_limit"
+                                placeholder="Enter budget limit" />
+                            <mat-error *ngIf="
+                      form.get('budget_limit')?.invalid &&
+                      form.get('budget_limit')?.touched
+                    ">
+                                Budget Limit is required.
+                            </mat-error>
+                        </mat-form-field>
+                    </td>
+                    <td class="col-4 px-2" *ngIf="mode !== 'view'">
+                        <button type="button" mat-icon-button color="primary" (click)="addDomesticBudgetLimit()">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button type="button" mat-icon-button color="warn" [disabled]="i === 0"
+                            (click)="removeDomesticBudgetLimit(i)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            <div class="col-12 px-2">
+                <mat-form-field appearance="outline">
+                    <mat-label>Remark</mat-label>
+                    <input matInput id="remark" type="text" formControlName="remark"
+                        placeholder="Enter remark" />
+                    <mat-error *ngIf="
+                      form.get('remark')?.invalid &&
+                      form.get('remark')?.touched
+                    ">
+                        Remark is required.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-actions mt-3 d-flex justify-content-end gap-2" *ngIf="mode !== 'view'">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+                {{ mode === "edit" ? "Update" : "Save" }}
+            </button>
+        </div>
+    </form>
+</app-wrapper>

@@ -1,0 +1,53 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>CRM</h1>
+    <p>Assign User <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+      </i><span> Assign User List </span></p>
+  </div>
+  <div class="add_button">
+    <button type="button" [routerLink]="['../assign-user-create']">Add</button>
+    <!-- <button class="backBtn" routerLink="../"><i class="fa fa-arrow-circle-left"></i> Back</button> -->
+  </div>
+</div>
+
+<div class="right_data_all">
+  <div class="employ_sube py-2">
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+        <!-- <span class="pag_size">Per Page</span> -->
+    </div>
+    <div class="mt-2 my-auto">
+      <form [formGroup]="leadSummaryForm" >
+        <mat-form-field appearance="outline">
+          <mat-label>Select Branch</mat-label>
+          <mat-select formControlName="branch_id" (selectionChange)="getAssignUserList()">
+            <mat-option *ngFor=" let item of branchList" [value]="item?.id">
+              {{item?.branch_name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+    
+  </form>
+    </div>
+    
+    <div class="employee_2" align="end">
+      <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+        (input)="onFilterTextBoxChanged()">
+    </div>
+  </div>
+
+
+  <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+      (gridReady)="onGridReady($event)">
+    </ag-grid-angular>
+  </div>
+</div>
+<div>
+</div>

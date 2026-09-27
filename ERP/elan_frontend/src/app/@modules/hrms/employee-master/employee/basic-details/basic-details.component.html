@@ -1,0 +1,499 @@
+<div class="form_basic1 main_form">
+  <div class="right_data_all">
+    <div class="heading_neo">
+      <h3>Basic Details</h3>
+    </div>
+    <form class="form_set formBorder" [formGroup]="basicForm">
+      <div class="form_sePo">
+        <div class="row">
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Title <span class="alertspan">*</span></mat-label>
+              <mat-form-field readonly>
+                <mat-select formControlName="title" placeholder="Mr || Mrs || Miss"
+                  (selectionChange)="typeChange($event)">
+                  <mat-option value="Mr">Mr</mat-option>
+                  <mat-option value="Mrs">Mrs</mat-option>
+                  <mat-option value="Miss">Miss</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['title'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Employee Code <span class="alertspan">*</span></mat-label>
+              <mat-form-field [ngClass]="emp_code == undefined ? 'emp_codes' : ''">
+                <input matInput type="text" formControlName="employee_code" style="color: black" [readonly]="isReadonly"/>
+                <mat-error *ngIf="basicForm.controls['employee_code'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>First Name <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput maxlength="30" type="text" formControlName="first_name"
+                  [value]="basicForm.controls['first_name'].value | titlecase" />
+                <mat-error *ngIf="
+                    basicForm.controls['first_name'].hasError('leadingSpaces')
+                  ">
+                  *No leading spaces!
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['first_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['first_name'].hasError('minlength')">
+                  Minimum 1 character is required!
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['first_name'].hasError('pattern')">
+                  Please Enter only alphabet characters
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['first_name'].hasError('maxlength')">
+                  Accepts only 20 characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Middle Name</mat-label>
+              <mat-form-field>
+                <input matInput type="text" maxlength="10" formControlName="middle_name" />
+                <mat-error *ngIf="basicForm.controls['middle_name'].hasError('pattern')">
+                  Please enter only alphabet characters
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Last Name <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" maxlength="30" formControlName="last_name"
+                  [value]="basicForm.controls['last_name'].value | titlecase" />
+                <mat-error *ngIf="basicForm.controls['last_name'].hasError('required')">
+                  This field is required!
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['last_name'].hasError('pattern')">
+                  Please enter only alphabet characters
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['last_name'].hasError('minlength')">
+                  Minimum 1 characters required!
+                </mat-error>
+                <mat-error *ngIf="basicForm.controls['last_name'].hasError('maxlength')">
+                  Accepts only 20 characters.
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Entity <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select [formControl]="selectedEntity" multiple>
+                  <mat-option *ngFor="let item of entityList" [value]="item?.entity_id">
+                    {{item?.entity_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div> -->
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Entity <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="selectedEntity" multiple (selectionChange)="onEntitySelectionChange($event.value)">
+                  <mat-option *ngFor="let item of entityList" [value]="item?.entity_id">
+                    {{item?.entity_name}}
+                    <span *ngIf="item?.entity_id === primaryEntityId"> (PRIMARY)</span>
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['selectedEntity'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+            
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Entity <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="selectedEntity" multiple
+                  (selectionChange)="onEntitySelectionChange($event.value)">
+                  <mat-select-filter [array]="entities" (filteredReturn)="entitySearch($event)"></mat-select-filter>
+                  <mat-option [disabled]="item?.entity_id == primaryEntityId" *ngFor="let item of entityList"
+                    [value]="item?.entity_id">
+                    {{ item?.entity_name }}
+                    <span *ngIf="item?.entity_id == primaryEntityId">
+                      (PRIMARY)</span>
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['selectedEntity'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Plant <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="plant_id">
+                  <mat-select-filter
+                    [array]="entities"
+                    (filteredReturn)="plantSearch($event)"
+                  ></mat-select-filter>
+                  <mat-option *ngFor="let item of plant" [value]="item?.id">
+                    {{ item?.plant_name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error
+                  *ngIf="basicForm.controls['plant_id'].hasError('required')"
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Gender <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="gender">
+                  <mat-option value="male">Male</mat-option>
+                  <mat-option value="female">Female</mat-option>
+                  <mat-option value="transgender">Other</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['gender'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Date Of Birth <span class="alertspan">*</span></mat-label>
+              <mat-form-field readonly>
+                <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="date_of_birth" [max]="max"
+                  readonly />
+                <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp></mat-datepicker>
+                <mat-error *ngIf="
+                    basicForm.controls['date_of_birth'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Personal Email ID</mat-label>
+              <mat-form-field>
+                <input matInput type="text" style="text-transform: lowercase" formControlName="emp_personal_email" />
+                <mat-error *ngIf="basicForm.get('emp_personal_email')?.hasError('email')">
+                  Please enter a valid email
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <!-- <div class="codeArea"> -->
+            <!-- <div class="form-group addCoding">
+                <mat-form-field class="country-codes">
+                  <mat-select formControlName="country_code">
+                    <mat-select-filter [array]="codes"
+                    (filteredReturn)="codesSearch($event)"></mat-select-filter>
+                    <mat-option *ngFor="let countryCode of countryCodeList"
+                      [value]="countryCode?.dialing_code">+{{countryCode?.dialing_code}}</mat-option>
+                  </mat-select> -->
+            <!-- <mat-error *ngIf="basicForm.controls['role_master_id'].hasError('required')">
+                This field is required!
+              </mat-error> -->
+            <!-- </mat-form-field>
+              </div> -->
+            <div class="form-group">
+              <mat-label>Contact Number <span class="alertspan">*</span></mat-label>
+              <div class="wrapper countryCodeInput">
+                <ngx-intl-tel-input [cssClass]="'custom'" [enableAutoCountrySelect]="true" [enablePlaceholder]="true"
+                  [searchCountryFlag]="true" [searchCountryField]="[
+                    SearchCountryField.Iso2,
+                    SearchCountryField.Name
+                  ]" [selectFirstCountry]="false" [selectedCountryISO]="selectedCountryISO" [maxLength]="15"
+                  [phoneValidation]="false" [separateDialCode]="separateDialCode"
+                  [numberFormat]="PhoneNumberFormat.National" name="phone" formControlName="phone">
+                </ngx-intl-tel-input>
+              </div>
+            </div>
+            <!-- </div> -->
+          </div>
+
+          <div *ngIf="mainId !== 'undefined'" class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Reporting Manager <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="reporting_manager_id">
+                  <mat-select-filter [array]="reporting"
+                    (filteredReturn)="reportingManagerSearch($event)"></mat-select-filter>
+
+                  <mat-option *ngFor="let val of reporting_manager_list" (click)="getReportingData(val)"
+                    [value]="val.employee_id">{{ val.title }} {{ val.first_name }}
+                    {{ val.last_name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['reporting_manager_id'].hasError(
+                      'required'
+                    )
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Branch</mat-label>
+              <mat-form-field>
+                <mat-select formControlName="location_id">
+                  <mat-select-filter [array]="branches" (filteredReturn)="locationSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let branch of branchList" [value]="branch.id">{{ branch.branch_name
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['location_id'].hasError('required')">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Department <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="department_id" (selectionChange)="getAllArea($event)">
+                  <mat-select-filter [array]="departments"
+                    (filteredReturn)="departmentSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let department of getAllDepartment" [value]="department?.dept_id">
+                    {{ department?.department_name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['department_id'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Area <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="area_id">
+                  <mat-select-filter
+                    [array]="areas"
+                    (filteredReturn)="areaSearch($event)"
+                  ></mat-select-filter>
+                  <mat-option
+                    *ngFor="let area of areaList"
+                    [value]="area?.id"
+                    >{{ area?.area_name }}</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                  *ngIf="basicForm.controls['area_id'].hasError('required')"
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Designation <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="designation_id">
+                  <mat-select-filter [array]="designations"
+                    (filteredReturn)="positionSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let designation of getAllDesignation" [value]="designation?.designation_id">{{
+                    designation?.designation_name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['designation_id'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Employee Type <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <!-- <mat-select formControlName="emplyoment_type_id" (selectionChange)="typeChange($event)"> -->
+                <mat-select formControlName="emplyoment_type_id">
+                  <mat-select-filter [array]="empTypes" (filteredReturn)="empTypesSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let employement of employementTypeList" [value]="employement?.emptype_id">{{
+                    employement?.emptype_name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['emplyoment_type_id'].hasError(
+                      'required'
+                    )
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label
+                >Municipality <span class="alertspan">*</span></mat-label
+              >
+              <mat-form-field>
+                <mat-select formControlName="municipality_id">
+                  <mat-select-filter
+                    [array]="muncipalities"
+                    (filteredReturn)="muncipalitySearch($event)"
+                  ></mat-select-filter>
+                  <mat-option
+                    *ngFor="let municiplity of municipalityList"
+                    [value]="municiplity?.id"
+                    >{{ municiplity?.name_of_municipality }}</mat-option
+                  >
+                </mat-select>
+                <mat-error
+                  *ngIf="
+                    basicForm.controls['municipality_id'].hasError('required')
+                  "
+                >
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div> -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Official Email ID
+                <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <input matInput type="text" style="text-transform: lowercase" formControlName="employee_official_email"
+                  [readonly]="isEmailReadOnly"/>
+                <mat-error *ngIf="
+                    basicForm
+                      .get('employee_official_email')
+                      ?.hasError('required')
+                  ">
+                  Official Email Id is Required.
+                </mat-error>
+                <!-- <mat-error *ngIf="basicForm.get('employee_official_email')?.hasError('email')">
+                  Please enter a valid email
+                </mat-error>
+                <mat-error *ngIf="basicForm.hasError('emailMatch')">
+                  Personal and Official Email cannot be the same.
+                </mat-error> -->
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Grade <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="grade_id">
+                  <mat-option *ngFor="let grade of gradeData" [value]="grade?.id">{{ grade?.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['grade_id'].hasError('required')">
+                  Grade is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Holiday Category <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="holiday_category_id">
+                  <mat-option *ngFor="let holiday of holidayData" [value]="holiday.id">{{ holiday.name }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['holiday_category_id'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <!--  <--*ngIf="((basicForm.controls['emplyoment_type'].value =='Full Time') || (basicForm.controls['emplyoment_type'].value =='On roll Full Time Employees'))"-->
+            <div class="form-group">
+              <mat-label>Assign Role <span class="alertspan">*</span></mat-label>
+              <mat-form-field>
+                <mat-select formControlName="role_master_id">
+                  <mat-select-filter [array]="roles" (filteredReturn)="rolesSearch($event)"></mat-select-filter>
+                  <mat-option *ngFor="let role of allRoleMaster" [value]="role.role_master_id">{{ role.role_master_name
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="
+                    basicForm.controls['role_master_id'].hasError('required')
+                  ">
+                  This field is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Add shift field  -->
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group">
+              <mat-label>Select Shift</mat-label>
+              <mat-form-field appearance="outline">
+                <mat-select formControlName="shift_id" placeholder="Select shift">
+                  <mat-option *ngFor="let shift of shiftData" [value]="shift.id">
+                    {{ shift?.shift_name}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="basicForm.controls['shift_id'].hasError('required')">
+                  Grade is required!
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+            <div class="form-group fileWithViewImg">
+              <mat-label>{{ employee_id ? "Profile Picture" : "Profile Picture"
+                }}
+                <!-- <span class="alertspan">*</span> -->
+              </mat-label>
+              <input class="form-control" type="file" style="padding-right: 19%" title="Profile Picture"
+                (change)="uploadDoc($event)" formControlName="employee_photo" accept=".png, .jpg, .jpeg" />
+              <img *ngIf="employee_photo" [src]="baseUrl + '/' + employee_photo" alt class="fileViewImage"
+                (click)="viewImg()" (error)="onImageError($event)"/>
+            </div>
+          </div>
+
+          <div class="col-xxl-9 col-lg-9 col-md-9 col-sm-9 col-9">
+            <b>“Note: You can use any one of the following as your Login User ID — Employee Code, Contact Number, or Official Email ID.”</b>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+            <div class="common_button_sub" *ngIf="!action_type">
+              <button (click)="onSubmitForm()" [class.spinner]="loading" [disabled]="loading">
+                Save
+              </button>
+              <button class="cancel_button_y" type="button" (click)="redirectToList()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

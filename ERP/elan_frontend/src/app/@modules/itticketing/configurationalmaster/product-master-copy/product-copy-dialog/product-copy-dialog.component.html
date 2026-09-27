@@ -1,0 +1,50 @@
+<div>
+    <h3 mat-dialog-title class="popHead" style="padding-left: 5px">Add Amount</h3>
+
+    <fieldset>
+        <div class="m-3" [formGroup]="productForm">
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <!-- <div class="form-group mb-4"  [ngClass]="view ? 'readonly-select':''">
+                    <mat-form-field appearance="outline">
+                    <mat-label>Department</mat-label>
+                    <mat-select   formControlName="department"  >
+                        <mat-select-filter [array]="departments" (filteredReturn)="departmentFilter($event)"></mat-select-filter>
+                    <mat-option *ngFor="let department of departmentList"
+                        [value]="department.dept_id">{{department.department_name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="areaForm.get('department')?.hasError('required')">
+                        This field is required!
+                        </mat-error>
+                    </mat-form-field>
+                </div>      -->
+            </div>
+            <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+                <div class="form-group mb-4">
+                    <mat-form-field appearance="outline" readonly>
+                        <mat-label>Amount</mat-label>
+                        <input matInput type="text" formControlName="amount" />
+                        <mat-error *ngIf="productForm.controls['amount'].hasError('required')">
+                            *Required!
+                        </mat-error>
+                        <mat-error *ngIf="productForm.controls['amount'].hasError('leadingSpaces')">
+                            *No leading spaces!
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            
+        </div>
+
+        <mat-dialog-actions align="end" class="common_button_sub">
+            <button  (click)="onSubmitForm()" class="mx-2">
+                Submit
+            </button>
+            <!-- <button *ngIf="id"  (click)="onUpdateForm()" class="mx-2">
+                Update
+            </button> -->
+            <button mat-dialog-close class="cancel_button_y" style="float: right">
+                Close
+            </button>      
+        </mat-dialog-actions>
+    </fieldset>
+</div>

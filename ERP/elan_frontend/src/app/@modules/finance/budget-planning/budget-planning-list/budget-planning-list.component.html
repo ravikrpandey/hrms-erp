@@ -1,0 +1,41 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Finance and Accounting </h1>
+    <p>Budget Planning <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c">
+    </i><span> Budget Planning List</span></p>
+  </div>
+  <div *ngIf="page == 'planning'" class="add_button">
+    <button type="button"  (click)="redirect()" >Plan Budget </button>
+  </div>
+</div>
+<div class="right_data_all">
+  <div class="heading_neo">
+  <h3>Financial Year :- {{fYearData?.financial_year}}</h3>
+  </div>
+    <div class="row" >
+      <div class="col-md-12 col-lg-12 col-sm-12">
+      <div class="tab_menu">
+        <div class="tab-item">
+          <button class="main-button" [routerLink]="['planning']" [skipLocationChange]="true" routerLinkActive="active_button" [queryParams]="{ id: id, type: activeTab, page: 'planning' }" >Planning</button>
+          <button class="main-button"  [routerLink]="['pending-for-approval']" [skipLocationChange]="true" [queryParams]="{ id: id,type: activeTab, page : 'pending-for-approval', dept_id: dept_id }" routerLinkActive="active_button">Pending for Approval</button>
+          <button class="main-button" [routerLink]="['approved-by-me']" [skipLocationChange]="true" [queryParams]="{ id: id,type: activeTab, page: 'approved-by-me' }" routerLinkActive="active_button" >Approved By Me</button>
+          <button class="main-button" [routerLink]="['draft']" [skipLocationChange]="true" [queryParams]="{ id: id,type: activeTab, page: 'draft' }" routerLinkActive="active_button" >Draft</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="box"><span><h2>Financial Year :- {{fYearData?.financial_year}}</h2></span></div> -->
+
+<!-- <div class="row">
+  <div class="flexRow">
+    <div class="box"><span><h2>Financial Year :- {{fYearData?.financial_year}}</h2></span></div>
+    <div *ngIf="page != 'pending-for-approval' || show" class="activeBox" style="margin-right:20px" (click)="toggle('Opex')" [ngClass]="{ 'activeBox': activeTab === 'Opex', 'inActive': activeTab !== 'Opex' }">Opex</div>
+    <div *ngIf="page != 'pending-for-approval' || show" class="inactive" (click)="toggle('Capex')" [ngClass]="{ 'activeBox': activeTab === 'Capex', 'inActive': activeTab !== 'Capex' }">Capex</div>
+    <div *ngIf="page == 'planning' || show" class="add_button">
+      <button type="button" class="btn_add" (click)="redirect()" >Plan Budget </button>
+    </div>
+  </div>
+</div> -->
+
+ 
+<router-outlet></router-outlet>

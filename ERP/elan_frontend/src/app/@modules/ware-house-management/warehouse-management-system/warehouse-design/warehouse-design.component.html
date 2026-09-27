@@ -1,0 +1,272 @@
+<!-- 
+<div class="heading_top">
+    <div class="page-title">
+      <h1>Warehouse Management</h1>
+      <p> Warehouse</p>
+    </div>
+    <div class="add_button">
+      <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-left"></i> Back</button>
+    </div>
+  </div>
+     <div class="row" style="padding:20px 0">
+     
+        <div class="col-md-6">
+          <mat-form-field appearance="outline">
+            <mat-label>Zone Types</mat-label>
+            <mat-select [(ngModel)]="selectedZoneTypes" multiple>
+              <mat-option *ngFor="let zone of allZoneTypes" [value]="zone">
+                {{ zone?.zoneType_id}}-{{zone?.zone_size}}sqmt.
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-6">
+          <div class="legend">
+            <div><span class="vacant-box"></span> Vacant</div>
+            <div><span class="occupied-box"></span> Occupied</div>
+          </div>  
+    
+      </div>
+     
+    </div>
+    
+
+<div class="rack-layout" *ngIf="rackZone">
+  <div class="rack-list">
+    <button
+      *ngFor="let rack of rackZone.racks; let i = index"
+      (click)="selectRack(i)"
+      [ngClass]="{ 'active-rack': selectedRackIndex === i }"
+    >
+      {{ rack.rack_name }} 
+    </button>
+  </div>
+
+  <div class="rack-details" *ngIf="selectedRack">
+    <table>
+      <thead>
+        <tr>
+          <th>Rack Name</th>
+          <th>Size (sqmt.)</th>
+          <th>Occupied</th>
+          <th>Vacant</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ selectedRack.rack_name }}</td>  
+          <td>{{ selectedRack.rack_area }}</td>
+          <td>
+            <div class="bar">
+              <div class="occupied-bar" [style.width.%]="selectedRack.rack_occupied_size"></div>
+            </div>
+            {{ selectedRack.rack_occupied_size }}%
+          </td>
+          <td>{{ 100 - selectedRack.rack_occupied_size }}%</td>
+        </tr>
+
+        <ng-container *ngFor="let shelf of selectedRack.shelves; let j = index">
+          <tr>
+            <td>
+              <button
+                (click)="toggleShelfs(j)"
+                [ngClass]="shelf.expanded ? 'expanded-shelf' : ''"
+              >
+                {{ shelf.shelf_name }}  
+              </button>
+            </td>
+            <td>{{ shelf.shelf_area }}</td>
+            <td>
+              <div class="bar">
+                <div class="occupied-bar" [style.width.%]="shelf.shelf_occupied_size"></div>
+              </div>
+              {{ shelf.shelf_occupied_size }}%
+            </td>
+            <td>{{ 100 - shelf.shelf_occupied_size }}%</td>
+          </tr>
+
+          <tr *ngFor="let bin of shelf.bins" [hidden]="!shelf.expanded">
+            <td class="indent">➤ {{ bin.bins_name }}</td>  
+            <td>{{ bin.bins_area }}</td>
+            <td>
+              <div class="bar">
+                <div class="occupied-bar" [style.width.%]="bin.bin_occupied_size"></div>
+              </div>
+              {{ bin.bin_occupied_size }}%
+            </td>
+            <td>{{ 100 - bin.bin_occupied_size }}%</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div *ngIf="hasZoneType('BulkStorage') && bulkZone" class="bulk-storage">
+  <h3>Bulk Storage</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Zone Type</th>
+        <th>Zone</th>
+        <th>Size (sqmt.)</th>
+        <th>Occupied</th>
+        <th>Vacant</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ bulkZone.zoneType }}</td>
+        <td>{{ bulkZone.zone }}</td>
+        <td>{{ bulkZone.zone_size }}</td>
+        <td>
+          <div class="bar">
+            <div class="occupied-bar" [style.width.%]="bulkZone.occupied"></div>
+          </div>
+          {{ bulkZone.occupied }}%
+        </td>
+        <td>{{ bulkZone.vacant }}%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ul class="bulk-details">
+    <li>▪ BRSS Capacity: {{ bulkZone.attributes.brssCapacity }}</li>
+    <li>▪ Fragility Factor: {{ bulkZone.attributes.fragilityFactor }}</li>
+    <li>▪ Temperature Control: {{ bulkZone.attributes.temperatureControl }}</li>
+    <li>▪ Barcode: {{ bulkZone.attributes.barcode }}</li>
+    <li>▪ Stacking Rules: {{ bulkZone.attributes.stackingRules }}</li>
+    <li>▪ Product Category Compatibility: {{ bulkZone.attributes.productCategoryCompatibility }}</li>
+  </ul>
+</div> -->
+ 
+
+<div class="p-3" >
+  <div class="heading_top">
+    <div class="page-title">
+        <h1>Warehouse Management</h1>
+        <p>Warehouse Layout Design  
+             
+        </p>
+    </div>
+    <div class="add_button">
+        <button class="backBtn" (click)="goBack()">
+            <i class="fa fa-arrow-left"></i> Back
+        </button>
+    </div>
+</div>
+ 
+    <div class="warehouse mt-3">
+      <div class="area-top">{{zone_data.area | number:'1.0-0'}}   ft²</div>
+      <div class="area-right">{{zone_data.area | number:'1.0-0'}}   ft²</div>
+      <div class="area-bottom">{{zone_data.area | number:'1.0-0'}}   ft²</div>
+      <div class="area-left">{{zone_data.area | number:'1.0-0'}}   ft²</div>
+
+      <div
+      cdkDropList
+      [cdkDropListData]="sections"
+      (cdkDropListDropped)="drop($event)"
+      class="sections-container"
+    >
+      <div
+        class="section-card"
+        *ngFor="let sec of sections"
+        cdkDrag
+        (click)="sectionClicked(sec)"
+      >
+        <div class="card-header">
+          <h3>{{ sec.name }}</h3>
+        </div>
+        <div class="card-body">
+          <p>
+            {{ sec.description }}
+          </p>
+          <button class="action-btn">View Details</button>
+        </div>
+      </div>
+    </div>
+    
+    
+  <!-- <div class="warehouse" cdkDropList (cdkDropListDropped)="drop($event)">
+         <div *ngFor="let zone of warehouseData" class="zone" > Zone {{ zone.id }}<br> {{ zone.zone_size | number:'1.0-0':'en-IN' }} ft² 
+          <div *ngFor="let rack of zone.racks" class="rack" > {{ rack.rack_name }}<br>{{ rack.rack_Of_volume | number:'1.0-0':'en-IN' }} ft³ 
+            <div *ngFor="let shelf of rack.shelves" class="shelf"> {{ shelf.shelf_name }}<br>{{ shelf.shelf_volume | number:'1.0-0':'en-IN' }} ft³ 
+              <div *ngFor="let bin of shelf.bins" class="bin"> {{ bin.bin_name }}<br>{{ bin.shelf_volume | number:'1.0-0':'en-IN' }} ft³ 
+              </div>
+             </div> 
+            </div> 
+          </div> 
+      </div>  -->
+      <div style="width: 500px;">
+        <mat-accordion multi cdkDropList [cdkDropListData]="warehouseData" (cdkDropListDropped)="dropZone($event)">
+          
+          <mat-expansion-panel *ngFor="let zone of warehouseData; let i = index" cdkDrag class="three-d-card zone-card" [expanded]="true" (click)="navigateTo(zone)" >
+            <mat-expansion-panel-header>
+              <mat-panel-title>🏭 Zone {{ zone.zone_name }}</mat-panel-title>
+              <mat-panel-description>
+                {{ zone.zone_size | number:'1.0-0':'en-IN' }} ft²
+              </mat-panel-description>     
+            </mat-expansion-panel-header>
+      
+            <mat-accordion multi cdkDropList [cdkDropListData]="zone.racks" (cdkDropListDropped)="dropRack($event, i)">
+              <mat-expansion-panel *ngFor="let rack of zone.racks; let j = index" cdkDrag class="three-d-card rack-card" [expanded]="true" (click)="navigateTo(rack)" >
+                <mat-expansion-panel-header>
+                  <mat-panel-title>📦 Rack: {{ rack.rackName }}</mat-panel-title>
+                  <mat-panel-description>
+                    {{ rack.rack_capacity | number:'1.0-0':'en-IN' }} ft²
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+      
+                <mat-accordion multi cdkDropList [cdkDropListData]="rack.shelves" (cdkDropListDropped)="dropShelf($event, i, j)">
+                  <mat-expansion-panel *ngFor="let shelf of rack.shelves; let k = index" cdkDrag class="three-d-card shelf-card" [expanded]="true" (click)="navigateTo(shelf)">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>🪜 Shelf: {{ shelf.shelfName }}</mat-panel-title>
+                      <mat-panel-description>
+                        {{ shelf.shelf_capacity | number:'1.0-0':'en-IN' }} ft²
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+      
+                    <div *ngFor="let bin of shelf.bins; let l = index" class="three-d-bin bin-card" cdkDrag (click)="navigateTo(bin)">
+                      <strong>🗃️ Bin:</strong> {{ bin.binName }} <br>
+                      <span>Volume: {{ bin.shelf_capacity | number:'1.0-0':'en-IN' }} ft²</span>
+                    </div>
+      
+                  </mat-expansion-panel>
+                </mat-accordion>
+      
+              </mat-expansion-panel>
+            </mat-accordion>
+      
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      
+      
+  
+  
+      <!-- <div class="section forklift ">FORKLIFT</div>
+      <div class="section pallet-staging">PALLET STAGING</div>
+      <div class="section packing-area">PACKING AREA</div> -->
+      <div class="bulk-storage-wrapper" >
+        <div *ngFor="let zone of bulk_storage" (click)="getBulkStorageItem()"
+             class="bulk-zone-container" 
+             cdkDrag>
+          <div class="bulk-zone">
+            <div class="face front">   
+              <div class="zone-label">
+                Bulk Storage<br>
+                {{ zone.bulk_zone_area | number:'1.0-0':'en-IN' }} ft²
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- <div class="section quality-control">QUALITY CONTROL</div> -->
+    </div>
+  
+  
+</div>
+   

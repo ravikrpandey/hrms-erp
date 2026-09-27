@@ -1,0 +1,104 @@
+<form class="form_set" [formGroup]="materialForm">
+  <div>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th, td {
+        width: 20%;
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      .form-group {
+        width: 100%;
+      }
+
+      mat-form-field {
+        width: 100%;
+      }
+
+      i.material-icons.deleteBtn {
+        cursor: pointer;
+      }
+
+      
+      h2 {
+        text-align: center;
+        background-color: #063178;
+        color: white; 
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+    </style>
+
+    <!-- Center-aligned header -->
+    <h2>ADD ITEM</h2>
+
+    <table id="itemTable">
+      <thead>
+        <tr>
+          <th>Select Cetegory</th>
+          <th>Item</th>
+          <th>Quantity</th>
+          <!-- <th>Action</th> -->
+          <!-- <th>
+            <mat-icon style="cursor: pointer" matTooltip="Add More" (click)="addItems()">add_box</mat-icon>
+          </th> -->
+        </tr>
+      </thead>
+      <tbody class="invoice_line">
+        <ng-container >
+          <!-- formArrayName="productServiceData" *ngFor="let control of CF_1.productServiceData['controls']; index as i" -->
+          <!-- [formGroup]="control" -->
+          <tr class="form_set">
+
+            <td>
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="cetegory" (selectionChange)="getItem($event)">
+                    <mat-option *ngFor="let item of cetegory" [value]="item.id">
+                      {{ item.asset_category_name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </td>
+            <td>
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <mat-select formControlName="item">
+                    <mat-option *ngFor="let item of item" [value]="item?.id">
+                      {{ item.item_name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </td>
+            <td>
+              <div class="form-group">
+                <mat-form-field appearance="outline">
+                  <input matInput type="text" formControlName="quantity" />
+                </mat-form-field>
+              </div>
+            </td>
+            <!-- <td>
+              <div class="form-group" style="margin-bottom: 20px;">
+                <i class="material-icons deleteBtn" (click)="deleteRow(i, control)">delete</i>
+              </div>
+            </td> -->
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    <div class="upload-btn">
+      <button class="cancel-btn" mat-raised-button color="warn" mat-dialog-close >Cancel</button>
+      <button class="favorite styled" (click)="submit()">Add</button>  
+    </div>
+  </div>
+</form>

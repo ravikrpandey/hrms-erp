@@ -1,0 +1,88 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Recruitment</h1>
+    <p>Recruitment Candidate Add Profile <i class="fa fa-angle-right" aria-hidden="true" style="color:#858586">
+      </i><span> Candidate Search Profile </span></p>
+  </div>
+  <div class="add_button">
+    <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <mat-card class="mb-4 p-3 mt-3">
+    <div class="basic_details basicInfos">
+      <h2>Basic Details</h2>
+      <div class="row">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Location</h5>
+          <p>{{profileDetails?.location}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Job title</h5>
+          <p>{{profileDetails?.job_title}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Job Position</h5>
+          <p>{{profileDetails?.designation_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Expected End Date</h5>
+          <p>{{profileDetails?.end_date}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Department</h5>
+          <p>{{profileDetails?.department_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Area</h5>
+          <p>{{profileDetails?.area_name}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Experience (In Months)</h5>
+          <p>{{profileDetails?.experience}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Level of Interview</h5>
+          <p>{{profileDetails?.level_of_interview}}</p>
+        </div>
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <h5>Job Title</h5>
+          <p>{{title}}</p>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <div class="form_basic mb-0">
+    <form class="form_set formBorder">
+      <div class="row align-items-center">
+        <div class="col-xxl-4 col-lg-8 col-md-8 col-sm-8 col-12">
+          <div class="form-group mb-3">
+            <mat-label>Keywords <span class="alertspan">*</span></mat-label>
+            <mat-form-field>
+              <input matInput type="text" [(ngModel)]="keyword" [ngModelOptions]="{standalone: true}"
+                placeholder="Enter keyword like skills, designation and company....." />
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-md-4 col-sm-4 col-12 text-end">
+          <div class="add_button a_at_bg" >
+          <button (click)="handleSearch()">Search</button>
+        </div>
+        </div>
+        <div class="col-xxl-2 col-lg-2 col-md-4 col-sm-4 col-12 text-end">
+          <div class="add_button a_at_bg" >
+          <button (click)="handleSubmit()">Submit</button>
+        </div>
+        </div>
+      </div>
+    </form>
+    <div class="ag_grid">
+      <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+        [rowData]="rowDataJob" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="9"
+        (gridReady)="onGridReady($event)" (selectionChanged)="onSelectionChanged($event)"  [rowSelection]="'multiple'">
+      </ag-grid-angular>
+    </div>
+  </div>
+
+  </div>

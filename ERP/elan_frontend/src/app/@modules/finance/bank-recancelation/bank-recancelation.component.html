@@ -1,0 +1,215 @@
+
+<div class="heading_top">
+  <div class="page-title">
+  <h1>Finance & Accounting</h1>
+  <p> Bank Reconciliation <i class="fa fa-angle-right" aria-hidden="true" style="color:#363636">
+  </i>
+  <span>Bank Reconciliation Statement </span>
+</p>
+</div>
+  <!-- <div class="add_button">
+    <button type="button" (click)="getJournalEntriesForBankClearance()" >Get Payment Entries</button>
+    <button type="button" (click)="updateClearanceDates()" >Update Clearance Date</button>
+  </div> -->
+  </div>
+
+<div class="right_data_all mt-3">
+  <form [formGroup]="bankClearanceForm" class="mt-2">
+    <div class="row">
+      <!-- <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+          <mat-form-field appearance="outline">
+            <mat-label>Account</mat-label>
+            <mat-select formControlName="chart_of_account" (selectionChange)="onAccountChange($event)">
+              <mat-option [value]="data.id" *ngFor="let data of bankCoaList">
+                {{data.account_name}}
+              </mat-option>
+            </mat-select>
+            <button mat-icon-button *ngIf="bankClearanceForm.get('chart_of_account')?.value" matSuffix (click)="clearDate('chart_of_account')">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+      </div> -->
+
+
+
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Select account</mat-label>
+                <mat-select formControlName="chart_of_account" (selectionChange)="onAccountChange($event)">
+
+                    <mat-select-filter [array]="bankAccList1"  (filteredReturn)="accountFilter($event)"></mat-select-filter>
+                   
+                    <ng-container>
+                        <mat-option *ngFor="let data of allBankAccList"
+                            [value]="data.id">{{data.account_name}}</mat-option>
+                    </ng-container>
+                </mat-select>
+                <button mat-icon-button *ngIf="bankClearanceForm.get('chart_of_account')?.value" matSuffix (click)="clearDate('chart_of_account')">
+                  <mat-icon>close</mat-icon>
+                </button>
+                <!-- <mat-error *ngIf="form.get('parent_account_id')?.hasError('required')">
+                    This field is required!
+                </mat-error> -->
+            </mat-form-field>
+    </div>
+
+
+
+
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>From Date </mat-label>
+          <input matInput [matDatepicker]="dp" (click)="dp.open()" formControlName="from_date" [max]="maxDate"
+            (dateChange)="fromDate($event)"/>
+          <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+          <mat-datepicker #dp></mat-datepicker>
+          <mat-error *ngIf="bankClearanceForm.controls['from_date'].hasError('required')">
+            This field is required!
+          </mat-error>
+          <button mat-icon-button *ngIf="bankClearanceForm.get('from_date')?.value" matSuffix (click)="clearDate('from_date')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="col-sm-4 col-md-4 col-lg-4 col-12">
+        <mat-form-field appearance="outline">
+          <mat-label>To Date</mat-label>
+          <input matInput [matDatepicker]="picker" (click)="picker.open()" formControlName="to_date" [max]="maxDate"
+            [min]="FromDate || minDate" (dateChange)="ToDate($event)">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="bankClearanceForm.controls['to_date'].hasError('required')">
+            This field is required!
+          </mat-error>
+          <button mat-icon-button *ngIf="bankClearanceForm.get('to_date')?.value" matSuffix (click)="clearDate('to_date')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+<div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group mt-3">
+                          <mat-checkbox formControlName="isReconciledEntries"
+                              (change)="onSelectCheckbox($event)">
+                              Include Reconciled Entries
+                          </mat-checkbox>
+                      </div>
+                  </div>
+
+
+    </div>
+  </form>
+
+
+  <div class="employ_sube download_file_icon">
+    <div class="icon_add" align="end">
+
+
+      <span class="icon_img" (click)="onBtnExportDataAsExcel()"
+        ><mat-icon matTooltip="Download Excel" class="print">download</mat-icon></span
+      >
+
+      <!-- <span class="icon_img" (click)="onDownloadPdf()"
+      ><mat-icon matTooltip="Download PDF" class="print">download</mat-icon></span
+    > -->
+
+
+    </div>
+  </div>
+
+
+
+  <div class="employ_sube py-2">
+    <div class="">
+      <div class="example-header">
+        <select (change)="onPageSizeChanged()" id="page-size">
+          <option value="10" selected="">10</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+        </select>
+      </div>
+    </div>
+    <div class="">
+      <div class="employee_2" align="end">
+        <input type="text" class="form-control" id="filter-text-box" placeholder="Search"
+          (input)="onFilterTextBoxChanged()">
+      </div>
+    </div>
+  </div>
+  <!-- <div class="ag_grid">
+    <ag-grid-angular [rowClass]="rowClass" class="ag-theme-alpine" style=" width:100%; height:426px;"
+      [rowData]="rowData" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="10"
+      (gridReady)="onGridReady($event)" [gridOptions]="gridOptions">
+    </ag-grid-angular>
+  </div> -->
+
+
+
+<div class="ag_grid mb-4">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 426px;"
+      [rowData]="rowData"
+      [columnDefs]="columnDefs"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      (gridReady)="onGridReady($event)"
+      (cellValueChanged)="onCellValueChanged($event)">
+    </ag-grid-angular>
+  </div>
+
+  <div class="totals-container">
+    <div class="totals-section">
+      <div class="totals-label"></div>
+      <div class="totals-values">
+        <div class="totals-amount">Debit</div>
+        <div class="totals-amount">Credit</div>
+      </div>
+    </div>
+
+    <div class="totals-section">
+      <div class="totals-label">Bank Statement balance as per General Ledger:</div>
+      <div class="totals-values">
+        <div class="totals-amount">{{ total_gl_debit  }}</div>
+        <div class="totals-amount">{{ total_gl_credit  }}</div>
+      </div>
+    </div>
+
+    <div class="totals-section">
+      <div class="totals-label">Outstanding Cheques and Deposits to clear:</div>
+      <div class="totals-values">
+        <div class="totals-amount">{{ outstanding_debit_total  }}</div>
+        <div class="totals-amount">{{ outstanding_credit_total  }}</div>
+      </div>
+    </div>
+
+    <div class="totals-section">
+      <div class="totals-label">Calculated Bank Statement balance:</div>
+      <div class="totals-values">
+        <div class="totals-amount">{{ cleared_debit_total  }}</div>
+        <div class="totals-amount">{{ cleared_credit_total  }}</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- <div class="d-flex justify-content-between mb-3">
+    <div class="mt-2">
+    <strong>Total</strong>
+    </div>
+    <div class="d-flex mt-2" style="padding-right: 53px;">
+      <div class="px-5">&#8377; <strong>{{ totalDebit | number: '1.2-2' }}</strong></div>
+      <div class="px-5">&#8377; <strong>{{ totalCredit | number: '1.2-2' }}</strong></div>
+      <div class="px-5">&#8377; <strong>{{ totalBalance | number: '1.2-2' }}</strong></div>
+    </div>
+  </div> -->
+</div>
+<div>
+  </div>
+

@@ -1,0 +1,8 @@
+<div class="edd-del">
+    <mat-icon class="viewButton" *ngIf="assignAction?.Read" (click)="view()">visibility</mat-icon>
+    <mat-icon class="deleteButton" (click)="delete($event)" *ngIf="assignAction?.Delete && (this.approval=='PENDING' || this.approval=='DRAFT')">delete</mat-icon>
+    <!-- <mat-icon (click)="download()">download</mat-icon> -->
+    <mat-icon class="editButton" (click)="edit()" *ngIf="assignAction?.Write && (this.approval=='PENDING' || this.approval=='DRAFT')">edit</mat-icon>
+    <mat-icon class="fastButton" (click)="proceed_To_Approve()" *ngIf="this.expense_approvel_status=='PENDING'&& this.status=='1'">arrow_forward</mat-icon>
+</div>
+

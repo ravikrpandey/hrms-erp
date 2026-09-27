@@ -1,0 +1,32 @@
+<ng-container>
+  <h3 mat-dialog-title class="popHead"> Interview Round</h3>
+  <mat-dialog-content class="mat-typography">
+    <div class="cotain">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>S.No. </th>
+            <th>Round</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let data of rowData?.round_list; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{data?.interview_round}}</td>
+            <td>{{ data?.interview_date | date: 'dd-MM-yyyy' }}</td>
+            <td>{{data?.interview_time}}</td>
+            <td class="bothButtons">
+              <button type="button" color="primary" (click)="openInterview(data)"
+                [disabled]="data?.interview_status == 'COMPLETED' ">{{data?.interview_status}}</button>
+              <button type="button" color="primary" *ngIf="data?.interview_status == 'COMPLETED'" (click)="viewInterviewDetail(data)">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-dialog-content>
+
+</ng-container>

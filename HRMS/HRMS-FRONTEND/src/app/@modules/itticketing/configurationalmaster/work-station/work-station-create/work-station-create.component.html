@@ -1,0 +1,168 @@
+<section class="section">
+
+    <div class="row">
+        <div class="employee_top my-1">
+            Admin
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #5d6c7c"></i>
+                Work Station</span>
+        </div>
+    </div>
+    <div class="row py-1">
+        <div class="employee_top">Work-Station
+            <span class="employee_2" *ngIf="!workStationId"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color:#5d6c7c">
+                </i>
+                Create </span>
+            <span class="employee_2" *ngIf="workStationId"><i class="fa fa-angle-right" aria-hidden="true"
+                    style="color:#5d6c7c">
+                </i>
+                Update </span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head">
+            <h3>Work Station</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="workStationForm">
+                <div class="row">
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Type Of Workstation</mat-label>
+                                <mat-select formControlName="type_of_workstation">
+                                    <mat-option value="Manual">Manual</mat-option>
+                                    <mat-option value="Automatic">Automatic</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Work Station Name</mat-label>
+                                <input matInput type="text" formControlName="name_of_workstation" />
+                                <mat-error *ngIf="workStationForm.controls['name_of_workstation'].hasError('required')">
+                                    Work Station Name is Required.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="workStationForm.controls['name_of_workstation'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="workStationForm.controls['name_of_workstation'].hasError('minlength')">
+                                    This field accepted minimum 2 length.
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="workStationForm.controls['name_of_workstation'].hasError('maxlength')">
+                                    This field accepted maximum 150 length.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Running Cost Per Hour</mat-label>
+                                <input matInput type="number" formControlName="running_cost_per_hour" />
+                                <mat-error
+                                    *ngIf="workStationForm.controls['running_cost_per_hour'].hasError('required')">
+                                    Running Cost Per Hour is Required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Hourly Efficiency</mat-label>
+                                <input matInput type="number" formControlName="hourly_effciency" />
+                                <mat-error *ngIf="workStationForm.controls['hourly_effciency'].hasError('required')">
+                                    Hourly Efficiency is Required.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>UOM</mat-label>
+                                <mat-select formControlName="uom_id">
+                                    <mat-option *ngFor="let data of getUom_data"
+                                        [value]="data.uom_id">{{data?.uom_name}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Description</mat-label>
+                                <input matInput type="text" formControlName="description" />
+                                <mat-error *ngIf="workStationForm.controls['description'].hasError('required')">
+                                    Description is Required.
+                                </mat-error>
+                                <mat-error *ngIf="workStationForm.controls['description'].hasError('leadingSpaces')">
+                                    *No leading spaces!
+                                </mat-error>
+                                <mat-error *ngIf="workStationForm.controls['description'].hasError('minlength')">
+                                    This field accepted minimum 2 length.
+                                </mat-error>
+                                <mat-error *ngIf="workStationForm.controls['description'].hasError('maxlength')">
+                                    This field accepted maximum 150 length.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <input class="form-control" type="file" style="padding-right: 19%"
+                                title="MULTIPLE UPLOAD DOCUMENT" (change)="onChange($event)" formControlName="images"
+                                multiple="true" />
+                        </div>
+                        <div *ngIf="workStationForm.controls['images']" class="invalid-feedback">
+                            file is required
+                        </div>
+                    </div>
+                    <div *ngIf="workStationId && getData?.UploadDocs && getData?.UploadDocs.length > 0" class="row">
+                        <div class="col-xxl-12">
+                            <div class="form-group">
+                                <h4>Uploaded Documents</h4>
+                                <div class="d-flex flex-wrap">
+                                    <div *ngFor="let uploadDoc of getData.UploadDocs; index as i" class="mr-3 mb-3">
+                                        <ng-container *ngIf="isImage(uploadDoc.UploadDoc)">
+                                            <img [src]="generateImageUrl(uploadDoc.UploadDoc)" class="imgEmp"
+                                                alt="Uploaded Image">
+                                            <span (click)="removeImage(i)" class="remove-icon"><i
+                                                    class="fas fa-times"></i></span>
+                                        </ng-container>
+                                        <ng-container
+                                            *ngIf="getFileExtension(uploadDoc.UploadDoc) !== 'png' && getFileExtension(uploadDoc.UploadDoc) !== 'jpg' && getFileExtension(uploadDoc.UploadDoc) !== 'jpeg' && getFileExtension(uploadDoc.UploadDoc) !== 'gif'">
+                                            <a class="viewBtn" [href]="generateFileUrl(uploadDoc.UploadDoc)"
+                                                target="_blank">View</a>
+                                            <i (click)="removeImage(i)" class="remove-icon" class="fas fa-times"></i>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <button *ngIf="!workStationId" [disabled]="extraWords" (click)="onSubmitForm()" mat-raised-button
+                        color="primary">
+                        Submit
+                    </button>
+
+                    <button *ngIf="workStationId" (click)="updateForm($event)" mat-raised-button color="primary">
+                        Update
+                    </button>
+                    <button mat-raised-button color="warn" class="mx-3" (click)="back()">Cancel</button>
+                </div>
+            </form>
+
+        </div>
+    </mat-card>
+</section>

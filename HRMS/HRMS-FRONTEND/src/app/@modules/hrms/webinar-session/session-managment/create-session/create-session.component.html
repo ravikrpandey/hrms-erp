@@ -1,0 +1,246 @@
+<app-pageheading [backbuttonShow]="true"
+    [pagename]="mode === 'create' ? 'Add New Session' : mode === 'edit' ? 'Edit Session' : 'View Session'">
+</app-pageheading>
+
+<form class="create-session-form" [formGroup]="sessionForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <!-- Session Title -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="Session Title" type="text" [model]="sessionForm.get('session_title')?.value"
+                    [errorshow]="sessionForm.get('session_title')?.touched && sessionForm.get('session_title')?.invalid ? 'Session Title is required' : ''"
+                    (modelChange)="sessionForm.get('session_title')?.setValue($event)" [required]="true"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- Date -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="Date" type="date" [model]="sessionForm.get('date')?.value"
+                    [errorshow]="sessionForm.get('date')?.touched && sessionForm.get('date')?.invalid ? 'Date is required' : ''"
+                    (modelChange)="sessionForm.get('date')?.setValue($event)" [required]="true"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- Start Time -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="Start Time" type="time" [model]="sessionForm.get('start_time')?.value"
+                    [errorshow]="sessionForm.get('start_time')?.touched && sessionForm.get('start_time')?.invalid ? 'Start time is required' : ''"
+                    (modelChange)="sessionForm.get('start_time')?.setValue($event)" [required]="true"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- End Time -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="End Time" type="time" [model]="sessionForm.get('end_time')?.value"
+                    [errorshow]="sessionForm.get('end_time')?.touched && sessionForm.get('end_time')?.invalid ? 'End time is required' : ''"
+                    (modelChange)="sessionForm.get('end_time')?.setValue($event)" [required]="true"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- Job Role -->
+        <!-- <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <app-inputfield type="select" labelname="Job Role" [selectoptions]="jobRoles"
+                    [model]="sessionForm.get('jobRole')?.value"
+                    [errorshow]="sessionForm.get('jobRole')?.touched && sessionForm.get('jobRole')?.invalid ? 'Job Role is required' : ''"
+                    (modelChange)="sessionForm.get('jobRole')?.setValue($event)" selectvaluekey="id"
+                    selectshowvaluekey="roleType" [required]="true" [disabled]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div> -->
+
+        <!-- Employee -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3 mt-1"> <!-- mt-1 here -->
+                <mat-form-field appearance="outline" class="w-100 slim-field">
+                    <mat-label>Employee</mat-label>
+                    <mat-select formControlName="employee" multiple [disabled]="mode === 'view'">
+                        <mat-option *ngFor="let emp of employees" [value]="emp.employee_id">
+                            {{ emp.full_name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="sessionForm.get('employee')?.touched && sessionForm.get('employee')?.invalid">
+                        Employee is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+
+
+        <!-- Platform -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <!-- Platform -->
+                <app-inputfield type="select" labelname="Platform" [selectoptions]="[
+    { id: 'Google Meet', text: 'Google Meet' },
+    { id: 'Zoom', text: 'Zoom Meeting' }
+  ]" [model]="sessionForm.get('platform')?.value" (modelChange)="sessionForm.get('platform')?.setValue($event)"
+                    selectvaluekey="id" selectshowvaluekey="text" [required]="true" [disabled]="mode == 'view'">
+                </app-inputfield>
+
+            </div>
+        </div>
+
+        <!-- External Participant Checkbox -->
+        <div class="col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="External Participant" type="checkbox"
+                    [model]="sessionForm.get('externalParticipant')?.value"
+                    (modelChange)="sessionForm.get('externalParticipant')?.setValue($event)"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- External Participant Details -->
+        <div class="col-12" *ngIf="sessionForm.get('externalParticipant')?.value">
+            <div formArrayName="externalParticipants">
+                <div class="row align-items-center mb-2" *ngFor="let p of externalParticipants.controls; let i = index"
+                    [formGroupName]="i">
+
+                    <!-- Name -->
+                    <div class="col-md-4">
+                        <app-inputfield labelname="Name" type="text" [model]="p.get('name')?.value"
+                            [errorshow]="p.get('name')?.touched && p.get('name')?.invalid ? 'Name is required' : ''"
+                            (modelChange)="p.get('name')?.setValue($event)" [required]="true"
+                            [readonly]="mode == 'view'">
+                        </app-inputfield>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="col-md-4">
+                        <app-inputfield labelname="Email" type="email" [model]="p.get('email')?.value"
+                            [errorshow]="p.get('email')?.touched && p.get('email')?.invalid ? 'Valid email is required' : ''"
+                            (modelChange)="p.get('email')?.setValue($event)" [required]="true"
+                            [readonly]="mode == 'view'">
+                        </app-inputfield>
+                    </div>
+
+                    <!-- Remove -->
+                    <div class="col-md-2" style="padding-top: 15px;">
+                        <app-button *ngIf="mode !== 'view'" btnClass="fillRed" type="button"
+                            (buttonClick)="removeParticipant(i)" text="Remove"></app-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add button -->
+            <div class="participant-btn">
+                <app-button *ngIf="mode !== 'view'" btnClass="fillGreen mt-2" type="button"
+                    (buttonClick)="addParticipant()" text="+ Add Participant"></app-button>
+            </div>
+
+        </div>
+
+        <!-- Description -->
+        <div class="col-12">
+            <div class="form-group mb-3">
+                <app-inputfield labelname="Description" type="textarea" [model]="sessionForm.get('description')?.value"
+                    [errorshow]="sessionForm.get('description')?.touched && sessionForm.get('description')?.invalid ? 'Description is required' : ''"
+                    (modelChange)="sessionForm.get('description')?.setValue($event)" [required]="true"
+                    [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- Instructor -->
+        <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+            <div class="form-group mb-3">
+                <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Instructor</mat-label>
+                    <mat-select formControlName="instructor" [disabled]="mode === 'view'" required>
+                        <mat-option *ngFor="let instructor of instructors" [value]="instructor.login_id">
+                            {{ instructor.login_username }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="sessionForm.get('instructor')?.touched && sessionForm.get('instructor')?.invalid">
+                        Instructor is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12">
+                <div class="form-group mb-3">
+                    <app-inputfield labelname="Meeting URL" type="text" [model]="sessionForm.get('meetingUrl')?.value"
+                        (modelChange)="sessionForm.get('meetingUrl')?.setValue($event)" [readonly]="mode == 'view'">
+                    </app-inputfield>
+                </div>
+            </div>
+
+
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12"
+                *ngIf="sessionForm.get('platform')?.value === 'Zoom'">
+                <div class="form-group mb-3">
+                    <app-inputfield labelname="Meeting ID" type="text" [model]="sessionForm.get('meetingId')?.value"
+                        (modelChange)="sessionForm.get('meetingId')?.setValue($event)" [readonly]="mode == 'view'">
+                    </app-inputfield>
+                </div>
+            </div>
+
+            <!-- Generate button -->
+            <div class="col-xxl-4 col-xl-4 col-lg-6 col-sm-6 col-12" style="margin-top: 30px;">
+                <div class="form-group mb-3">
+                    <!-- Google Meet -->
+                    <app-button *ngIf="mode !== 'view' && sessionForm.get('platform')?.value === 'Google Meet'"
+                        btnClass="fillBlue" type="button" text="Auto generate Meet link"
+                        (buttonClick)="generateMeetLink()">
+                    </app-button>
+
+                    <!-- Zoom -->
+                    <app-button *ngIf="mode !== 'view' && sessionForm.get('platform')?.value === 'Zoom'"
+                        btnClass="fillBlue" type="button" text="Auto generate Zoom link"
+                        (buttonClick)="generateZoomLink()">
+                    </app-button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!-- Record Session -->
+        <div class="col-xxl-3 col-xl-3 col-lg-6 col-sm-6 col-12">
+            <div class="form-group">
+                <app-inputfield labelname="Record Session" type="checkbox"
+                    [model]="sessionForm.get('recordSession')?.value"
+                    (modelChange)="sessionForm.get('recordSession')?.setValue($event)" [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+
+        <!-- Recurring -->
+        <div class="col-xxl-3 col-xl-3 col-lg-6 col-sm-6 col-12">
+            <div class="form-group">
+                <app-inputfield labelname="Recurring" type="checkbox" [model]="sessionForm.get('recurring')?.value"
+                    (modelChange)="sessionForm.get('recurring')?.setValue($event)" [readonly]="mode == 'view'">
+                </app-inputfield>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="row">
+        <div class="col-12">
+            <!-- <app-button btnClass="borderBlue" type="button" (buttonClick)="cancel()" text="Cancel"></app-button> -->
+            <app-button *ngIf="mode !== 'view'" [btnClass]="mode === 'create' ? 'fillGreen' : 'fillBlue'" type="submit"
+                [text]="mode === 'create' ? 'Create Session' : 'Update Session'">
+            </app-button>
+        </div>
+    </div>
+</form>

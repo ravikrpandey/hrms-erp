@@ -1,0 +1,43 @@
+<div>
+  <h3 mat-dialog-title class="popHead">Digital Signature Approval</h3>
+
+  <fieldset>
+    <div class="m-3" [formGroup]="areaForm">
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Mark As</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="Approved">Approved</mat-option>
+              <mat-option value="Rejected">Rejected</mat-option>
+            </mat-select>
+            <mat-error *ngIf="areaForm.get('status')?.hasError('required')">
+              This field is required!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-6 col-12">
+        <div class="form-group mb-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Remark</mat-label>
+            <input matInput type="text" formControlName="remark" />
+            <mat-error *ngIf="areaForm.get('remark')?.hasError('required')">
+              *Required!
+            </mat-error>
+            <mat-error
+              *ngIf="areaForm.get('remark')?.hasError('leadingSpaces')"
+            >
+              *No leading spaces!
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+
+    <mat-dialog-actions align="end" class="common_button_sub">
+      <button (click)="onSubmitForm()">Submit</button>
+      <button mat-dialog-close class="cancel_button_y">Close</button>
+    </mat-dialog-actions>
+  </fieldset>
+</div>

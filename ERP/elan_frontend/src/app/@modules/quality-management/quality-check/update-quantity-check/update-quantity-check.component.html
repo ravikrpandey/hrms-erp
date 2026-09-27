@@ -1,0 +1,158 @@
+<section class="section">
+    <div class="row">
+        <div class="employee_top my-1">
+            Quality Management
+            <span class="employee_2"><i class="fa fa-angle-right" aria-hidden="true" style="color: #063178"></i>
+                Quality Check</span>
+        </div>
+    </div>
+    <mat-card>
+        <div class="form_head">
+            <h3>Quality Check</h3>
+            <button class="backBtn" (click)="goBack()"><i class="fa fa-arrow-circle-left"></i> Back</button>
+        </div>
+        <div class="form_basic">
+            <form class="form_set" [formGroup]="qualityCheck">
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="">
+                            <mat-label>Select Product Category</mat-label>
+                            <mat-select  formControlName="product_category_id" (selectionChange)="getAllActiveProduct($event)">
+                              <mat-option *ngFor="let data of cetegory" [value]="data.id">{{data.category_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="qualityCheck.get('cetegory')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                   
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label>Select Product Name</mat-label>
+                            <mat-select formControlName="product_id" >
+                              <mat-option *ngFor="let data of productData" [value]="data.id">{{data.product_name}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="qualityCheck.get('product_id')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <mat-form-field appearance="outline" class="mt-1">
+                            <mat-label> Product Variant</mat-label>
+                            <input type="text" matInput formControlName="product_variant" readonly />
+                            <mat-error *ngIf="qualityCheck.get('product_variant')?.hasError('required')">
+                              This field is required!
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                   
+                    
+                </div>
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Select Shift</mat-label>
+                                <mat-select formControlName="shift_id">
+                                    <mat-option *ngFor="let shift of shiftList" [value]="shift.shift_id">
+                                        {{ shift.MASTER_SHIFT?.shift_name }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="qualityCheck.get('shift_id')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Date</mat-label>
+                                <input matInput [matDatepicker]="picker" format="DD-MM-YY" 
+                                 formControlName="date" 
+                                    (dateChange)="dateSelected($event)" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error *ngIf="qualityCheck.get('date')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-label style="margin-top: 12px; margin-right: 12px;">Generate Label</mat-label>
+                            <mat-radio-group aria-label="Select an option">
+                                <!-- <mat-radio-button value="batch" (change)="generateCode($event)">Batch</mat-radio-button> -->
+                                <mat-radio-button value="SNo" (change)="generateCode($event)">S.No</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Serial No</mat-label>
+                                <input type="text" matInput formControlName="generate_label" readonly />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Total Production</mat-label>
+                                <input type="text" matInput formControlName="total_production" (keyup)="calculateSum()" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Remaining Production</mat-label>
+                                <input type="text" matInput formControlName="remaning_production" (keyup)="calculateSum()" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>Quality Pass</mat-label>
+                                <input type="number" matInput formControlName="quality_pass" (keyup)="calculateSum()" />
+                                <mat-error *ngIf="qualityCheck.get('quality_pass')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" class="mt-1">
+                                <mat-label>NG</mat-label>
+                                <input type="number" matInput formControlName="NG" (keyup)="calculateSum()" />
+                                <mat-error *ngIf="qualityCheck.get('NG')?.hasError('required')">
+                                    This field is required!
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div style="float: right; margin-bottom: 2rem;">
+                    <!-- <button mat-raised-button color="primary">
+                        Generate Label
+                    </button> -->
+                    <button mat-raised-button color="primary" class="mx-3" (click)="updateQualityCheck(qualityCheck.value)">Save</button>
+                </div>
+            </form>
+        </div>
+    </mat-card>
+  </section>

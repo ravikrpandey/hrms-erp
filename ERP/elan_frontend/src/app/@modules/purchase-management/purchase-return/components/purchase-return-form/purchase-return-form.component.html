@@ -1,0 +1,183 @@
+<div class="form-card">
+    <div class="form-header">
+        <h3>{{ viewMode === 'create' ? 'Create Purchase Return Request' : 'Edit Purchase Return - ' + selectedReturn?.return_no }}</h3>
+        <span class="required-note">* Indicates required fields</span>
+    </div>
+
+    <form [formGroup]="returnForm" (ngSubmit)="submitForm(false)">
+        <!-- Document Header Fields -->
+        <div class="form-grid">
+            <!-- Vendor Selector -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Vendor *</mat-label>
+                <mat-select formControlName="vendor_id" (selectionChange)="onVendorChange($event.value)"
+                    [disabled]="viewMode === 'edit' || isVendor">
+                    <mat-option *ngFor="let vendor of vendorsList" [value]="vendor.id">
+                        {{ vendor.vendor_name }} ({{ vendor.vendor_code }})
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="returnForm.get('vendor_id')?.hasError('required')">
+                    Vendor selection is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- GRN Selector -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Select GRN (Completed) *</mat-label>
+                <mat-select formControlName="grn_id" (selectionChange)="onGrnChange($event.value)"
+                    [disabled]="viewMode === 'edit'">
+                    <mat-option *ngFor="let grn of filteredGrnsList" [value]="grn.id">
+                        {{ grn.grn_number }} (Inv: {{ grn.invoiceNo || 'N/A' }}, Date: {{ grn.grn_date | date:'dd-MMM-yyyy' }})
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="returnForm.get('grn_id')?.hasError('required')">
+                    GRN is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Return Date -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Return Date *</mat-label>
+                <input matInput type="date" formControlName="return_date">
+                <mat-error *ngIf="returnForm.get('return_date')?.hasError('required')">
+                    Return Date is required
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Return Reason -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Return Reason</mat-label>
+                <mat-select formControlName="return_reason_id">
+                    <mat-option [value]="1">Damaged Product / Defective</mat-option>
+                    <mat-option [value]="2">Incorrect Item Supplied</mat-option>
+                    <mat-option [value]="3">Excess Quantity Sent</mat-option>
+                    <mat-option [value]="4">Short Expiry / Quality Concern</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- Remarks -->
+            <mat-form-field appearance="outline" class="full-width grid-col-span-2">
+                <mat-label>Remarks / Notes</mat-label>
+                <textarea matInput formControlName="remarks" rows="2"
+                    placeholder="Describe context, delivery details, etc..."></textarea>
+            </mat-form-field>
+        </div>
+
+        <!-- Items Details Grid -->
+        <div class="items-section">
+            <h4>Return Item Specifications</h4>
+            <p class="section-subtitle">Specify return quantities for eligible received GRN items. System validates remaining return limits and warehouse stock availability.</p>
+
+            <div class="table-responsive scrollable-grid">
+                <table class="items-table">
+                    <thead>
+                        <tr>
+                            <th>Item Details</th>
+                            <th>Warehouse & Allocation</th>
+                            <th>Received Qty</th>
+                            <th>Already Returned</th>
+                            <th>Remaining Returnable</th>
+                            <th>Available Stock</th>
+                            <th class="width-input-qty">Return Qty *</th>
+                            <th>Gross Rate</th>
+                            <th>Discount %</th>
+                            <th>Net Rate</th>
+                            <th>GST %</th>
+                            <th>Tax Amt</th>
+                            <th>Total Amt</th>
+                            <th>Reason / Item Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="items">
+                        <tr *ngFor="let itemGroup of itemsArray.controls; let i = index" [formGroupName]="i">
+                            <td>
+                                <div class="item-cell">
+                                    <span class="item-name">{{ itemGroup.get('item_name')?.value }}</span>
+                                    <span class="item-code">{{ itemGroup.get('item_code')?.value }}</span>
+                                    <span class="manage-by-badge">{{ itemGroup.get('manage_by')?.value }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="warehouse-cell">
+                                    <span class="wh-name">{{ itemGroup.get('warehouse_name')?.value || 'No Wh' }}</span>
+                                    <span class="allocation-specs" *ngIf="itemGroup.get('batch_no')?.value || itemGroup.get('serial_no')?.value">
+                                        <i class="fa fa-tags"></i>
+                                        {{ itemGroup.get('batch_no')?.value ? 'Batch: ' + itemGroup.get('batch_no')?.value : '' }}
+                                        {{ itemGroup.get('serial_no')?.value ? 'S/N: ' + itemGroup.get('serial_no')?.value : '' }}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>{{ itemGroup.get('received_qty')?.value }}</td>
+                            <td>{{ itemGroup.get('already_returned_qty')?.value }}</td>
+                            <td class="bold-text text-orange">{{ itemGroup.get('remaining_qty')?.value }}</td>
+                            <td class="bold-text text-green">{{ itemGroup.get('available_stock')?.value }}</td>
+                            <td>
+                                <input type="number" formControlName="return_qty" class="qty-input"
+                                    (input)="calculateItemTotals(i)" min="0"
+                                    [max]="itemGroup.get('manage_by')?.value === 'S.No. Only' ? 1 : itemGroup.get('remaining_qty')?.value">
+                                <!-- Validation errors -->
+                                <div class="validation-error" *ngIf="itemGroup.get('return_qty')?.errors">
+                                    <span *ngIf="itemGroup.get('return_qty')?.hasError('exceedRemaining')">
+                                        Exceeds GRN limit
+                                    </span>
+                                    <span *ngIf="itemGroup.get('return_qty')?.hasError('exceedAvailable')">
+                                        Exceeds stock
+                                    </span>
+                                    <span *ngIf="itemGroup.get('return_qty')?.hasError('min')">
+                                        Must be >= 0
+                                    </span>
+                                </div>
+                            </td>
+                            <td>₹ {{ itemGroup.get('gross_rate')?.value | number:'1.2-2' }}</td>
+                            <td>{{ itemGroup.get('discount_percentage')?.value }}%</td>
+                            <td>₹ {{ itemGroup.get('rate')?.value | number:'1.2-2' }}</td>
+                            <td>{{ itemGroup.get('tax_percent')?.value }}%</td>
+                            <td>₹ {{ itemGroup.get('tax_amount')?.value | number:'1.2-2' }}</td>
+                            <td class="bold-text">₹ {{ itemGroup.get('amount')?.value | number:'1.2-2' }}</td>
+                            <td>
+                                <input type="text" formControlName="remarks" class="table-text-input" placeholder="Notes">
+                            </td>
+                        </tr>
+                        <tr *ngIf="itemsArray.controls.length === 0">
+                            <td colspan="12" class="empty-items-cell">
+                                No items available. Select a completed GRN to load items.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Form Totals and Summary -->
+        <div class="form-totals-container">
+            <div class="form-totals">
+                <div class="total-row">
+                    <span>Sub Total:</span>
+                    <span>₹ {{ subTotal | number:'1.2-2' }}</span>
+                </div>
+                <div class="total-row">
+                    <span>Tax Amount (GST):</span>
+                    <span>₹ {{ taxAmount | number:'1.2-2' }}</span>
+                </div>
+                <div class="total-row final">
+                    <span>Final Credit Adjustment:</span>
+                    <span>₹ {{ finalAmount | number:'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Action Buttons -->
+        <div class="form-actions-footer">
+            <button type="button" class="btn secondary-btn" (click)="onCancel.emit()">
+                Cancel
+            </button>
+            <button type="submit" class="btn secondary-btn save-draft-btn" [disabled]="returnForm.invalid">
+                <i class="fa fa-save"></i> Save Draft
+            </button>
+            <button type="button" class="btn primary-btn submit-btn" [disabled]="returnForm.invalid"
+                (click)="submitForm(true)">
+                <i class="fa fa-paper-plane"></i> Save & Submit
+            </button>
+        </div>
+    </form>
+</div>

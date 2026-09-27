@@ -1,0 +1,476 @@
+<mat-card>
+    <div class="section">
+      <div class="main">
+        <div class="employee">
+        </div>
+        <div class="msater-nav">
+            <a href="">My Expenses<mat-icon>keyboard_arrow_right</mat-icon></a>
+            <a routerLink="../">Vendor List</a>
+        </div>
+        <div class="updatetitle" > <h2><b>Create Vendor</b></h2></div>
+        <!-- <div class="updatetitle" *ngIf="makePaymentStatus"> <h2><b>Approve Expense</b></h2></div>
+        <div class="updatetitle" *ngIf="makePaymentStatusApproved"> <h2><b>Expenses Accounts Payable</b></h2></div> -->
+        <section class="job-nav">
+          
+  
+            <mat-card style="padding: 20px 0px;">
+              <div class="row form_head">
+                <h3>My Expenses</h3>
+              </div>
+              <div class="form_basic">
+                <form class="form_set" [formGroup]="expenceForm">
+                  <div class="row">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div class="form-group">
+                        <p>vendor management id</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                          <input matInput type="text" formControlName="vendor_management_id" readonly/>
+                       </mat-form-field>
+                      </div>
+                    </div>
+  
+                      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" >
+                        <div class="form-group">
+                          <p>Vendor Name</p>
+                        </div>
+                      </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="vendor_name" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                  </div>
+
+
+
+
+                  <div class="row">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div class="form-group">
+                        <p>Account Type</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly class="readonly-wrapper">
+                          <input matInput type="text" formControlName="account_type" readonly/>
+                       </mat-form-field>
+                      </div>
+                    </div>
+  
+                      <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12" >
+                        <div class="form-group">
+                          <p>Bank Account Number</p>
+                        </div>
+                      </div>
+                        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12" >
+                          <div class="form-group">
+                            <mat-form-field appearance="outline">
+                          <input matInput type="text" formControlName="bank_account_number" readonly/>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                  </div>
+  
+                  <div class="row">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div class="form-group">
+                        <p>bank address</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="text" formControlName="bank_address"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div class="form-group">
+                        <p>branch</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="text" formControlName="branch"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div class="col-xxl-2 col-lg-2 col-md-2 col-sm-2 col-12">
+                      <div class="form-group">
+                        <p>Contact Number</p>
+                      </div>
+                    </div>
+                    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <mat-form-field appearance="outline" readonly>
+                          <input matInput type="number" min="1" formControlName="contact_number"/>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+                   <br>
+          <div class="upload-btn">
+                  <button  class="cancel-btn">
+                    Cancel
+                  </button>
+                 
+                
+                  <button class="favorite styled"(click)="CreateExpense()">Vendor</button>
+                </div>
+                </form>
+              </div>
+            </mat-card>
+         
+        </section>
+
+<!-- PURCHASE ORDER DATA -->
+<form class="form_set" [formGroup]="raiseInvoiceForm">
+  <h2 style="text-align: center;"><b>Genrate Invoice create</b></h2>
+  <div class="form_head">
+      <h3>Item Details</h3>
+    </div>
+  <div class="row">
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <!-- <th scope="col">Product Image</th> -->
+                    <th scope="col">Item Name</th>
+                    <th scope="col">Item Code</th>
+                    <th scope="col">Unit</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">MVP</th>
+                </tr>
+            </thead>
+            <tbody formArrayName="alldata"
+                *ngFor="let control of CF_1.alldata['controls']; index as i">
+                <tr *ngIf="CF_1.alldata.length != 0" style="text-align: center"
+                    [formGroup]="control">
+                    <!-- <td>
+                        <div class="form-group">
+                            <img [src]="control.value?.product_image" width="150" height="150" />
+                        </div>
+                    </td> -->
+                    <td class="inpBox">
+                        <!-- <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                                <input matInput formControlName="item_name" readonly />
+                            </mat-form-field>
+                        </div> -->
+                        {{vendorInvoiceData?.item_name}}
+                    </td>
+                    <td class="inpBox">
+                        <!-- <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                                <input matInput formControlName="item_code" readonly />
+                            </mat-form-field>
+                        </div> -->
+                        {{vendorInvoiceData?.item_code}}
+                    </td>
+                    <td class="inpBox">
+                        <!-- <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                                <input type="number" matInput formControlName="unit" min="1" />
+                            </mat-form-field>
+                        </div> -->
+                        {{vendorInvoiceData?.unit}}
+                    </td>
+                    <td class="inpBox">
+                        <!-- <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 10vw">
+                                <mat-select formControlName="priority">
+                                    <mat-option value="HIGH">HIGH</mat-option>
+                                    <mat-option value="MEDIUM">MEDIUM</mat-option>
+                                    <mat-option value="LOW">LOW</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div> -->
+                        {{vendorInvoiceData?.priority}}
+                    </td>
+                    <td class="inpBox">
+                        <!-- <mat-form-field appearance="outline" style="width: 10vw">
+                            <input matInput formControlName="mvp" readonly />
+                        </mat-form-field> -->
+                        {{vendorInvoiceData?.mvp}}
+                    </td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="CF_1.alldata.length == 0">
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #8e8e8e">
+                        Product Not Selcted
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br />
+<!-- <div class="form_head">
+    <h3>Delivery Address</h3>
+</div>
+<br />
+<div class="row">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <p>Location(Branch)</p>
+            <mat-form-field appearance="outline" readonly>
+                <input matInput type="text" formControlName="location" readonly />
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <p>Delivery Address</p>
+            <mat-form-field appearance="outline">
+                <input matInput type="text" formControlName="delivery_address" readonly />
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <p>PIN</p>
+            <mat-form-field appearance="outline">
+                <input matInput type="number" formControlName="pin" readonly />
+            </mat-form-field>
+        </div>
+    </div>
+</div> -->
+<div class="form_head">
+    <h3>Vendor Details</h3>
+</div>
+<div class="row mt-5">
+    <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Vendor Name</th>
+                    <th scope="col">Remark</th>
+                    <th scope="col">Unit Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">SGST</th>
+                    <th scope="col">CGST</th>
+                    <th scope="col">IGST</th>
+                    <th scope="col">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="text-align: center;">
+                    <!-- <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="vendor_name"  />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="remark" />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="unitPrice" />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="quantity" />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="ammount" min="1" />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="sgst"  />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input type="number" matInput readonly formControlName="cgst" />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group ">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input matInput readonly formControlName="igst"  />
+                            </mat-form-field>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <mat-form-field appearance="outline" style="width: 7vw">
+                                <input type="number" matInput readonly formControlName="total" />
+                            </mat-form-field>
+                        </div>
+                    </td> -->
+
+                    <td>{{vendorInvoiceData?.vendor_name}}</td>
+                    <td>{{vendorInvoiceData?.remark}}</td>
+                    <td>{{vendorInvoiceData?.price_amt}}</td>
+                    <td>{{vendorInvoiceData?.unit}}</td>
+                    <td>{{ammount}}</td>
+                    <td>{{vendorInvoiceData?.sgst}}</td>
+                    <td>{{vendorInvoiceData?.cgst}}</td>
+                    <td>{{vendorInvoiceData?.igst}}</td>
+                    <td>{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+        <div class="row">
+          <div class="col-xxl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <table class="table table-bordered" style="width: 50%;">
+                  <thead>
+                      <tr>
+                          <th scope="col">Delivery Charges</th>
+                          <th scope="col">Additional Charges</th>
+                          <th scope="col">Grand Total</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr style="text-align: center;">
+                          <td>
+                              <!-- <div class="form-group">
+                                  <mat-form-field appearance="outline" style="width: 10vw">
+                                      <input matInput readonly formControlName="delivery_charges"  />
+                                  </mat-form-field>
+                              </div> -->
+                              {{vendorInvoiceData?.delivery_charges}}
+                          </td>
+                          <td>
+                              <!-- <div class="form-group">
+                                  <mat-form-field appearance="outline" style="width: 10vw">
+                                      <input matInput readonly formControlName="additonal_charges"  />
+                                  </mat-form-field>
+                              </div> -->
+                              {{vendorInvoiceData?.additional_charges}}
+                          </td>
+                          <td>
+                              <!-- <div class="form-group">
+                                  <mat-form-field appearance="outline" style="width: 10vw">
+                                      <input matInput readonly formControlName="grand_total" />
+                                  </mat-form-field>
+                              </div> -->
+                              {{grand_total}}
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+<br />
+
+<div class="form_head">
+    <h3>Purchase Order Details</h3>
+</div>
+<div class="row mt-5">
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <mat-form-field appearance="outline" readonly>
+                <mat-label>PO Date</mat-label>
+                <input matInput [matDatepicker]="dp4" (click)="dp4.open()" formControlName="po_date" />
+                <mat-datepicker-toggle matSuffix [for]="dp4"></mat-datepicker-toggle>
+                <mat-datepicker #dp4></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>PO No.</mat-label>
+                <input matInput type="number" formControlName="poNumber" />
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+        <div class="form-group">
+            <mat-form-field appearance="outline">
+                <mat-label>Raised by</mat-label>
+                <input matInput type="text" formControlName="raised_by" />
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+<div class="form_head">
+  <h3>Invoice Details</h3>
+</div>
+<div class="row mt-5">
+  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+          <mat-form-field appearance="outline" readonly>
+              <mat-label>Invoice Date</mat-label>
+              <input matInput [matDatepicker]="dp2" (click)="dp2.open()" formControlName="invoice_date" />
+              <mat-datepicker-toggle matSuffix [for]="dp2"></mat-datepicker-toggle>
+              <mat-datepicker #dp2></mat-datepicker>
+          </mat-form-field>
+      </div>
+  </div>
+
+  <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+          <mat-form-field appearance="outline">
+              <mat-label>Remark</mat-label>
+              <input matInput type="text" formControlName="invoice_remarks" />
+          </mat-form-field>
+      </div>
+  </div>
+  <!-- <div class="col-xxl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+        <input class="form-control" type="file" style="padding-right: 19%" title="UPLOAD DOCUMENT"
+          (change)="onChange($event)" formControlName="invoice_file" />
+        <img [src]="imagePath ? imagePath : this.singlePrData?.file"
+          *ngIf="imagePath || this.singlePrData?.file" class="imgEmp"
+          (click)="seePreview(this.singlePrData?.file, imagePath)" />
+      </div>
+      <div *ngIf="raiseInvoiceForm.controls['file']" class="invalid-feedback">
+        file is required
+      </div>
+    </div> -->
+</div>
+
+<div class="mt-5">
+  <button mat-raised-button color="warn"
+  routerLink="/master/itticket/purchase-inventory/invoice">
+  Cancel
+</button> 
+    <span class="float-end">
+        <button mat-raised-button color="primary" class="mx-3" (click)="genrateInvoice()">
+            Submit
+        </button>
+    </span>
+</div>
+</form> 
+    </div>
+    </div>
+  </mat-card>

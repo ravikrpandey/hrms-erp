@@ -1,0 +1,89 @@
+<div class="right_data_all">
+  <div class="heading_neo mt-4">
+    <h3>Document Information</h3>
+  </div>
+  <div class="form_basic mb-0">
+    <form class="form_set" [formGroup]="customerDocumentForm">
+      <div class="row">
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Documents Name</mat-label>
+              <mat-select formControlName="document_name">
+                <mat-option value="Company Registration Certificate">Company Registration Certificate</mat-option>
+                <mat-option value="GST/TAX Certificate">GST/TAX Certificate</mat-option>
+                <mat-option value="Contract Agreements">Contract Agreements</mat-option>
+                <mat-option value="PAN Card">PAN Card</mat-option>
+                <mat-option value="Addhar Card">Addhar Card</mat-option>
+
+
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-xxl-4 col-lg-4 col-md-4 col-sm-4 col-12">
+          <div class="form-group-name-cat">
+            <input (change)="onChange($event)"
+              class="form-control"
+              type="file"
+              style="padding-right: 19%"
+              title="Upload Document"
+              formControlName="upload_document"
+              accept="\.jpg,\.jpeg,\.png,\.pdf,\.docx,\.doc\.xls\.xlsx"
+            />
+          </div>
+        </div>
+        
+
+         <div class="col-xxl-3 col-lg-3 col-md-3 col-sm-3 col-12">
+          <div class="add_button">
+            <button type="button" (click)="addDocument()">Add Document</button>
+          </div>
+        </div> 
+
+        <div class="table-responsive mt-4">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Document Name</th>
+                <th>Document</th>
+                <th *ngIf="action_type !== 'View'">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let doc of arrayDataPush; let i = index">
+                <td>{{doc?.document_name || '-'}}</td>
+                <td>
+                  <a href="{{generateImageUrl()+doc?.upload_document}}"
+                   target="_blank" download>
+                  <mat-icon class="imgEmpCopy"> visibility</mat-icon>
+                  </a>
+                </td>
+                <td *ngIf="action_type !== 'View'" style="
+                                
+                color: #7c7c7c;
+                cursor: pointer;
+               
+              ">
+                    <i class="material-icons" (click)="deletData(doc,i)">delete</i>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <div class="row">
+          <div *ngIf="arrayDataPush.length === 0">
+            <p style="text-align: center;
+            font-size: 16px;">Documents Not Found</p>
+          </div>
+        </div> -->
+      </div>
+
+      <div class="common_button_sub">
+        <button (click)="onSubmitForm()" *ngIf="!action_type">Upload Document</button>
+        <button (click)="onSubmitForm()" *ngIf="action_type == 'edit'">Upload Document</button>
+        <!-- <button class="cancel_button_y">Cancel</button> -->
+      </div>
+    </form>
+  </div>
+</div>

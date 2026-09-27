@@ -1,0 +1,7 @@
+<div class="edd-del">
+    <!-- <i (click)="edit($event)" class='fas fa-edit'></i> -->
+    <mat-icon (click)="openDialog($event)" *ngIf="assignAction?.Read" class="viewButton">visibility</mat-icon>
+    <mat-icon *ngIf="(!tobeApproved && allJObData?.final_status == 'PENDING') && assignAction?.Write" (click)="edit($event)" class="editButton">edit</mat-icon>
+    <mat-icon *ngIf="(!tobeApproved && allJObData?.final_status == 'PENDING' && assignAction?.Delete)" (click)="delete($event)" class="deleteButton">delete</mat-icon>
+    <mat-icon *ngIf="tobeApproved" (click)="updated($event)" matTooltip="Proceed To Approval" class="checkButton">check_circle</mat-icon>
+</div>

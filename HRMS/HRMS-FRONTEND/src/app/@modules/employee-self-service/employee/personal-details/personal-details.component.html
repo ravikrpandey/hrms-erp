@@ -1,0 +1,159 @@
+<div class="employee_basic_details">
+  <mat-card class="PRESENT_ADDRESS_DETAILS">
+      <h3>Present Address Details </h3>
+    <div class="row">
+      <div class="col-md-4">
+        <p><b>Country</b></p>
+        <p>{{dataObj?.present_country_name ? dataObj?.present_country_name : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>State</b></p>
+        <p>{{dataObj?.present_states_name ? dataObj?.present_states_name :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>City</b></p>
+        <p>{{dataObj?.present_city_name? dataObj?.present_city_name :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Address</b></p>
+        <p>{{dataObj?.present_address? dataObj?.present_address :"-"}}</p>
+      </div>
+    </div>
+  </mat-card>
+
+  <mat-card class="PERSONAL DETAILS">
+      <h3>Personal Details</h3>
+    <div class="row">
+      <div class="col-md-4">
+        <p><b>Nationality</b></p>
+        <p>{{dataObj?.permanent_country_name? dataObj?.permanent_country_name :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>State</b></p>
+        <p>{{dataObj?.permanent_states_name? dataObj?.permanent_states_name :"-"}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>City</b></p>
+        <p>{{dataObj?.permanent_city_name? dataObj?.permanent_city_name :"-"}}</p>
+      </div>
+      <!-- <div class="col-md-4">
+        <p><b>DIRE Number</b></p>
+        <p>{{dataObj?.DIRE_number?dataObj?.DIRE_number : '-'}}</p>
+      </div> -->
+      <div class="col-md-4">
+        <p><b>Driving License Number</b></p>
+        <p>{{dataObj?.driving_license_number?dataObj?.driving_license_number : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Blood Group</b></p>
+        <p>{{dataObj?.blood_group?dataObj?.blood_group : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>ID Number</b></p>
+        <p>{{dataObj?.id_number?dataObj?.id_number : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Issued Date</b></p>
+        <p>{{ dataObj?.issued_date ? (dataObj?.issued_date | date:'dd/MM/yyyy') : '-' }}</p>
+      </div>      
+      <div class="col-md-4">
+        <p><b>Exp Date</b></p>
+        <p>{{ dataObj?.exp_date ? (dataObj?.exp_date | date:'dd/MM/yyyy') : '-' }}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>PAN Number </b></p>
+        <p>{{dataObj?.emp_pan_card?(dataObj?.emp_pan_card | uppercase) : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>VISA Number </b></p>
+        <p>{{dataObj?.visa_number?(dataObj?.visa_number | uppercase) : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Adhar Card Number </b></p>
+        <p>{{dataObj?.emp_adhar_card_number?(dataObj?.emp_adhar_card_number | uppercase) : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Emirates Id Number </b></p>
+        <p>{{dataObj?.emirates_id_number?(dataObj?.emirates_id_number | uppercase) : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Labour Card Number </b></p>
+        <p>{{dataObj?.labour_card_number?(dataObj?.labour_card_number | uppercase) : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Medical Condition </b></p>
+        <p>{{dataObj?.emp_medical_condition?dataObj?.emp_medical_condition : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Passport Number</b></p>
+        <p>{{dataObj?.passport_number?dataObj?.passport_number : '-'}}</p>
+      </div>
+      <div class="col-md-4">
+        <p><b>Marital Status</b></p>
+        <p>{{dataObj?.marital_status?dataObj?.marital_status : '-'}}</p>
+      </div>
+      
+    </div>
+  </mat-card>
+
+<mat-card class="Family details">
+    <h3>Family Details</h3>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Family Member's Name</th>
+        <th>Date Of Birth</th>
+        <th>Relation With Employee</th>
+        <th>Contact Number</th>
+        <th>Emergency Contact</th>
+        <th>Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataObj?.family_details">
+        <td>{{data?.member_name}}</td>
+        <td>{{data?.date_of_birth | date:'dd/MM/yyyy'}}</td>
+        <td>{{data?.relation}}</td>
+        <td>
+          <span [style.background-color]="'skyblue'" [style.color]="'white'">
+            +{{ data?.country_code || '-' }}
+          </span>
+          <span>
+            {{ data?.contact_number || '-' }}
+          </span>
+        </td>
+        
+        <td>{{data?.emergency_contact}}</td>
+        <td>{{data?.remarks}}</td>
+      </tr>
+    </tbody>
+  </table>
+</mat-card>
+
+  <mat-card class="PREVIOUS_EMPLOYER_DETAILS">
+      <h3>Previous Employer Details </h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Company Name</th>
+          <th>Form Date</th>
+          <th>To Date</th>
+          <th>Last Drawn Salary (k)</th>
+          <th>Reason Of Leaving</th>
+          <th>Position</th>
+          <th>Location</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <tr *ngFor="let data of dataObj?.prev_employer_details">
+          <td>{{data?.company_name}}</td>
+          <td>{{ data?.from_date ? (data?.from_date | date:'dd/MM/yyyy') : '-' }}</td>
+          <td>{{ data?.to_date ? (data?.to_date | date:'dd/MM/yyyy') : '-' }}</td>
+          <td>{{data?.last_salary}}</td>
+          <td>{{data?.reason_of_leaving}}</td>
+          <td>{{data?.position}}</td>
+          <td>{{data?.location}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
