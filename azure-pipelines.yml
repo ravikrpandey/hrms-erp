@@ -1,0 +1,76 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+
+pool:
+  name: ERP-HRMS
+  demands:
+    - Agent.Name -equals WIN-M04PR0VLFMJ
+
+steps:
+- checkout: self
+  clean: true
+  persistCredentials: false
+
+- powershell: |
+    $ErrorActionPreference = "Stop"
+
+    $components = @(
+        "ERP\elan_backend",
+        "ERP\elan_frontend",
+        "HRMS\HRMS-BACKEND",
+        "HRMS\HRMS-FRONTEND"
+    )
+
+    $excludeDirs = @(
+        ".git", "node_modules", "dist", ".angular",
+        ".idea", ".vscode", "logs", "logger",
+        "upload", "uploads", "uploaded_files",
+        "env", "document", "digital_signature",
+        "generated_offer_letters", "generated_payslip",
+        "leadfile", "Excel file", "master_csv", "item_master"
+    )
+
+    $excludeFiles = @(
+        ".env", ".env.*", "*.sql", "*.log",
+        "*.stackdump", "*.backup-*",
+        ".gitignore", ".gitmessage.txt",
+        "output.pdf", "price-list-master.xls",
+        "price-list-master1.xlsx",
+        "Quotation_QUO202512011002.pdf"
+    )
+
+    # Validate all paths before copying.
+    foreach ($component in $components) {
+        $source = Join-Path $env:BUILD_SOURCESDIRECTORY $component
+        $target = Join-Path "E:\Apps" $component
+
+        if (!(Test-Path "$source\package.json" -PathType Leaf)) {
+            throw "Missing source package.json: $component"
+        }
+        if (!(Test-Path $target -PathType Container)) {
+            throw "Deployment folder missing: $target"
+        }
+    }
+
+    foreach ($component in $components) {
+        $source = Join-Path $env:BUILD_SOURCESDIRECTORY $component
+        $target = Join-Path "E:\Apps" $component
+
+        Write-Host "Deploying $component"
+
+        & robocopy $source $target /E /COPY:DAT /XJ /R:2 /W:2 `
+            /XD $excludeDirs /XF $excludeFiles /NFL /NDL /NP
+
+        $copyResult = $LASTEXITCODE
+        if ($copyResult -ge 8) {
+            throw "Copy failed for $component. Robocopy code: $copyResult"
+        }
+    }
+
+    Write-Host "All four application folders updated."
+    exit 0
+  displayName: Copy application code to E:\Apps
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
