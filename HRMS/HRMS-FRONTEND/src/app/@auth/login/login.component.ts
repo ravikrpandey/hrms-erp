@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
           Validators.maxLength(20),
         ],
       ],
-      domain: [null, Validators.required],
+      domain: ['zyno', Validators.required],
     });
   }
 
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
       'password'
     ).toString();
 
-    const domain = obj?.domain;
+    const domain = obj?.domain || 'zyno';
 
     localStorage.setItem('domain', domain);
 
@@ -98,8 +98,25 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        // Save FIRST API response
         localStorage.setItem('loginUserDetails', JSON.stringify(res));
+
+        const signInObj = {
+          employee_official_email: res.employee_official_email,
+          _token: res.accessToken,
+          token: res.accessToken,
+          accessToken: res.accessToken,
+          employee_photo: res.employee_photo,
+          first_name: res.first_name,
+          last_name: res.last_name,
+          employee_id: res.employee_id,
+          role: res.roles,
+          role_name: res.roles,
+          roles: res.roles,
+          role_id: res.role_master_id,
+          role_master_id: res.role_master_id,
+          role_master_name: res.roles
+        };
+        localStorage.setItem('signInUser', JSON.stringify(signInObj));
 
         this.toast.success('Welcome to Zyno HRMS', 'Login Successful');
 

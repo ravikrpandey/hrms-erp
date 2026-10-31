@@ -3,7 +3,7 @@
         <div class="modal-dialog-header">
       <div class="header-content">
         <h4 class="modal-dialog-title">
-          <i class="fa fa-shield text-primary mr-2"></i> Task Review & Approval
+          <i class="fas fa-clipboard-check text-primary mr-2"></i> Task Review & Approval
         </h4>
         <span class="header-subtitle">Every task requires reviewer approval before closing</span>
       </div>
@@ -102,12 +102,13 @@
         Cancel
       </button>
 
-            <button
+      <button
         type="button"
         class="btn btn-warning"
         *ngIf="task?.status === 'Completed'"
         (click)="reopenTask()"
-        [disabled]="submitting"
+        [disabled]="submitting || !canReopen"
+        [title]="canReopen ? 'Reopen task to In Progress' : 'Reopen not permitted for employees'"
       >
         <i class="fa fa-undo mr-1"></i> Reopen Task
       </button>

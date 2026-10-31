@@ -5,6 +5,8 @@ import { ProjectListComponent } from './components/project-list/project-list.com
 import { ProjectCreateComponent } from './components/project-create/project-create.component';
 import { ProjectDetailComponent } from './components/project-detail/project-detail.component';
 import { TaskManagementComponent } from './components/task-management/task-management.component';
+import { TimesheetComponent } from './components/timesheet/timesheet.component';
+import { ExpenseReportComponent } from './components/expense-report/expense-report.component';
 
 const routes: Routes = [
   {
@@ -38,8 +40,11 @@ const routes: Routes = [
       },
       {
         path: 'timesheet',
-        redirectTo: 'projects',
-        pathMatch: 'full'
+        component: TimesheetComponent
+      },
+      {
+        path: 'expense-report',
+        component: ExpenseReportComponent
       }
     ]
   }

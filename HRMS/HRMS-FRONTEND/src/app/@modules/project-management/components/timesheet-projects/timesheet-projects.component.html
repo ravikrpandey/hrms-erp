@@ -1,0 +1,333 @@
+<div class="zoho-page-container">
+  <!-- Hidden import file input -->
+  <input
+    type="file"
+    id="projectsImportInput"
+    style="display: none"
+    accept=".csv,.xlsx"
+    (change)="handleFileImport($event)"
+  />
+
+  <!-- Toolbar matching Image 2 -->
+  <div class="zoho-toolbar">
+    <div class="toolbar-left">
+      <div class="zoho-dropdown">
+        <select class="zoho-select" [(ngModel)]="selectedFilter" (change)="onFilterChange()">
+          <option value="Projects">Projects</option>
+          <option value="My Projects">My Projects</option>
+          <option value="All Projects">All Projects</option>
+        </select>
+        <i class="fa fa-angle-down select-chevron"></i>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <button type="button" class="btn-zoho-primary" *ngIf="canCreateProject" (click)="openAddProject()">
+        Add Project
+      </button>
+
+      <div class="toolbar-actions">
+        <button
+          type="button"
+          class="btn-zoho-icon"
+          [class.active]="showFilterPanel"
+          (click)="toggleFilterPanel()"
+          title="Filter"
+        >
+          <i class="fa fa-filter"></i>
+        </button>
+        <div class="more-menu-container">
+          <button
+            type="button"
+            class="btn-zoho-icon"
+            [class.active]="showMoreMenu"
+            (click)="toggleMoreMenu($event)"
+            title="More options"
+          >
+            <i class="fa fa-ellipsis-h"></i>
+          </button>
+          <div class="more-dropdown-menu" *ngIf="showMoreMenu" (click)="$event.stopPropagation()">
+            <button type="button" class="more-menu-item" (click)="onImportClick()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Import</span>
+            </button>
+            <button type="button" class="more-menu-item" (click)="onExportClick()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Export</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AG Grid Projects Table -->
+  <div class="table-container ag-grid-wrapper">
+    <ag-grid-angular
+      style="width: 100%; height: 100%;"
+      class="ag-theme-alpine"
+      [rowData]="filteredProjects"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowSelection]="'multiple'"
+      [suppressRowClickSelection]="true"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowHeight]="48"
+      [headerHeight]="40"
+      (gridReady)="onGridReady($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+      (selectionChanged)="onSelectionChanged()"
+    ></ag-grid-angular>
+  </div>
+
+
+  <!-- Slide-in Side Filter Panel (Projects Filter Exact Match) -->
+  <div
+    class="timesheet-side-filter-backdrop"
+    *ngIf="showFilterPanel"
+    (click)="toggleFilterPanel()"
+  >
+    <div class="timesheet-side-filter-panel" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="side-filter-header">
+        <h3 class="side-filter-title">Filter</h3>
+        <button
+          type="button"
+          class="side-filter-close-btn"
+          (click)="toggleFilterPanel()"
+          title="Close filter"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="side-filter-body">
+        <div class="side-filter-group">
+          <label class="side-filter-label">Project Name</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterProjectName">
+              <option value="All">All</option>
+              <option *ngFor="let name of projectNames" [value]="name">{{ name }}</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Clients</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterClient">
+              <option value="All Clients">All Clients</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Project Head</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterProjectHead">
+              <option value="All Users">All Users</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Project Manager</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterProjectManager">
+              <option value="All Users">All Users</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Assigned To</label>
+          <div class="filter-tag-container" (click)="!filterAssignedTo ? setAssignedTo() : null">
+            <span class="filter-tag" *ngIf="filterAssignedTo">
+              <i class="fa fa-user-o tag-user-icon"></i>
+              <span class="tag-text">{{ filterAssignedTo }}</span>
+              <span class="tag-remove-btn" (click)="$event.stopPropagation(); clearAssignedTo()">✕</span>
+            </span>
+            <span class="filter-tag-placeholder" *ngIf="!filterAssignedTo">Select user...</span>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Status</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterStatus">
+              <option value="In-Progress">In-Progress</option>
+              <option value="All">All</option>
+              <option value="Completed">Completed</option>
+              <option value="On Hold">On Hold</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="side-filter-footer">
+        <button type="button" class="btn-side-filter-apply" (click)="applySideFilter()">Apply</button>
+        <button type="button" class="btn-side-filter-reset" (click)="resetSideFilter()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project Details Slide-Over Drawer/Modal -->
+<div *ngIf="showProjectModal" class="project-modal-backdrop" (click)="closeProjectModal()">
+  <div class="project-modal-dialog" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <h3 class="project-modal-title">
+          {{ selectedProject?.project_name }}
+          <span class="project-code-badge" *ngIf="selectedProject?.project_code">
+            {{ selectedProject?.project_code }}
+          </span>
+        </h3>
+        <span class="zoho-status-badge">
+          <i class="fa fa-check-circle zoho-check-icon"></i>
+          {{ formatStatus(selectedProject?.status) }}
+        </span>
+      </div>
+      <div class="modal-header-actions">
+        <button
+          type="button"
+          class="btn-zoho-primary btn-sm"
+          (click)="goToFullProject(selectedProject)"
+        >
+          <i class="fa fa-external-link mr-1"></i> Full Project View
+        </button>
+        <button
+          type="button"
+          class="btn-close-modal"
+          (click)="closeProjectModal()"
+          title="Close"
+        >
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="modal-body">
+      <!-- Loading indicator -->
+      <div *ngIf="loadingProjectDetails" class="text-center py-4 text-muted">
+        <i class="fa fa-spinner fa-spin mr-2"></i> Loading project details...
+      </div>
+
+      <div *ngIf="!loadingProjectDetails">
+        <!-- Overview Grid -->
+        <div class="overview-grid">
+          <div class="info-card">
+            <span class="info-label">Client</span>
+            <span class="info-val">{{ selectedProject?.client_name || '-' }}</span>
+          </div>
+          <div class="info-card" *ngIf="selectedProject?.project_manager_name">
+            <span class="info-label">Project Head</span>
+            <span class="info-val">{{ selectedProject?.project_manager_name }}</span>
+          </div>
+          <div class="info-card" *ngIf="selectedProject?.supervisor_name">
+            <span class="info-label">Project Manager (Supervisor)</span>
+            <span class="info-val">{{ selectedProject?.supervisor_name }}</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Start Date</span>
+            <span class="info-val">{{ formatDate(selectedProject?.start_date) }}</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">End Date</span>
+            <span class="info-val">{{ formatDate(selectedProject?.end_date) }}</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Total Jobs</span>
+            <span class="info-val">{{ selectedProject?.jobs_count || projectJobs.length || 0 }}</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Hours Logged</span>
+            <span class="info-val font-semibold">{{ selectedProject?.hours_logged || '0' }} hrs</span>
+          </div>
+          <div class="info-card" *ngIf="canCreateProject && selectedProject?.budget">
+            <span class="info-label">Allocated Budget</span>
+            <span class="info-val font-semibold text-primary">₹{{ selectedProject?.budget | number }}</span>
+          </div>
+        </div>
+
+        <!-- Jobs in Project Section -->
+        <div class="modal-section mt-4">
+          <div class="section-header">
+            <h5 class="section-title">
+              <i class="fa fa-tasks mr-2 text-primary"></i> Jobs ({{ projectJobs.length }})
+            </h5>
+          </div>
+          <div class="project-jobs-list" *ngIf="projectJobs.length > 0">
+            <div
+              *ngFor="let job of projectJobs"
+              class="project-job-item"
+              (click)="openJobInDialog(job)"
+            >
+              <div class="job-item-left">
+                <span class="job-title-item">{{ job.task_name }}</span>
+                <span class="job-assignee-item text-muted" *ngIf="job.assigned_to_name">
+                  <i class="fa fa-user-o mr-1"></i> {{ job.assigned_to_name }}
+                </span>
+              </div>
+              <div class="job-item-right">
+                <span class="zoho-status-badge mr-3">
+                  <i class="fa fa-check-circle zoho-check-icon"></i> {{ job.status }}
+                </span>
+                <i class="fa fa-chevron-right text-muted"></i>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="projectJobs.length === 0" class="text-center py-3 text-muted">
+            No jobs found under this project
+          </div>
+        </div>
+
+        <!-- Project Members Section -->
+        <div class="modal-section mt-4" *ngIf="projectMembers.length > 0">
+          <div class="section-header">
+            <h5 class="section-title">
+              <i class="fa fa-users mr-2 text-primary"></i> Team Members ({{ projectMembers.length }})
+            </h5>
+          </div>
+          <div class="members-chip-wrap">
+            <span *ngFor="let m of projectMembers" class="member-chip">
+              <i class="fa fa-user-circle-o mr-1"></i>
+              {{ m.employee_name || 'Member' }}
+              <span class="role-badge" *ngIf="m.role_in_project">({{ m.role_in_project }})</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Task Dialog when job is clicked inside project drawer -->
+<app-task-dialog
+  *ngIf="showTaskDialog"
+  [task]="selectedJobForDialog"
+  [projects]="allProjects"
+  [employees]="employees"
+  [currentUser]="currentUser"
+  [canEdit]="true"
+  (close)="closeTaskDialog()"
+  (saved)="onTaskSaved()"
+></app-task-dialog>

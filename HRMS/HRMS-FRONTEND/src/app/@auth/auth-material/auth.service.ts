@@ -70,13 +70,13 @@ export class AuthService {
         }
 
         this.authenticationUser(
-          data.employee_official_email,
+          res.employee_official_email || data.employee_official_email,
           res.accessToken,
           res.employee_photo,
           res.first_name,
           res.employee_id,
           res.roles,
-          res.employee_id
+          res.role_master_id
         );
       })
     );
@@ -315,7 +315,7 @@ export class AuthService {
     role: string,
     role_id: number
   ) {
-    const userS = new Login(
+    const userS: any = new Login(
       employee_official_email,
       token,
       img,
@@ -324,6 +324,9 @@ export class AuthService {
       role,
       role_id
     );
+    userS.role_master_id = role_id;
+    userS.role_name = role;
+    userS.roles = role;
     this.userS.next(userS);
     localStorage.setItem('signInUser', JSON.stringify(userS));
     return userS;

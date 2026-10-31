@@ -1,0 +1,202 @@
+<div class="zoho-page-container">
+  <!-- Hidden import file input -->
+  <input
+    type="file"
+    id="jobsImportInput"
+    style="display: none"
+    accept=".csv,.xlsx"
+    (change)="handleFileImport($event)"
+  />
+
+  <!-- Toolbar matching Image 1 -->
+  <div class="zoho-toolbar">
+    <div class="toolbar-left">
+      <div class="zoho-dropdown">
+        <select class="zoho-select" [(ngModel)]="selectedFilter" (change)="onFilterChange()">
+          <option value="Jobs">Jobs</option>
+          <option value="My Jobs">My Jobs</option>
+          <option value="All Jobs">All Jobs</option>
+        </select>
+        <i class="fa fa-angle-down select-chevron"></i>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <button type="button" class="btn-zoho-primary" (click)="openAddJob()">
+        Add Job
+      </button>
+
+      <div class="toolbar-actions">
+        <button
+          type="button"
+          class="btn-zoho-icon"
+          [class.active]="showFilterPanel"
+          (click)="toggleFilterPanel()"
+          title="Filter"
+        >
+          <i class="fa fa-filter"></i>
+        </button>
+        <div class="more-menu-container">
+          <button
+            type="button"
+            class="btn-zoho-icon"
+            [class.active]="showMoreMenu"
+            (click)="toggleMoreMenu($event)"
+            title="More options"
+          >
+            <i class="fa fa-ellipsis-h"></i>
+          </button>
+          <div class="more-dropdown-menu" *ngIf="showMoreMenu" (click)="$event.stopPropagation()">
+            <button type="button" class="more-menu-item" (click)="onImportClick()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Import</span>
+            </button>
+            <button type="button" class="more-menu-item" (click)="onExportClick()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span>Export</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AG Grid Jobs Table -->
+  <div class="table-container ag-grid-wrapper">
+    <ag-grid-angular
+      style="width: 100%; height: 100%;"
+      class="ag-theme-alpine"
+      [rowData]="filteredJobs"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowSelection]="'multiple'"
+      [suppressRowClickSelection]="true"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowHeight]="48"
+      [headerHeight]="40"
+      (gridReady)="onGridReady($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+      (selectionChanged)="onSelectionChanged()"
+    ></ag-grid-angular>
+  </div>
+
+  <!-- Slide-in Side Filter Panel (Jobs Filter Exact Match) -->
+  <div
+    class="timesheet-side-filter-backdrop"
+    *ngIf="showFilterPanel"
+    (click)="toggleFilterPanel()"
+  >
+    <div class="timesheet-side-filter-panel" (click)="$event.stopPropagation()">
+      <!-- Header -->
+      <div class="side-filter-header">
+        <h3 class="side-filter-title">Filter</h3>
+        <button
+          type="button"
+          class="side-filter-close-btn"
+          (click)="toggleFilterPanel()"
+          title="Close filter"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="side-filter-body">
+        <div class="side-filter-group">
+          <label class="side-filter-label">Job Name</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterJobName">
+              <option value="All">All</option>
+              <option *ngFor="let name of jobNames" [value]="name">{{ name }}</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Clients</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterClient">
+              <option value="All Clients">All Clients</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Projects</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterProject">
+              <option value="All Projects">All Projects</option>
+              <option *ngFor="let p of projectNames" [value]="p">{{ p }}</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Assigned To</label>
+          <div class="filter-tag-container" (click)="!filterAssignedTo ? setAssignedTo() : null">
+            <span class="filter-tag" *ngIf="filterAssignedTo">
+              <i class="fa fa-user-o tag-user-icon"></i>
+              <span class="tag-text">{{ filterAssignedTo }}</span>
+              <span class="tag-remove-btn" (click)="$event.stopPropagation(); clearAssignedTo()">✕</span>
+            </span>
+            <span class="filter-tag-placeholder" *ngIf="!filterAssignedTo">Select user...</span>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Assigned By</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterAssignedBy">
+              <option value="Select">Select</option>
+              <option value="All Users">All Users</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+
+        <div class="side-filter-group">
+          <label class="side-filter-label">Status</label>
+          <div class="filter-select-wrap">
+            <select class="filter-input-select" [(ngModel)]="filterStatus">
+              <option value="In-Progress">In-Progress</option>
+              <option value="All">All</option>
+              <option value="Completed">Completed</option>
+              <option value="On Hold">On Hold</option>
+            </select>
+            <i class="fa fa-angle-down filter-chevron"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="side-filter-footer">
+        <button type="button" class="btn-side-filter-apply" (click)="applySideFilter()">Apply</button>
+        <button type="button" class="btn-side-filter-reset" (click)="resetSideFilter()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Task Dialog for viewing/editing on click -->
+<app-task-dialog
+  *ngIf="showJobDialog"
+  [task]="selectedJob"
+  [projects]="allProjects"
+  [employees]="employees"
+  [currentUser]="currentUser"
+  [canEdit]="true"
+  (close)="closeJobDialog()"
+  (saved)="onJobSaved()"
+></app-task-dialog>

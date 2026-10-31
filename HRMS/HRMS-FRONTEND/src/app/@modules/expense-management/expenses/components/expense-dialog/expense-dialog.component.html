@@ -1,0 +1,278 @@
+<div class="expense-dialog">
+  <div class="dialog-header">
+    <div>
+      <h3 class="dialog-title">
+        {{ isRejected ? 'Correct & Resubmit Expense' : isEdit ? 'Edit Expense Draft' : 'Add New Expense' }}
+      </h3>
+      <p class="dialog-subtitle">
+        {{ isRejected ? 'Update the required details and resubmit for Project Manager approval' : 'Submit or save your project expenses for two-level approval' }}
+      </p>
+    </div>
+    <button type="button" class="close-btn" (click)="onCancel()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-body">
+    <!-- Rejection Banner if editing a rejected expense -->
+    <div *ngIf="isRejected" class="rejection-alert mb-3">
+      <div class="alert-icon">
+        <i class="fa fa-exclamation-triangle"></i>
+      </div>
+      <div class="alert-content">
+        <h6 class="alert-heading">Previous Rejection Notice</h6>
+        <p class="alert-reason">{{ rejectionReason }}</p>
+        <span class="alert-hint">Please address this feedback before resubmitting. Resubmission will restart approval from the Project Manager.</span>
+      </div>
+    </div>
+
+    <form [formGroup]="expenseForm">
+      <!-- Associated Project -->
+      <div class="inline-form-row mb-3">
+        <label class="inline-label">
+          Associated Project <span class="required-star">*</span>
+        </label>
+        <div class="inline-control-wrap">
+          <div class="searchable-project-dropdown">
+            <div
+              class="custom-select-trigger custom-control d-flex align-items-center justify-content-between"
+              [class.is-invalid]="expenseForm.get('project_id')?.touched && expenseForm.get('project_id')?.invalid"
+              [class.open]="showProjectDropdown"
+              (click)="toggleProjectDropdown($event)"
+            >
+              <span class="selected-text" [class.placeholder-text]="!expenseForm.get('project_id')?.value">
+                {{ getSelectedProjectName() || 'Select project...' }}
+              </span>
+              <i class="fa fa-chevron-down dropdown-arrow" [class.rotated]="showProjectDropdown"></i>
+            </div>
+
+            <!-- Dropdown Popover -->
+            <div class="custom-dropdown-popover" *ngIf="showProjectDropdown" (click)="$event.stopPropagation()">
+              <div class="dropdown-search-box">
+                <i class="fa fa-search search-icon"></i>
+                <input
+                  type="text"
+                  class="dropdown-search-input"
+                  [(ngModel)]="projectSearchText"
+                  [ngModelOptions]="{standalone: true}"
+                  placeholder="Search project..."
+                  autofocus
+                />
+                <button
+                  *ngIf="projectSearchText"
+                  type="button"
+                  class="clear-search-btn"
+                  (click)="projectSearchText = ''"
+                >
+                  <i class="fa fa-times"></i>
+                </button>
+              </div>
+
+              <div class="dropdown-options-container">
+                <div
+                  class="dropdown-option"
+                  [class.active]="!expenseForm.get('project_id')?.value"
+                  (click)="selectProject(null)"
+                >
+                  <span class="option-title text-muted">Select project...</span>
+                </div>
+                <div
+                  class="dropdown-option"
+                  *ngFor="let proj of filteredProjects"
+                  [class.active]="expenseForm.get('project_id')?.value == proj.project_id"
+                  (click)="selectProject(proj)"
+                >
+                  <span class="option-title">{{ proj.project_name }}</span>
+                  <span class="option-badge">{{ proj.project_code || 'PRJ-' + proj.project_id }}</span>
+                </div>
+                <div class="dropdown-empty-text" *ngIf="filteredProjects.length === 0">
+                  <i class="fa fa-folder-open-o mr-1"></i> No matching projects found
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="expenseForm.get('project_id')?.touched && expenseForm.get('project_id')?.invalid" class="form-error">
+            Project is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Category -->
+      <div class="inline-form-row mb-3">
+        <label class="inline-label">
+          Expense Category <span class="required-star">*</span>
+        </label>
+        <div class="inline-control-wrap">
+          <select class="form-select custom-control" formControlName="expense_type">
+            <option value="" disabled>Select category...</option>
+            <option *ngFor="let cat of categories" [value]="cat.expense_type">
+              {{ cat.expense_type }}
+            </option>
+          </select>
+          <div *ngIf="expenseForm.get('expense_type')?.touched && expenseForm.get('expense_type')?.invalid" class="form-error">
+            Category is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Expense Date -->
+      <div class="inline-form-row mb-3">
+        <label class="inline-label">
+          Expense Date <span class="required-star">*</span>
+        </label>
+        <div class="inline-control-wrap">
+          <input
+            type="date"
+            class="form-control custom-control"
+            formControlName="expense_date"
+            [max]="maxDate"
+          />
+          <div *ngIf="expenseForm.get('expense_date')?.touched && expenseForm.get('expense_date')?.invalid" class="form-error">
+            Valid expense date is required.
+          </div>
+        </div>
+      </div>
+
+      <!-- Amount -->
+      <div class="inline-form-row mb-3">
+        <label class="inline-label">
+          Amount (₹) <span class="required-star">*</span>
+        </label>
+        <div class="inline-control-wrap">
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              class="form-control custom-control"
+              placeholder="0.00"
+              formControlName="amount"
+            />
+          </div>
+          <div *ngIf="expenseForm.get('amount')?.touched && expenseForm.get('amount')?.invalid" class="form-error">
+            Please enter a positive amount.
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments / Description -->
+      <div class="inline-form-row mb-3 inline-form-row-top">
+        <label class="inline-label inline-label-top">
+          Comments
+        </label>
+        <div class="inline-control-wrap">
+          <textarea
+            class="form-control custom-control"
+            rows="3"
+            placeholder="Describe the nature of this expense, vendor details, or project milestone..."
+            formControlName="comments"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Supporting Bill / Receipt -->
+      <div class="inline-form-row mb-2 inline-form-row-top">
+        <label class="inline-label inline-label-top">
+          Attachment
+        </label>
+        <div class="inline-control-wrap">
+          <div class="file-upload-box" *ngIf="!selectedFileName && !existingAttachmentName">
+            <input
+              type="file"
+              id="billUpload"
+              class="file-input"
+              (change)="onFileChange($event)"
+              accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+            />
+            <label for="billUpload" class="file-label">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0c85c0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              <span class="upload-text">Click to browse or drag & drop bill/invoice</span>
+              <span class="upload-hint">Supported formats: PDF, PNG, JPG, JPEG, DOCX (Max 25MB)</span>
+            </label>
+          </div>
+
+          <!-- Newly selected file badge -->
+          <div class="file-badge new-file" *ngIf="selectedFileName">
+            <div class="file-info">
+              <i class="fa fa-file-text-o file-icon"></i>
+              <span class="file-name">{{ selectedFileName }}</span>
+              <span class="badge bg-primary ml-2">New Upload</span>
+            </div>
+            <button type="button" class="btn-remove-file" (click)="removeSelectedFile()">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+
+          <!-- Existing file display when editing -->
+          <div class="file-badge existing-file" *ngIf="!selectedFileName && existingAttachmentName">
+            <div class="file-info">
+              <i class="fa fa-paperclip file-icon"></i>
+              <span class="file-name">{{ existingAttachmentName }}</span>
+              <span class="badge bg-secondary ml-2">Attached File</span>
+            </div>
+            <label for="billUploadEdit" class="change-file-btn">
+              Change
+              <input
+                type="file"
+                id="billUploadEdit"
+                class="d-none"
+                (change)="onFileChange($event)"
+                accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+              />
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="dialog-footer">
+    <button type="button" class="btn btn-cancel-modal" (click)="onCancel()" [disabled]="submitting">
+      Cancel
+    </button>
+
+    <div class="footer-actions">
+      <!-- Save as Draft (only for new or editing draft) -->
+      <button
+        *ngIf="!isRejected"
+        type="button"
+        class="btn btn-draft"
+        (click)="save('Draft')"
+        [disabled]="submitting"
+      >
+        <i class="fa fa-save mr-1"></i> Save as Draft
+      </button>
+
+      <!-- Submit for Approval -->
+      <button
+        *ngIf="!isRejected"
+        type="button"
+        class="btn btn-primary ml-2"
+        (click)="save('Submit')"
+        [disabled]="submitting"
+      >
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i> Submitting...</span>
+        <span *ngIf="!submitting"><i class="fa fa-paper-plane mr-1"></i> Submit for Approval</span>
+      </button>
+
+      <!-- Resubmit for Approval (when rejected) -->
+      <button
+        *ngIf="isRejected"
+        type="button"
+        class="btn btn-primary ml-2"
+        (click)="save('Resubmit')"
+        [disabled]="submitting"
+      >
+        <span *ngIf="submitting"><i class="fa fa-spinner fa-spin mr-1"></i> Resubmitting...</span>
+        <span *ngIf="!submitting"><i class="fa fa-refresh mr-1"></i> Resubmit for Approval</span>
+      </button>
+    </div>
+  </div>
+</div>
+

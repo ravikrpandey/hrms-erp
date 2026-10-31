@@ -15,11 +15,11 @@
         <span>{{ project.project_code || ('PRJ-' + project.project_id) }}</span>
       </p>
     </div>
-    <div class="add_button">
-      <button class="backBtn" (click)="goBack()">
+    <div class="add_button" style="display: flex; align-items: center; gap: 10px;">
+      <button type="button" class="backBtn" (click)="goBack()">
         <i class="fa fa-arrow-circle-left"></i> Back
       </button>
-      <button class="btn_add ml-2" (click)="goToEdit()">
+      <button type="button" class="btn_add" (click)="goToEdit()" *ngIf="canEditProject">
         <i class="fa fa-edit"></i> Edit Project
       </button>
     </div>
@@ -50,6 +50,10 @@
               <span class="sub-item">
                 <i class="fa fa-credit-card mr-1"></i> Billing: <strong>{{ project.billing_method || 'Fixed Cost' }}</strong>
               </span>
+              <span class="sub-separator" *ngIf="project.project_type">•</span>
+              <span class="sub-item" *ngIf="project.project_type">
+                <i class="fa fa-tag mr-1"></i> Type: <strong>{{ project.project_type }}</strong>
+              </span>
             </div>
           </div>
         </div>
@@ -65,7 +69,7 @@
         </div>
       </div>
 
-            <div class="kpi-grid">
+      <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-icon icon-tasks">
             <i class="fa fa-tasks"></i>
@@ -87,6 +91,16 @@
         </div>
 
         <div class="kpi-card">
+          <div class="kpi-icon icon-milestones">
+            <i class="fa fa-flag"></i>
+          </div>
+          <div class="kpi-details">
+            <span class="kpi-value">{{ completedMilestonesCount }} / {{ milestones.length }}</span>
+            <span class="kpi-label">Milestones Done</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
           <div class="kpi-icon icon-members">
             <i class="fa fa-users"></i>
           </div>
@@ -96,15 +110,47 @@
           </div>
         </div>
 
-        <div class="kpi-card">
-          <div class="kpi-icon icon-budget">
-            <i class="fa fa-inr"></i>
+        <div class="kpi-card" *ngIf="overdueTasksCount > 0">
+          <div class="kpi-icon icon-overdue">
+            <i class="fa fa-exclamation-triangle"></i>
           </div>
           <div class="kpi-details">
-            <span class="kpi-value">{{ formatCurrency(project.budget) }}</span>
-            <span class="kpi-label">Allocated Budget</span>
+            <span class="kpi-value text-danger">{{ overdueTasksCount }}</span>
+            <span class="kpi-label">Overdue Tasks</span>
           </div>
         </div>
+
+        <ng-container *ngIf="isProjectHeadOrAdmin">
+          <div class="kpi-card">
+            <div class="kpi-icon icon-budget">
+              <i class="fa fa-inr"></i>
+            </div>
+            <div class="kpi-details">
+              <span class="kpi-value">{{ formatCurrency(project.budget) }}</span>
+              <span class="kpi-label">Allocated Budget</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon icon-burned">
+              <i class="fa fa-fire"></i>
+            </div>
+            <div class="kpi-details">
+              <span class="kpi-value">{{ formatCurrency(project.burned_amount || project.spent) }}</span>
+              <span class="kpi-label">Total Used / Burned</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon icon-available">
+              <i class="fa fa-shield"></i>
+            </div>
+            <div class="kpi-details">
+              <span class="kpi-value">{{ formatCurrency(project.available_budget) }}</span>
+              <span class="kpi-label">Available Budget</span>
+            </div>
+          </div>
+        </ng-container>
       </div>
 
             <div class="banner-progress-row">
@@ -130,13 +176,21 @@
       </div>
     </div>
 
-        <div class="zoho-tabs-nav">
+    <div class="zoho-tabs-nav">
       <button
         class="tab-link"
         [class.active]="activeTab === 'overview'"
         (click)="setTab('overview')"
       >
         <i class="fa fa-th-large mr-1"></i> Overview
+      </button>
+      <button
+        class="tab-link"
+        [class.active]="activeTab === 'milestones'"
+        (click)="setTab('milestones')"
+      >
+        <i class="fa fa-flag mr-1"></i> Milestones
+        <span class="tab-badge">{{ milestones.length }}</span>
       </button>
       <button
         class="tab-link"
@@ -156,9 +210,10 @@
       </button>
     </div>
 
-        <div class="tab-pane" *ngIf="activeTab === 'overview'">
+    <!-- ==================== OVERVIEW TAB ==================== -->
+    <div class="tab-pane" *ngIf="activeTab === 'overview'">
       <div class="row">
-                <div class="col-xxl-8 col-lg-8 col-12 mb-3">
+        <div class="col-xxl-8 col-lg-8 col-12 mb-3">
           <div class="content-card">
             <h4 class="card-sec-title">Project Details</h4>
 
@@ -180,11 +235,22 @@
                 <span class="detail-val">{{ project.department_name || 'General' }}</span>
               </div>
               <div class="detail-item">
-                <span class="detail-label">Project Head / Manager</span>
+                <span class="detail-label">Project Head</span>
                 <span class="detail-val font-semibold text-primary">
                   {{ project.project_manager_name || 'Not assigned' }}
                   <span class="text-muted" *ngIf="project.project_manager_email">({{ project.project_manager_email }})</span>
                 </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Project Manager (Supervisor)</span>
+                <span class="detail-val font-semibold text-dark">
+                  {{ project.supervisor_name || 'Not assigned' }}
+                  <span class="text-muted" *ngIf="project.supervisor_email">({{ project.supervisor_email }})</span>
+                </span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Project Type</span>
+                <span class="detail-val">{{ project.project_type || 'Client Project' }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">Billing Method</span>
@@ -201,9 +267,17 @@
                   <span *ngIf="project.is_overdue" class="badge-overdue ml-2">OVERDUE</span>
                 </span>
               </div>
-              <div class="detail-item">
-                <span class="detail-label">Budget</span>
-                <span class="detail-val">{{ formatCurrency(project.budget) }}</span>
+              <div class="detail-item" *ngIf="isProjectHeadOrAdmin">
+                <span class="detail-label">Allocated Budget</span>
+                <span class="detail-val font-semibold">{{ formatCurrency(project.budget) }}</span>
+              </div>
+              <div class="detail-item" *ngIf="isProjectHeadOrAdmin">
+                <span class="detail-label">Total Used / Burned</span>
+                <span class="detail-val text-danger">{{ formatCurrency(project.burned_amount || project.spent) }}</span>
+              </div>
+              <div class="detail-item" *ngIf="isProjectHeadOrAdmin">
+                <span class="detail-label">Available Budget</span>
+                <span class="detail-val text-success font-semibold">{{ formatCurrency(project.available_budget) }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">Initial Progress</span>
@@ -228,18 +302,32 @@
               <div class="manager-text">
                 <h5 class="mgr-name">{{ project.project_manager_name }}</h5>
                 <p class="mgr-email" *ngIf="project.project_manager_email">{{ project.project_manager_email }}</p>
-                <span class="mgr-badge">Project Manager</span>
+                <span class="mgr-badge">Project Head</span>
               </div>
             </div>
             <ng-template #noMgr>
-              <p class="text-muted mb-0">No Project Manager assigned yet.</p>
+              <p class="text-muted mb-0">No Project Head assigned yet.</p>
             </ng-template>
+          </div>
+
+          <div class="content-card mb-3" *ngIf="project.supervisor_name">
+            <h4 class="card-sec-title">Project Manager (Supervisor)</h4>
+            <div class="manager-card-body">
+              <div class="manager-avatar-lg" style="background: linear-gradient(135deg, #0284c7, #0369a1);">
+                {{ getInitials(project.supervisor_name) }}
+              </div>
+              <div class="manager-text">
+                <h5 class="mgr-name">{{ project.supervisor_name }}</h5>
+                <p class="mgr-email" *ngIf="project.supervisor_email">{{ project.supervisor_email }}</p>
+                <span class="mgr-badge" style="background:#e0f2fe; color:#0369a1;">Supervisor</span>
+              </div>
+            </div>
           </div>
 
                     <div class="content-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <h4 class="card-sec-title mb-0">Team ({{ members.length }})</h4>
-              <button class="btn-xs btn_add" (click)="openAssignModal()">
+              <button class="btn-xs btn_add" (click)="openAssignModal()" *ngIf="canManageMembers">
                 <i class="fa fa-plus"></i> Assign
               </button>
             </div>
@@ -271,7 +359,155 @@
       </div>
     </div>
 
-        <div class="tab-pane" *ngIf="activeTab === 'tasks'">
+    <!-- ==================== MILESTONES TAB ==================== -->
+    <div class="tab-pane" *ngIf="activeTab === 'milestones'">
+      <div class="content-card">
+        <div class="tasks-action-bar">
+          <div class="task-filters-left">
+            <div class="search-box">
+              <i class="fa fa-search"></i>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search milestones..."
+                [(ngModel)]="milestoneSearchTerm"
+                (input)="applyMilestoneFilter()"
+              />
+            </div>
+            <div class="status-filter-box">
+              <select class="form-select" [(ngModel)]="milestoneStatusFilter" (change)="applyMilestoneFilter()">
+                <option value="All">All Statuses</option>
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="Blocked">Blocked</option>
+              </select>
+            </div>
+          </div>
+          <div class="task-actions-right" *ngIf="canManageMilestones">
+            <button type="button" class="btn_add" (click)="openCreateMilestoneModal()">
+              <i class="fa fa-plus"></i> Add Milestone
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container mt-3" *ngIf="filteredMilestones.length > 0; else noMilestones">
+          <table class="table project-table">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Code</th>
+                <th style="min-width: 180px;">Milestone Name</th>
+                <th style="width: 85px; text-align: center;">Tasks</th>
+                <th style="width: 95px; text-align: center;">Completed</th>
+                <th style="min-width: 150px;">Progress</th>
+                <th style="width: 130px;">Due Date</th>
+                <th style="width: 120px;">Status</th>
+                <th style="width: 150px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let m of filteredMilestones">
+                <td>
+                  <span class="milestone-code-badge font-weight-bold">
+                    {{ m.milestone_code || m.milestone_id || ('MS-' + m.id) }}
+                  </span>
+                </td>
+                <td>
+                  <div class="milestone-name-cell">
+                    <a class="milestone-title-link font-semibold text-primary cursor-pointer" (click)="openMilestoneTasksModal(m)" title="View associated tasks">
+                      <i class="fa fa-flag mr-1 text-primary"></i>{{ m.name }}
+                    </a>
+                    <small class="text-muted d-block" *ngIf="m.description" style="font-size: 11.5px;">{{ m.description }}</small>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <span class="milestone-count-badge" [class.count-zero]="!(m.total_tasks > 0)">
+                    {{ m.total_tasks !== undefined ? m.total_tasks : getMilestoneTasks(m).length }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <span class="milestone-count-badge count-completed" *ngIf="(m.completed_tasks || 0) > 0">
+                    <i class="fa fa-check mr-1" style="font-size: 10px;"></i>{{ m.completed_tasks }}
+                  </span>
+                  <span class="milestone-count-badge count-zero" *ngIf="!(m.completed_tasks > 0)">
+                    0
+                  </span>
+                </td>
+                <td>
+                  <div class="milestone-progress-box">
+                    <div class="d-flex justify-content-between align-items-center mb-1 small">
+                      <span class="font-weight-600 text-dark" style="font-size: 12.5px;">{{ m.progress || 0 }}%</span>
+                      <span class="text-muted" style="font-size: 11px; font-weight: 500;">
+                        {{ m.completed_tasks || 0 }}/{{ m.total_tasks !== undefined ? m.total_tasks : getMilestoneTasks(m).length }}
+                      </span>
+                    </div>
+                    <div class="progress" style="height: 6px; border-radius: 4px; background: #e2e8f0;">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        [style.width.%]="m.progress || 0"
+                        [ngClass]="{
+                          'bg-success': (m.progress || 0) === 100,
+                          'bg-info': (m.progress || 0) > 0 && (m.progress || 0) < 100,
+                          'bg-secondary': (m.progress || 0) === 0
+                        }"
+                      ></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px;">
+                    <i class="fa fa-calendar-o mr-1 text-muted" *ngIf="m.due_date"></i>
+                    {{ m.due_date ? formatDate(m.due_date) : '-' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-pill" [ngClass]="getMilestoneStatusClass(m.status)">
+                    <span class="status-dot"></span>
+                    {{ m.status || 'Not Started' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="action-buttons d-inline-flex align-items-center" style="gap: 4px;">
+                    <button type="button" class="btn-action btn-view" title="View Associated Tasks" (click)="openMilestoneTasksModal(m)">
+                      <i class="fa fa-tasks text-primary"></i>
+                    </button>
+                    <button type="button" class="btn-action btn-order" title="Move Up" (click)="moveMilestoneUp(m, $event)" *ngIf="canManageMilestones">
+                      <i class="fa fa-arrow-up text-muted"></i>
+                    </button>
+                    <button type="button" class="btn-action btn-order" title="Move Down" (click)="moveMilestoneDown(m, $event)" *ngIf="canManageMilestones">
+                      <i class="fa fa-arrow-down text-muted"></i>
+                    </button>
+                    <button type="button" class="btn-action btn-edit" title="Edit Milestone" (click)="openEditMilestoneModal(m)" *ngIf="canManageMilestones">
+                      <i class="fa fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn-action btn-delete" title="Delete Milestone" (click)="deleteMilestone(m)" *ngIf="canManageMilestones">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noMilestones>
+          <div class="empty-state-card text-center py-5">
+            <i class="fa fa-flag-o fa-3x text-muted mb-3 d-block"></i>
+            <h5 class="text-muted">No Milestones Found</h5>
+            <p class="text-muted mb-3" style="font-size: 13px;">
+              {{ milestones.length === 0 ? 'Create milestones to track project phases, deliverables, and deadlines.' : 'No milestones match the current filter.' }}
+            </p>
+            <button type="button" class="btn_add" (click)="openCreateMilestoneModal()" *ngIf="canManageMilestones && milestones.length === 0">
+              <i class="fa fa-plus"></i> Add First Milestone
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- ==================== TASKS TAB ==================== -->
+    <div class="tab-pane" *ngIf="activeTab === 'tasks'">
       <div class="content-card">
                 <div class="tasks-action-bar">
           <div class="task-filters-left">
@@ -311,6 +547,9 @@
                 <th style="min-width: 140px;">Assigned To</th>
                 <th style="min-width: 140px;">Reviewer</th>
                 <th style="min-width: 90px;">Priority</th>
+                <th style="min-width: 175px; white-space: nowrap;">
+                  <i class="fa fa-clock-o mr-1 text-muted"></i>Total Consumed Hrs
+                </th>
                 <th style="min-width: 110px;">Due Date</th>
                 <th style="min-width: 100px;">Status</th>
                 <th style="min-width: 120px;">Review Status</th>
@@ -319,31 +558,41 @@
             </thead>
             <tbody>
               <tr *ngIf="filteredTasks.length === 0">
-                <td colspan="9" class="text-center py-4 text-muted">
+                <td colspan="10" class="text-center py-4 text-muted">
                   <i class="fa fa-check-square-o fa-2x mb-2 d-block"></i>
                   No tasks found. Click "Add Task" to create one.
                 </td>
               </tr>
 
               <tr *ngFor="let t of filteredTasks" class="task-table-row">
-                                <td>
+                <!-- Checkbox / Quick Toggle -->
+                <td>
                   <input
                     type="checkbox"
                     class="task-checkbox"
                     [checked]="t.status === 'Completed'"
-                    [title]="t.status === 'Completed' ? 'Click to reopen task' : (t.review_status === 'Approved' ? 'Click to close task' : 'Requires reviewer approval before closing')"
+                    [disabled]="t.status === 'Completed' && !isProjectHeadOrAdmin"
+                    [title]="t.status === 'Completed' ? (isProjectHeadOrAdmin ? 'Click to reopen task' : 'Reopening completed task is restricted to Project Head or Admin') : (t.review_status === 'Approved' ? 'Click to close task' : 'Requires reviewer approval before closing')"
                     (change)="toggleTaskStatus(t)"
                   />
                 </td>
 
-                                <td>
+                <!-- Task Name -->
+                <td>
                   <div class="task-name-cell" [class.task-done]="t.status === 'Completed'">
                     <span class="task-title-text" (click)="openEditTask(t)">{{ t.task_name }}</span>
+                    <div class="task-meta-subrow" *ngIf="t.milestone_name">
+                      <span class="task-milestone-pill" [title]="'Milestone: ' + t.milestone_name">
+                        <i class="fa fa-flag"></i>
+                        <span class="milestone-name-text">{{ t.milestone_name }}</span>
+                      </span>
+                    </div>
                     <small class="task-desc-text" *ngIf="t.description">{{ t.description }}</small>
                   </div>
                 </td>
 
-                                <td>
+                <!-- Assigned To -->
+                <td>
                   <div class="manager-info" *ngIf="t.assigned_to_name; else unassigned">
                     <span class="manager-avatar">{{ getInitials(t.assigned_to_name) }}</span>
                     <span class="manager-name">{{ t.assigned_to_name }}</span>
@@ -353,7 +602,8 @@
                   </ng-template>
                 </td>
 
-                                <td>
+                <!-- Reviewer -->
+                <td>
                   <div class="manager-info" *ngIf="t.reviewer_name; else noReviewer">
                     <span class="manager-avatar reviewer-avatar">{{ getInitials(t.reviewer_name) }}</span>
                     <span class="manager-name font-semibold">{{ t.reviewer_name }}</span>
@@ -363,20 +613,43 @@
                   </ng-template>
                 </td>
 
-                                <td>
+                <!-- Priority -->
+                <td>
                   <span class="priority-pill" [ngClass]="getPriorityClass(t.priority)">
                     {{ t.priority || 'Medium' }}
                   </span>
                 </td>
 
-                                <td>
+                <!-- Total Consumed Hrs -->
+                <td style="white-space: nowrap;">
+                  <div class="consumed-hrs-cell">
+                    <span class="consumed-hours-val">
+                      <i class="fa fa-clock-o mr-1 text-primary"></i>{{ t.consumed_hours || t.logged_hours || 0 }} hrs
+                    </span>
+                    <small class="consumed-date-range text-muted">
+                      <ng-container *ngIf="(t.consumed_hours || t.logged_hours || 0) > 0">
+                        <span>{{ formatDate(t.first_log_date || t.start_date) }}</span>
+                        <span class="mx-1">&rarr;</span>
+                        <span *ngIf="t.last_log_date">{{ formatDate(t.last_log_date) }}</span>
+                        <span *ngIf="!t.last_log_date && t.completed_date">{{ formatDate(t.completed_date) }}</span>
+                        <span *ngIf="!t.last_log_date && !t.completed_date && t.status === 'Completed'">{{ formatDate(t.due_date) }}</span>
+                        <span *ngIf="!t.last_log_date && !t.completed_date && t.status !== 'Completed'" class="text-info font-weight-500">Ongoing</span>
+                      </ng-container>
+                      <span *ngIf="!(t.consumed_hours || t.logged_hours || 0)" class="text-muted">No time logged</span>
+                    </small>
+                  </div>
+                </td>
+
+                <!-- Due Date -->
+                <td>
                   <span class="timeline-date">
                     <i class="fa fa-calendar-o mr-1"></i>
                     {{ formatDate(t.due_date) }}
                   </span>
                 </td>
 
-                                <td>
+                <!-- Status -->
+                <td>
                   <span class="status-pill" [ngClass]="getStatusClass(t.status)">
                     <span class="status-dot"></span>
                     {{ t.status }}
@@ -390,7 +663,8 @@
                     (click)="openReviewTask(t)"
                     title="Click to view review details or perform review"
                   >
-                    <i class="fa fa-shield mr-1"></i>
+                    <i class="fas fa-check-circle mr-1" *ngIf="t.review_status === 'Approved'"></i>
+                    <i class="fas fa-clock mr-1" *ngIf="t.review_status !== 'Approved'"></i>
                     {{ t.review_status || 'Pending' }}
                   </span>
                 </td>
@@ -403,12 +677,16 @@
                       (click)="openReviewTask(t)"
                       [class.has-review-alert]="t.review_status === 'Submitted'"
                     >
-                      <i class="fa fa-shield"></i>
+                      <i class="fas fa-clipboard-check"></i>
                     </button>
-                    <button class="btn-action btn-edit" title="Edit Task" (click)="openEditTask(t)">
-                      <i class="fa fa-edit"></i>
+                    <button
+                      class="btn-action btn-edit"
+                      [title]="canEditTask(t) ? 'Edit Task' : 'View Task Details & Activity'"
+                      (click)="openEditTask(t)"
+                    >
+                      <i [class]="canEditTask(t) ? 'fa fa-edit' : 'fa fa-eye'"></i>
                     </button>
-                    <button class="btn-action btn-delete" title="Delete Task" (click)="deleteTask(t, $event)">
+                    <button class="btn-action btn-delete" title="Delete Task" (click)="deleteTask(t, $event)" *ngIf="canDeleteTasks">
                       <i class="fa fa-trash"></i>
                     </button>
                   </div>
@@ -435,7 +713,7 @@
               />
             </div>
           </div>
-          <div class="task-actions-right">
+          <div class="task-actions-right" *ngIf="canManageMembers">
             <button class="btn_add" (click)="openAssignModal()">
               <i class="fa fa-user-plus"></i> Assign Team Member
             </button>
@@ -450,12 +728,13 @@
                 <th style="min-width: 150px;">Role in Project</th>
                 <th style="min-width: 150px;">Department</th>
                 <th style="min-width: 180px;">Email</th>
-                <th style="min-width: 80px; text-align: center;">Action</th>
+                <th style="min-width: 160px;" *ngIf="canManageMembers">Hourly Rate</th>
+                <th style="min-width: 80px; text-align: center;" *ngIf="canManageMembers">Action</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngIf="filteredMembers.length === 0">
-                <td colspan="5" class="text-center py-4 text-muted">
+                <td [attr.colspan]="canManageMembers ? 6 : 4" class="text-center py-4 text-muted">
                   <i class="fa fa-users fa-2x mb-2 d-block"></i>
                   No team members assigned yet.
                 </td>
@@ -478,14 +757,35 @@
                 </td>
 
                 <td>
-                  <span class="dept-badge">{{ m.department_name || '-' }}</span>
+                  <span class="dept-badge">{{ getMemberDepartment(m) }}</span>
                 </td>
 
                 <td>
                   <span class="text-muted">{{ m.employee_email || '-' }}</span>
                 </td>
 
-                <td class="text-center">
+                <td *ngIf="canManageMembers">
+                  <div *ngIf="editingMemberId !== m.id" class="d-flex align-items-center justify-content-between">
+                    <span>
+                      <strong *ngIf="m.hourly_rate !== null && m.hourly_rate !== undefined">{{ m.hourly_rate | currency:'INR':'symbol':'1.2-2' }}/hr</strong>
+                      <span *ngIf="m.hourly_rate === null || m.hourly_rate === undefined" class="badge badge-warning text-dark">Unconfigured</span>
+                    </span>
+                    <button class="btn btn-sm btn-link p-0 ml-2" (click)="startEditMemberRate(m)" title="Edit Rate">
+                      <i class="fa fa-pencil"></i>
+                    </button>
+                  </div>
+                  <div *ngIf="editingMemberId === m.id" class="d-flex align-items-center">
+                    <input type="number" step="0.01" min="0" class="form-control form-control-sm mr-1" style="width: 90px;" [(ngModel)]="editingMemberRate" placeholder="₹/hr" />
+                    <button class="btn btn-sm btn-success p-1 mr-1" (click)="saveMemberRate(m)" [disabled]="savingMemberRate" title="Save">
+                      <i class="fa fa-check"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary p-1" (click)="cancelEditMemberRate()" [disabled]="savingMemberRate" title="Cancel">
+                      <i class="fa fa-times"></i>
+                    </button>
+                  </div>
+                </td>
+
+                <td class="text-center" *ngIf="canManageMembers">
                   <button class="btn-action btn-delete" title="Remove Member" (click)="removeMember(m)">
                     <i class="fa fa-trash"></i>
                   </button>
@@ -509,12 +809,24 @@
       <div class="modal-dialog-body">
         <div class="form-group mb-3">
           <label class="modal-field-label">Select Employee <span class="text-danger">*</span></label>
-          <select class="form-select" [(ngModel)]="selectedEmployeeId">
-            <option [ngValue]="null" disabled selected>-- Select Employee --</option>
-            <option *ngFor="let e of allEmployees" [value]="e.employee_id">
-              {{ e.name }} <span *ngIf="e.department">({{ e.department }})</span>
-            </option>
-          </select>
+          <mat-select
+            class="form-select py-0 d-flex align-items-center"
+            style="height: 38px; background: #fff;"
+            [(ngModel)]="selectedEmployeeId"
+            placeholder="-- Select Employee --"
+          >
+            <app-search-filter
+              *ngIf="allEmployees.length >= 8"
+              [array]="allEmployees"
+              [searchFields]="['name', 'employee_code', 'department']"
+              placeholder="Search employee by name, code or department..."
+              (filteredReturn)="filteredAssignEmployees = $event.data"
+            ></app-search-filter>
+            <mat-option [value]="null">-- Select Employee --</mat-option>
+            <mat-option *ngFor="let e of filteredAssignEmployees" [value]="e.employee_id">
+              {{ e.displayText || e.name }}
+            </mat-option>
+          </mat-select>
         </div>
 
         <div class="form-group mb-3">
@@ -522,6 +834,21 @@
           <select class="form-select" [(ngModel)]="selectedMemberRole">
             <option *ngFor="let r of memberRoles" [value]="r">{{ r }}</option>
           </select>
+        </div>
+
+        <div class="form-group mb-3" *ngIf="canManageMembers">
+          <label class="modal-field-label">Hourly Cost Rate (₹/hr)</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="selectedMemberHourlyRate"
+            placeholder="e.g. 500.00 (leave empty if unassigned)"
+            min="0"
+            step="0.01"
+          />
+          <small class="text-muted d-block mt-1">
+            Used to calculate project budget consumption for approved timesheets.
+          </small>
         </div>
       </div>
 
@@ -544,10 +871,15 @@
     *ngIf="showTaskModal"
     [task]="taskToEdit"
     [projectId]="projectId"
-    [projectName]="project.project_name"
+    [projectName]="project?.project_name"
     [employees]="allEmployees"
+    [currentUser]="currentUser"
+    [canEdit]="taskToEdit ? canEditTask(taskToEdit) : true"
+    [isProjectHeadOrAdmin]="isProjectHead"
+    [initialView]="initialTaskDialogView"
     (close)="closeTaskModal()"
     (saved)="onTaskSaved()"
+    (reviewed)="onTaskSaved()"
   ></app-task-dialog>
 
     <app-task-review-dialog
@@ -557,5 +889,236 @@
     (close)="closeReviewModal()"
     (reviewed)="onTaskReviewed($event)"
   ></app-task-review-dialog>
+
+  <app-task-activity-dialog
+    *ngIf="showActivityModal"
+    [task]="taskForActivity"
+    [currentUser]="currentUser"
+    [isProjectHeadOrAdmin]="isProjectHead"
+    (close)="closeTaskActivity()"
+    (activityUpdated)="onActivityUpdated()"
+  ></app-task-activity-dialog>
+
+  <!-- ==================== MILESTONE MODAL ==================== -->
+  <div class="modal-backdrop-custom" *ngIf="showMilestoneModal" (click)="closeMilestoneModal()">
+    <div class="modal-dialog-box" (click)="$event.stopPropagation()" style="width: 540px;">
+      <div class="modal-dialog-header">
+        <h4 class="modal-dialog-title">{{ milestoneToEdit ? 'Edit Milestone' : 'Add Milestone' }}</h4>
+        <button type="button" class="modal-close-btn" (click)="closeMilestoneModal()">&times;</button>
+      </div>
+      <div class="modal-dialog-body">
+        <div class="row gx-3 mb-3">
+          <div class="col-5">
+            <label class="modal-field-label">Milestone Code <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              [(ngModel)]="milestoneForm.milestone_code"
+              class="form-control"
+              placeholder="e.g. MS-001"
+            />
+          </div>
+          <div class="col-7">
+            <label class="modal-field-label">Milestone Name <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              [(ngModel)]="milestoneForm.name"
+              class="form-control"
+              placeholder="e.g. Requirement Analysis"
+            />
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label class="modal-field-label">Description</label>
+          <textarea
+            [(ngModel)]="milestoneForm.description"
+            rows="3"
+            class="form-control"
+            placeholder="Describe the milestone objectives and deliverables..."
+          ></textarea>
+        </div>
+        <div class="row gx-3 mb-3">
+          <div class="col-6">
+            <label class="modal-field-label">Start Date</label>
+            <input type="date" [(ngModel)]="milestoneForm.start_date" class="form-control" />
+          </div>
+          <div class="col-6">
+            <label class="modal-field-label">Due Date</label>
+            <input type="date" [(ngModel)]="milestoneForm.due_date" class="form-control" />
+          </div>
+        </div>
+        <div class="row gx-3 mb-2">
+          <div class="col-6">
+            <label class="modal-field-label">Status</label>
+            <select [(ngModel)]="milestoneForm.status" class="form-select">
+              <option value="Not Started">Not Started</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Blocked">Blocked</option>
+            </select>
+          </div>
+          <div class="col-6">
+            <label class="modal-field-label">Display Order</label>
+            <input type="number" min="1" [(ngModel)]="milestoneForm.display_order" class="form-control" placeholder="1" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-secondary mr-2" (click)="closeMilestoneModal()">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="savingMilestone || !milestoneForm.name?.trim() || !milestoneForm.milestone_code?.trim()"
+          (click)="saveMilestone()"
+        >
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="savingMilestone"></i>
+          {{ milestoneToEdit ? 'Update Milestone' : 'Create Milestone' }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MILESTONE TASKS VIEW MODAL ==================== -->
+  <div class="modal-backdrop-custom" *ngIf="showMilestoneTasksModal" (click)="closeMilestoneTasksModal()">
+    <div class="modal-dialog-box" (click)="$event.stopPropagation()" style="width: 840px; max-width: 95vw;">
+      <div class="modal-dialog-header">
+        <div class="d-flex align-items-center flex-wrap" style="gap: 10px;">
+          <span class="milestone-code-badge font-weight-bold">
+            {{ selectedMilestoneForTasks?.milestone_code || selectedMilestoneForTasks?.milestone_id || ('MS-' + selectedMilestoneForTasks?.id) }}
+          </span>
+          <h4 class="modal-dialog-title mb-0">{{ selectedMilestoneForTasks?.name }}</h4>
+          <span class="status-pill" [ngClass]="getMilestoneStatusClass(selectedMilestoneForTasks?.status)">
+            <span class="status-dot"></span>
+            {{ selectedMilestoneForTasks?.status || 'Not Started' }}
+          </span>
+        </div>
+        <button type="button" class="modal-close-btn" (click)="closeMilestoneTasksModal()">&times;</button>
+      </div>
+
+      <div class="modal-dialog-body" style="max-height: 75vh; overflow-y: auto;">
+        <!-- Milestone Header Summary -->
+        <div class="p-3 mb-3 bg-light rounded border">
+          <div class="row align-items-center">
+            <div class="col-md-7">
+              <p class="text-muted mb-2 small" *ngIf="selectedMilestoneForTasks?.description">
+                {{ selectedMilestoneForTasks?.description }}
+              </p>
+              <div class="d-flex align-items-center gap-3 small text-muted">
+                <span *ngIf="selectedMilestoneForTasks?.start_date">
+                  <i class="fa fa-calendar-check-o mr-1"></i>Start: {{ formatDate(selectedMilestoneForTasks.start_date) }}
+                </span>
+                <span *ngIf="selectedMilestoneForTasks?.due_date">
+                  <i class="fa fa-calendar mr-1"></i>Due: {{ formatDate(selectedMilestoneForTasks.due_date) }}
+                </span>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="d-flex justify-content-between align-items-center mb-1 small">
+                <span class="font-weight-600">Milestone Progress: {{ selectedMilestoneForTasks?.progress || 0 }}%</span>
+                <span class="text-muted" style="font-size: 11px;">
+                  {{ selectedMilestoneForTasks?.completed_tasks || 0 }}/{{ selectedMilestoneForTasks?.total_tasks !== undefined ? selectedMilestoneForTasks.total_tasks : getMilestoneTasks(selectedMilestoneForTasks).length }} Tasks Completed
+                </span>
+              </div>
+              <div class="progress" style="height: 7px; border-radius: 4px; background: #e2e8f0;">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [style.width.%]="selectedMilestoneForTasks?.progress || 0"
+                  [ngClass]="{
+                    'bg-success': (selectedMilestoneForTasks?.progress || 0) === 100,
+                    'bg-info': (selectedMilestoneForTasks?.progress || 0) > 0 && (selectedMilestoneForTasks?.progress || 0) < 100,
+                    'bg-secondary': (selectedMilestoneForTasks?.progress || 0) === 0
+                  }"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="font-weight-600 mb-0">Associated Tasks ({{ getMilestoneTasks(selectedMilestoneForTasks).length }})</h6>
+          <button type="button" class="btn btn-sm btn-primary" (click)="openAddTaskForMilestone(selectedMilestoneForTasks)">
+            <i class="fa fa-plus mr-1"></i> Add Task to Milestone
+          </button>
+        </div>
+
+        <!-- Tasks Table -->
+        <div class="table-container border rounded" style="max-height: 280px; overflow-y: auto;" *ngIf="getMilestoneTasks(selectedMilestoneForTasks).length > 0; else noMilestoneTasks">
+          <table class="table project-table mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th style="min-width: 180px;">Task Name</th>
+                <th style="min-width: 120px;">Assigned To</th>
+                <th style="width: 85px;">Priority</th>
+                <th style="width: 110px;">Due Date</th>
+                <th style="width: 110px;">Status</th>
+                <th style="width: 90px; text-align: center;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let t of getMilestoneTasks(selectedMilestoneForTasks)">
+                <td>
+                  <span class="font-weight-600 text-dark">{{ t.task_name }}</span>
+                  <small class="text-muted d-block" *ngIf="t.task_code" style="font-size: 11px;">{{ t.task_code }}</small>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px;">{{ t.assigned_to_name || '-' }}</span>
+                </td>
+                <td>
+                  <span class="priority-pill" [ngClass]="getPriorityClass(t.priority)">
+                    {{ t.priority || 'Medium' }}
+                  </span>
+                </td>
+                <td>
+                  <span style="font-size: 12px;">{{ t.due_date ? formatDate(t.due_date) : '-' }}</span>
+                </td>
+                <td>
+                  <span class="status-pill" [ngClass]="getStatusClass(t.status)">
+                    <span class="status-dot"></span>
+                    {{ t.status || 'To Do' }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <div class="action-buttons d-inline-flex align-items-center" style="gap: 4px;">
+                    <button
+                      type="button"
+                      class="btn-action btn-review"
+                      title="Review & Approval"
+                      (click)="closeMilestoneTasksModal(); openReviewTask(t)"
+                      [class.has-review-alert]="t.review_status === 'Submitted'"
+                    >
+                      <i class="fas fa-clipboard-check"></i>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn-action btn-edit"
+                      [title]="canEditTask(t) ? 'Edit Task' : 'View Task Details & Activity'"
+                      (click)="closeMilestoneTasksModal(); openEditTask(t)"
+                    >
+                      <i [class]="canEditTask(t) ? 'fa fa-edit' : 'fa fa-eye'"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ng-template #noMilestoneTasks>
+          <div class="text-center py-4 text-muted bg-white border rounded">
+            <i class="fa fa-tasks fa-2x mb-2 d-block text-muted"></i>
+            <p class="mb-2" style="font-size: 13px;">No tasks currently assigned to this milestone.</p>
+            <button type="button" class="btn btn-sm btn-outline-primary" (click)="openAddTaskForMilestone(selectedMilestoneForTasks)">
+              <i class="fa fa-plus mr-1"></i> Map First Task
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeMilestoneTasksModal()">Close</button>
+      </div>
+    </div>
+  </div>
 
 </div>

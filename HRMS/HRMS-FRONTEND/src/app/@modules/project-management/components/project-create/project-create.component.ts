@@ -18,8 +18,13 @@ export class ProjectCreateComponent implements OnInit {
   activeTab: string = 'details';
 
   departments: any[] = [];
+  filteredDepartments: any[] = [];
   employees: any[] = [];
-  billingMethods: string[] = ['Fixed Cost', 'Hourly', 'Staff Rate', 'Non-Billable'];
+  filteredManagers: any[] = [];
+  filteredSupervisors: any[] = [];
+  filteredMemberOptions: any[] = [];
+  billingMethods: string[] = ['Fixed Cost', 'Hourly', 'Staff Rate', 'Non-Billable', 'Other'];
+  projectTypes: string[] = ['Client Project', 'Internal', 'Retainer', 'Support & Maintenance', 'Other'];
   priorities: string[] = ['Low', 'Medium', 'High', 'Critical'];
   statuses: string[] = ['Active', 'In Progress', 'On Hold', 'Completed', 'Cancelled'];
 
@@ -37,6 +42,24 @@ export class ProjectCreateComponent implements OnInit {
     this.projectId = this.route.snapshot.paramMap.get('id');
     if (this.projectId) {
       this.isEditMode = true;
+    } else {
+      const userStr = localStorage.getItem('signInUser');
+      const detailsStr = localStorage.getItem('loginUserDetails');
+      let user: any = {};
+      if (detailsStr) {
+        try { user = { ...user, ...JSON.parse(detailsStr) }; } catch (e) {}
+      }
+      if (userStr) {
+        try { user = { ...user, ...JSON.parse(userStr) }; } catch (e) {}
+      }
+      const rId = Number(user.role_master_id || user.role_id || localStorage.getItem('role_master_id'));
+      const rName = (user.role_name || user.role_master_name || user.roles || user.role || localStorage.getItem('role') || '').toString().toLowerCase();
+      const canCreate = rId === 1 || rName.includes('admin') || rName.includes('super') || rName.includes('project head') || rName.includes('head');
+      if (!canCreate) {
+        this.toast.error('Project creation is only allowed to Super Admin or Project Head');
+        this.router.navigate(['/master/project-management/projects']);
+        return;
+      }
     }
     this.initForm();
     this.loadDropdownData();
@@ -72,7 +95,13 @@ export class ProjectCreateComponent implements OnInit {
       project_manager_id: [null, [Validators.required]],
       project_manager_name: [''],
       project_manager_email: [''],
+      supervisor_id: [null],
+      supervisor_name: [''],
+      supervisor_email: [''],
+      project_type: ['Client Project'],
+      custom_project_type: [''],
       billing_method: ['Fixed Cost'],
+      custom_billing_method: [''],
       budget: [0, [Validators.min(0)]],
       priority: ['Medium'],
       status: ['Active'],
@@ -99,6 +128,7 @@ export class ProjectCreateComponent implements OnInit {
             }
           }
           this.departments = list.sort((a, b) => a.department_name.localeCompare(b.department_name));
+          this.filteredDepartments = [...this.departments];
 
           const currentDeptId = this.projectForm.get('department_id')?.value;
           const currentDeptName = this.projectForm.get('department_name')?.value;
@@ -131,6 +161,9 @@ export class ProjectCreateComponent implements OnInit {
               displayText: empCode ? `[${empCode}] ${displayName}${desig ? ' (' + desig + ')' : ''}` : `${displayName}${desig ? ' (' + desig + ')' : ''}`
             };
           });
+          this.filteredManagers = [...this.employees];
+          this.filteredSupervisors = [...this.employees];
+          this.filteredMemberOptions = [...this.employees];
 
           const currentMgrId = this.projectForm.get('project_manager_id')?.value;
           if (currentMgrId) {
@@ -139,6 +172,17 @@ export class ProjectCreateComponent implements OnInit {
               this.projectForm.patchValue({
                 project_manager_name: mgr.name,
                 project_manager_email: mgr.email || ''
+              });
+            }
+          }
+
+          const currentSupId = this.projectForm.get('supervisor_id')?.value;
+          if (currentSupId) {
+            const sup = this.employees.find(e => e.employee_id == currentSupId);
+            if (sup) {
+              this.projectForm.patchValue({
+                supervisor_name: sup.name,
+                supervisor_email: sup.email || ''
               });
             }
           }
@@ -171,6 +215,26 @@ export class ProjectCreateComponent implements OnInit {
             if (mgr) mgrName = mgr.name;
           }
 
+          let supName = p.supervisor_name;
+          if (p.supervisor_id && this.employees.length > 0) {
+            const sup = this.employees.find(e => e.employee_id == p.supervisor_id);
+            if (sup) supName = sup.name;
+          }
+
+          let bMethod = p.billing_method || 'Fixed Cost';
+          let customBMethod = '';
+          if (!['Fixed Cost', 'Hourly', 'Staff Rate', 'Non-Billable'].includes(bMethod)) {
+            customBMethod = bMethod;
+            bMethod = 'Other';
+          }
+
+          let pType = p.project_type || 'Client Project';
+          let customPType = '';
+          if (!['Client Project', 'Internal', 'Retainer', 'Support & Maintenance'].includes(pType)) {
+            customPType = pType;
+            pType = 'Other';
+          }
+
           this.projectForm.patchValue({
             project_name: p.project_name,
             project_code: p.project_code || '',
@@ -180,7 +244,13 @@ export class ProjectCreateComponent implements OnInit {
             project_manager_id: p.project_manager_id,
             project_manager_name: mgrName,
             project_manager_email: p.project_manager_email,
-            billing_method: p.billing_method || 'Fixed Cost',
+            supervisor_id: p.supervisor_id,
+            supervisor_name: supName,
+            supervisor_email: p.supervisor_email,
+            project_type: pType,
+            custom_project_type: customPType,
+            billing_method: bMethod,
+            custom_billing_method: customBMethod,
             budget: p.budget || 0,
             priority: p.priority || 'Medium',
             status: p.status || 'Active',
@@ -221,6 +291,30 @@ export class ProjectCreateComponent implements OnInit {
     }
   }
 
+  onSupervisorChange(empId: any): void {
+    const selected = this.employees.find(m => m.employee_id == empId);
+    if (selected) {
+      this.projectForm.patchValue({
+        supervisor_name: selected.name,
+        supervisor_email: selected.email
+      });
+    } else {
+      this.projectForm.patchValue({
+        supervisor_name: '',
+        supervisor_email: ''
+      });
+    }
+  }
+
+  isDateRangeInvalid(): boolean {
+    const start = this.projectForm?.get('start_date')?.value;
+    const end = this.projectForm?.get('end_date')?.value;
+    if (start && end) {
+      return new Date(end).getTime() < new Date(start).getTime();
+    }
+    return false;
+  }
+
   onSubmit(): void {
     if (this.projectForm.invalid) {
       this.projectForm.markAllAsTouched();
@@ -235,13 +329,32 @@ export class ProjectCreateComponent implements OnInit {
       return;
     }
 
+    if (this.isDateRangeInvalid()) {
+      this.toast.error('Project end date cannot be earlier than start date');
+      return;
+    }
+
     this.submitting = true;
     const formVal = this.projectForm.value;
 
+    let billingMethod = formVal.billing_method || 'Fixed Cost';
+    if (billingMethod === 'Other' && formVal.custom_billing_method?.trim()) {
+      billingMethod = formVal.custom_billing_method.trim();
+    }
+
+    let projectType = formVal.project_type || 'Client Project';
+    if (projectType === 'Other' && formVal.custom_project_type?.trim()) {
+      projectType = formVal.custom_project_type.trim();
+    }
+
     const payload: any = {
       ...formVal,
+      billing_method: billingMethod,
+      project_type: projectType,
       progress: formVal.initial_progress || 0
     };
+    delete payload.custom_billing_method;
+    delete payload.custom_project_type;
 
     if (payload.start_date) {
       const d = new Date(payload.start_date);

@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { ColDef, GridApi, GridReadyEvent, GridSizeChangedEvent } from 'ag-grid-community';
 import { ProjectManagementService } from '../../services/project-management.service';
 import { ToastrService } from 'ngx-toastr';
+import { ProjectActionCellComponent } from '../project-action-cell/project-action-cell.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-project-list',
@@ -12,6 +15,8 @@ export class ProjectListComponent implements OnInit {
   projects: any[] = [];
   filteredProjects: any[] = [];
   departments: string[] = [];
+  departmentsListObjects: { name: string }[] = [];
+  filteredDepartmentsList: { name: string }[] = [];
   loading: boolean = false;
   searchTerm: string = '';
   selectedStatus: string = 'All';
@@ -24,8 +29,58 @@ export class ProjectListComponent implements OnInit {
   overdueCount: number = 0;
 
   pageSize: number = 10;
-  currentPage: number = 1;
-  pageSizeOptions: number[] = [10, 25, 50, 100];
+  pageSizeOptions: number[] = [7, 10, 25, 50];
+  currentUser: any = null;
+
+  gridApi!: GridApi;
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    sortable: true,
+    filter: true,
+    resizable: true,
+    suppressMovable: true
+  };
+
+  get isAdmin(): boolean {
+    const rId = Number(
+      this.currentUser?.role_master_id ||
+      this.currentUser?.role_id ||
+      localStorage.getItem('role_master_id')
+    );
+    const rName = (
+      this.currentUser?.role_name ||
+      this.currentUser?.role_master_name ||
+      this.currentUser?.roles ||
+      this.currentUser?.role ||
+      ''
+    ).toString().toLowerCase();
+    return rId === 1 || rName.includes('admin') || rName.includes('super');
+  }
+
+  get canCreateProject(): boolean {
+    if (this.isAdmin) return true;
+    if (!this.currentUser) return false;
+    const rName = (
+      this.currentUser?.role_name ||
+      this.currentUser?.role_master_name ||
+      this.currentUser?.roles ||
+      this.currentUser?.role ||
+      localStorage.getItem('role') ||
+      ''
+    ).toString().toLowerCase();
+    return rName.includes('project head') || rName.includes('head');
+  }
+
+  canEditProject(project: any): boolean {
+    if (this.isAdmin) return true;
+    if (!this.currentUser) return false;
+    return (
+      project.user_role === 'head' ||
+      project.user_role === 'admin' ||
+      project.project_manager_id == this.currentUser.employee_id ||
+      project.created_by == this.currentUser.employee_id
+    );
+  }
 
   constructor(
     private pmService: ProjectManagementService,
@@ -34,11 +89,190 @@ export class ProjectListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const userStr = localStorage.getItem('signInUser');
+    const detailsStr = localStorage.getItem('loginUserDetails');
+    let user: any = {};
+    if (detailsStr) {
+      try { user = { ...user, ...JSON.parse(detailsStr) }; } catch (e) {}
+    }
+    if (userStr) {
+      try { user = { ...user, ...JSON.parse(userStr) }; } catch (e) {}
+    }
+    if (Object.keys(user).length > 0) {
+      this.currentUser = user;
+    }
+
+    this.setupColumnDefs();
     this.loadProjects();
   }
 
-  loadProjects(): void {
-    this.loading = true;
+  setupColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: 'PROJECT NAME & CODE',
+        field: 'project_name',
+        minWidth: 230,
+        flex: 1.7,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const p = params.data;
+          const initials = this.getInitials(p.project_name);
+          const code = p.project_code || ('PRJ-' + p.project_id);
+          return `
+            <div class="project-info-cell" title="Click to view details">
+              <div class="project-avatar">${initials}</div>
+              <div class="project-title-block">
+                <span class="project-title-link">${p.project_name || '—'}</span>
+                <span class="project-code-tag">${code}</span>
+              </div>
+            </div>
+          `;
+        },
+        onCellClicked: (params: any) => this.goToDetail(params.data)
+      },
+      {
+        headerName: 'CLIENT',
+        field: 'client_name',
+        minWidth: 130,
+        flex: 1.0,
+        valueFormatter: (params: any) => params.value || '—'
+      },
+      {
+        headerName: 'DEPARTMENT',
+        field: 'department_name',
+        minWidth: 130,
+        flex: 1.0,
+        cellRenderer: (params: any) => {
+          const val = params.value || 'General';
+          return `<span class="dept-badge">${val}</span>`;
+        }
+      },
+      {
+        headerName: 'PROJECT HEAD',
+        field: 'project_manager_name',
+        minWidth: 150,
+        flex: 1.1,
+        cellRenderer: (params: any) => {
+          if (!params.value) return '<span class="text-muted">—</span>';
+          const initials = this.getInitials(params.value);
+          return `
+            <div class="manager-info">
+              <span class="manager-avatar">${initials}</span>
+              <span class="manager-name">${params.value}</span>
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'BILLING',
+        field: 'billing_method',
+        minWidth: 110,
+        flex: 0.9,
+        cellRenderer: (params: any) => {
+          const val = params.value || 'Fixed Cost';
+          return `<span class="billing-tag">${val}</span>`;
+        }
+      },
+      {
+        headerName: 'TIMELINE',
+        field: 'start_date',
+        minWidth: 175,
+        flex: 1.3,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const p = params.data;
+          const dates = `${this.formatDate(p.start_date)} - ${this.formatDate(p.end_date)}`;
+          const overdueBadge = p.is_overdue ? '<span class="badge-overdue">OVERDUE</span>' : '';
+          return `
+            <div class="timeline-wrapper">
+              <span class="timeline-date"><i class="fa fa-calendar-o mr-1"></i>${dates}</span>
+              ${overdueBadge}
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'PROGRESS',
+        field: 'progress',
+        minWidth: 120,
+        flex: 1.0,
+        cellRenderer: (params: any) => {
+          const prog = params.value || 0;
+          let barClass = 'bg-info';
+          if (prog === 100) barClass = 'bg-success';
+          else if (prog === 0) barClass = 'bg-secondary';
+          return `
+            <div class="progress-bar-wrapper">
+              <div class="progress" style="height: 6px; flex: 1;">
+                <div class="progress-bar ${barClass}" style="width: ${prog}%;"></div>
+              </div>
+              <span class="progress-percentage">${prog}%</span>
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'STATUS',
+        field: 'status',
+        minWidth: 120,
+        flex: 0.9,
+        cellRenderer: (params: any) => {
+          const status = params.value || 'Draft';
+          const cls = this.getStatusClass(status);
+          return `
+            <span class="status-pill ${cls}">
+              <span class="status-dot"></span>
+              ${status}
+            </span>
+          `;
+        }
+      },
+      {
+        headerName: 'ACTIONS',
+        field: 'project_id',
+        sortable: false,
+        filter: false,
+        headerClass: 'header-align-center',
+        cellStyle: { 'justify-content': 'center' },
+        minWidth: 115,
+        maxWidth: 135,
+        flex: 0.8,
+        cellClass: 'action-cell-renderer',
+        cellRenderer: ProjectActionCellComponent,
+        cellRendererParams: {
+          onView: (p: any) => this.goToDetail(p),
+          onEdit: (p: any, e: any) => this.goToEdit(p, e),
+          onDelete: (p: any, e: any) => this.deleteProject(p, e),
+          canEdit: (p: any) => this.canEditProject(p),
+          canDelete: () => this.isAdmin
+        }
+      }
+    ];
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+    if (this.filteredProjects && this.filteredProjects.length > 0) {
+      this.gridApi.setRowData(this.filteredProjects);
+    }
+    setTimeout(() => {
+      this.gridApi?.sizeColumnsToFit();
+    }, 50);
+  }
+
+  onGridSizeChanged(params: GridSizeChangedEvent): void {
+    params.api?.sizeColumnsToFit();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.gridApi?.sizeColumnsToFit();
+  }
+
+  loadProjects(showLoader: boolean = true): void {
+    if (showLoader) {
+      this.loading = true;
+    }
     this.pmService.getAllProjects().subscribe({
       next: (res: any) => {
         this.loading = false;
@@ -52,7 +286,9 @@ export class ProjectListComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error('Error fetching projects:', err);
-        this.toast.error('Failed to load projects');
+        if (showLoader) {
+          this.toast.error('Failed to load projects');
+        }
       }
     });
   }
@@ -65,6 +301,8 @@ export class ProjectListComponent implements OnInit {
       }
     });
     this.departments = Array.from(deptSet).sort();
+    this.departmentsListObjects = this.departments.map(d => ({ name: d }));
+    this.filteredDepartmentsList = [...this.departmentsListObjects];
   }
 
   computeCounts(): void {
@@ -77,6 +315,14 @@ export class ProjectListComponent implements OnInit {
 
   setStatusFilter(status: string): void {
     this.selectedStatus = status;
+    this.applyFilter();
+  }
+
+  onDepartmentChange(): void {
+    this.applyFilter();
+  }
+
+  onFilterTextBoxChanged(): void {
     this.applyFilter();
   }
 
@@ -109,46 +355,16 @@ export class ProjectListComponent implements OnInit {
     }
 
     this.filteredProjects = result;
-    this.currentPage = 1;
-  }
-
-  get paginatedProjects(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredProjects.slice(start, start + this.pageSize);
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredProjects.length / this.pageSize) || 1;
-  }
-
-  get totalCount(): number {
-    return this.filteredProjects.length;
-  }
-
-  get startItemIndex(): number {
-    if (this.totalCount === 0) return 0;
-    return (this.currentPage - 1) * this.pageSize + 1;
-  }
-
-  get endItemIndex(): number {
-    const end = this.currentPage * this.pageSize;
-    return end > this.totalCount ? this.totalCount : end;
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    if (this.gridApi) {
+      this.gridApi.setRowData(this.filteredProjects);
+      setTimeout(() => this.gridApi?.sizeColumnsToFit(), 30);
     }
   }
 
   onPageSizeChange(): void {
-    this.currentPage = 1;
+    if (this.gridApi) {
+      this.gridApi.paginationSetPageSize(Number(this.pageSize));
+    }
   }
 
   goToCreate(): void {
@@ -156,28 +372,41 @@ export class ProjectListComponent implements OnInit {
   }
 
   goToDetail(project: any): void {
+    if (!project?.project_id) return;
     this.router.navigate(['/master/project-management/projects', project.project_id]);
   }
 
-  goToEdit(project: any, event: Event): void {
-    event.stopPropagation();
+  goToEdit(project: any, event?: Event): void {
+    if (event) event.stopPropagation();
     this.router.navigate(['/master/project-management/projects/edit', project.project_id]);
   }
 
-  deleteProject(project: any, event: Event): void {
-    event.stopPropagation();
-    if (confirm(`Are you sure you want to delete project "${project.project_name}"?`)) {
-      this.pmService.deleteProject(project.project_id).subscribe({
-        next: (res: any) => {
-          this.toast.success('Project deleted successfully');
-          this.loadProjects();
-        },
-        error: (err) => {
-          console.error('Error deleting project:', err);
-          this.toast.error('Failed to delete project');
-        }
-      });
-    }
+  deleteProject(project: any, event?: Event): void {
+    if (event) event.stopPropagation();
+    Swal.fire({
+      title: 'Delete Project?',
+      text: `Are you sure you want to delete project "${project.project_name}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pmService.deleteProject(project.project_id).subscribe({
+          next: () => {
+            this.toast.success('Project deleted successfully');
+            this.loadProjects();
+          },
+          error: (err) => {
+            console.error('Error deleting project:', err);
+            this.toast.error('Failed to delete project');
+          }
+        });
+      }
+    });
   }
 
   formatDate(dateStr: string): string {

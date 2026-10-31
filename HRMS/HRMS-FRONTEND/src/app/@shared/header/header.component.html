@@ -2,55 +2,36 @@
   <div class="toggle_button" (click)="toggleLeftNav(leftNavToggle=!leftNavToggle)">
     <img src="../../../assets/icons/navbar-icon.svg" />
   </div>
-  <div routerLink="ess/dashboard" class="logo">
+  <div routerLink="ess/dashboard" class="logo" *ngIf="entityDetail?.logo">
     <img [src]="baseUrl + '/uploaded_files/' + entityDetail?.logo" alt="" class="header_logo">
-    <!-- <img src="../../../assets/logo.png" class="img-responsive"> -->
   </div>
 
-
-  <!-- <div class="search-task">
-    routerLink="../pending-task"
-  (click)="openDialog()"
-    <a routerLinkActive="activ" style="position: relative;" routerLink="header-menu/notification" (click)="notifications($event)">
-      <mat-icon class="iconBell">notifications</mat-icon>
-      Notification</a>
-      <a routerLinkActive="activ" style="position: relative;" routerLink="header-menu/pending-task" (click)="myPendingTask($event)">
-       
-        My Pending Task</a>
-    <a routerLinkActive="active">Ex & AR Dashboard</a>
-    <a routerLinkActive="active">My Account</a>
-    <a routerLinkActive="active">Org Chart</a>
-  </div> -->
-
-  <!-- <div class="user_profile">
-    <ul>
-        <li>
-            <a href="#" class="arrow_down"><span class="user_picture"><img src="images/user.jpg" ></span>Uday Admin</a>
-            <div class="dropdown-profile">
-                <a href="#"><img src="images/user.png"> Profile User</a> 	
-                <a href="change-password.html"><img src="images/password.png"> Change password</a>
-                <a href="#"><img src="images/sign-out.png">Sign Out</a>
-</div>
-          </li>
-      </ul>
-   </div> -->
-
-
-
   <div class="search-box position-relative">
+    <svg class="header-search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
     <input type="text" class="form-control" [(ngModel)]="searchTerm" (input)="onSearchChange()"
+      (focus)="searchTerm && searchResults.length > 0 ? showDropdown = true : null"
       placeholder="Search module, menu, or feature..." />
+    <button *ngIf="searchTerm" type="button" class="clear-search-btn" (click)="clearSearch()" title="Clear">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
 
-    <ul class="dropdown-menu show w-100" *ngIf="showDropdown && searchResults.length > 0"
-      style="max-height: 250px; overflow-y: auto;">
+    <ul class="search-dropdown-menu" *ngIf="showDropdown && searchResults.length > 0">
       <li *ngFor="let item of searchResults" (click)="navigateTo(item.path, item)"
-        class="dropdown-item d-flex justify-content-between align-items-center">
-
-        <div>
-          <strong>{{ item.name }}</strong>
-          <small class="text-muted">({{ item.type }})</small>
+        class="dropdown-item">
+        <div class="item-info">
+          <span class="item-name">{{ item.name }}</span>
+          <span class="item-badge" *ngIf="item.type">{{ item.type }}</span>
         </div>
-        <i class="fa fa-arrow-right text-secondary"></i>
+        <svg class="item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
       </li>
     </ul>
   </div>

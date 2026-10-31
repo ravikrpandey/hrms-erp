@@ -1,0 +1,22 @@
+
+<div class="right_data_all">
+  <div class="timesheet-tab-bar">
+    <button
+      type="button"
+      *ngFor="let tab of tabs"
+      class="timesheet-tab-btn"
+      [class.active]="activeTab === tab.key"
+      (click)="setActiveTab(tab.key)"
+    >
+      {{ tab.label }}
+    </button>
+  </div>
+
+  <div class="timesheet-tab-content">
+    <app-timesheet-time-logs *ngIf="activeTab === 'time-logs'"></app-timesheet-time-logs>
+    <app-timesheet-timesheets *ngIf="activeTab === 'timesheets'"></app-timesheet-timesheets>
+    <app-timesheet-jobs *ngIf="activeTab === 'jobs'"></app-timesheet-jobs>
+    <app-timesheet-projects *ngIf="activeTab === 'projects'"></app-timesheet-projects>
+    <app-expense-report *ngIf="activeTab === 'expense-report'"></app-expense-report>
+  </div>
+</div>

@@ -1,0 +1,1025 @@
+<div class="timesheet-timesheets-wrapper">
+  <!-- Hidden import file input -->
+  <input
+    type="file"
+    id="timesheetSubmissionsImportInput"
+    style="display: none"
+    accept=".csv,.xlsx"
+    (change)="handleFileImport($event)"
+  />
+
+  <!-- Approver Sub-Tab Strip -->
+  <div class="approver-tab-strip" *ngIf="canApprove">
+    <button
+      type="button"
+      class="approver-tab-btn"
+      [class.active]="currentTab === 'my'"
+      (click)="setTab('my')"
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+      <span>My Timesheets</span>
+    </button>
+    <button
+      type="button"
+      class="approver-tab-btn"
+      [class.active]="currentTab === 'team'"
+      (click)="setTab('team')"
+    >
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span>Team Timesheets</span>
+      <span class="tab-pending-badge" *ngIf="pendingTeamCount > 0">{{ pendingTeamCount }}</span>
+    </button>
+  </div>
+
+  <!-- Top Toolbar -->
+  <div class="timesheets-top-toolbar">
+    <!-- Center Month Navigator -->
+    <div class="toolbar-center-nav">
+      <div class="month-segmented-group">
+        <button type="button" class="btn-seg-nav" (click)="prevMonth()" title="Previous Month">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="btn-seg-nav btn-cal-icon" (click)="currentMonth()" title="Selected Month">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+        <button type="button" class="btn-seg-nav" (click)="nextMonth()" title="Next Month">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+      <span class="month-label-text">{{ monthDisplayLabel }}</span>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="toolbar-right-controls">
+      <!-- Status Dropdown: All ▾ -->
+      <div class="status-select-wrap">
+        <select
+          class="status-dropdown-select"
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusChange()"
+        >
+          <option *ngFor="let opt of statusOptions" [value]="opt">{{ opt }}</option>
+        </select>
+        <svg class="select-chevron-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <!-- In "My" Tab: Create Timesheet Button -->
+      <button
+        type="button"
+        class="btn-create-timesheet"
+        *ngIf="currentTab === 'my'"
+        (click)="openCreateTimesheet()"
+      >
+        Create Timesheet
+      </button>
+
+      <!-- In "Team" Tab: Bulk Approve Button -->
+      <button
+        type="button"
+        class="btn-approve-bulk"
+        *ngIf="currentTab === 'team' && selectedPendingCount > 0"
+        (click)="approveSelected()"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>Approve ({{ selectedPendingCount }})</span>
+      </button>
+
+      <!-- Filter Icon Button -->
+      <button
+        type="button"
+        class="icon-action-btn"
+        [class.active]="showFilterPanel"
+        (click)="toggleFilterPanel()"
+        title="Filter"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+        </svg>
+      </button>
+
+      <!-- More Menu Button (...) -->
+      <div class="more-menu-container">
+        <button
+          type="button"
+          class="icon-action-btn"
+          [class.active]="showMoreMenu"
+          (click)="toggleMoreMenu($event)"
+          title="More options"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="1.5"></circle>
+            <circle cx="19" cy="12" r="1.5"></circle>
+            <circle cx="5" cy="12" r="1.5"></circle>
+          </svg>
+        </button>
+
+        <div class="more-dropdown-menu" *ngIf="showMoreMenu" (click)="$event.stopPropagation()">
+          <button type="button" class="more-menu-item" (click)="onImportClick()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Import</span>
+          </button>
+          <button type="button" class="more-menu-item" (click)="onExportClick()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Export</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AG Grid Container (My Timesheets) -->
+  <div class="table-container ag-grid-wrapper" *ngIf="currentTab === 'my'">
+    <ag-grid-angular
+      style="width: 100%; height: 100%;"
+      class="ag-theme-alpine"
+      [rowData]="filteredSubmissions"
+      [columnDefs]="myColumnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowSelection]="'multiple'"
+      [suppressRowClickSelection]="true"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowHeight]="48"
+      [headerHeight]="40"
+      (gridReady)="onMyGridReady($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+      (selectionChanged)="onSelectionChanged('my')"
+      (rowDoubleClicked)="onRowDoubleClicked($event)"
+    ></ag-grid-angular>
+  </div>
+
+  <!-- AG Grid Container (Team Timesheets) -->
+  <div class="table-container ag-grid-wrapper" *ngIf="currentTab === 'team'">
+    <ag-grid-angular
+      style="width: 100%; height: 100%;"
+      class="ag-theme-alpine"
+      [rowData]="filteredTeamSubmissions"
+      [columnDefs]="teamColumnDefs"
+      [defaultColDef]="defaultColDef"
+      [rowSelection]="'multiple'"
+      [suppressRowClickSelection]="true"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [rowHeight]="48"
+      [headerHeight]="40"
+      (gridReady)="onTeamGridReady($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+      (selectionChanged)="onSelectionChanged('team')"
+      (rowDoubleClicked)="onRowDoubleClicked($event)"
+    ></ag-grid-angular>
+  </div>
+</div>
+
+<!-- Zoho-Identical Submit/Create Timesheet Modal -->
+<div class="zoho-modal-backdrop" *ngIf="showCreateModal" (click)="closeCreateModal()">
+  <div class="zoho-timesheet-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="zm-header">
+      <div class="zm-header-left">
+        <button type="button" class="zm-back-btn" (click)="closeCreateModal()" title="Back">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="zm-user-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="zm-header-title">
+          {{ getCreateHeaderTitle() }}
+        </span>
+      </div>
+      <div class="zm-header-right">
+        <button type="button" class="zm-close-btn" (click)="closeCreateModal()" title="Close">
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="zm-body">
+      <!-- Top Form & Hours Box Grid -->
+      <div class="zm-top-grid">
+        <!-- Left: Form inputs -->
+        <div class="zm-form-col">
+          <div class="zm-field-group">
+            <label class="zm-label">Timesheet Name <span class="zm-required">*</span></label>
+            <input
+              type="text"
+              class="zm-input-text"
+              [(ngModel)]="createModalData.timesheetName"
+              placeholder="Timesheet Name"
+            />
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Description</label>
+            <textarea
+              class="zm-textarea"
+              rows="2"
+              [(ngModel)]="createModalData.comments"
+            ></textarea>
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Attachment</label>
+            <div class="zm-attachment-box">
+              <span class="att-link" (click)="triggerAttachmentUpload()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Desktop
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Zoho WorkDrive
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                Others
+              </span>
+            </div>
+          </div>
+
+          <div class="zm-field-group zm-project-field">
+            <label class="zm-label-muted">Project Name</label>
+            <div class="zm-project-val">{{ getSubmitProjectNames() }}</div>
+          </div>
+        </div>
+
+        <!-- Right: Hours to be submitted Card -->
+        <div class="zm-hours-card">
+          <div class="zm-hours-card-title">Hours to be submitted</div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">
+              <span class="zm-accent-pipe"></span>
+              Billable Time Logs
+            </div>
+            <div class="zm-hours-val">{{ formatDuration(createModalData.billableHours) }}</div>
+          </div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">Total Hours</div>
+            <div class="zm-hours-val">{{ formatDuration(createModalData.totalHours) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="zm-table-section">
+        <div class="zm-table-header-row">
+          <div class="zm-th th-date"></div>
+          <div class="zm-th th-job">Job Name</div>
+          <div class="zm-th th-workitem">Work Item</div>
+          <div class="zm-th th-cal"></div>
+          <div class="zm-th th-billable"></div>
+          <div class="zm-th th-hours">Hour(s)</div>
+          <div class="zm-th th-actions"></div>
+        </div>
+
+        <!-- Date-Grouped Rows -->
+        <div class="zm-date-block" *ngFor="let grp of createModalData.groupedByDate">
+          <div class="zm-log-row" *ngFor="let log of grp.items; let first = first" [class.editing-row]="editingModalLogId === log.log_id">
+            <!-- Date Column -->
+            <div class="zm-td td-date">
+              <div class="zm-date-badge" *ngIf="first">
+                <span class="zm-date-day">{{ grp.dayMonth }}</span>
+                <span class="zm-date-dow">{{ grp.dayName }}</span>
+              </div>
+            </div>
+
+            <!-- Normal (Read-Only) State -->
+            <ng-container *ngIf="editingModalLogId !== log.log_id">
+              <div class="zm-td td-job">
+                {{ log.task_name || 'job 1' }}
+              </div>
+
+              <div class="zm-td td-workitem">
+                {{ log.description || log.work_item || '--' }}
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                {{ log.is_billable ? 'Billable' : 'Non-Billable' }}
+              </div>
+
+              <div class="zm-td td-hours">
+                {{ formatDuration(log.total_hours) }}
+              </div>
+
+              <div class="zm-td td-actions">
+                <button type="button" class="zm-action-icon" title="Edit" (click)="startInlineEdit(log)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Inline Edit Mode -->
+            <ng-container *ngIf="editingModalLogId === log.log_id">
+              <div class="zm-td td-job">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.task_id" [compareWith]="compareTasks" (change)="onInlineEditJobChange()">
+                  <option *ngFor="let j of getJobsForProject(log.project_id, log)" [ngValue]="j.task_id">{{ j.task_name }}</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-workitem">
+                <input
+                  type="text"
+                  class="zm-edit-input"
+                  [(ngModel)]="inlineEditData.description"
+                  placeholder="What are you working on?"
+                />
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.is_billable">
+                  <option [ngValue]="true">Billable</option>
+                  <option [ngValue]="false">Non-Billable</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-hours">
+                <input
+                  type="text"
+                  class="zm-edit-input zm-edit-hours"
+                  [(ngModel)]="inlineEditData.duration"
+                  placeholder="00:00"
+                />
+              </div>
+
+              <div class="zm-td td-actions">
+                <div class="zm-inline-actions">
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-save"
+                    (click)="saveInlineEdit(log)"
+                    title="Save changes"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-cancel"
+                    (click)="cancelInlineEdit()"
+                    title="Cancel"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div *ngIf="!createModalData.logs || createModalData.logs.length === 0" class="zm-no-logs">
+          No unsubmitted time logs for this period.
+        </div>
+      </div>
+
+      <!-- Financial Summary Section (Right-Aligned) -->
+      <div class="zm-financial-summary-wrap">
+        <div class="zm-fin-row">
+          <span class="zm-fin-label">Total Payable Hours</span>
+          <span class="zm-fin-val">{{ formatDuration(createModalData.totalHours) }}</span>
+        </div>
+        <div class="zm-fin-row" *ngIf="canApprove">
+          <span class="zm-fin-label">Rate per hour (RPH)</span>
+          <span class="zm-fin-val">0 USD</span>
+        </div>
+        <div class="zm-fin-row" *ngIf="canApprove">
+          <span class="zm-fin-label">Total Amount</span>
+          <span class="zm-fin-val">0.00 USD</span>
+        </div>
+        <div class="zm-formula-box" *ngIf="canApprove">
+          Total Amount = Total Payable Hours * Rate per hour (RPH)
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="zm-footer">
+      <div class="zm-footer-left">
+        <button
+          type="button"
+          class="zm-btn zm-btn-draft"
+          [disabled]="submittingTimesheet"
+          (click)="saveAsDraft()"
+        >
+          Save as draft
+        </button>
+
+        <button
+          type="button"
+          class="zm-btn zm-btn-draft"
+          (click)="closeCreateModal()"
+        >
+          Close
+        </button>
+      </div>
+
+      <div class="zm-footer-right">
+        <button
+          type="button"
+          class="zm-btn zm-btn-submit"
+          [disabled]="submittingTimesheet"
+          (click)="submitForApproval()"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" *ngIf="!submittingTimesheet">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="submittingTimesheet"></i>
+          Submit for Approval
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Zoho-Identical Timesheet Details Modal -->
+<div class="zoho-modal-backdrop" *ngIf="showDetailsModal" (click)="closeDetailsModal()">
+  <div class="zoho-timesheet-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="zm-header">
+      <div class="zm-header-left">
+        <button type="button" class="zm-back-btn" (click)="closeDetailsModal()" title="Back">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="zm-user-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="zm-header-title">
+          {{ getDetailsHeaderTitle() }}
+        </span>
+      </div>
+      <div class="zm-header-right">
+        <button type="button" class="zm-close-btn" (click)="closeDetailsModal()" title="Close">
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="zm-loading-box" *ngIf="loadingDetails">
+      <i class="fa fa-spinner fa-spin fa-2x text-primary mb-2"></i>
+      <span>Loading timesheet details...</span>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="zm-body" *ngIf="!loadingDetails && selectedSubmission?.submission">
+      <!-- Top Form & Hours Box Grid -->
+      <div class="zm-top-grid">
+        <!-- Left: Form inputs -->
+        <div class="zm-form-col">
+          <div class="zm-field-group">
+            <label class="zm-label">Timesheet Name <span class="zm-required">*</span></label>
+            <input
+              type="text"
+              class="zm-input-text"
+              [value]="selectedSubmission.submission.submission_name || formatTimesheetName(selectedSubmission.submission)"
+              readonly
+            />
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Description</label>
+            <textarea
+              class="zm-textarea"
+              rows="2"
+              [value]="selectedSubmission.submission.comments || ''"
+              readonly
+            ></textarea>
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Attachment</label>
+            <div class="zm-attachment-box">
+              <span class="att-link" (click)="triggerAttachmentUpload()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Desktop
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Zoho WorkDrive
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                Others
+              </span>
+            </div>
+          </div>
+
+          <div class="zm-field-group zm-project-field">
+            <label class="zm-label-muted">Project Name</label>
+            <div class="zm-project-val">{{ getSelectedSubmissionProjectNames() }}</div>
+          </div>
+        </div>
+
+        <!-- Right: Hours to be submitted Card -->
+        <div class="zm-hours-card">
+          <div class="zm-hours-card-title">Hours to be submitted</div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">
+              <span class="zm-accent-pipe"></span>
+              Billable Time Logs
+            </div>
+            <div class="zm-hours-val">{{ formatDuration(selectedSubmissionBillableHours) }}</div>
+          </div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">Total Hours</div>
+            <div class="zm-hours-val">{{ formatDuration(selectedSubmission.submission.total_hours) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="zm-table-section">
+        <div class="zm-table-header-row">
+          <div class="zm-th th-date"></div>
+          <div class="zm-th th-job">Job Name</div>
+          <div class="zm-th th-workitem">Work Item</div>
+          <div class="zm-th th-cal"></div>
+          <div class="zm-th th-billable"></div>
+          <div class="zm-th th-hours">Hour(s)</div>
+          <div class="zm-th th-actions"></div>
+        </div>
+
+        <!-- Date-Grouped Rows -->
+        <div class="zm-date-block" *ngFor="let grp of selectedSubmissionGroupedLogs">
+          <div class="zm-log-row" *ngFor="let log of grp.items; let first = first" [class.editing-row]="editingModalLogId === log.log_id">
+            <!-- Date Column -->
+            <div class="zm-td td-date">
+              <div class="zm-date-badge" *ngIf="first">
+                <span class="zm-date-day">{{ grp.dayMonth }}</span>
+                <span class="zm-date-dow">{{ grp.dayName }}</span>
+              </div>
+            </div>
+
+            <!-- Normal (Read-Only) State -->
+            <ng-container *ngIf="editingModalLogId !== log.log_id">
+              <div class="zm-td td-job">
+                {{ log.task_name || 'job 1' }}
+              </div>
+
+              <div class="zm-td td-workitem">
+                {{ log.description || log.work_item || '--' }}
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                {{ log.is_billable ? 'Billable' : 'Non-Billable' }}
+              </div>
+
+              <div class="zm-td td-hours" [class.text-muted]="log.approval_status === 'Rejected'">
+                <span>{{ formatDuration(log.total_hours) }}</span>
+                <span class="zm-badge-log-rejected" *ngIf="log.approval_status === 'Rejected'">Rejected</span>
+              </div>
+
+              <div class="zm-td td-actions">
+                <div class="zm-row-actions-group">
+                  <button
+                    type="button"
+                    class="zm-action-icon"
+                    title="Edit time log"
+                    (click)="startInlineEdit(log)"
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="zm-action-icon btn-reject-log"
+                    *ngIf="canApprove && log.approval_status !== 'Rejected' && selectedSubmission.submission.status !== 'Approved'"
+                    title="Reject this time log"
+                    (click)="rejectIndividualLog(log)"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+
+            <!-- Inline Edit Mode -->
+            <ng-container *ngIf="editingModalLogId === log.log_id">
+              <div class="zm-td td-job">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.task_id" [compareWith]="compareTasks" (change)="onInlineEditJobChange()">
+                  <option *ngFor="let j of getJobsForProject(log.project_id, log)" [ngValue]="j.task_id">{{ j.task_name }}</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-workitem">
+                <input
+                  type="text"
+                  class="zm-edit-input"
+                  [(ngModel)]="inlineEditData.description"
+                  placeholder="What are you working on?"
+                />
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.is_billable">
+                  <option [ngValue]="true">Billable</option>
+                  <option [ngValue]="false">Non-Billable</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-hours">
+                <input
+                  type="text"
+                  class="zm-edit-input zm-edit-hours"
+                  [(ngModel)]="inlineEditData.duration"
+                  placeholder="00:00"
+                />
+              </div>
+
+              <div class="zm-td td-actions">
+                <div class="zm-inline-actions">
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-save"
+                    (click)="saveInlineEdit(log)"
+                    title="Save changes"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-cancel"
+                    (click)="cancelInlineEdit()"
+                    title="Cancel"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div *ngIf="!selectedSubmission.logs || selectedSubmission.logs.length === 0" class="zm-no-logs">
+          No time logs in this timesheet.
+        </div>
+      </div>
+
+      <!-- Financial Summary Section (Right-Aligned) -->
+      <div class="zm-financial-summary-wrap">
+        <div class="zm-fin-row">
+          <span class="zm-fin-label">Total Payable Hours</span>
+          <span class="zm-fin-val">{{ formatDuration(selectedSubmission.submission.total_hours) }}</span>
+        </div>
+        <div class="zm-fin-row" *ngIf="canApprove">
+          <span class="zm-fin-label">Rate per hour (RPH)</span>
+          <span class="zm-fin-val">0 USD</span>
+        </div>
+        <div class="zm-fin-row" *ngIf="canApprove">
+          <span class="zm-fin-label">Total Amount</span>
+          <span class="zm-fin-val">0.00 USD</span>
+        </div>
+        <div class="zm-formula-box" *ngIf="canApprove">
+          Total Amount = Total Payable Hours * Rate per hour (RPH)
+        </div>
+      </div>
+
+      <!-- Audit History & Comments Section -->
+      <div class="zm-audit-section">
+        <div class="zm-audit-header">
+          <span class="zm-audit-title">Audit History & Comments</span>
+          <span class="zm-status-badge" [ngClass]="{
+            'badge-approved': selectedSubmission.submission.status === 'Approved',
+            'badge-rejected': selectedSubmission.submission.status === 'Rejected',
+            'badge-pending': selectedSubmission.submission.status === 'Pending',
+            'badge-draft': selectedSubmission.submission.status === 'Draft'
+          }">
+            Status: {{ selectedSubmission.submission.status || 'Draft' }}
+          </span>
+        </div>
+
+        <div class="zm-timeline" *ngIf="selectedSubmission.activities && selectedSubmission.activities.length > 0">
+          <div class="zm-timeline-item" *ngFor="let act of selectedSubmission.activities">
+            <div class="zm-timeline-header">
+              <span class="zm-timeline-actor">
+                {{ act.actor_name }}
+                <span class="zm-role-pill" *ngIf="act.actor_role">{{ act.actor_role }}</span>
+              </span>
+              <span class="zm-timeline-date">{{ act.createdAt | date:'short' }}</span>
+            </div>
+            <div class="zm-timeline-msg">{{ act.message }}</div>
+          </div>
+        </div>
+
+        <div class="zm-no-activities" *ngIf="!selectedSubmission.activities || selectedSubmission.activities.length === 0">
+          No activity logs recorded yet.
+        </div>
+
+        <div class="zm-comment-input-wrap">
+          <input
+            type="text"
+            class="zm-comment-input"
+            placeholder="Add a comment or rejection reason..."
+            [(ngModel)]="newComment"
+            (keyup.enter)="sendComment()"
+          />
+          <button
+            type="button"
+            class="zm-comment-send-btn"
+            [disabled]="addingComment || !newComment.trim()"
+            (click)="sendComment()"
+            title="Send comment"
+          >
+            <i class="fa fa-spinner fa-spin" *ngIf="addingComment"></i>
+            <svg *ngIf="!addingComment" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="zm-footer" *ngIf="!loadingDetails && selectedSubmission?.submission">
+      <div class="zm-footer-left">
+        <button type="button" class="zm-btn zm-btn-draft" (click)="closeDetailsModal()">
+          Close
+        </button>
+      </div>
+
+      <div class="zm-footer-right">
+        <!-- Approver Actions when Pending -->
+        <ng-container *ngIf="canApprove && selectedSubmission.submission.status === 'Pending'">
+          <span class="zm-zero-hours-hint" *ngIf="!hasPayableHours(selectedSubmission)">
+            Cannot approve or reject timesheet with 00:00 total hours
+          </span>
+          <button
+            type="button"
+            class="zm-btn zm-btn-reject"
+            [disabled]="!hasPayableHours(selectedSubmission)"
+            (click)="rejectSubmission(selectedSubmission.submission)"
+            [title]="!hasPayableHours(selectedSubmission) ? 'Timesheet with 00:00 total hours cannot be rejected' : ''"
+          >
+            Reject
+          </button>
+          <button
+            type="button"
+            class="zm-btn zm-btn-approve"
+            [disabled]="!hasPayableHours(selectedSubmission)"
+            (click)="approveSubmission(selectedSubmission.submission)"
+            [title]="!hasPayableHours(selectedSubmission) ? 'Timesheet with 00:00 total hours cannot be approved' : ''"
+          >
+            Approve Timesheet
+          </button>
+        </ng-container>
+
+        <!-- Status pills when already decided -->
+        <span class="zm-footer-status approved" *ngIf="selectedSubmission.submission.status === 'Approved'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Approved
+        </span>
+
+        <span class="zm-footer-status rejected" *ngIf="selectedSubmission.submission.status === 'Rejected'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Rejected
+        </span>
+
+        <!-- Submit for Approval when Draft -->
+        <button
+          type="button"
+          class="zm-btn zm-btn-submit"
+          *ngIf="selectedSubmission.submission.status === 'Draft'"
+          (click)="submitDetailsTimesheet()"
+        >
+          Submit for Approval
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Individual Log Confirmation Modal (Best Standard Zoho Design) -->
+<div class="zm-confirm-backdrop" *ngIf="showRejectLogConfirmModal" (click)="closeRejectLogModal()">
+  <div class="zm-confirm-dialog" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="zm-confirm-header">
+      <div class="zm-confirm-icon-box">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <div class="zm-confirm-title-wrap">
+        <h3 class="zm-confirm-title">Reject Time Log</h3>
+        <p class="zm-confirm-subtitle">Are you sure you want to reject this time entry?</p>
+      </div>
+      <button type="button" class="zm-confirm-close" (click)="closeRejectLogModal()" title="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Body / Summary Info Card -->
+    <div class="zm-confirm-body" *ngIf="logToReject">
+      <div class="zm-confirm-log-card">
+        <div class="zm-confirm-row">
+          <span class="zm-confirm-prop">Job / Task:</span>
+          <span class="zm-confirm-val strong">{{ logToReject.task_name || 'job 1' }}</span>
+        </div>
+        <div class="zm-confirm-row">
+          <span class="zm-confirm-prop">Duration:</span>
+          <span class="zm-confirm-badge-hours">{{ formatDuration(logToReject.total_hours) }}</span>
+        </div>
+        <div class="zm-confirm-row" *ngIf="logToReject.log_date">
+          <span class="zm-confirm-prop">Date:</span>
+          <span class="zm-confirm-val">{{ logToReject.log_date | date:'dd-MMM-yyyy' }}</span>
+        </div>
+        <div class="zm-confirm-row" *ngIf="logToReject.description || logToReject.work_item">
+          <span class="zm-confirm-prop">Work Item:</span>
+          <span class="zm-confirm-val muted truncate">{{ logToReject.description || logToReject.work_item }}</span>
+        </div>
+      </div>
+
+      <div class="zm-confirm-field-group">
+        <label class="zm-confirm-label">Reason for rejection <span class="required text-danger">*</span></label>
+        <textarea
+          class="zm-confirm-textarea"
+          [class.is-invalid]="rejectLogAttempted && !rejectLogReason?.trim()"
+          rows="2"
+          placeholder="Enter reason for rejection..."
+          [(ngModel)]="rejectLogReason"
+          (input)="rejectLogAttempted = false"
+        ></textarea>
+        <div class="zm-confirm-error" *ngIf="rejectLogAttempted && !rejectLogReason?.trim()">
+          Please enter a reason for rejection.
+        </div>
+      </div>
+
+      <div class="zm-confirm-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <span>This log will be excluded from approved hours and unlocked for correction.</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="zm-confirm-footer">
+      <button type="button" class="zm-confirm-btn zm-btn-cancel" (click)="closeRejectLogModal()" [disabled]="rejectingLog">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="zm-confirm-btn zm-btn-danger"
+        (click)="confirmRejectLog()"
+        [disabled]="rejectingLog || !rejectLogReason?.trim()"
+      >
+        <span *ngIf="!rejectingLog">Reject Log</span>
+        <span *ngIf="rejectingLog">Rejecting...</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Slide-in Side Filter Panel (Matching Zoho screenshot) -->
+<div class="timesheet-side-filter-backdrop" *ngIf="showFilterPanel" (click)="toggleFilterPanel()">
+  <div class="timesheet-side-filter-panel" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <div class="side-filter-header">
+      <h4 class="side-filter-title">Filter</h4>
+      <button type="button" class="side-filter-close-btn" (click)="toggleFilterPanel()" title="Close">&times;</button>
+    </div>
+
+    <!-- Body -->
+    <div class="side-filter-body">
+      <div class="side-filter-group">
+        <label class="side-filter-label">Period</label>
+        <div class="period-select-container">
+          <div
+            class="period-select-trigger"
+            [class.open]="isPeriodDropdownOpen"
+            (click)="togglePeriodDropdown($event)"
+          >
+            <span class="selected-period-text">{{ selectedPeriod }}</span>
+            <svg class="period-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          <!-- Dropdown Options List -->
+          <div class="period-dropdown-list" *ngIf="isPeriodDropdownOpen">
+            <div
+              *ngFor="let opt of periodOptions"
+              class="period-dropdown-option"
+              [class.active]="selectedPeriod === opt"
+              (click)="selectPeriod(opt)"
+            >
+              {{ opt }}
+            </div>
+          </div>
+          <div class="period-dropdown-divider"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="side-filter-footer">
+      <div class="filter-footer-buttons">
+        <button type="button" class="btn-side-filter-apply" (click)="applySideFilter()">Apply</button>
+        <button type="button" class="btn-side-filter-reset" (click)="resetSideFilter()">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+

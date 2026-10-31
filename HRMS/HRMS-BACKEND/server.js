@@ -16,6 +16,7 @@ global.__basedir = __dirname;
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 const corsOpts = {
   origin: true,
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
@@ -25,6 +26,7 @@ const corsOpts = {
     "x-domain",
     "x-access-token",
     "x-entity-id",
+    "x-user-id",
     "session-id",
     "x-skip-loader",
     "x-idempotency-key",
@@ -250,6 +252,7 @@ require("./app/ESS/Travel_Request/Routes/travel_Request_Router.js")(app);
 
 ///// Expense Request
 require("./app/Expenses/travel_expense/routes/expense_request_routes.js")(app);
+require("./app/Expenses/project_expense/routes/project_expense.routes.js")(app);
 
 
 ////////
@@ -410,8 +413,10 @@ require('./app/Tds/routes/appraisalDuration_routes.js')(app);
 
 // Project Management & Tasks
 require('./app/master/project_management/routes/project.routes.js')(app);
+require('./app/master/project_management/routes/timesheet.routes.js')(app);
 
-const PORT = process.env.SERVER_PORT || 7000;
-app.listen(PORT, () => {
-  console.log(` \u001b[1;32m Server is running on port ${PORT}.. \u001b[0m`);
+const PORT = process.env.PORT || process.env.SERVER_PORT || 3000;
+const HOST = process.env.HOST || "127.0.0.1";
+app.listen(PORT, HOST, () => {
+  console.log(` \u001b[1;32m Server is running on http://${HOST}:${PORT}.. \u001b[0m`);
 });

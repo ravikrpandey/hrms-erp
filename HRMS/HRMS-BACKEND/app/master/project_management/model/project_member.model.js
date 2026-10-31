@@ -31,6 +31,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(100),
         defaultValue: "Member",
       },
+      hourly_rate: {
+        type: Sequelize.DECIMAL(10, 2),
+        allowNull: true,
+      },
       assigned_date: {
         type: Sequelize.DATEONLY,
         defaultValue: Sequelize.NOW,

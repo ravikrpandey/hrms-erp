@@ -1,0 +1,232 @@
+<div class="expense-detail-dialog">
+  <div class="dialog-header">
+    <div class="header-main">
+      <div class="title-row">
+        <h3 class="dialog-title">{{ expense?.expense_number || 'Expense Details' }}</h3>
+        <span class="status-badge" [ngClass]="'status-' + (expense?.status?.toLowerCase().replace(' ', '-'))">
+          {{ expense?.status }}
+        </span>
+      </div>
+      <p class="dialog-subtitle">
+        Created on {{ expense?.createdAt | date:'mediumDate' }} &bull; Project: {{ expense?.project_name }} ({{ expense?.project_code }})
+      </p>
+    </div>
+    <button type="button" class="close-btn" (click)="onClose()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-body" *ngIf="!loading && expense">
+    <!-- Rejection Alert if rejected -->
+    <div *ngIf="expense.status === 'Rejected'" class="rejection-box mb-3">
+      <div class="rejection-title">
+        <i class="fa fa-times-circle"></i>
+        <span>Rejected at {{ expense.rejection_stage || 'Approval' }} Stage by {{ expense.rejected_by_name || 'Approver' }}</span>
+      </div>
+      <div class="rejection-reason-text">
+        <strong>Reason: </strong> {{ expense.rejection_reason }}
+      </div>
+      <div class="rejection-date-text">
+        Rejected on {{ expense.rejection_date | date:'medium' }}
+      </div>
+    </div>
+
+    <!-- Summary Details Grid -->
+    <div class="details-grid mb-3">
+      <div class="detail-card">
+        <span class="detail-label">Employee</span>
+        <span class="detail-value fw-600">{{ expense.employee_name }}</span>
+        <span class="detail-sub">{{ expense.employee_email || 'No email specified' }}</span>
+      </div>
+
+      <div class="detail-card">
+        <span class="detail-label">Project</span>
+        <span class="detail-value fw-600">{{ expense.project_name }}</span>
+        <span class="detail-sub">Code: {{ expense.project_code || 'N/A' }}</span>
+      </div>
+
+      <div class="detail-card">
+        <span class="detail-label">Expense Category</span>
+        <span class="detail-value">{{ expense.expense_type }}</span>
+        <span class="detail-sub">Date: {{ expense.expense_date | date:'mediumDate' }}</span>
+      </div>
+
+      <div class="detail-card highlight-card">
+        <span class="detail-label">Total Amount</span>
+        <span class="detail-value amount-text">₹{{ expense.amount | number:'1.2-2' }}</span>
+        <span class="detail-sub">{{ expense.status }}</span>
+      </div>
+    </div>
+
+    <!-- Approver Stage Cards -->
+    <div class="approval-stages-row mb-3">
+      <!-- Stage 1: PM Approval -->
+      <div class="stage-card" [class.stage-done]="expense.pm_approval_date" [class.stage-pending]="expense.status === 'Submitted'">
+        <div class="stage-header">
+          <span class="stage-num">1</span>
+          <span class="stage-name">Project Manager Approval</span>
+        </div>
+        <div class="stage-content">
+          <div *ngIf="expense.pm_approval_date">
+            <span class="approver-name"><i class="fa fa-check-circle text-success"></i> {{ expense.pm_approver_name }}</span>
+            <span class="stage-date">{{ expense.pm_approval_date | date:'medium' }}</span>
+            <p class="stage-notes" *ngIf="expense.pm_comments">"{{ expense.pm_comments }}"</p>
+          </div>
+          <div *ngIf="!expense.pm_approval_date && expense.status === 'Submitted'">
+            <span class="badge bg-warning text-dark"><i class="fa fa-clock-o"></i> Awaiting PM Decision</span>
+            <span class="stage-sub" *ngIf="expense.project_manager_name">Manager: {{ expense.project_manager_name }}</span>
+          </div>
+          <div *ngIf="!expense.pm_approval_date && expense.status === 'Draft'">
+            <span class="text-muted small">Not submitted yet</span>
+          </div>
+          <div *ngIf="!expense.pm_approval_date && expense.status === 'Rejected' && expense.rejection_stage === 'Project Manager'">
+            <span class="badge bg-danger"><i class="fa fa-times"></i> Rejected by PM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2: Finance Approval -->
+      <div class="stage-card" [class.stage-done]="expense.status === 'Approved'" [class.stage-pending]="expense.status === 'Finance Pending'">
+        <div class="stage-header">
+          <span class="stage-num">2</span>
+          <span class="stage-name">Finance Approver / Project Head</span>
+        </div>
+        <div class="stage-content">
+          <div *ngIf="expense.status === 'Approved'">
+            <span class="approver-name"><i class="fa fa-check-circle text-success"></i> {{ expense.finance_approver_name }}</span>
+            <span class="stage-date">{{ expense.finance_approval_date | date:'medium' }}</span>
+            <p class="stage-notes" *ngIf="expense.finance_comments">"{{ expense.finance_comments }}"</p>
+          </div>
+          <div *ngIf="expense.status === 'Finance Pending'">
+            <span class="badge bg-info text-white"><i class="fa fa-clock-o"></i> Awaiting Finance Approval</span>
+          </div>
+          <div *ngIf="expense.status === 'Submitted' || expense.status === 'Draft'">
+            <span class="text-muted small">Pending PM approval</span>
+          </div>
+          <div *ngIf="expense.status === 'Rejected' && expense.rejection_stage === 'Finance'">
+            <span class="badge bg-danger"><i class="fa fa-times"></i> Rejected by Finance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description & Comments -->
+    <div class="content-section mb-3" *ngIf="expense.comments">
+      <h6 class="section-title">Comments & Purpose</h6>
+      <div class="section-box">
+        {{ expense.comments }}
+      </div>
+    </div>
+
+    <!-- Supporting Document -->
+    <div class="content-section mb-3">
+      <h6 class="section-title">Supporting Bill / Receipt</h6>
+      <div *ngIf="expense.attachment_path" class="attachment-box">
+        <div class="attachment-info">
+          <i class="fa fa-file-text-o doc-icon"></i>
+          <div>
+            <div class="doc-name">{{ expense.attachment_name || 'Bill-Attachment' }}</div>
+            <div class="doc-meta" *ngIf="expense.attachment_size">
+              {{ (expense.attachment_size / 1024) | number:'1.0-1' }} KB &bull; {{ expense.attachment_type || 'Document' }}
+            </div>
+          </div>
+        </div>
+        <a [href]="getFileUrl(expense.attachment_path)" target="_blank" class="btn btn-sm btn-outline-primary download-btn">
+          <i class="fa fa-external-link"></i> View / Download Bill
+        </a>
+      </div>
+      <div *ngIf="!expense.attachment_path" class="text-muted small py-2">
+        <i class="fa fa-info-circle mr-1"></i> No bill or receipt attached to this expense.
+      </div>
+    </div>
+
+    <!-- Complete Approval History & Audit Trail Timeline -->
+    <div class="content-section">
+      <h6 class="section-title">Approval History & Audit Trail</h6>
+      
+      <div class="timeline-container" *ngIf="history && history.length > 0">
+        <div class="timeline-item" *ngFor="let item of history">
+          <div class="timeline-marker" [ngClass]="'marker-' + item.action?.toLowerCase().replace(' ', '-')">
+            <i class="fa" [ngClass]="{
+              'fa-plus': item.action === 'Created Draft',
+              'fa-pencil': item.action === 'Updated Draft',
+              'fa-paper-plane': item.action === 'Submitted',
+              'fa-check': item.action === 'PM Approved' || item.action === 'Finance Approved',
+              'fa-ban': item.action === 'PM Rejected' || item.action === 'Finance Rejected',
+              'fa-refresh': item.action === 'Resubmitted'
+            }"></i>
+          </div>
+          <div class="timeline-content">
+            <div class="timeline-header">
+              <span class="timeline-action">{{ item.action }}</span>
+              <span class="timeline-time">{{ item.createdAt | date:'medium' }}</span>
+            </div>
+            <div class="timeline-actor">
+              By <strong>{{ item.actor_name }}</strong> ({{ item.actor_role }})
+            </div>
+            <div class="timeline-comment" *ngIf="item.comments">
+              {{ item.comments }}
+            </div>
+            <div class="timeline-status-change" *ngIf="item.new_status">
+              <span class="status-label">Status:</span>
+              <span class="status-change-badge">{{ item.previous_status || 'New' }} &rarr; {{ item.new_status }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!history || history.length === 0" class="text-muted small py-2">
+        No audit records recorded yet.
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-body text-center py-5" *ngIf="loading">
+    <i class="fa fa-spinner fa-spin fa-2x text-primary mb-2"></i>
+    <p class="text-muted">Loading expense details...</p>
+  </div>
+
+  <div class="dialog-footer">
+    <button type="button" class="btn btn-close-modal" (click)="onClose()">
+      Close
+    </button>
+
+    <div class="footer-action-buttons">
+      <!-- Edit / Resubmit button if permitted -->
+      <button
+        *ngIf="permissions.canEdit"
+        type="button"
+        class="btn btn-edit-modal"
+        (click)="onEditResubmit()"
+      >
+        <i class="fa fa-pencil"></i>
+        <span>{{ expense?.status === 'Rejected' ? 'Correct & Resubmit' : 'Edit Draft' }}</span>
+      </button>
+
+      <!-- Reject button if permitted (PM or Finance) -->
+      <button
+        *ngIf="permissions.canRejectPM || permissions.canRejectFinance"
+        type="button"
+        class="btn btn-reject-modal"
+        (click)="onReject()"
+        [disabled]="actionInProgress"
+      >
+        <i class="fa fa-times"></i>
+        <span>Reject</span>
+      </button>
+
+      <!-- Approve button if permitted (PM or Finance) -->
+      <button
+        *ngIf="permissions.canApprovePM || permissions.canApproveFinance"
+        type="button"
+        class="btn btn-approve-modal"
+        (click)="onApprove()"
+        [disabled]="actionInProgress"
+      >
+        <i class="fa fa-check"></i>
+        <span>{{ permissions.canApprovePM ? 'Approve as PM' : 'Approve as Finance' }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+

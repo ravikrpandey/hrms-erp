@@ -8,6 +8,15 @@ const routes: Routes = [
     path: '', component: ExpenseManagementComponent,
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'expenses'
+      },
+      {
+        path: 'expenses',
+        loadChildren: () => import('./expenses/expenses.module').then(m => m.ExpensesModule)
+      },
+      {
         path: 'travel-expense',
         loadChildren: () => import('./travel-expense/travel-expense.module').then(m => m.TravelExpenseModule),
       },

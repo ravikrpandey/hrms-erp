@@ -1,0 +1,172 @@
+.zoho-page-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: #ffffff;
+  padding: 16px;
+}
+
+.table-container.ag-grid-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+  ag-grid-angular {
+    flex: 1;
+    width: 100%;
+    height: 100% !important;
+    min-height: 0;
+  }
+}
+
+:host ::ng-deep {
+  .ag-theme-alpine {
+    --ag-font-family: 'Source Sans 3', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    --ag-font-size: 13px;
+    --ag-header-background-color: #f8fafc;
+    --ag-header-foreground-color: #475569;
+    --ag-border-color: #e2e8f0;
+    --ag-row-hover-color: #f8fafc;
+
+    .ag-header-cell-label {
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .ag-cell {
+      display: flex;
+      align-items: center;
+      color: #334155;
+      font-size: 13px;
+      padding-left: 12px;
+      padding-right: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .ag-body-horizontal-scroll,
+    .ag-horizontal-right-spacer,
+    .ag-horizontal-left-spacer {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      border: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    .ag-paging-panel {
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0 !important;
+      border-bottom: none !important;
+      padding: 6px 16px;
+    }
+  }
+
+  .job-title {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 13px;
+  }
+
+  .project-title {
+    color: #475569;
+    font-size: 13px;
+  }
+
+  .priority-text {
+    font-size: 12.5px;
+    font-weight: 500;
+    text-transform: capitalize;
+
+    &.priority-urgent {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    &.priority-high {
+      color: #ea580c;
+      font-weight: 600;
+    }
+
+    &.priority-medium {
+      color: #d97706;
+    }
+
+    &.priority-low {
+      color: #64748b;
+    }
+  }
+
+  .status-cell-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    &.badge-todo {
+      color: #64748b;
+      .status-dot { background: #94a3b8; }
+    }
+
+    &.badge-inprogress {
+      color: #2563eb;
+      .status-dot { background: #3b82f6; }
+    }
+
+    &.badge-inreview {
+      color: #d97706;
+      .status-dot { background: #f59e0b; }
+    }
+
+    &.badge-completed {
+      color: #059669;
+      .status-dot { background: #10b981; }
+    }
+
+    &.badge-default {
+      color: #64748b;
+      .status-dot { background: #94a3b8; }
+    }
+  }
+
+  .overdue-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #dc2626;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+

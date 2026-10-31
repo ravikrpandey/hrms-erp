@@ -171,6 +171,26 @@ const routes: Routes = [
         path: 'tasks',
         redirectTo: 'project-management/tasks',
         pathMatch: 'full'
+      },
+      {
+        path: 'timesheet',
+        redirectTo: 'project-management/timesheet',
+        pathMatch: 'full'
+      },
+      {
+        path: 'timesheets',
+        redirectTo: 'project-management/timesheet',
+        pathMatch: 'full'
+      },
+      {
+        path: 'expenses',
+        redirectTo: 'expense-management/expenses',
+        pathMatch: 'full'
+      },
+      {
+        path: 'expense-report',
+        redirectTo: 'project-management/expense-report',
+        pathMatch: 'full'
       }
     ],
   },

@@ -1,0 +1,1285 @@
+<div class="time-logs-page-container">
+  <!-- Top Navigation & Controls Toolbar -->
+  <div class="time-logs-header-toolbar">
+    <!-- Left: Approver Sub-Tabs (My Time Logs vs Team Time Logs) -->
+    <div class="toolbar-left-scope" *ngIf="isManagerOrAdmin">
+      <button
+        type="button"
+        class="approver-tab-btn"
+        [class.active]="logScope === 'my'"
+        (click)="setLogScope('my')"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>My Time Logs</span>
+      </button>
+      <button
+        type="button"
+        class="approver-tab-btn"
+        [class.active]="logScope === 'team'"
+        (click)="setLogScope('team')"
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Team Time Logs</span>
+      </button>
+    </div>
+
+    <!-- Center: Weekly Date Navigation (Dead-centered) -->
+    <div class="toolbar-center-nav">
+      <div class="period-navigator-wrap">
+        <button type="button" class="nav-arrow-btn" (click)="prevPeriod()" title="Previous">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="nav-calendar-btn"
+          [class.active]="showDatePicker"
+          (click)="toggleDatePicker()"
+          title="Select date / week"
+        >
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+        <button type="button" class="nav-arrow-btn" (click)="nextPeriod()" title="Next">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+        <span class="period-label-text" (click)="toggleDatePicker()" title="Click to open calendar">
+          {{ periodDisplayLabel }}
+        </span>
+
+        <!-- Interactive Calendar Dropdown -->
+        <div class="period-calendar-dropdown" *ngIf="showDatePicker" (click)="$event.stopPropagation()">
+          <div class="cal-dropdown-header">
+            <div class="cal-month-nav">
+              <button type="button" class="cal-nav-arrow" (click)="navPickerMonth(-1)" title="Previous Month">
+                &lt;
+              </button>
+              <span class="cal-current-month-title">{{ pickerMonthTitle }}</span>
+              <button type="button" class="cal-nav-arrow" (click)="navPickerMonth(1)" title="Next Month">
+                &gt;
+              </button>
+            </div>
+            <div class="cal-presets">
+              <button
+                type="button"
+                class="preset-chip"
+                [class.active]="periodMode === 'day' && isTodaySelected"
+                (click)="selectToday()"
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                class="preset-chip"
+                [class.active]="periodMode === 'week' && isCurrentWeekSelected"
+                (click)="selectCurrentWeek()"
+              >
+                This Week
+              </button>
+              <button
+                type="button"
+                class="preset-chip"
+                [class.active]="periodMode === 'month' && isEntireMonthSelected"
+                (click)="selectEntireMonth()"
+              >
+                Entire Month
+              </button>
+            </div>
+          </div>
+
+          <div class="cal-weekdays-row">
+            <span *ngFor="let dayName of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']" class="cal-weekday-col">
+              {{ dayName }}
+            </span>
+          </div>
+
+          <div class="cal-grid">
+            <div *ngFor="let week of pickerWeeks" class="cal-grid-week-row" (click)="selectWeekRow(week)">
+              <div
+                *ngFor="let cell of week"
+                class="cal-day-cell"
+                [class.other-month]="cell?.isOtherMonth"
+                [class.in-range]="cell?.isInRange"
+                [class.range-start]="cell?.isRangeStart"
+                [class.range-end]="cell?.isRangeEnd"
+                [class.today]="cell?.isToday"
+                [class.has-hours]="cell?.hours > 0"
+                (click)="onPickerDayClick(cell, $event)"
+                [title]="cell ? (cell.dateStr + (cell.hours ? ': ' + cell.hours + ' hrs' : '')) : ''"
+              >
+                <span class="day-num">{{ cell?.day }}</span>
+                <span class="day-dot" *ngIf="cell?.hours > 0"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cal-dropdown-footer">
+            <div class="selected-summary-text">
+              <span>Selected: <strong>{{ periodDisplayLabel }}</strong></span>
+              <span class="total-hrs-tag" *ngIf="weekTotal > 0">({{ formatDuration(weekTotal) }} hrs)</span>
+            </div>
+            <button type="button" class="btn-cal-close" (click)="closeDatePicker()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="toolbar-right-controls">
+      <!-- Team Employee Selector when in Team mode -->
+      <div class="team-emp-filter-container" *ngIf="logScope === 'team'">
+        <label class="team-emp-label">Employee:</label>
+        <div class="team-emp-custom-dropdown">
+          <div
+            class="team-emp-select-trigger"
+            [class.is-open]="showTeamEmpDropdown"
+            (click)="toggleTeamEmpDropdown($event)"
+          >
+            <span class="selected-text">{{ getSelectedTeamEmpName() }}</span>
+            <svg class="dropdown-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+
+          <!-- Employee Dropdown Popover -->
+          <div class="custom-dropdown-popover team-emp-popover" *ngIf="showTeamEmpDropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-search-box">
+              <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                class="dropdown-search-input"
+                [(ngModel)]="teamEmpSearchText"
+                placeholder="Search"
+                (click)="$event.stopPropagation()"
+                autofocus
+              />
+            </div>
+
+            <div class="dropdown-options-container">
+              <div
+                class="dropdown-option"
+                [class.active]="selectedTeamEmployeeId === 'all'"
+                (click)="selectTeamEmployee('all')"
+              >
+                <span class="option-title">All Team Members</span>
+              </div>
+              <div
+                *ngFor="let emp of filteredTeamEmployees"
+                class="dropdown-option"
+                [class.active]="emp.employee_id == selectedTeamEmployeeId"
+                (click)="selectTeamEmployee(emp.employee_id)"
+              >
+                <span class="option-title">{{ emp.first_name }} {{ emp.last_name || '' }} <span class="emp-code" *ngIf="emp.employee_code">({{ emp.employee_code }})</span></span>
+              </div>
+              <div *ngIf="filteredTeamEmployees.length === 0" class="dropdown-empty-text">
+                No employees found
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Primary Log Time split button -->
+      <div class="log-time-split-btn">
+        <button type="button" class="split-btn-main" (click)="openLogDialog('Log Time')">
+          Log Time
+        </button>
+        <button type="button" class="split-btn-caret" (click)="toggleLogMenu()">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="6,9 12,15 18,9"></polygon>
+          </svg>
+        </button>
+        <div class="split-btn-menu" *ngIf="showLogMenu">
+          <div
+            class="split-menu-item"
+            *ngFor="let option of logMenuOptions"
+            [class.active]="isOptionActive(option)"
+            (click)="selectLogMenuOption(option)"
+          >
+            <span>{{ option }}</span>
+            <svg *ngIf="isOptionActive(option)" class="check-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- View and utility buttons -->
+      <div class="view-controls-group">
+        <button
+          type="button"
+          class="btn-icon-control"
+          [class.active]="view === 'list'"
+          (click)="setView('list')"
+          title="List View"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="btn-icon-control"
+          [class.active]="view === 'calendar'"
+          (click)="setView('calendar')"
+          title="Calendar View"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="btn-icon-control"
+          [class.active]="showFilterPanel"
+          (click)="toggleFilterPanel()"
+          title="Filter"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+        </button>
+        <div class="more-menu-container">
+          <button
+            type="button"
+            class="btn-icon-control"
+            [class.active]="showMoreMenu"
+            (click)="toggleMoreMenu($event)"
+            title="More options"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+              <circle cx="5" cy="12" r="1"></circle>
+            </svg>
+          </button>
+
+          <!-- More Options Popover Dropdown (Import & Export) -->
+          <div class="more-options-dropdown" *ngIf="showMoreMenu" (click)="$event.stopPropagation()">
+            <div class="more-menu-item" (click)="onImportClick()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="8 12 12 16 16 12"></polyline>
+                <line x1="12" y1="2" x2="12" y2="16"></line>
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+              </svg>
+              <span>Import</span>
+            </div>
+            <div class="more-menu-item" (click)="onExportClick()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="16 8 12 4 8 8"></polyline>
+                <line x1="12" y1="4" x2="12" y2="18"></line>
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+              </svg>
+              <span>Export</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Horizontal Time Entry Bar -->
+  <div class="horizontal-entry-bar">
+    <div class="entry-field project-field custom-dropdown-field" (click)="$event.stopPropagation()">
+      <div
+        class="entry-custom-select"
+        [class.dropdown-active]="showProjectDropdown"
+        (click)="toggleProjectDropdown($event)"
+      >
+        <span class="selected-text" [class.is-placeholder]="!entryProjectId">
+          {{ getSelectedProjectName() || 'Select Project' }}
+        </span>
+        <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <!-- Project Dropdown Popover -->
+      <div class="custom-dropdown-popover" *ngIf="showProjectDropdown">
+        <div class="dropdown-search-box">
+          <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            class="dropdown-search-input"
+            [(ngModel)]="projectSearchText"
+            placeholder="Search"
+            (click)="$event.stopPropagation()"
+          />
+        </div>
+
+        <div class="dropdown-options-container">
+          <div
+            class="dropdown-option"
+            [class.active]="!entryProjectId"
+            (click)="selectProject(null)"
+          >
+            Select Project
+          </div>
+          <div
+            class="dropdown-option"
+            *ngFor="let p of filteredProjectsList"
+            [class.active]="entryProjectId == p.project_id"
+            (click)="selectProject(p)"
+          >
+            <span class="option-title">{{ p.project_name }}</span>
+          </div>
+          <div class="dropdown-empty-text" *ngIf="filteredProjectsList.length === 0">
+            No projects found
+          </div>
+        </div>
+
+        <div class="dropdown-footer-action" *ngIf="canCreateProject">
+          <button type="button" class="btn-dropdown-footer" (click)="openAddProject()">
+            Add Project
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry-field job-field custom-dropdown-field" (click)="$event.stopPropagation()">
+      <div
+        class="entry-custom-select"
+        [class.dropdown-active]="showJobDropdown"
+        (click)="toggleJobDropdown($event)"
+      >
+        <span class="selected-text" [class.is-placeholder]="!entryJobId">
+          {{ getSelectedJobName() || 'Select Job' }}
+        </span>
+        <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <!-- Job Dropdown Popover -->
+      <div class="custom-dropdown-popover" *ngIf="showJobDropdown">
+        <div class="dropdown-search-box">
+          <svg class="search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            type="text"
+            class="dropdown-search-input"
+            [(ngModel)]="jobSearchText"
+            placeholder="Search"
+            (click)="$event.stopPropagation()"
+          />
+        </div>
+
+        <div class="dropdown-options-container">
+          <div
+            class="dropdown-option"
+            [class.active]="!entryJobId"
+            (click)="selectJob(null)"
+          >
+            Select Job
+          </div>
+          <div
+            class="dropdown-option"
+            *ngFor="let j of filteredJobsList"
+            [class.active]="entryJobId == j.task_id"
+            (click)="selectJob(j)"
+          >
+            <span class="option-title">{{ j.task_name }}</span>
+          </div>
+          <div class="dropdown-empty-text" *ngIf="filteredJobsList.length === 0">
+            No jobs found
+          </div>
+        </div>
+
+        <div class="dropdown-footer-action">
+          <button type="button" class="btn-dropdown-footer" (click)="openAddJob()">
+            Add Job
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="entry-field description-field">
+      <input
+        type="text"
+        [(ngModel)]="entryDescription"
+        (keyup.enter)="saveHorizontalEntry()"
+        placeholder="What are you working on?"
+        class="entry-input-text"
+      />
+    </div>
+
+    <div class="entry-field billable-field">
+      <select [(ngModel)]="entryIsBillable" class="entry-select">
+        <option [ngValue]="true">Billable</option>
+        <option [ngValue]="false">Non-Billable</option>
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="entry-util-btn"
+      (click)="openEntryDatePicker()"
+      [title]="entryDate ? ('Date: ' + entryDate) : 'Log Date (Today)'"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+    </button>
+
+    <button
+      type="button"
+      class="entry-util-btn"
+      (click)="toggleEntryLink()"
+      [title]="entryWorkItem ? ('Work Item: ' + entryWorkItem) : 'Attach Link / Work Item'"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+      </svg>
+    </button>
+
+    <!-- Running Green Timer on Right -->
+    <div
+      class="entry-timer-widget"
+      [class.running]="isTimerRunning"
+      [class.disabled]="!isTimerRunning && (!entryProjectId || !entryJobId)"
+    >
+      <span class="timer-digits">{{ timerDisplay }}</span>
+      <button
+        type="button"
+        class="timer-toggle-btn"
+        (click)="toggleTimer()"
+        [title]="isTimerRunning ? 'Stop & Log Timer' : ((!entryProjectId || !entryJobId) ? 'Select Project and Job to start timer' : 'Start Timer')"
+      >
+        <svg *ngIf="!isTimerRunning" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#ffffff"></circle>
+          <polygon points="10,8 17,12 10,16" [attr.fill]="(!entryProjectId || !entryJobId) ? '#94a3b8' : '#00b368'"></polygon>
+        </svg>
+        <svg *ngIf="isTimerRunning" width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#ffffff"></circle>
+          <rect x="8.5" y="8.5" width="7" height="7" rx="1" fill="#e11d48"></rect>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area: Date-wise Tabular Listing -->
+  <div class="time-logs-content-area">
+    <!-- List View (Date-Grouped Tabular Layout) -->
+    <div class="tabular-list-view" *ngIf="view === 'list'">
+      <div class="loading-box" *ngIf="loading">
+        <i class="fa fa-spinner fa-spin"></i> Loading time logs...
+      </div>
+
+      <div class="empty-state-box" *ngIf="!loading && groupedLogs.length === 0">
+        <i class="fa fa-clock-o empty-icon"></i>
+        <h5>No time logs found</h5>
+        <p class="text-muted">Log your work hours to get started.</p>
+        <button class="btn_add mt-2" (click)="openLogDialog('Log Time')">
+          <i class="fa fa-plus"></i> Log Time
+        </button>
+      </div>
+
+      <!-- Date Groups -->
+      <div class="date-table-group" *ngFor="let group of groupedLogs; trackBy: trackByDate">
+        <!-- Date Group Header Row -->
+        <div class="date-group-header-row">
+          <div class="cell-checkbox">
+            <input
+              type="checkbox"
+              class="table-checkbox"
+              [checked]="isDateGroupSelected(group)"
+              (change)="toggleDateGroupSelection(group)"
+            />
+          </div>
+          <div class="cell-date-title">
+            {{ formatDateHeading(group.date) }}
+          </div>
+          <div class="cell-flex-filler"></div>
+          <div class="cell-duration group-total-hours">
+            {{ formatDuration(group.dayTotal) }}
+          </div>
+          <div class="cell-location-space"></div>
+          <div class="cell-actions-space"></div>
+        </div>
+
+        <!-- Special Rows: Holidays -->
+        <div class="table-log-row special-row-holiday" *ngFor="let h of group.holidays">
+          <div class="cell-checkbox">
+            <input type="checkbox" class="table-checkbox" disabled />
+          </div>
+          <div class="cell-job-project text-holiday">
+            <i class="fa fa-star text-warning"></i> Holiday · {{ h.holiday_name }}
+          </div>
+          <div class="cell-description text-muted">Company Holiday</div>
+          <div class="cell-billable text-muted">Non-Billable</div>
+          <div class="cell-duration text-warning">{{ formatDuration(h.hours) }}</div>
+          <div class="cell-location">
+            <span class="location-pin-btn" title="Company Holiday">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </span>
+          </div>
+          <div class="cell-actions"></div>
+        </div>
+
+        <!-- Special Rows: Leaves -->
+        <div class="table-log-row special-row-leave" *ngFor="let l of group.leaves">
+          <div class="cell-checkbox">
+            <input type="checkbox" class="table-checkbox" disabled />
+          </div>
+          <div class="cell-job-project text-danger">
+            <i class="fa fa-calendar-minus-o text-danger"></i> Leave · {{ l.leave_name }}
+          </div>
+          <div class="cell-description text-muted">Leave ({{ l.approval_status }})</div>
+          <div class="cell-billable text-muted">Leave</div>
+          <div class="cell-duration text-danger">{{ formatDuration(l.hours) }}</div>
+          <div class="cell-location">
+            <span class="location-pin-btn" [title]="'Leave: ' + l.approval_status">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+            </span>
+          </div>
+          <div class="cell-actions"></div>
+        </div>
+
+        <!-- Special Rows: Week Offs -->
+        <div class="table-log-row special-row-weekoff" *ngFor="let w of group.weekOffs">
+          <div class="cell-checkbox">
+            <input type="checkbox" class="table-checkbox" disabled />
+          </div>
+          <div class="cell-job-project text-purple">
+            <i class="fa fa-coffee text-purple"></i> Week Off · {{ w.name || 'Weekly Off' }} ({{ w.day_name }})
+          </div>
+          <div class="cell-description text-muted">Weekly Off • {{ w.type || 'Full Day' }}</div>
+          <div class="cell-billable text-muted">Off</div>
+          <div class="cell-duration text-muted">00:00</div>
+          <div class="cell-location">
+            <span class="location-pin-btn" title="Weekly Off">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+                <line x1="6" y1="1" x2="6" y2="4"></line>
+                <line x1="10" y1="1" x2="10" y2="4"></line>
+                <line x1="14" y1="1" x2="14" y2="4"></line>
+              </svg>
+            </span>
+          </div>
+          <div class="cell-actions"></div>
+        </div>
+
+        <!-- Time Log Rows -->
+        <div
+          class="table-log-row"
+          *ngFor="let log of group.items; trackBy: trackByLogId"
+          [class.row-selected]="!log.isLiveTimer && isLogSelected(log.log_id)"
+          [class.live-timer-row]="isTimerRunning && (log.isLiveTimer || log.log_id === runningLogId)"
+          (click)="log.isLiveTimer ? null : onRowClick($event, log)"
+          (dblclick)="log.isLiveTimer ? null : onRowDblClick(log)"
+        >
+          <div class="cell-checkbox" (click)="$event.stopPropagation()" (dblclick)="$event.stopPropagation()">
+            <input
+              type="checkbox"
+              class="table-checkbox"
+              [disabled]="log.isLiveTimer"
+              [checked]="!log.isLiveTimer && isLogSelected(log.log_id)"
+              (change)="toggleLogSelection(log.log_id)"
+            />
+          </div>
+          <div class="cell-job-project">
+            <span class="job-name-text">{{ log.task_name || 'Job' }}</span>
+            <span class="separator-dot"> · </span>
+            <span class="project-name-text">{{ log.project_name || 'Project' }}</span>
+            <span class="log-employee-tag" *ngIf="logScope === 'team' && (log.employee_name || log.employee_id)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              {{ log.employee_name || ('Emp #' + log.employee_id) }}
+            </span>
+          </div>
+          <div class="cell-description" [title]="log.description">
+            {{ log.description || '' }}
+          </div>
+          <div class="cell-billable">
+            {{ log.is_billable ? 'Billable' : 'Non-Billable' }}
+          </div>
+          <div class="cell-duration" [class.live-timer-duration]="isTimerRunning && (log.isLiveTimer || log.log_id === runningLogId)">
+            {{ (isTimerRunning && (log.isLiveTimer || log.log_id === runningLogId)) ? timerDisplay : formatDuration(log.total_hours) }}
+          </div>
+          <div class="cell-location" [title]="log.work_mode || 'Office'">
+            <span class="location-pin-btn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </span>
+          </div>
+          <div class="cell-actions" (click)="$event.stopPropagation()" (dblclick)="$event.stopPropagation()">
+            <!-- Play / Pause Timer Button -->
+            <button
+              type="button"
+              class="row-timer-btn pause"
+              *ngIf="isTimerRunning && (log.isLiveTimer || log.log_id === runningLogId)"
+              (click)="stopTimer()"
+              title="Pause / Stop Timer"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#e11d48"></circle>
+                <rect x="8.5" y="7.5" width="2.5" height="9" rx="1" fill="#ffffff"></rect>
+                <rect x="13" y="7.5" width="2.5" height="9" rx="1" fill="#ffffff"></rect>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="row-timer-btn play"
+              *ngIf="isTimerLog(log) && !log.isLiveTimer && (!isTimerRunning || log.log_id !== runningLogId)"
+              (click)="resumeTimerFromLog(log)"
+              title="Start / Resume Timer"
+              [disabled]="isLocked(log)"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="#00b368"></circle>
+                <polygon points="10,8 16,12 10,16" fill="#ffffff"></polygon>
+              </svg>
+            </button>
+
+            <!-- Edit Action -->
+            <button
+              *ngIf="!log.isLiveTimer"
+              type="button"
+              class="row-action-icon edit-action"
+              title="Edit"
+              (click)="editLog(log)"
+              [disabled]="isLocked(log)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+              </svg>
+            </button>
+            <!-- Delete Action -->
+            <button
+              *ngIf="!log.isLiveTimer"
+              type="button"
+              class="row-action-icon delete-action"
+              title="Delete"
+              (click)="deleteLog(log)"
+              [disabled]="isLocked(log)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="calendar-view" *ngIf="view === 'calendar'">
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let week of calendarWeeks">
+            <td
+              *ngFor="let cell of week"
+              class="calendar-cell"
+              [class.empty-cell]="!cell"
+              [class.today-cell]="cell?.isToday"
+              [class.in-selected-range]="cell?.isInRange"
+              [class.range-start]="cell?.isRangeStart"
+              [class.range-end]="cell?.isRangeEnd"
+              [class.has-hours]="cell?.totalHours > 0 || (cell?.logs && cell?.logs.length > 0) || (cell?.weekOffs && cell?.weekOffs.length > 0)"
+              [class.cell-weekoff]="cell?.isWeekOff"
+              (click)="onDayClick(cell)"
+            >
+              <ng-container *ngIf="cell">
+                <div class="cell-top-bar">
+                  <span class="cell-day-number">{{ cell.day }}</span>
+                  <span class="cell-total-badge" *ngIf="cell.totalHours > 0">{{ formatDuration(cell.totalHours) }}</span>
+                  <span class="cell-total-badge badge-dayoff" *ngIf="cell.totalHours === 0 && (cell.isWeekOff || (cell.logs && cell.logs.length > 0))">Off</span>
+                </div>
+
+                <div class="cell-entries-container" *ngIf="cell.totalHours > 0 || (cell.logs && cell.logs.length > 0) || (cell.weekOffs && cell.weekOffs.length > 0)">
+                  <div
+                    class="cal-entry-pill holiday-entry"
+                    *ngFor="let h of cell.holidays"
+                    (click)="$event.stopPropagation()"
+                    [title]="h.holiday_name + ' (Holiday: ' + h.hours + ' hrs)'"
+                  >
+                    <i class="fa fa-star entry-icon"></i>
+                    <span class="entry-name">{{ h.holiday_name }}</span>
+                    <span class="entry-hrs">{{ formatDuration(h.hours) }}</span>
+                  </div>
+
+                  <div
+                    class="cal-entry-pill leave-entry"
+                    *ngFor="let l of cell.leaves"
+                    (click)="$event.stopPropagation()"
+                    [title]="l.leave_name + ' (Leave: ' + l.hours + ' hrs)'"
+                  >
+                    <i class="fa fa-calendar-minus-o entry-icon"></i>
+                    <span class="entry-name">{{ l.leave_name }}</span>
+                    <span class="entry-hrs">{{ formatDuration(l.hours) }}</span>
+                  </div>
+
+                  <div
+                    class="cal-entry-pill weekoff-entry"
+                    *ngFor="let w of cell.weekOffs"
+                    (click)="$event.stopPropagation()"
+                    [title]="(w.name || 'Week Off') + ' (' + w.day_name + ' - ' + (w.type || 'Full Day') + ')'"
+                  >
+                    <i class="fa fa-coffee entry-icon"></i>
+                    <span class="entry-name">{{ w.name || 'Week Off' }}</span>
+                    <span class="entry-hrs">{{ w.type === '1st Half' || w.type === '2nd Half' ? 'Half' : 'Off' }}</span>
+                  </div>
+
+                  <div
+                    class="cal-entry-pill work-entry"
+                    [ngClass]="'entry-' + (log.work_mode ? log.work_mode.toLowerCase().replace(' ', '') : 'office')"
+                    *ngFor="let log of cell.logs"
+                    (click)="$event.stopPropagation(); editLog(log)"
+                    [title]="'[' + (log.work_mode || 'Office') + '] ' + (log.task_name || log.project_name) + ' (' + log.total_hours + ' hrs)'"
+                  >
+                    <i [class]="getWorkModeIcon(log.work_mode) + ' entry-icon'"></i>
+                    <span class="entry-name">{{ log.task_name || log.project_name }}</span>
+                    <span class="entry-hrs">{{ formatDuration(log.total_hours) }}</span>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Fixed Bottom Summary & Approval Action -->
+  <div class="time-logs-fixed-footer">
+    <div class="footer-stats-bar">
+      <div class="footer-stat-unit">
+        <span class="stat-number text-blue">{{ formatDuration(summary.total_hours) }} Hrs</span>
+        <span class="stat-title">Total</span>
+      </div>
+      <div class="footer-stat-divider">|</div>
+      <div class="footer-stat-unit">
+        <span class="stat-number text-green">{{ formatDuration(summary.submitted_hours) }} Hrs</span>
+        <span class="stat-title">Submitted</span>
+      </div>
+      <div class="footer-stat-divider">|</div>
+      <div class="footer-stat-unit">
+        <span class="stat-number text-orange">{{ formatDuration(summary.not_submitted_hours) }} Hrs</span>
+        <span class="stat-title">Not Submitted</span>
+      </div>
+    </div>
+
+    <div class="footer-approval-action">
+      <button
+        type="button"
+        class="btn-submit-for-approval"
+        (click)="openSubmitApprovalModal()"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        Submit for Approval
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Zoho-Identical Submit Timesheet for Approval Popup -->
+<div class="zoho-modal-backdrop" *ngIf="showSubmitModal" (click)="closeSubmitModal()">
+  <div class="zoho-timesheet-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="zm-header">
+      <div class="zm-header-left">
+        <button type="button" class="zm-back-btn" (click)="closeSubmitModal()" title="Back">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="zm-user-avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <span class="zm-header-title">
+          {{ employeeId || '1' }}- {{ employeeName || 'Ravi Pandey' }} {{ periodDisplayLabel }}
+        </span>
+      </div>
+      <div class="zm-header-right">
+        <button type="button" class="zm-close-btn" (click)="closeSubmitModal()" title="Close">
+          &times;
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="zm-body">
+      <!-- Top Form & Hours Box Grid -->
+      <div class="zm-top-grid">
+        <!-- Left: Form inputs -->
+        <div class="zm-form-col">
+          <div class="zm-field-group">
+            <label class="zm-label">Timesheet Name <span class="zm-required">*</span></label>
+            <input
+              type="text"
+              class="zm-input-text"
+              [(ngModel)]="submitTimesheetName"
+              placeholder="Timesheet Name"
+            />
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Description</label>
+            <textarea
+              class="zm-textarea"
+              rows="2"
+              [(ngModel)]="submitComments"
+            ></textarea>
+          </div>
+
+          <div class="zm-field-group">
+            <label class="zm-label">Attachment</label>
+            <div class="zm-attachment-box">
+              <span class="att-link" (click)="triggerAttachmentUpload()">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                Desktop
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                Zoho WorkDrive
+              </span>
+              <span class="att-sep">/</span>
+              <span class="att-link">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0073ea" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                Others
+              </span>
+            </div>
+          </div>
+
+          <div class="zm-field-group zm-project-field">
+            <label class="zm-label-muted">Project Name</label>
+            <div class="zm-project-val">{{ getSubmitProjectNames() }}</div>
+          </div>
+        </div>
+
+        <!-- Right: Hours to be submitted Card -->
+        <div class="zm-hours-card">
+          <div class="zm-hours-card-title">Hours to be submitted</div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">
+              <span class="zm-accent-pipe"></span>
+              Billable Time Logs
+            </div>
+            <div class="zm-hours-val">{{ formatDuration(submitModalData.billableHours) }}</div>
+          </div>
+          <div class="zm-hours-row">
+            <div class="zm-hours-label">Total Hours</div>
+            <div class="zm-hours-val">{{ formatDuration(submitModalData.totalHours) }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table Section -->
+      <div class="zm-table-section">
+        <div class="zm-table-header-row">
+          <div class="zm-th th-date"></div>
+          <div class="zm-th th-job">Job Name</div>
+          <div class="zm-th th-workitem">Work Item</div>
+          <div class="zm-th th-cal"></div>
+          <div class="zm-th th-billable"></div>
+          <div class="zm-th th-hours">Hour(s)</div>
+          <div class="zm-th th-actions"></div>
+        </div>
+
+        <!-- Date-Grouped Rows -->
+        <div class="zm-date-block" *ngFor="let grp of submitModalData.groupedByDate">
+          <div class="zm-log-row" *ngFor="let log of grp.items; let first = first" [class.editing-row]="editingModalLogId === log.log_id">
+            <!-- Date Column (first row of the day) -->
+            <div class="zm-td td-date">
+              <div class="zm-date-badge" *ngIf="first">
+                <span class="zm-date-day">{{ grp.dayMonth }}</span>
+                <span class="zm-date-dow">{{ grp.dayName }}</span>
+              </div>
+            </div>
+
+            <!-- Normal (Read-Only) State -->
+            <ng-container *ngIf="editingModalLogId !== log.log_id">
+              <div class="zm-td td-job">
+                {{ log.task_name || 'job 1' }}
+              </div>
+
+              <div class="zm-td td-workitem">
+                {{ log.description || log.work_item || '--' }}
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                {{ log.is_billable ? 'Billable' : 'Non-Billable' }}
+              </div>
+
+              <div class="zm-td td-hours">
+                {{ formatDuration(log.total_hours) }}
+              </div>
+
+              <div class="zm-td td-actions">
+                <button type="button" class="zm-action-icon" title="Edit" (click)="startInlineEdit(log)">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Inline Edit Mode (Exact match to reference image) -->
+            <ng-container *ngIf="editingModalLogId === log.log_id">
+              <div class="zm-td td-job">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.task_id" [compareWith]="compareTasks" (change)="onInlineEditJobChange()">
+                  <option *ngFor="let j of getJobsForProject(log.project_id, log)" [ngValue]="j.task_id">{{ j.task_name }}</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-workitem">
+                <input
+                  type="text"
+                  class="zm-edit-input"
+                  [(ngModel)]="inlineEditData.description"
+                  placeholder="What are you workir"
+                />
+              </div>
+
+              <div class="zm-td td-cal">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+
+              <div class="zm-td td-billable">
+                <select class="zm-edit-select" [(ngModel)]="inlineEditData.is_billable">
+                  <option [ngValue]="true">Billable</option>
+                  <option [ngValue]="false">Non-Billable</option>
+                </select>
+              </div>
+
+              <div class="zm-td td-hours">
+                <input
+                  type="text"
+                  class="zm-edit-input zm-edit-hours"
+                  [(ngModel)]="inlineEditData.duration"
+                  placeholder="00:00"
+                />
+              </div>
+
+              <div class="zm-td td-actions">
+                <div class="zm-inline-actions">
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-save"
+                    (click)="saveInlineEdit(log)"
+                    title="Save changes"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="zm-inline-btn zm-btn-cancel"
+                    (click)="cancelInlineEdit()"
+                    title="Cancel"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Calculation / Summary Rows (Right Aligned) -->
+      <div class="zm-calc-section">
+        <div class="zm-calc-table">
+          <div class="zm-calc-row">
+            <span class="zm-calc-lbl">Total Payable Hours</span>
+            <span class="zm-calc-val">{{ formatDuration(submitModalData.totalHours) }}</span>
+          </div>
+          <div class="zm-calc-row" *ngIf="isManagerOrAdmin">
+            <span class="zm-calc-lbl">Rate per hour (RPH)</span>
+            <span class="zm-calc-val">0 USD</span>
+          </div>
+          <div class="zm-calc-row" *ngIf="isManagerOrAdmin">
+            <span class="zm-calc-lbl">Total Amount</span>
+            <span class="zm-calc-val">0.00 USD</span>
+          </div>
+        </div>
+
+        <!-- Yellow Formula Note -->
+        <div class="zm-formula-pill" *ngIf="isManagerOrAdmin">
+          Total Amount = Total Payable Hours * Rate per hour (RPH)
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="zm-footer">
+      <div class="zm-footer-left">
+        <button type="button" class="btn-save-draft" (click)="saveAsDraft()">
+          Save as draft
+        </button>
+        <button type="button" class="btn-zm-close" (click)="closeSubmitModal()">
+          Close
+        </button>
+      </div>
+      <div class="zm-footer-right">
+        <button
+          type="button"
+          class="btn-confirm-submit"
+          (click)="confirmSubmitApproval()"
+          [disabled]="submittingTimesheet"
+        >
+          <i class="fa fa-spinner fa-spin" *ngIf="submittingTimesheet"></i>
+          <i class="fa fa-check" *ngIf="!submittingTimesheet"></i>
+          {{ submittingTimesheet ? 'Submitting...' : 'Submit for Approval' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Filter Panel Dialog -->
+<app-timesheet-filter-panel
+  *ngIf="showFilterPanel"
+  [clients]="clientOptions"
+  [projects]="projects"
+  [jobs]="jobs"
+  [employees]="employees"
+  [isManagerOrAdmin]="isManagerOrAdmin"
+  [selectedClient]="filters.client"
+  [selectedProjectId]="filters.project_id"
+  [selectedTaskId]="filters.task_id"
+  [selectedEmployeeId]="filters.employee_id"
+  [selectedApprovalStatus]="filters.approval_status"
+  [selectedWorkMode]="filters.work_mode"
+  (close)="toggleFilterPanel()"
+  (apply)="onFilterApply($event)"
+  (reset)="onFilterReset()"
+></app-timesheet-filter-panel>
+
+<!-- Log Time Dialog -->
+<app-timesheet-log-dialog
+  *ngIf="showLogDialog"
+  [employeeId]="employeeId"
+  [employeeName]="employeeName"
+  [projects]="projects"
+  [log]="editingLog"
+  [defaultDate]="logDialogDefaultDate"
+  [logMode]="logDialogMode"
+  [isReadOnly]="isLogDialogReadOnly"
+  (close)="closeLogDialog()"
+  (saved)="onLogSaved()"
+></app-timesheet-log-dialog>
+
+<!-- Task Dialog for Add Job -->
+<app-task-dialog
+  *ngIf="showJobDialog"
+  [task]="null"
+  [projectId]="entryProjectId"
+  [projects]="projects"
+  [employees]="employees"
+  [currentUser]="currentUser"
+  [canEdit]="true"
+  (close)="closeJobDialog()"
+  (saved)="onJobSaved($event)"
+></app-task-dialog>
+
+<!-- Zoho Add Project Modal -->
+<div class="zoho-modal-backdrop" *ngIf="showAddProjectModal" (click)="closeAddProjectModal()">
+  <div class="zoho-timesheet-modal zoho-project-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="zm-header">
+      <div class="zm-header-left">
+        <span class="zm-header-title">Add Project</span>
+      </div>
+      <div class="zm-header-right">
+        <button type="button" class="zm-close-btn" (click)="closeAddProjectModal()" title="Close">&times;</button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="zm-body p-4">
+      <div class="form-group mb-3">
+        <label class="form-label font-weight-bold">Project Name <span class="text-danger">*</span></label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="newProjectForm.project_name"
+          placeholder="Enter Project Name"
+          autofocus
+        />
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <label class="form-label">Project Code</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newProjectForm.project_code"
+            placeholder="e.g. PRJ-001"
+          />
+        </div>
+        <div class="col-6">
+          <label class="form-label">Client / Account Name</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="newProjectForm.client_name"
+            placeholder="Client Name"
+          />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <label class="form-label">Department</label>
+          <select class="form-select" [(ngModel)]="newProjectForm.department_id">
+            <option value="">Select Department</option>
+            <option *ngFor="let d of departments" [value]="d.dept_id">{{ d.department_name }}</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Project Head</label>
+          <select class="form-select" [(ngModel)]="newProjectForm.project_manager_id">
+            <option value="">Select Project Head</option>
+            <option *ngFor="let e of employees" [value]="e.employee_id">{{ e.first_name }} {{ e.last_name || '' }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-6">
+          <label class="form-label">Project Manager (Supervisor)</label>
+          <select class="form-select" [(ngModel)]="newProjectForm.supervisor_id">
+            <option value="">Select Project Manager (Supervisor)</option>
+            <option *ngFor="let e of employees" [value]="e.employee_id">{{ e.first_name }} {{ e.last_name || '' }}</option>
+          </select>
+        </div>
+        <div class="col-6">
+          <label class="form-label">Billing Method</label>
+          <select class="form-select" [(ngModel)]="newProjectForm.billing_method">
+            <option value="Fixed Cost">Fixed Cost</option>
+            <option value="Hourly">Hourly</option>
+            <option value="Staff Rate">Staff Rate</option>
+            <option value="Non-Billable">Non-Billable</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group mb-2">
+        <label class="form-label">Description</label>
+        <textarea
+          class="form-control"
+          rows="2"
+          [(ngModel)]="newProjectForm.description"
+          placeholder="Project Description"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="zm-footer p-3 d-flex justify-content-between align-items-center">
+      <a href="javascript:void(0)" class="text-primary small" (click)="goToFullProjectCreate()">
+        Open Full Project Form &rarr;
+      </a>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="closeAddProjectModal()">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-sm btn-primary"
+          (click)="saveNewProject()"
+          [disabled]="savingProject"
+        >
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="savingProject"></i>
+          Save Project
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden file input for Timesheet CSV/Excel Import -->
+<input
+  type="file"
+  id="timesheetImportFileInput"
+  style="display: none"
+  accept=".csv, .xlsx, .xls"
+  (change)="handleFileImport($event)"
+/>

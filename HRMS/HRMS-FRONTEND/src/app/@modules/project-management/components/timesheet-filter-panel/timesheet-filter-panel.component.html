@@ -1,0 +1,65 @@
+<div class="filter-panel-backdrop" (click)="close.emit()">
+  <div class="filter-panel-box" (click)="$event.stopPropagation()">
+    <div class="filter-panel-header">
+      <h5>Filters</h5>
+      <button type="button" class="filter-close-btn" (click)="close.emit()">&times;</button>
+    </div>
+
+    <div class="filter-panel-body">
+      <div class="filter-group">
+        <label>Clients</label>
+        <select class="form-select" [(ngModel)]="localClient">
+          <option value="">All Clients</option>
+          <option *ngFor="let c of clients" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Projects</label>
+        <select class="form-select" [(ngModel)]="localProjectId">
+          <option value="">All Projects</option>
+          <option *ngFor="let p of projects" [value]="p.project_id">{{ p.project_name }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Jobs</label>
+        <select class="form-select" [(ngModel)]="localTaskId">
+          <option value="">All Jobs</option>
+          <option *ngFor="let j of jobs" [value]="j.task_id">{{ j.task_name }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Approval Status</label>
+        <select class="form-select" [(ngModel)]="localApprovalStatus">
+          <option value="">All</option>
+          <option *ngFor="let s of approvalStatuses" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group" *ngIf="isManagerOrAdmin && employees?.length">
+        <label>Employee</label>
+        <select class="form-select" [(ngModel)]="localEmployeeId">
+          <option value="">All Employees</option>
+          <option *ngFor="let e of employees" [value]="e.employee_id">
+            {{ e.first_name }} {{ e.last_name }} ({{ e.employee_id }})
+          </option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label>Work Mode</label>
+        <select class="form-select" [(ngModel)]="localWorkMode">
+          <option value="">All Modes</option>
+          <option *ngFor="let m of workModes" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-panel-footer">
+      <button type="button" class="btn-filter-reset" (click)="onReset()">Reset</button>
+      <button type="button" class="btn-filter-apply" (click)="onApply()">Apply</button>
+    </div>
+  </div>
+</div>

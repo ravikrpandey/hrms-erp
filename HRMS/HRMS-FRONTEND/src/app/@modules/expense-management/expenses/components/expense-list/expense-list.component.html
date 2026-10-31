@@ -1,0 +1,129 @@
+<div class="heading_top">
+  <div class="page-title">
+    <h1>Expenses</h1>
+    <p>
+      Expense Management
+      <i class="fa fa-angle-right" aria-hidden="true" style="color:#5d6c7c"></i>
+      <span>Expenses</span>
+    </p>
+  </div>
+  <div class="add_button">
+    <button type="button" class="btn_add" (click)="openAddExpenseModal()">
+      <i class="fa fa-plus"></i> Add Expense
+    </button>
+  </div>
+</div>
+
+<div class="right_data_all">
+  <!-- Role-based Tabs -->
+  <div class="expense-tabs mb-3">
+    <!-- My Expenses Tab (Always visible for all users) -->
+    <button
+      type="button"
+      class="tab-chip"
+      [class.active]="activeTab === 'my_expenses'"
+      (click)="setTab('my_expenses')"
+    >
+      <i class="fa fa-user-circle-o mr-1"></i>
+      My Expenses <span class="chip-count">{{ counts.my_expenses }}</span>
+    </button>
+
+    <!-- Project Manager / Finance / Admin Tabs -->
+    <ng-container *ngIf="canViewAllTabs">
+      <button
+        type="button"
+        class="tab-chip chip-pending"
+        [class.active]="activeTab === 'pending'"
+        (click)="setTab('pending')"
+      >
+        <i class="fa fa-clock-o mr-1"></i>
+        Pending for Approval <span class="chip-count">{{ counts.pending }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="tab-chip chip-approved"
+        [class.active]="activeTab === 'approved'"
+        (click)="setTab('approved')"
+      >
+        <i class="fa fa-check-circle mr-1"></i>
+        Approved <span class="chip-count">{{ counts.approved }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="tab-chip chip-rejected"
+        [class.active]="activeTab === 'rejected'"
+        (click)="setTab('rejected')"
+      >
+        <i class="fa fa-ban mr-1"></i>
+        Rejected <span class="chip-count">{{ counts.rejected }}</span>
+      </button>
+    </ng-container>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="filter-toolbar">
+    <div class="toolbar-left">
+      <!-- Search Input -->
+      <div class="search-box">
+        <i class="fa fa-search"></i>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by expense #, employee, project..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+        />
+      </div>
+
+      <!-- Project Filter -->
+      <div class="select-box">
+        <select class="form-select filter-select" [(ngModel)]="selectedProjectId" (change)="onFilterChange()">
+          <option value="All">All Projects</option>
+          <option *ngFor="let p of projects" [value]="p.project_id">
+            {{ p.project_name }} ({{ p.project_code || 'PRJ-' + p.project_id }})
+          </option>
+        </select>
+      </div>
+
+      <!-- Category Filter -->
+      <div class="select-box">
+        <select class="form-select filter-select" [(ngModel)]="selectedCategory" (change)="onFilterChange()">
+          <option value="All">All Categories</option>
+          <option *ngFor="let c of categories" [value]="c.expense_type">
+            {{ c.expense_type }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="toolbar-right">
+      <div class="export-icon mr-2" (click)="onExportDataAsCsv()" title="Export CSV">
+        <i class="fa fa-download"></i>
+      </div>
+      <span class="page-size-label">Show</span>
+      <select class="form-select page-size-select" [(ngModel)]="pageSize" (change)="onPageSizeChanged()">
+        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+      </select>
+      <span class="page-size-label">entries</span>
+    </div>
+  </div>
+
+  <!-- AG GRID TABLE SECTION -->
+  <div class="ag_grid tableGroup">
+    <ag-grid-angular
+      [rowClass]="rowClass"
+      class="ag-theme-alpine"
+      style="width: 100%; height: 540px;"
+      [rowData]="expenses"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="pageSize"
+      [gridOptions]="gridOptions"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>

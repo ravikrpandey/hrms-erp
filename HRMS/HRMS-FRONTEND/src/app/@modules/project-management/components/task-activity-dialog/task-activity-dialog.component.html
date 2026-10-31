@@ -1,0 +1,213 @@
+<div class="modal-backdrop-custom" (click)="close.emit()">
+  <div class="modal-dialog-box" (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="modal-dialog-header">
+      <div class="header-content">
+        <h4 class="modal-dialog-title">
+          <i class="fa fa-comments text-primary mr-2"></i> Task Conversation &amp; Activity
+        </h4>
+        <span class="header-subtitle">
+          Task #{{ taskDetails?.task_id || task?.task_id }}: <span class="font-semibold">{{ taskDetails?.task_name || task?.task_name }}</span> &bull; {{ taskDetails?.project_name || task?.project_name || 'Project #' + (taskDetails?.project_id || task?.project_id) }}
+          <span class="task-milestone-pill ml-2" *ngIf="taskDetails?.milestone_name || task?.milestone_name">
+            <i class="fa fa-flag"></i>
+            <span class="milestone-name-text">{{ taskDetails?.milestone_name || task?.milestone_name }}</span>
+          </span>
+        </span>
+      </div>
+      <button class="modal-close-btn" (click)="close.emit()">&times;</button>
+    </div>
+
+    <!-- Patched Task Values Section -->
+    <div class="task-patched-panel">
+      <div class="patched-meta-grid">
+        <div class="patched-item">
+          <span class="patched-label">TASK TYPE</span>
+          <span class="patched-val">
+            <span class="task-type-badge">{{ taskDetails?.task_type || task?.task_type || 'Task' }}</span>
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">STATUS</span>
+          <span class="patched-val">
+            <span class="status-pill" [ngClass]="getStatusClass(taskDetails?.status || task?.status)">
+              <span class="status-dot"></span>
+              {{ taskDetails?.status || task?.status || 'To Do' }}
+            </span>
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">PRIORITY</span>
+          <span class="patched-val">
+            <span class="priority-pill" [ngClass]="getPriorityClass(taskDetails?.priority || task?.priority)">
+              {{ taskDetails?.priority || task?.priority || 'Medium' }}
+            </span>
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">ASSIGNEE</span>
+          <span class="patched-val font-semibold text-dark">
+            <i class="fa fa-user-circle text-primary mr-1"></i>
+            {{ taskDetails?.assigned_to_name || task?.assigned_to_name || 'Unassigned' }}
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">REVIEWER</span>
+          <span class="patched-val">
+            <i class="fa fa-user-check text-info mr-1"></i>
+            {{ taskDetails?.reviewer_name || task?.reviewer_name || 'Not assigned' }}
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">TIMELINE</span>
+          <span class="patched-val" [class.text-danger]="isTaskOverdue()">
+            <i class="fa fa-calendar mr-1"></i>
+            {{ formatDate(taskDetails?.start_date || task?.start_date) }} - {{ formatDate(taskDetails?.due_date || task?.due_date) }}
+            <span *ngIf="isTaskOverdue()" class="overdue-tag">OVERDUE</span>
+          </span>
+        </div>
+        <div class="patched-item" *ngIf="taskDetails?.estimated_hours || task?.estimated_hours">
+          <span class="patched-label">EST. / LOGGED</span>
+          <span class="patched-val">
+            {{ taskDetails?.estimated_hours || task?.estimated_hours }} hrs / {{ taskDetails?.consumed_hours || taskDetails?.logged_hours || task?.consumed_hours || task?.logged_hours || 0 }} hrs
+          </span>
+        </div>
+        <div class="patched-item">
+          <span class="patched-label">REVIEW STATUS</span>
+          <span class="patched-val">
+            <span class="review-status-pill" [class.text-success]="(taskDetails?.review_status || task?.review_status) === 'Approved'">
+              {{ taskDetails?.review_status || task?.review_status || 'Pending' }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Description in patched card -->
+      <div class="patched-description" *ngIf="taskDetails?.description || task?.description">
+        <span class="desc-label"><i class="fa fa-info-circle mr-1"></i> Description:</span>
+        <span class="desc-content">{{ taskDetails?.description || task?.description }}</span>
+      </div>
+    </div>
+
+    <!-- Scroll & Filter Preference Toolbar -->
+    <div class="stream-preference-toolbar">
+      <div class="stream-tabs">
+        <button
+          type="button"
+          class="btn-stream-tab"
+          [class.active]="activeFilterTab === 'ALL'"
+          (click)="activeFilterTab = 'ALL'"
+        >
+          All Activity <span class="stream-count">{{ activities.length }}</span>
+        </button>
+        <button
+          type="button"
+          class="btn-stream-tab"
+          [class.active]="activeFilterTab === 'COMMENTS'"
+          (click)="activeFilterTab = 'COMMENTS'"
+        >
+          Comments <span class="stream-count">{{ commentsCount }}</span>
+        </button>
+        <button
+          type="button"
+          class="btn-stream-tab"
+          [class.active]="activeFilterTab === 'SYSTEM'"
+          (click)="activeFilterTab = 'SYSTEM'"
+        >
+          Logs &amp; History <span class="stream-count">{{ systemLogsCount }}</span>
+        </button>
+      </div>
+      <div class="stream-actions">
+        <label class="auto-scroll-toggle" title="Toggle automatic scrolling to latest message">
+          <input type="checkbox" [(ngModel)]="autoScrollEnabled" />
+          <span>Auto-scroll</span>
+        </label>
+        <button type="button" class="btn-scroll-action" (click)="scrollToTop()" title="Scroll to top">
+          <i class="fa fa-arrow-up"></i>
+        </button>
+        <button type="button" class="btn-scroll-action" (click)="scrollToBottom()" title="Scroll to bottom">
+          <i class="fa fa-arrow-down"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Conversation & Activity Body -->
+    <div class="modal-dialog-body" #scrollContainer>
+      <div *ngIf="loading" class="text-center py-5 text-muted">
+        <i class="fa fa-spinner fa-spin fa-2x mb-2 d-block text-primary"></i>
+        <span>Loading conversation &amp; activity...</span>
+      </div>
+
+      <div *ngIf="!loading && filteredActivities.length === 0" class="empty-chat-state">
+        <i class="fa fa-comments-o empty-icon"></i>
+        <h6>No messages or activity yet</h6>
+        <p class="text-muted small">Start the conversation by posting an update or comment below.</p>
+      </div>
+
+      <div class="timeline-stream" *ngIf="!loading && filteredActivities.length > 0">
+        <ng-container *ngFor="let item of filteredActivities">
+
+          <div *ngIf="item.activity_type !== 'COMMENT'" class="system-event-row">
+            <div class="system-event-chip">
+              <i class="fa" [ngClass]="getActivityIcon(item.activity_type)"></i>
+              <span class="event-text">{{ item.message }}</span>
+              <span class="event-time">&bull; {{ formatTime(item.createdAt || item.created_at) }}</span>
+            </div>
+          </div>
+
+          <div *ngIf="item.activity_type === 'COMMENT'"
+               class="chat-row"
+               [ngClass]="item.sender_id == currentUserId ? 'chat-mine' : 'chat-other'">
+            
+            <div class="chat-bubble">
+              <div class="bubble-header">
+                <div class="sender-info">
+                  <span class="avatar-chip">{{ getInitials(item.sender_name) }}</span>
+                  <span class="sender-name">{{ item.sender_name }}</span>
+                  <span class="role-badge" [ngClass]="getRoleBadgeClass(item.sender_role)">
+                    {{ item.sender_role || 'Member' }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="bubble-text">
+                {{ item.message }}
+              </div>
+
+              <div class="bubble-time">
+                {{ formatTime(item.createdAt || item.created_at) }}
+              </div>
+            </div>
+
+          </div>
+
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Modal Footer / Chat Composer -->
+    <div class="modal-dialog-footer">
+      <div class="chat-input-wrapper">
+        <textarea
+          class="chat-textarea"
+          rows="2"
+          placeholder="Type an update or comment (Enter to send, Shift+Enter for newline)..."
+          [(ngModel)]="newMessage"
+          (keydown)="onKeyDown($event)"
+          [disabled]="submitting"
+        ></textarea>
+        <button
+          class="btn-send"
+          (click)="sendComment()"
+          [disabled]="!newMessage.trim() || submitting"
+          title="Send message"
+        >
+          <i class="fa fa-spinner fa-spin" *ngIf="submitting"></i>
+          <i class="fa fa-paper-plane" *ngIf="!submitting"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -1,43 +1,112 @@
 <div class="modal-backdrop-custom" (click)="close.emit()">
-  <div class="modal-dialog-box" (click)="$event.stopPropagation()">
-        <div class="modal-dialog-header">
+  <div class="modal-dialog-box" [class.is-edit-mode]="!!task" (click)="$event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div class="modal-dialog-header">
       <div class="header-left">
         <div class="header-icon-box">
           <i class="fa fa-tasks"></i>
         </div>
         <div class="header-title-wrap">
           <h4 class="modal-dialog-title">
-            {{ task ? 'Edit Task' : 'Create New Task' }}
+            {{ !task ? 'Create New Task' : (canEdit ? 'Edit Task' : 'Task Details') }}
+            <span *ngIf="task" class="task-id-badge">#{{ task.task_id }}</span>
           </h4>
           <span class="header-subtitle">
-            {{ task ? 'Update task details, schedule, and reviewer assignment' : 'Define work items, assignees, deadlines, and designated reviewer' }}
+            <span *ngIf="!task">Define work items, assignees, deadlines, and designated reviewer</span>
+            <span *ngIf="task" class="header-task-meta">
+              <span class="meta-tag project-tag" *ngIf="task.project_name">
+                <i class="fa fa-folder-o mr-1"></i>{{ task.project_name }}
+              </span>
+              <span class="meta-tag milestone-tag" *ngIf="taskForm.get('milestone_name')?.value || task.milestone_name" [title]="'Milestone: ' + (taskForm.get('milestone_name')?.value || task.milestone_name)">
+                <i class="fa fa-flag mr-1"></i>{{ taskForm.get('milestone_name')?.value || task.milestone_name }}
+              </span>
+              <span class="meta-tag status-tag" [ngClass]="getStatusClass(taskForm.get('status')?.value || task.status)">
+                <span class="status-dot"></span>
+                {{ taskForm.get('status')?.value || task.status }}
+              </span>
+              <span class="meta-tag priority-tag" [ngClass]="getPriorityClass(taskForm.get('priority')?.value || task.priority)">
+                {{ taskForm.get('priority')?.value || task.priority }}
+              </span>
+              <span class="meta-tag review-tag" [ngClass]="getReviewStatusBadgeClass(task.review_status)">
+                <i class="fas fa-clipboard-check mr-1"></i> {{ task.review_status || 'Pending' }}
+              </span>
+            </span>
           </span>
         </div>
       </div>
+
+      <!-- View Switcher Tabs (Only when task exists) -->
+      <div class="header-view-switcher" *ngIf="task">
+        <button
+          type="button"
+          class="btn-view-toggle"
+          [class.active]="activeDialogView === 'split' || activeDialogView === 'details'"
+          (click)="activeDialogView = 'split'"
+          title="Task details form"
+        >
+          <i class="fa fa-pencil-square-o mr-1"></i> Task Details
+        </button>
+        <button
+          type="button"
+          class="btn-view-toggle"
+          [class.active]="activeDialogView === 'review'"
+          (click)="activeDialogView = 'review'"
+          title="Review & approval"
+        >
+          <i class="fas fa-clipboard-check mr-1"></i> Review &amp; Approval
+          <span class="badge-status-dot" [ngClass]="getReviewStatusBadgeClass(task.review_status)"></span>
+        </button>
+        <button
+          type="button"
+          class="btn-view-toggle"
+          [class.active]="activeDialogView === 'activity'"
+          (click)="activeDialogView = 'activity'"
+          title="Activity & comments"
+        >
+          <i class="fa fa-comments mr-1"></i> Activity &amp; Comments
+          <span class="badge-count" *ngIf="activities.length > 0">{{ activities.length }}</span>
+        </button>
+      </div>
+
       <button type="button" class="modal-close-btn" (click)="close.emit()" title="Close">&times;</button>
     </div>
 
-        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <!-- 1. CREATE MODE (Clean single column) -->
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" *ngIf="!task">
       <div class="modal-dialog-body">
 
-                <div class="inline-form-row mb-2" *ngIf="!projectId && projects.length > 0">
+        <div class="inline-form-row mb-2" *ngIf="!projectId">
           <label class="inline-label">
             Project <span class="required-star">*</span>
           </label>
           <div class="inline-control-wrap">
-            <select formControlName="project_id" class="form-select custom-control" (change)="onProjectChange(taskForm.get('project_id')?.value)">
-              <option [ngValue]="null" disabled selected>-- Select Project --</option>
-              <option *ngFor="let p of projects" [value]="p.project_id">
+            <mat-select
+              formControlName="project_id"
+              [compareWith]="compareIds"
+              class="custom-control select-control py-0 d-flex align-items-center"
+              [class.is-invalid]="taskForm.get('project_id')?.invalid && taskForm.get('project_id')?.touched"
+              placeholder="-- Select Project --"
+              (selectionChange)="onProjectChange($event.value)"
+            >
+              <app-search-filter
+                *ngIf="projects.length >= 5"
+                [array]="projects"
+                [searchFields]="['project_name', 'project_code']"
+                placeholder="Search project..."
+                (filteredReturn)="filteredProjects = $event.data"
+              ></app-search-filter>
+              <mat-option *ngFor="let p of filteredProjects" [value]="p.project_id">
                 {{ p.project_name }}
-              </option>
-            </select>
+              </mat-option>
+            </mat-select>
             <div class="field-error-text" *ngIf="taskForm.get('project_id')?.invalid && taskForm.get('project_id')?.touched">
               Project is required
             </div>
           </div>
         </div>
 
-                <div class="inline-form-row mb-2">
+        <div class="inline-form-row mb-2">
           <label class="inline-label">
             Task Name <span class="required-star">*</span>
           </label>
@@ -54,35 +123,69 @@
           </div>
         </div>
 
-                <div class="row g-2 mb-2">
+        <div class="row g-2 mb-2">
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                <i class="fa fa-user-o text-muted mr-1"></i> Assignee
-              </label>
+              <label class="inline-label"><i class="fa fa-flag text-muted mr-1"></i> Milestone</label>
               <div class="inline-control-wrap">
-                <select formControlName="assigned_to_id" class="form-select custom-control" (change)="onAssigneeChange(taskForm.get('assigned_to_id')?.value)">
-                  <option [ngValue]="null">-- Unassigned --</option>
-                  <option *ngFor="let e of employees" [value]="e.employee_id">
-                    {{ e.displayText || e.name }}
-                  </option>
-                </select>
+                <mat-select
+                  formControlName="milestone_id"
+                  [compareWith]="compareIds"
+                  class="custom-control select-control py-0 d-flex align-items-center"
+                  placeholder="-- Select Milestone --"
+                  (selectionChange)="onMilestoneChange($event.value)"
+                >
+                  <mat-option [value]="null">-- No Milestone --</mat-option>
+                  <mat-option *ngFor="let ms of milestones" [value]="ms.id">
+                    {{ (ms.milestone_code || ms.milestone_id) ? ((ms.milestone_code || ms.milestone_id) + ' — ') : '' }}{{ ms.name }}
+                  </mat-option>
+                </mat-select>
               </div>
             </div>
           </div>
 
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                <i class="fa fa-shield text-primary mr-1"></i> Reviewer <span class="required-star">*</span>
-              </label>
+              <label class="inline-label">Task Type</label>
               <div class="inline-control-wrap">
-                <select formControlName="reviewer_id" class="form-select custom-control" (change)="onReviewerChange(taskForm.get('reviewer_id')?.value)">
-                  <option [ngValue]="null" disabled>-- Select Reviewer --</option>
-                  <option *ngFor="let e of employees" [value]="e.employee_id">
-                    {{ e.displayText || e.name }}
-                  </option>
-                </select>
+                <mat-select formControlName="task_type" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Type">
+                  <mat-option *ngFor="let typ of taskTypes" [value]="typ">{{ typ }}</mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12" *ngIf="taskForm.get('task_type')?.value === 'Other'">
+            <div class="inline-form-row">
+              <label class="inline-label">Specify Type <span class="required-star">*</span></label>
+              <div class="inline-control-wrap">
+                <input type="text" formControlName="other_task_type" class="form-control custom-control" placeholder="e.g. Migration, Security Patch..." />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-2 mb-2">
+          <div class="col-md-6 col-12">
+            <div class="inline-form-row">
+              <label class="inline-label"><i class="fa fa-user-o text-muted mr-1"></i> Assignee</label>
+              <div class="inline-control-wrap">
+                <mat-select formControlName="assigned_to_id" [compareWith]="compareIds" class="custom-control select-control py-0 d-flex align-items-center" placeholder="-- Unassigned --" (selectionChange)="onAssigneeChange($event.value)">
+                  <mat-option [value]="null">-- Unassigned --</mat-option>
+                  <mat-option *ngFor="let e of filteredAssignees" [value]="e.employee_id">{{ e.displayText || e.name }}</mat-option>
+                </mat-select>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 col-12">
+            <div class="inline-form-row">
+              <label class="inline-label"><i class="fas fa-user-check text-primary mr-1"></i> Reviewer <span class="required-star">*</span></label>
+              <div class="inline-control-wrap">
+                <mat-select formControlName="reviewer_id" [compareWith]="compareIds" class="custom-control select-control py-0 d-flex align-items-center" [class.is-invalid]="taskForm.get('reviewer_id')?.invalid && taskForm.get('reviewer_id')?.touched" placeholder="-- Select Reviewer --" (selectionChange)="onReviewerChange($event.value)">
+                  <app-search-filter *ngIf="employees.length >= 8" [array]="employees" [searchFields]="['name', 'employee_code', 'department', 'designation']" placeholder="Search reviewer..." (filteredReturn)="filteredReviewers = $event.data"></app-search-filter>
+                  <mat-option *ngFor="let e of filteredReviewers" [value]="e.employee_id">{{ e.displayText || e.name }}</mat-option>
+                </mat-select>
                 <div class="field-error-text" *ngIf="taskForm.get('reviewer_id')?.invalid && taskForm.get('reviewer_id')?.touched">
                   Reviewer is required
                 </div>
@@ -91,54 +194,37 @@
           </div>
         </div>
 
-                <div class="row g-2 mb-2">
+        <div class="row g-2 mb-2">
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                Priority
-              </label>
+              <label class="inline-label">Priority</label>
               <div class="inline-control-wrap">
-                <select formControlName="priority" class="form-select custom-control">
-                  <option *ngFor="let pr of priorities" [value]="pr">{{ pr }}</option>
-                </select>
+                <mat-select formControlName="priority" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Priority">
+                  <mat-option *ngFor="let pr of priorities" [value]="pr">{{ pr }}</mat-option>
+                </mat-select>
               </div>
             </div>
           </div>
 
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                Status
-              </label>
+              <label class="inline-label">Status</label>
               <div class="inline-control-wrap">
-                <select formControlName="status" class="form-select custom-control">
-                  <option *ngFor="let st of statuses" [value]="st" [disabled]="st === 'Completed' && (!task || task.review_status !== 'Approved')">
-                    {{ st }}{{ (st === 'Completed' && (!task || task.review_status !== 'Approved')) ? ' (Requires Approval)' : '' }}
-                  </option>
-                </select>
-                <div class="helper-info" *ngIf="!task || task.review_status !== 'Approved'">
-                  <i class="fa fa-info-circle mr-1"></i> Requires reviewer approval to close
-                </div>
+                <mat-select formControlName="status" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Status">
+                  <mat-option *ngFor="let st of statuses" [value]="st" [disabled]="st === 'Completed'">{{ st }}</mat-option>
+                </mat-select>
               </div>
             </div>
           </div>
         </div>
 
-                <div class="row g-2 mb-2">
+        <div class="row g-2 mb-2">
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                <i class="fa fa-calendar-o text-muted mr-1"></i> Start Date
-              </label>
+              <label class="inline-label"><i class="fa fa-calendar-o text-muted mr-1"></i> Start Date</label>
               <div class="inline-control-wrap">
                 <div class="date-picker-wrap">
-                  <input
-                    matInput
-                    [matDatepicker]="taskStartPicker"
-                    formControlName="start_date"
-                    placeholder="DD-MM-YYYY"
-                    class="form-control custom-control date-control"
-                  />
+                  <input matInput [matDatepicker]="taskStartPicker" [min]="minStartDate" formControlName="start_date" placeholder="DD-MM-YYYY" class="form-control custom-control date-control" />
                   <mat-datepicker-toggle matSuffix [for]="taskStartPicker" class="date-toggle-btn"></mat-datepicker-toggle>
                   <mat-datepicker #taskStartPicker></mat-datepicker>
                 </div>
@@ -148,32 +234,23 @@
 
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                <i class="fa fa-calendar-check-o text-muted mr-1"></i> Due Date
-              </label>
+              <label class="inline-label"><i class="fa fa-calendar-check-o text-muted mr-1"></i> Due Date</label>
               <div class="inline-control-wrap">
                 <div class="date-picker-wrap">
-                  <input
-                    matInput
-                    [matDatepicker]="taskDuePicker"
-                    formControlName="due_date"
-                    placeholder="DD-MM-YYYY"
-                    class="form-control custom-control date-control"
-                  />
+                  <input matInput [matDatepicker]="taskDuePicker" [min]="taskForm.get('start_date')?.value || minStartDate" formControlName="due_date" placeholder="DD-MM-YYYY" class="form-control custom-control date-control" [class.is-invalid]="isDateRangeInvalid()" />
                   <mat-datepicker-toggle matSuffix [for]="taskDuePicker" class="date-toggle-btn"></mat-datepicker-toggle>
                   <mat-datepicker #taskDuePicker></mat-datepicker>
                 </div>
+                <div class="field-error-text" *ngIf="isDateRangeInvalid()">Due Date cannot be earlier than Start Date</div>
               </div>
             </div>
           </div>
         </div>
 
-                <div class="row g-2 mb-2">
+        <div class="row g-2 mb-2">
           <div class="col-md-6 col-12">
             <div class="inline-form-row">
-              <label class="inline-label">
-                Est. Hours
-              </label>
+              <label class="inline-label">Est. Hours</label>
               <div class="inline-control-wrap">
                 <div class="input-group">
                   <input type="number" formControlName="estimated_hours" min="0" class="form-control custom-control" placeholder="0" />
@@ -182,45 +259,587 @@
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="col-md-6 col-12">
-            <div class="inline-form-row">
-              <label class="inline-label">
-                Progress
-              </label>
-              <div class="inline-control-wrap">
-                <div class="input-group">
-                  <input type="number" formControlName="progress" min="0" max="100" class="form-control custom-control" placeholder="0 - 100" />
-                  <span class="input-group-text unit-tag">%</span>
-                </div>
-              </div>
-            </div>
+        <div class="inline-form-row mb-1">
+          <label class="inline-label inline-label-top">Description</label>
+          <div class="inline-control-wrap">
+            <textarea formControlName="description" class="form-control custom-control" rows="3" placeholder="Describe the task expectations, deliverables, or acceptance criteria..."></textarea>
           </div>
         </div>
 
-                <div class="inline-form-row mb-1">
-          <label class="inline-label inline-label-top">
-            Description
-          </label>
-          <div class="inline-control-wrap">
+      </div>
+
+      <div class="modal-dialog-footer">
+        <button type="button" class="btn btn-secondary btn-modal-cancel" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-modal-save" [disabled]="submitting">
+          <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i> Save Task
+        </button>
+      </div>
+    </form>
+
+    <!-- 2. EDIT / UPDATE / CONVERSATION MODE (Integrated Interface) -->
+    <div class="modal-split-body" *ngIf="task">
+
+      <!-- LEFT COLUMN: Task Form & Details -->
+      <div class="split-col split-left-form" *ngIf="activeDialogView === 'split' || activeDialogView === 'details'">
+        <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="h-100 d-flex flex-column">
+          <div class="form-scrollable-body flex-grow-1">
+
+            <div class="inline-form-row mb-2">
+              <label class="inline-label">Task Name <span class="required-star" *ngIf="canEdit">*</span></label>
+              <div class="inline-control-wrap">
+                <input type="text" formControlName="task_name" class="form-control custom-control" placeholder="Task name..." [readonly]="!canEdit" />
+                <div class="field-error-text" *ngIf="taskForm.get('task_name')?.invalid && taskForm.get('task_name')?.touched">
+                  Task name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label"><i class="fa fa-flag text-muted mr-1"></i> Milestone</label>
+                  <div class="inline-control-wrap">
+                    <mat-select
+                      formControlName="milestone_id"
+                      [compareWith]="compareIds"
+                      class="custom-control select-control py-0 d-flex align-items-center"
+                      placeholder="-- Select Milestone --"
+                      [disabled]="!canEdit"
+                      (selectionChange)="onMilestoneChange($event.value)"
+                    >
+                      <mat-option [value]="null">-- No Milestone --</mat-option>
+                      <mat-option *ngFor="let ms of milestones" [value]="ms.id">
+                        {{ (ms.milestone_code || ms.milestone_id) ? ((ms.milestone_code || ms.milestone_id) + ' — ') : '' }}{{ ms.name }}
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label">Task Type</label>
+                  <div class="inline-control-wrap">
+                    <mat-select formControlName="task_type" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Type" [disabled]="!canEdit">
+                      <mat-option *ngFor="let typ of taskTypes" [value]="typ">{{ typ }}</mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12" *ngIf="taskForm.get('task_type')?.value === 'Other'">
+                <div class="inline-form-row">
+                  <label class="inline-label">Specify Type</label>
+                  <div class="inline-control-wrap">
+                    <input type="text" formControlName="other_task_type" class="form-control custom-control" placeholder="Specify custom type..." [readonly]="!canEdit" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label"><i class="fa fa-user-o text-muted mr-1"></i> Assignee</label>
+                  <div class="inline-control-wrap">
+                    <mat-select formControlName="assigned_to_id" [compareWith]="compareIds" class="custom-control select-control py-0 d-flex align-items-center" placeholder="-- Unassigned --" (selectionChange)="onAssigneeChange($event.value)">
+                      <mat-option [value]="null">-- Unassigned --</mat-option>
+                      <mat-option *ngFor="let e of filteredAssignees" [value]="e.employee_id">{{ e.displayText || e.name }}</mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label"><i class="fas fa-user-check text-primary mr-1"></i> Reviewer</label>
+                  <div class="inline-control-wrap">
+                    <mat-select formControlName="reviewer_id" [compareWith]="compareIds" class="custom-control select-control py-0 d-flex align-items-center" placeholder="-- Select Reviewer --" (selectionChange)="onReviewerChange($event.value)">
+                      <app-search-filter *ngIf="employees.length >= 8" [array]="employees" [searchFields]="['name', 'employee_code', 'department']" placeholder="Search reviewer..." (filteredReturn)="filteredReviewers = $event.data"></app-search-filter>
+                      <mat-option *ngFor="let e of filteredReviewers" [value]="e.employee_id">{{ e.displayText || e.name }}</mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label">Priority</label>
+                  <div class="inline-control-wrap">
+                    <mat-select formControlName="priority" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Priority">
+                      <mat-option *ngFor="let pr of priorities" [value]="pr">{{ pr }}</mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label">Status</label>
+                  <div class="inline-control-wrap">
+                    <mat-select formControlName="status" class="custom-control select-control py-0 d-flex align-items-center" placeholder="Select Status" [disabled]="!canEdit || (task.status === 'Completed' && !canReopen)">
+                      <mat-option *ngFor="let st of statuses" [value]="st" [disabled]="(st === 'Completed' && task.review_status !== 'Approved') || (task.status === 'Completed' && st !== 'Completed' && !canReopen)">
+                        {{ st }}{{ (st === 'Completed' && task.review_status !== 'Approved') ? ' (Requires Approval)' : (task.status === 'Completed' && st !== 'Completed' && !canReopen ? ' (Reopen Restricted)' : '') }}
+                      </mat-option>
+                    </mat-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label"><i class="fa fa-calendar-o text-muted mr-1"></i> Start Date</label>
+                  <div class="inline-control-wrap">
+                    <div class="date-picker-wrap">
+                      <input matInput [matDatepicker]="taskStartPickerEdit" formControlName="start_date" placeholder="DD-MM-YYYY" class="form-control custom-control date-control" [readonly]="!canEdit" />
+                      <mat-datepicker-toggle matSuffix [for]="taskStartPickerEdit" class="date-toggle-btn" *ngIf="canEdit"></mat-datepicker-toggle>
+                      <mat-datepicker #taskStartPickerEdit></mat-datepicker>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label"><i class="fa fa-calendar-check-o text-muted mr-1"></i> Due Date</label>
+                  <div class="inline-control-wrap">
+                    <div class="date-picker-wrap">
+                      <input matInput [matDatepicker]="taskDuePickerEdit" [min]="taskForm.get('start_date')?.value" formControlName="due_date" placeholder="DD-MM-YYYY" class="form-control custom-control date-control" [class.is-invalid]="isDateRangeInvalid()" [readonly]="!canEdit" />
+                      <mat-datepicker-toggle matSuffix [for]="taskDuePickerEdit" class="date-toggle-btn" *ngIf="canEdit"></mat-datepicker-toggle>
+                      <mat-datepicker #taskDuePickerEdit></mat-datepicker>
+                    </div>
+                    <div class="field-error-text" *ngIf="isDateRangeInvalid()">Due Date cannot be earlier than Start Date</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-2 mb-2">
+              <div class="col-md-6 col-12">
+                <div class="inline-form-row">
+                  <label class="inline-label">Est. Hours</label>
+                  <div class="inline-control-wrap">
+                    <div class="input-group">
+                      <input type="number" formControlName="estimated_hours" min="0" class="form-control custom-control" placeholder="0" [readonly]="!canEdit" />
+                      <span class="input-group-text unit-tag">hrs</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="inline-form-row mb-2">
+              <label class="inline-label inline-label-top">Description</label>
+              <div class="inline-control-wrap">
+                <textarea formControlName="description" class="form-control custom-control" rows="3" placeholder="Task description..." [readonly]="!canEdit"></textarea>
+              </div>
+            </div>
+
+            <!-- INTEGRATED REVIEW & APPROVAL CARD -->
+            <div class="integrated-review-box mt-3">
+              <div class="review-box-header">
+                <div class="review-header-title">
+                  <i class="fas fa-clipboard-check text-primary mr-1"></i>
+                  <strong>Review &amp; Approval Status</strong>
+                </div>
+                <span class="review-status-badge" [ngClass]="getReviewStatusBadgeClass(task.review_status)">
+                  {{ task.review_status || 'Pending' }}
+                </span>
+              </div>
+
+              <!-- Reviewer / Status Summary -->
+              <div class="review-meta-summary">
+                <div class="review-meta-item">
+                  <span class="meta-label-tiny">Reviewer</span>
+                  <div class="person-inline" *ngIf="taskForm.get('reviewer_id')?.value; else noRevFound">
+                    <span class="avatar-tiny">{{ getInitials(taskForm.get('reviewer_name')?.value || task.reviewer_name) }}</span>
+                    <span class="person-name-text">{{ taskForm.get('reviewer_name')?.value || task.reviewer_name }}</span>
+                  </div>
+                  <ng-template #noRevFound><span class="text-danger small">Not assigned</span></ng-template>
+                </div>
+
+                <div class="review-meta-item">
+                  <span class="meta-label-tiny">Task Status</span>
+                  <span class="font-semibold">{{ taskForm.get('status')?.value || task.status }} ({{ taskForm.get('progress')?.value || task.progress || 0 }}%)</span>
+                </div>
+
+                <div class="review-meta-item" *ngIf="isReviewer">
+                  <span class="badge badge-reviewer-pill">
+                    <i class="fa fa-user-circle mr-1"></i> You are Reviewer
+                  </span>
+                </div>
+                <div class="review-meta-item" *ngIf="!isReviewer && isAssignee">
+                  <span class="badge badge-assignee-pill">
+                    <i class="fa fa-user mr-1"></i> You are Assignee
+                  </span>
+                </div>
+              </div>
+
+              <!-- Last Review Feedback (if any) -->
+              <div class="review-feedback-card mt-2" *ngIf="task.review_comments">
+                <div class="feedback-card-heading">
+                  <i class="fa fa-commenting-o mr-1 text-warning"></i>
+                  <span>Last Review Feedback</span>
+                  <span class="feedback-timestamp" *ngIf="task.reviewed_at"> &bull; {{ formatDate(task.reviewed_at) }}</span>
+                </div>
+                <p class="feedback-card-content">{{ task.review_comments }}</p>
+              </div>
+
+              <!-- Completed Notice -->
+              <div class="review-completed-card mt-2" *ngIf="task.status === 'Completed'">
+                <i class="fa fa-check-circle success-icon mr-2"></i>
+                <div class="flex-grow-1">
+                  <strong class="text-success d-block">Task Completed &amp; Approved</strong>
+                  <span class="text-muted small">Reviewed and verified. Click reopen below to resume work.</span>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-warning ml-2"
+                  (click)="reopenTask()"
+                  [disabled]="reviewSubmitting || !canReopen"
+                  [title]="canReopen ? 'Reopen task to In Progress' : 'Reopen not permitted for employees'"
+                >
+                  <i class="fa fa-undo mr-1"></i> Reopen Task
+                </button>
+              </div>
+
+              <!-- Review Status Summary in Details Form -->
+              <div class="review-policy-notice mt-2" *ngIf="task.status !== 'Completed'">
+                <i class="fas fa-clipboard-check text-primary mr-1"></i>
+                <span>Review Status: <strong>{{ task.review_status || 'Pending' }}</strong></span>
+                <span class="ml-2" *ngIf="task.reviewer_name">&bull; Reviewer: <strong>{{ task.reviewer_name }}</strong></span>
+                <a class="ml-2 font-weight-bold text-primary" style="cursor: pointer;" (click)="activeDialogView = 'review'">
+                  &bull; Go to Review &amp; Approval &rarr;
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <!-- DEDICATED REVIEW & APPROVAL VIEW -->
+      <div class="split-col split-review-dashboard" *ngIf="activeDialogView === 'review'">
+        <div class="review-dashboard-scroll">
+          
+          <div class="task-info-card">
+            <div class="task-title-row">
+              <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                <span class="project-tag">
+                  <i class="fa fa-folder-o mr-1"></i> {{ task.project_name || 'Project #' + task.project_id }}
+                </span>
+                <span class="milestone-tag" *ngIf="task.milestone_name" [title]="'Milestone: ' + task.milestone_name">
+                  <i class="fa fa-flag mr-1"></i> {{ task.milestone_name }}
+                </span>
+              </div>
+              <span class="review-status-badge" [ngClass]="getReviewStatusBadgeClass(task.review_status)">
+                {{ task.review_status || 'Pending' }}
+              </span>
+            </div>
+
+            <h5 class="task-heading">{{ task.task_name }}</h5>
+            <p class="task-desc" *ngIf="task.description">{{ task.description }}</p>
+
+            <div class="meta-grid">
+              <div class="meta-item">
+                <span class="meta-label">Assignee</span>
+                <div class="person-info" *ngIf="task.assigned_to_name; else unassignedRev">
+                  <span class="avatar-sm">{{ getInitials(task.assigned_to_name) }}</span>
+                  <span class="person-name">{{ task.assigned_to_name }}</span>
+                </div>
+                <ng-template #unassignedRev><span class="text-muted">Unassigned</span></ng-template>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label">Reviewer</span>
+                <div class="person-info" *ngIf="task.reviewer_name; else noReviewerRev">
+                  <span class="avatar-sm avatar-reviewer">{{ getInitials(task.reviewer_name) }}</span>
+                  <span class="person-name font-semibold">{{ task.reviewer_name }}</span>
+                </div>
+                <ng-template #noReviewerRev><span class="text-danger">Not Set</span></ng-template>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label">Task Status</span>
+                <span class="font-semibold">{{ task.status || 'To Do' }} ({{ task.progress || 0 }}%)</span>
+              </div>
+
+              <div class="meta-item">
+                <span class="meta-label">Due Date</span>
+                <span>{{ formatDate(task.due_date) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Last Review Feedback -->
+          <div class="feedback-card" *ngIf="task.review_comments">
+            <div class="feedback-header">
+              <i class="fa fa-commenting-o mr-1"></i>
+              <span>Last Review Feedback</span>
+              <span class="feedback-date" *ngIf="task.reviewed_at"> &bull; {{ formatDate(task.reviewed_at) }}</span>
+            </div>
+            <p class="feedback-text">{{ task.review_comments }}</p>
+          </div>
+
+          <!-- Approval Rule Alert -->
+          <div class="approval-rule-alert" *ngIf="task.review_status !== 'Approved' && task.status !== 'Completed'">
+            <i class="fa fa-info-circle alert-icon"></i>
+            <div class="alert-content">
+              <strong>Reviewer Approval Required</strong>
+              <p>
+                This task cannot be closed directly.
+                {{ isReviewer ? 'As the reviewer/admin, you can approve and close this task below or request changes.' : 'Submit your work for review so the designated reviewer can approve and close it.' }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Completed Notice -->
+          <div class="completed-notice-card" *ngIf="task.status === 'Completed'">
+            <i class="fa fa-check-circle-o success-icon"></i>
+            <div class="flex-grow-1">
+              <h6 class="mb-1 text-success font-semibold">Task Completed &amp; Approved</h6>
+              <p class="mb-0 text-muted small">This task has already been reviewed, approved, and marked closed.</p>
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-warning ml-3"
+              (click)="reopenTask()"
+              [disabled]="reviewSubmitting || !canReopen"
+              [title]="canReopen ? 'Reopen task to In Progress' : 'Reopen not permitted for employees'"
+            >
+              <i class="fa fa-undo mr-1"></i> Reopen Task
+            </button>
+          </div>
+
+          <!-- Comments Section when not completed -->
+          <div class="comments-section" *ngIf="task.status !== 'Completed'">
+            <label class="modal-field-label">
+              <span *ngIf="isReviewer">Reviewer Feedback / Comments</span>
+              <span *ngIf="!isReviewer">Submission Notes (Optional)</span>
+              <span class="text-muted font-weight-normal small ml-2" *ngIf="isReviewer">(Optional for approval, required for requesting changes)</span>
+            </label>
             <textarea
-              formControlName="description"
-              class="form-control custom-control"
+              class="form-control feedback-input"
               rows="3"
-              placeholder="Describe the task expectations, deliverables, or acceptance criteria..."
+              [(ngModel)]="reviewCommentsInput"
+              [ngModelOptions]="{standalone: true}"
+              [placeholder]="isReviewer ? 'Enter approval feedback or required revisions...' : 'Describe what was completed or link deliverables...'"
+            ></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Integrated Conversation & Activity Stream -->
+      <div class="split-col split-right-activity" *ngIf="activeDialogView === 'split' || activeDialogView === 'activity' || activeDialogView === 'review'">
+        
+        <!-- Activity Preference Toolbar -->
+        <div class="activity-preference-bar">
+          <div class="activity-filter-chips">
+            <button
+              type="button"
+              class="chip-filter"
+              [class.active]="activeActivityTab === 'ALL'"
+              (click)="activeActivityTab = 'ALL'"
+            >
+              All Activity <span class="chip-badge">{{ activities.length }}</span>
+            </button>
+            <button
+              type="button"
+              class="chip-filter"
+              [class.active]="activeActivityTab === 'COMMENTS'"
+              (click)="activeActivityTab = 'COMMENTS'"
+            >
+              Comments <span class="chip-badge">{{ commentsCount }}</span>
+            </button>
+            <button
+              type="button"
+              class="chip-filter"
+              [class.active]="activeActivityTab === 'SYSTEM'"
+              (click)="activeActivityTab = 'SYSTEM'"
+            >
+              History <span class="chip-badge">{{ systemLogsCount }}</span>
+            </button>
+          </div>
+
+          <div class="activity-scroll-controls">
+            <label class="auto-scroll-check" title="Toggle automatic scrolling">
+              <input type="checkbox" [(ngModel)]="autoScrollEnabled" />
+              <span>Auto-scroll</span>
+            </label>
+            <button type="button" class="btn-scroll-arrow" (click)="scrollToTop()" title="Scroll to top">
+              <i class="fa fa-arrow-up"></i>
+            </button>
+            <button type="button" class="btn-scroll-arrow" (click)="scrollToBottom()" title="Scroll to bottom">
+              <i class="fa fa-arrow-down"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Conversation & Event Stream -->
+        <div class="activity-scroll-stream" #scrollContainer>
+          
+          <div *ngIf="activityLoading" class="text-center py-4 text-muted">
+            <i class="fa fa-spinner fa-spin fa-2x mb-2 d-block text-primary"></i>
+            <span>Loading conversation &amp; activity...</span>
+          </div>
+
+          <div *ngIf="!activityLoading && filteredActivities.length === 0" class="empty-conversation-state">
+            <i class="fa fa-comments-o empty-chat-icon"></i>
+            <h6>No conversation or activity yet</h6>
+            <p class="text-muted small">Post an update or comment below to start the conversation.</p>
+          </div>
+
+          <div class="activity-list" *ngIf="!activityLoading && filteredActivities.length > 0">
+            <ng-container *ngFor="let item of filteredActivities">
+
+              <!-- System Audit Event -->
+              <div *ngIf="item.activity_type !== 'COMMENT'" class="system-event-item">
+                <div class="system-event-pill">
+                  <i class="fa" [ngClass]="getActivityIcon(item.activity_type)"></i>
+                  <span class="event-msg">{{ item.message }}</span>
+                  <span class="event-time">&bull; {{ formatTime(item.createdAt || item.created_at) }}</span>
+                </div>
+              </div>
+
+              <!-- User Comment Bubble -->
+              <div *ngIf="item.activity_type === 'COMMENT'"
+                   class="comment-bubble-row"
+                   [ngClass]="item.sender_id == currentUserId ? 'bubble-mine' : 'bubble-other'">
+                
+                <div class="comment-bubble-card">
+                  <div class="bubble-header-bar">
+                    <div class="bubble-sender-info">
+                      <span class="bubble-avatar">{{ getInitials(item.sender_name) }}</span>
+                      <span class="bubble-sender-name">{{ item.sender_name }}</span>
+                      <span class="bubble-role-badge" [ngClass]="getRoleBadgeClass(item.sender_role)">
+                        {{ item.sender_role || 'Member' }}
+                      </span>
+                    </div>
+
+                  </div>
+
+                  <div class="bubble-body-text">
+                    {{ item.message }}
+                  </div>
+
+                  <div class="bubble-timestamp">
+                    {{ formatTime(item.createdAt || item.created_at) }}
+                  </div>
+                </div>
+
+              </div>
+
+            </ng-container>
+          </div>
+
+        </div>
+
+        <!-- Bottom Chat / Comment Composer (Hidden during review to eliminate duplicate comment box) -->
+        <div class="activity-composer-footer" *ngIf="activeDialogView !== 'review'">
+          <div class="composer-inner">
+            <textarea
+              class="form-control composer-textarea"
+              rows="2"
+              placeholder="Write an update or comment..."
+              [(ngModel)]="newCommentMessage"
+              (keydown)="onKeyDown($event)"
+              [disabled]="commentSubmitting"
             ></textarea>
           </div>
         </div>
 
       </div>
 
-            <div class="modal-dialog-footer">
-        <button type="button" class="btn btn-secondary btn-modal-cancel" (click)="close.emit()">Cancel</button>
-        <button type="submit" class="btn btn-primary btn-modal-save" [disabled]="submitting">
-          <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i>
-          {{ task ? 'Update Task' : 'Save Task' }}
-        </button>
+    </div>
+
+    <!-- Unified Modal Footer for Edit Mode -->
+    <div class="modal-dialog-footer unified-task-footer" *ngIf="task">
+      <div class="footer-left-info">
+        <span *ngIf="activeDialogView === 'review'" class="text-muted small">
+          <i class="fa fa-info-circle text-primary mr-1"></i>
+          {{ isReviewer ? 'Reviewer actions will directly update task status and notify assignee.' : 'Submit your work for reviewer approval.' }}
+        </span>
+        <span *ngIf="activeDialogView !== 'review' && !canEdit" class="text-muted small">
+          <i class="fa fa-info-circle text-primary mr-1"></i> View mode: Comments &amp; conversation only.
+        </span>
+        <span *ngIf="activeDialogView !== 'review' && canEdit && newCommentMessage.trim()" class="text-primary small font-weight-500">
+          <i class="fa fa-commenting-o mr-1"></i> Comment will be posted along with task update
+        </span>
       </div>
-    </form>
+
+      <div class="footer-btn-actions">
+        <button type="button" class="btn btn-secondary btn-modal-cancel" (click)="close.emit()">
+          {{ canEdit ? 'Cancel' : 'Close' }}
+        </button>
+
+        <ng-container *ngIf="activeDialogView === 'review'">
+          <button
+            type="button"
+            class="btn btn-warning"
+            *ngIf="task.status === 'Completed'"
+            (click)="reopenTask()"
+            [disabled]="reviewSubmitting || !canReopen"
+            [title]="canReopen ? 'Reopen task to In Progress' : 'Reopen not permitted for employees'"
+          >
+            <i class="fa fa-undo mr-1"></i> Reopen Task
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            *ngIf="task.status !== 'Completed' && task.review_status !== 'Submitted' && !isReviewer"
+            (click)="submitForReview()"
+            [disabled]="reviewSubmitting"
+          >
+            <i class="fa fa-spinner fa-spin mr-1" *ngIf="reviewSubmitting"></i>
+            <i class="fa fa-paper-plane mr-1" *ngIf="!reviewSubmitting"></i>
+            Submit for Review
+          </button>
+
+          <ng-container *ngIf="task.status !== 'Completed' && isReviewer">
+            <button
+              type="button"
+              class="btn btn-outline-danger"
+              (click)="requestChanges()"
+              [disabled]="reviewSubmitting"
+            >
+              <i class="fa fa-exclamation-triangle mr-1"></i> Request Changes
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="approveTask()"
+              [disabled]="reviewSubmitting"
+            >
+              <i class="fa fa-spinner fa-spin mr-1" *ngIf="reviewSubmitting"></i>
+              <i class="fa fa-check mr-1" *ngIf="!reviewSubmitting"></i>
+              Approve &amp; Close Task
+            </button>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activeDialogView !== 'review'">
+          <button
+            type="button"
+            class="btn btn-primary btn-modal-save"
+            [disabled]="submitting || commentSubmitting || (!canEdit && !newCommentMessage.trim())"
+            (click)="onSubmitUnified()"
+          >
+            <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting || commentSubmitting"></i>
+            {{ canEdit ? 'Update Task' : 'Post Comment' }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
   </div>
 </div>
+

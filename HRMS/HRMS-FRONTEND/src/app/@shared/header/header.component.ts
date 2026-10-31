@@ -252,15 +252,25 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
     data.forEach((module: any) => {
       const modulePath = `/${module.module_master_link}`;
 
+      let moduleDefaultPath = modulePath;
+      if (module.HRMS_RBAC_MENU_MASTER && module.HRMS_RBAC_MENU_MASTER.length > 0) {
+        const firstMenu = module.HRMS_RBAC_MENU_MASTER[0];
+        if (firstMenu.HRMS_RBAC_SUBMENU_MASTER && firstMenu.HRMS_RBAC_SUBMENU_MASTER.length > 0) {
+          moduleDefaultPath = `${modulePath}/${firstMenu.menu_master_link}/${firstMenu.HRMS_RBAC_SUBMENU_MASTER[0].submenu_masters_link}`;
+        } else if (firstMenu.menu_master_link) {
+          moduleDefaultPath = `${modulePath}/${firstMenu.menu_master_link}`;
+        }
+      }
+
       // Push module-level route
       searchList.push({
         name: module.role_module_master_name,
         type: 'Module',
-        path: modulePath
+        path: moduleDefaultPath
       });
 
       // Loop over menus
-      module.HRMS_RBAC_MENU_MASTER.forEach((menu: any) => {
+      module.HRMS_RBAC_MENU_MASTER?.forEach((menu: any) => {
         const menuPath = `${modulePath}/${menu.menu_master_link}`;
 
         searchList.push({
@@ -286,7 +296,9 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
     searchList.push(
       { name: 'Project Management', type: 'Module', path: '/project-management/projects' },
       { name: 'Projects', type: 'Menu', path: '/project-management/projects' },
-      { name: 'Tasks', type: 'Menu', path: '/project-management/tasks' }
+      { name: 'Tasks', type: 'Menu', path: '/project-management/tasks' },
+      { name: 'Timesheets', type: 'Menu', path: '/project-management/timesheet' },
+      { name: 'Project Expense Report', type: 'Menu', path: '/project-management/expense-report' }
     );
 
     return searchList;
@@ -315,6 +327,20 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
     this.showDropdown = this.searchResults.length > 0;
   }
 
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.searchResults = [];
+    this.showDropdown = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target && !target.closest('.search-box')) {
+      this.showDropdown = false;
+    }
+  }
+
 
   filterRoutes() {
     const term = this.searchTerm.toLowerCase();
@@ -328,27 +354,21 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
     }
   }
 
-navigateTo(path: string, item: any) {
-  if (!path) return;
-  const fullPath = `master${path}`;
-  if (item?.type?.toLowerCase() !== 'module') {
-  this.router.navigate([fullPath]);
-  }
-  this.showDropdown = false;
-  this.searchTerm = '';
+  navigateTo(path: string, item: any) {
+    if (!path) return;
 
-  if (item?.type?.toLowerCase() === 'module') {
-    // document.getElementById('sidebar')?.classList.remove('collapsed');
-    // document.getElementById('sidebar')?.classList.remove('manage-sidebar');
-    // document
-    //   .getElementsByClassName('router-page')[0]
-    //   ?.classList.remove('router-page-remove');
-    // document
-    //   .getElementsByClassName('footer')[0]
-    //   ?.classList.remove('footer_e');
-    this.toggleLeftNav(true);
+    let targetPath = path.trim();
+    if (!targetPath.startsWith('/')) {
+      targetPath = '/' + targetPath;
+    }
+    if (!targetPath.startsWith('/master')) {
+      targetPath = '/master' + targetPath;
+    }
+
+    this.router.navigateByUrl(targetPath);
+    this.showDropdown = false;
+    this.searchTerm = '';
   }
-}
 
 
 

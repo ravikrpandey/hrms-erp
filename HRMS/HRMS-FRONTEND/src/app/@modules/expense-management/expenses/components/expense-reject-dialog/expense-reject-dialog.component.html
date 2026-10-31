@@ -1,0 +1,49 @@
+<div class="reject-dialog">
+  <div class="dialog-header">
+    <div class="title-with-icon">
+      <span class="danger-icon-badge">
+        <i class="fa fa-times-circle"></i>
+      </span>
+      <div>
+        <h4 class="dialog-title">Reject Expense</h4>
+        <p class="dialog-subtitle">
+          {{ data?.expense_number }} &bull; ₹{{ data?.amount | number:'1.2-2' }} &bull; {{ data?.employee_name }}
+        </p>
+      </div>
+    </div>
+    <button type="button" class="close-btn" (click)="onCancel()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+
+  <div class="dialog-body">
+    <div class="alert alert-warning py-2 px-3 mb-3">
+      <i class="fa fa-info-circle mr-1"></i>
+      Rejection requires a mandatory reason. This will be visible to the employee so they can correct and resubmit.
+    </div>
+
+    <div class="form-group mb-2">
+      <label class="form-label required">Reason for Rejection</label>
+      <textarea
+        class="form-control"
+        rows="4"
+        placeholder="Specify clearly what information, receipt, or correction is required..."
+        [(ngModel)]="rejectionReason"
+        (input)="errorMessage = ''"
+      ></textarea>
+      <div *ngIf="errorMessage" class="text-danger small mt-1">
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-footer">
+    <button type="button" class="btn btn-cancel-modal" (click)="onCancel()">
+      Cancel
+    </button>
+    <button type="button" class="btn btn-reject-confirm" (click)="onConfirm()">
+      <i class="fa fa-times mr-1"></i> Reject Expense
+    </button>
+  </div>
+</div>
+

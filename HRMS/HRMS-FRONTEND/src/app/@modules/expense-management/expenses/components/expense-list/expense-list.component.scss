@@ -1,0 +1,305 @@
+.expense-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  .tab-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px;
+    height: 36px !important;
+    min-height: 36px !important;
+    max-height: 36px !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 16px !important;
+    border-radius: 20px !important;
+    font-size: 13px !important;
+    font-weight: 500;
+    vertical-align: middle !important;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    .chip-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      line-height: 20px;
+      padding: 0 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    &:hover {
+      border-color: #0c85c0;
+      color: #0c85c0;
+    }
+
+    &.active {
+      background: #0c85c0;
+      border-color: #0c85c0;
+      color: #ffffff;
+
+      .chip-count {
+        background: rgba(255, 255, 255, 0.25);
+        color: #ffffff;
+      }
+    }
+
+    &.chip-pending.active {
+      background: #0284c7;
+      border-color: #0284c7;
+      color: #fff;
+    }
+
+    &.chip-approved.active {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: #fff;
+    }
+
+    &.chip-rejected.active {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: #fff;
+    }
+  }
+}
+
+.filter-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  .toolbar-left {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-box {
+      position: relative;
+      width: 280px;
+
+      i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+      }
+
+      input {
+        padding-left: 34px;
+        height: 38px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+
+        &:focus {
+          border-color: #0c85c0;
+          box-shadow: 0 0 0 2px rgba(12, 133, 192, 0.15);
+        }
+      }
+    }
+
+    .select-box {
+      .filter-select {
+        height: 38px;
+        min-width: 170px;
+        font-size: 13px;
+        border-radius: 6px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        padding: 0 12px;
+
+        &:focus {
+          border-color: #0c85c0;
+          box-shadow: 0 0 0 2px rgba(12, 133, 192, 0.15);
+        }
+      }
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .export-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #0c85c0;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: #0c85c0;
+        color: #ffffff;
+        border-color: #0c85c0;
+      }
+
+      i {
+        font-size: 14px;
+      }
+    }
+
+    .page-size-label {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .page-size-select {
+      height: 34px;
+      width: 70px;
+      padding: 2px 8px;
+      font-size: 13px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+    }
+  }
+}
+
+.ag_grid {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+:host ::ng-deep {
+  .ag-theme-alpine {
+    --ag-font-family: inherit;
+    --ag-font-size: 13px;
+    --ag-header-background-color: #f8fafc;
+    --ag-header-foreground-color: #475569;
+    --ag-border-color: #e2e8f0;
+    --ag-row-hover-color: #f8fafc;
+
+    .ag-header-cell-label {
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .ag-cell {
+      display: flex;
+      align-items: center;
+      color: #334155;
+      font-size: 13px;
+      padding-left: 12px;
+      padding-right: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      &.action-cell-renderer {
+        overflow: visible !important;
+        justify-content: center !important;
+        padding-left: 4px !important;
+        padding-right: 4px !important;
+      }
+    }
+
+    .ag-header-cell.header-align-center {
+      .ag-header-cell-label {
+        justify-content: center;
+        text-align: center;
+      }
+      .ag-header-cell-text {
+        text-align: center;
+      }
+    }
+
+    /* Remove horizontal scrollbar line completely */
+    .ag-body-horizontal-scroll,
+    .ag-horizontal-right-spacer,
+    .ag-horizontal-left-spacer {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      border: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    /* Clean paging panel without duplicate border */
+    .ag-paging-panel {
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0 !important;
+      border-bottom: none !important;
+      padding: 6px 16px;
+    }
+  }
+
+  .expense-no-link {
+    color: #0c85c0;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.2px;
+
+    &.status-draft {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    &.status-submitted {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+    &.status-finance-pending {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+    &.status-approved {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+    &.status-rejected {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+  }
+}

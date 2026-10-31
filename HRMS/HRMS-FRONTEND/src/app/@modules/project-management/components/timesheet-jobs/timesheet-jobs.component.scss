@@ -1,0 +1,611 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.zoho-page-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.zoho-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #edf2f7;
+
+  .toolbar-left {
+    display: flex;
+    align-items: center;
+
+    .zoho-dropdown {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+
+      .zoho-select {
+        appearance: none;
+        -webkit-appearance: none;
+        background: #ffffff;
+        border: 1px solid #d0d7de;
+        border-radius: 4px;
+        padding: 5px 28px 5px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #24292f;
+        cursor: pointer;
+        outline: none;
+
+        &:focus {
+          border-color: #0070e0;
+        }
+      }
+
+      .select-chevron {
+        position: absolute;
+        right: 10px;
+        pointer-events: none;
+        font-size: 12px;
+        color: #57606a;
+      }
+    }
+  }
+
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .zoho-toggle-group {
+      display: inline-flex;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      overflow: hidden;
+
+      .toggle-btn {
+        border: none;
+        background: #ffffff;
+        padding: 5px 14px;
+        font-size: 13px;
+        color: #57606a;
+        cursor: pointer;
+        font-weight: 500;
+        outline: none;
+        transition: all 0.15s ease;
+
+        &.active {
+          color: #0070e0;
+          border: 1px solid #0070e0;
+          margin: -1px;
+          border-radius: 4px;
+          box-shadow: 0 0 0 1px #0070e0;
+          z-index: 1;
+        }
+      }
+    }
+
+    .btn-zoho-primary {
+      background-color: #0070e0;
+      color: #ffffff;
+      border: 1px solid #0070e0;
+      border-radius: 4px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      outline: none;
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: #005bb5;
+        border-color: #005bb5;
+      }
+    }
+
+    .toolbar-actions {
+      display: inline-flex;
+      gap: 6px;
+
+      .btn-zoho-icon {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #d0d7de;
+        border-radius: 4px;
+        background: #ffffff;
+        color: #57606a;
+        cursor: pointer;
+        font-size: 12px;
+        outline: none;
+        transition: all 0.15s ease;
+
+        &:hover,
+        &.active {
+          background: #f6f8fa;
+          color: #0070e0;
+          border-color: #0070e0;
+        }
+      }
+
+      .more-menu-container {
+        position: relative;
+
+        .more-dropdown-menu {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          margin-top: 4px;
+          background: #ffffff;
+          border: 1px solid #d0d7de;
+          border-radius: 6px;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+          min-width: 130px;
+          z-index: 100;
+          overflow: hidden;
+          padding: 4px 0;
+        }
+
+        .more-menu-item {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 14px;
+          border: none;
+          background: transparent;
+          font-size: 13px;
+          color: #334155;
+          cursor: pointer;
+          text-align: left;
+          transition: background 0.15s ease;
+
+          &:hover {
+            background: #f1f5f9;
+            color: #0073ea;
+          }
+        }
+      }
+    }
+  }
+}
+
+.table-container.ag-grid-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin: 16px;
+
+  ag-grid-angular {
+    flex: 1;
+    width: 100%;
+    height: 100% !important;
+    min-height: 0;
+  }
+}
+
+:host ::ng-deep {
+  .ag-theme-alpine {
+    --ag-font-family: 'Source Sans 3', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    --ag-font-size: 13px;
+    --ag-header-background-color: #f8fafc;
+    --ag-header-foreground-color: #475569;
+    --ag-border-color: #e2e8f0;
+    --ag-row-hover-color: #f8fafc;
+
+    .ag-header-cell-label {
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .ag-cell {
+      display: flex;
+      align-items: center;
+      color: #334155;
+      font-size: 13px;
+      padding-left: 12px;
+      padding-right: 12px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .ag-header-cell.header-align-center {
+      .ag-header-cell-label {
+        justify-content: center;
+        text-align: center;
+      }
+      .ag-header-cell-text {
+        text-align: center;
+      }
+    }
+
+    .ag-body-horizontal-scroll,
+    .ag-horizontal-right-spacer,
+    .ag-horizontal-left-spacer {
+      display: none !important;
+      height: 0 !important;
+      min-height: 0 !important;
+      border: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+    }
+
+    .ag-paging-panel {
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #e2e8f0 !important;
+      border-bottom: none !important;
+      padding: 6px 16px;
+    }
+  }
+
+  .job-cell-content {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+
+    .job-title {
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 13px;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: #0284c7;
+      }
+    }
+
+    .job-sep {
+      margin: 0 6px;
+      color: #94a3b8;
+    }
+
+    .job-project {
+      color: #64748b;
+      font-size: 12.5px;
+    }
+  }
+
+  .logged-hours-cell {
+    display: inline-block;
+
+    .logged-text {
+      font-size: 13px;
+      color: #334155;
+    }
+
+    .progress-track {
+      height: 2px;
+      width: 68px;
+      background: #e2e8f0;
+      border-radius: 1px;
+      margin-top: 4px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        background: #0284c7;
+        transition: width 0.3s ease;
+      }
+    }
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    background: transparent !important;
+    border: none !important;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    &.badge-todo {
+      color: #64748b;
+      .status-dot { background: #94a3b8; }
+    }
+
+    &.badge-inprogress {
+      color: #0284c7;
+      .status-dot { background: #0ea5e9; }
+    }
+
+    &.badge-completed {
+      color: #059669;
+      .status-dot { background: #10b981; }
+    }
+
+    &.badge-onhold {
+      color: #d97706;
+      .status-dot { background: #f59e0b; }
+    }
+
+    &.badge-default {
+      color: #64748b;
+      .status-dot { background: #94a3b8; }
+    }
+  }
+
+  .zoho-badge-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    cursor: default;
+
+    .user-icon {
+      color: #64748b;
+      font-size: 14px;
+      transition: color 0.15s ease;
+    }
+
+    &:hover .user-icon {
+      color: #1e293b;
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -4px;
+      right: -7px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+    }
+  }
+}
+
+
+/* Slide-in Side Filter Panel (Exact Zoho Image Match) */
+.timesheet-side-filter-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.02);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1045;
+  animation: fadeInBackdrop 0.15s ease-out;
+
+  .timesheet-side-filter-panel {
+    width: 290px;
+    max-width: 85vw;
+    height: 100%;
+    background: #ffffff;
+    border-left: 1px solid #e2e8f0;
+    box-shadow: -4px 0 16px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    animation: slideInPanel 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+    .side-filter-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #edf2f7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .side-filter-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #1e293b;
+        margin: 0;
+      }
+
+      .side-filter-close-btn {
+        background: transparent;
+        border: none;
+        font-size: 18px;
+        color: #94a3b8;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        transition: color 0.15s ease;
+
+        &:hover {
+          color: #0f172a;
+        }
+      }
+    }
+
+    .side-filter-body {
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      .side-filter-group {
+        display: flex;
+        flex-direction: column;
+
+        .side-filter-label {
+          font-size: 12.5px;
+          color: #475569;
+          font-weight: 500;
+          margin-bottom: 6px;
+        }
+
+        .filter-select-wrap {
+          position: relative;
+          width: 100%;
+
+          .filter-input-select {
+            width: 100%;
+            height: 32px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 4px;
+            padding: 0 28px 0 10px;
+            font-size: 13px;
+            color: #1e293b;
+            outline: none;
+            cursor: pointer;
+
+            &:focus {
+              border-color: #0070e0;
+            }
+          }
+
+          .filter-chevron {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 13px;
+            color: #57606a;
+          }
+        }
+
+        .filter-tag-container {
+          min-height: 32px;
+          border: 1px solid #d0d7de;
+          border-radius: 4px;
+          padding: 3px 8px;
+          display: flex;
+          align-items: center;
+          background: #ffffff;
+          cursor: pointer;
+
+          .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 12px;
+            color: #334155;
+
+            .tag-user-icon {
+              font-size: 11px;
+              color: #64748b;
+            }
+
+            .tag-text {
+              font-weight: 500;
+            }
+
+            .tag-remove-btn {
+              font-size: 11px;
+              color: #94a3b8;
+              margin-left: 2px;
+              cursor: pointer;
+
+              &:hover {
+                color: #ef4444;
+              }
+            }
+          }
+
+          .filter-tag-placeholder {
+            font-size: 12.5px;
+            color: #94a3b8;
+          }
+        }
+      }
+    }
+
+    .side-filter-footer {
+      padding: 16px 20px;
+      border-top: 1px solid #edf2f7;
+      display: flex;
+      gap: 10px;
+
+      .btn-side-filter-apply {
+        background-color: #0070e0;
+        color: #ffffff;
+        border: 1px solid #0070e0;
+        border-radius: 4px;
+        padding: 6px 20px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background-color: #005bb5;
+          border-color: #005bb5;
+        }
+      }
+
+      .btn-side-filter-reset {
+        background-color: #ffffff;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+        padding: 6px 20px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background-color: #f8fafc;
+          border-color: #94a3b8;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeInBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInPanel {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}

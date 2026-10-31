@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(100),
         defaultValue: "Fixed Cost",
       },
+      project_type: {
+        type: Sequelize.STRING(100),
+        defaultValue: "Client Project",
+      },
       priority: {
         type: Sequelize.ENUM("Low", "Medium", "High", "Critical"),
         defaultValue: "Medium",
@@ -51,6 +55,18 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: true,
       },
+      supervisor_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      supervisor_name: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      supervisor_email: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
       start_date: {
         type: Sequelize.DATEONLY,
         allowNull: true,
@@ -70,6 +86,14 @@ module.exports = (sequelize, Sequelize) => {
       budget: {
         type: Sequelize.DECIMAL(12, 2),
         defaultValue: 0.0,
+      },
+      recognized_revenue: {
+        type: Sequelize.DECIMAL(12, 2),
+        defaultValue: 0.0,
+      },
+      currency: {
+        type: Sequelize.STRING(10),
+        defaultValue: "INR",
       },
       spent: {
         type: Sequelize.DECIMAL(12, 2),

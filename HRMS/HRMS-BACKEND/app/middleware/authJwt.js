@@ -4,15 +4,19 @@ const db = require("../models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
-  let token = req.headers["x-access-token"];
+  let token = req.headers["x-access-token"] || req.headers["authorization"];
+
+  if (token && typeof token === "string" && token.startsWith("Bearer ")) {
+    token = token.slice(7).trim();
+  }
 
   if (!token) {
-    return res.status(401).send({ code: 401, message: "You are not authorized.You have entered wrong token" });
+    return res.status(401).send({ code: 401, success: false, message: "No token provided. Authorization required." });
   }
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      return res.status(401).send({ code: 401, message: "You are Unauthorized!.Your token has been expired" });
+      return res.status(401).send({ code: 401, success: false, message: "Unauthorized! Your token has expired or is invalid." });
     }
     req.userId = decoded.id;
     next();

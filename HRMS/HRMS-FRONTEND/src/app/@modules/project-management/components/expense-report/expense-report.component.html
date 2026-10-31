@@ -1,0 +1,256 @@
+<div class="expense-report-container">
+  <div class="report-header-section">
+    <div class="report-title-block">
+      <h1 class="report-main-title">Project Expense & Cost Report</h1>
+      <p class="report-breadcrumbs">
+        Project Management
+        <i class="fa fa-angle-right" aria-hidden="true"></i>
+        <span class="crumb-highlight">Financial Ledger & Expense Reporting</span>
+      </p>
+    </div>
+    <div class="report-actions">
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="loadReport()" [disabled]="loading">
+        <i class="fa fa-refresh" [class.fa-spin]="loading"></i> Refresh
+      </button>
+      <button type="button" class="btn btn-primary btn-sm" (click)="exportCsv()">
+        <i class="fa fa-download"></i> Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI Cards Row -->
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-icon icon-budget">
+        <i class="fas fa-rupee-sign"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ formatCurrency(summary.allocated_budget) }}</span>
+        <span class="kpi-label">Allocated Budget</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon icon-spent">
+        <i class="fas fa-credit-card"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ formatCurrency(summary.total_actual_expenditure) }}</span>
+        <span class="kpi-label">Actual Expenditure</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon icon-labor">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ formatCurrency(summary.total_labor_cost) }}</span>
+        <span class="kpi-label">Labor Cost ({{ summary.total_logged_hours }} hrs)</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon icon-expense">
+        <i class="fas fa-receipt"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ formatCurrency(summary.total_expense_cost) }}</span>
+        <span class="kpi-label">Direct Project Expenses</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon icon-available">
+        <i class="fas fa-shield-alt"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value" [class.text-danger]="summary.available_budget <= 0" [class.text-success]="summary.available_budget > 0">
+          {{ formatCurrency(summary.available_budget) }}
+        </span>
+        <span class="kpi-label">Available Budget</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon icon-utilization">
+        <i class="fas fa-chart-pie"></i>
+      </div>
+      <div class="kpi-body">
+        <span class="kpi-value">{{ summary.budget_utilization_pct }}%</span>
+        <span class="kpi-label">Budget Utilization</span>
+        <div class="progress mt-1" style="height: 4px;">
+          <div
+            class="progress-bar"
+            [class.bg-success]="summary.budget_utilization_pct < 70"
+            [class.bg-warning]="summary.budget_utilization_pct >= 70 && summary.budget_utilization_pct <= 90"
+            [class.bg-danger]="summary.budget_utilization_pct > 90"
+            [style.width.%]="summary.budget_utilization_pct > 100 ? 100 : summary.budget_utilization_pct"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter Toolbar -->
+  <div class="filter-toolbar">
+    <div class="filter-item">
+      <label>Project</label>
+      <select class="form-control form-control-sm" [(ngModel)]="selectedProjectId" (change)="onFilterChange()">
+        <option value="all">All Projects</option>
+        <option *ngFor="let p of projects" [value]="p.project_id">{{ p.project_name }} ({{ p.project_code }})</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label>Cost Source</label>
+      <select class="form-control form-control-sm" [(ngModel)]="selectedSourceType" (change)="onFilterChange()">
+        <option value="ALL">All Cost Types</option>
+        <option value="TIMESHEET_LABOR">Labor Costs</option>
+        <option value="PROJECT_EXPENSE">Project Expenses</option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label>Team Member</label>
+      <select class="form-control form-control-sm" [(ngModel)]="selectedEmployeeId" (change)="onFilterChange()">
+        <option value="all">All Employees</option>
+        <option *ngFor="let emp of employees" [value]="emp.employee_id">
+          {{ emp.first_name }} {{ emp.last_name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-item">
+      <label>From Date</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="startDate" (change)="onFilterChange()" />
+    </div>
+
+    <div class="filter-item">
+      <label>To Date</label>
+      <input type="date" class="form-control form-control-sm" [(ngModel)]="endDate" (change)="onFilterChange()" />
+    </div>
+
+    <div class="filter-item search-box">
+      <label>Search</label>
+      <input
+        type="text"
+        class="form-control form-control-sm"
+        placeholder="Search item, task, employee..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onFilterChange()"
+      />
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
+        <i class="fa fa-times"></i> Reset
+      </button>
+    </div>
+  </div>
+
+  <!-- AG Grid Section -->
+  <div class="grid-card">
+    <div class="grid-header">
+      <span class="grid-title">Cost Ledger Transactions ({{ summary.transaction_count }})</span>
+      <span class="text-muted small">Authoritative immutable project cost transactions</span>
+    </div>
+
+    <ag-grid-angular
+      class="ag-theme-alpine expense-grid"
+      [rowData]="transactions"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [domLayout]="'autoHeight'"
+      [pagination]="true"
+      [paginationPageSize]="25"
+      (gridReady)="onGridReady($event)"
+      (gridSizeChanged)="onGridSizeChanged($event)"
+    >
+    </ag-grid-angular>
+  </div>
+</div>
+
+<!-- Audit Drill-down Modal -->
+<div class="modal-backdrop-custom" *ngIf="showDrilldown" (click)="closeDrilldown()">
+  <div class="modal-dialog-custom" (click)="$event.stopPropagation()">
+    <div class="modal-header-custom">
+      <h5 class="modal-title">
+        <i class="fa fa-file-text-o mr-2 text-primary"></i>
+        Cost Ledger Transaction Details
+      </h5>
+      <button type="button" class="close-btn" (click)="closeDrilldown()">&times;</button>
+    </div>
+
+    <div class="modal-body-custom" *ngIf="selectedTransaction">
+      <div class="audit-grid">
+        <div class="audit-row">
+          <span class="audit-label">Transaction ID:</span>
+          <span class="audit-val font-semibold">#{{ selectedTransaction.transaction_id }}</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Ledger Status:</span>
+          <span class="audit-val">
+            <span class="badge-status" [class.badge-posted]="selectedTransaction.posting_status === 'POSTED'" [class.badge-reversed]="selectedTransaction.posting_status === 'REVERSED'">
+              {{ selectedTransaction.posting_status }}
+            </span>
+          </span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Project:</span>
+          <span class="audit-val">{{ selectedTransaction.project_name }} (ID #{{ selectedTransaction.project_id }})</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Source Type:</span>
+          <span class="audit-val">{{ selectedTransaction.source_type }}</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Reference ID:</span>
+          <span class="audit-val">#{{ selectedTransaction.source_reference_id }}</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Item / Task:</span>
+          <span class="audit-val">{{ selectedTransaction.source_reference_name || selectedTransaction.task_name || '-' }}</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Employee:</span>
+          <span class="audit-val">{{ selectedTransaction.employee_name }} (ID #{{ selectedTransaction.employee_id }})</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Transaction Date:</span>
+          <span class="audit-val">{{ selectedTransaction.transaction_date }}</span>
+        </div>
+        <div class="audit-row" *ngIf="selectedTransaction.hours">
+          <span class="audit-label">Approved Hours:</span>
+          <span class="audit-val">{{ selectedTransaction.hours }} hrs</span>
+        </div>
+        <div class="audit-row" *ngIf="selectedTransaction.applied_rate">
+          <span class="audit-label">Applied Cost Rate:</span>
+          <span class="audit-val">₹{{ selectedTransaction.applied_rate }}/hr</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Total Amount:</span>
+          <span class="audit-val text-primary font-bold text-lg">
+            {{ formatCurrency(selectedTransaction.amount) }} {{ selectedTransaction.currency }}
+          </span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Idempotency Key:</span>
+          <span class="audit-val code-val">{{ selectedTransaction.idempotency_key }}</span>
+        </div>
+        <div class="audit-row">
+          <span class="audit-label">Created At:</span>
+          <span class="audit-val">{{ selectedTransaction.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="audit-row full-width" *ngIf="selectedTransaction.notes">
+          <span class="audit-label">Audit Notes:</span>
+          <p class="audit-notes">{{ selectedTransaction.notes }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer-custom">
+      <button type="button" class="btn btn-secondary btn-sm" (click)="closeDrilldown()">Close</button>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ColDef, GridApi, GridReadyEvent, GridSizeChangedEvent } from 'ag-grid-community';
 import { ProjectManagementService } from '../../services/project-management.service';
 import { ToastrService } from 'ngx-toastr';
+import { TaskActionCellComponent } from '../task-action-cell/task-action-cell.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-task-management',
@@ -19,20 +22,31 @@ export class TaskManagementComponent implements OnInit {
   selectedPriority: string = 'All';
 
   projects: any[] = [];
+  filteredToolbarProjects: any[] = [];
   employees: any[] = [];
 
   showTaskDialog: boolean = false;
   editingTask: any = null;
   showReviewDialog: boolean = false;
   taskToReview: any = null;
+  showActivityDialog: boolean = false;
+  taskForActivity: any = null;
   currentUser: any = null;
 
-  statuses: string[] = ['All', 'To Do', 'In Progress', 'In Review', 'Completed'];
+  statuses: string[] = ['All', 'To Do', 'In Progress', 'In Review', 'Waiting for Information', 'Completed', 'Overdue'];
   priorities: string[] = ['All', 'Low', 'Medium', 'High', 'Urgent'];
 
   pageSize: number = 10;
-  currentPage: number = 1;
-  pageSizeOptions: number[] = [10, 25, 50, 100];
+  pageSizeOptions: number[] = [7, 10, 25, 50];
+
+  gridApi!: GridApi;
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    sortable: true,
+    filter: true,
+    resizable: true,
+    suppressMovable: true
+  };
 
   constructor(
     private pmService: ProjectManagementService,
@@ -42,12 +56,16 @@ export class TaskManagementComponent implements OnInit {
 
   ngOnInit(): void {
     const userStr = localStorage.getItem('signInUser');
+    const detailsStr = localStorage.getItem('loginUserDetails');
+    let user: any = {};
+    if (detailsStr) {
+      try { user = { ...user, ...JSON.parse(detailsStr) }; } catch (e) {}
+    }
     if (userStr) {
-      try {
-        this.currentUser = JSON.parse(userStr);
-      } catch (e) {
-        console.error('Error parsing signInUser:', e);
-      }
+      try { user = { ...user, ...JSON.parse(userStr) }; } catch (e) {}
+    }
+    if (Object.keys(user).length > 0) {
+      this.currentUser = user;
     }
 
     this.route.queryParams.subscribe(params => {
@@ -59,15 +77,262 @@ export class TaskManagementComponent implements OnInit {
       }
     });
 
+    this.setupColumnDefs();
     this.loadLookups();
     this.loadTasks();
+  }
+
+  setupColumnDefs(): void {
+    this.columnDefs = [
+      {
+        headerName: '',
+        field: 'status',
+        width: 48,
+        minWidth: 48,
+        maxWidth: 48,
+        sortable: false,
+        filter: false,
+        cellStyle: { 'justify-content': 'center', 'padding': '0' },
+        cellRenderer: (params: any) => {
+          if (!params.data) return '';
+          const t = params.data;
+          const isDone = t.status === 'Completed';
+          const canReopen = this.canReopenTask(t);
+          const disabled = isDone && !canReopen ? 'disabled' : '';
+          const checked = isDone ? 'checked' : '';
+          const title = isDone
+            ? (canReopen ? 'Click to reopen task' : 'Reopening restricted to Head/Admin')
+            : (t.review_status === 'Approved' ? 'Click to complete task' : 'Requires review approval before closing');
+          return `<input type="checkbox" class="task-grid-checkbox" ${checked} ${disabled} title="${title}" />`;
+        },
+        onCellClicked: (params: any) => {
+          if (params.event?.target?.tagName === 'INPUT') {
+            this.toggleTaskStatus(params.data);
+          }
+        }
+      },
+      {
+        headerName: 'TASK NAME',
+        field: 'task_name',
+        minWidth: 220,
+        flex: 1.6,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const t = params.data;
+          const isDone = t.status === 'Completed';
+          const typeBadge = t.task_type ? `<span class="task-type-badge">${t.task_type}</span>` : '';
+          const milestonePill = t.milestone_name ? `
+            <span class="task-milestone-pill" title="Milestone: ${t.milestone_name}">
+              <i class="fa fa-flag mr-1"></i>${t.milestone_name}
+            </span>` : '';
+          const desc = t.description ? `<small class="task-desc-text">${t.description}</small>` : '';
+          return `
+            <div class="task-name-cell ${isDone ? 'task-done' : ''}">
+              <div class="d-flex align-items-center flex-wrap" style="gap: 5px;">
+                ${typeBadge}
+                <span class="task-title-link" title="Click to view/edit">${t.task_name}</span>
+                ${milestonePill}
+              </div>
+              ${desc}
+            </div>
+          `;
+        },
+        onCellClicked: (params: any) => this.openEditTask(params.data)
+      },
+      {
+        headerName: 'PROJECT',
+        field: 'project_name',
+        minWidth: 150,
+        flex: 1.1,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const pName = params.value || ('Project #' + params.data.project_id);
+          return `<span class="project-table-link"><i class="fa fa-folder-o mr-1"></i>${pName}</span>`;
+        },
+        onCellClicked: (params: any) => {
+          if (params.data?.project_id) {
+            window.location.href = `#/master/project-management/projects/${params.data.project_id}`;
+          }
+        }
+      },
+      {
+        headerName: 'ASSIGNED TO',
+        field: 'assigned_to_name',
+        minWidth: 140,
+        flex: 1.1,
+        cellRenderer: (params: any) => {
+          if (!params.value) return '<span class="text-muted">Unassigned</span>';
+          const initials = this.getInitials(params.value);
+          return `
+            <div class="manager-info">
+              <span class="manager-avatar">${initials}</span>
+              <span class="manager-name">${params.value}</span>
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'REVIEWER',
+        field: 'reviewer_name',
+        minWidth: 140,
+        flex: 1.1,
+        cellRenderer: (params: any) => {
+          if (!params.value) return '<span class="text-danger small"><i class="fa fa-warning mr-1"></i>Not assigned</span>';
+          const initials = this.getInitials(params.value);
+          return `
+            <div class="manager-info">
+              <span class="manager-avatar reviewer-avatar">${initials}</span>
+              <span class="manager-name font-semibold">${params.value}</span>
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'PRIORITY',
+        field: 'priority',
+        minWidth: 95,
+        flex: 0.8,
+        cellRenderer: (params: any) => {
+          const raw = params.value || 'Medium';
+          const val = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+          const cls = this.getPriorityClass(raw);
+          return `<span class="priority-pill ${cls}">${val}</span>`;
+        }
+      },
+      {
+        headerName: 'CONSUMED HRS',
+        field: 'consumed_hours',
+        minWidth: 155,
+        flex: 1.2,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const t = params.data;
+          const rawHrs = t.consumed_hours !== undefined && t.consumed_hours !== null
+            ? t.consumed_hours
+            : (t.logged_hours || 0);
+          const numHrs = typeof rawHrs === 'number' ? rawHrs : parseFloat(rawHrs || 0);
+          const hrsText = Number.isInteger(numHrs) ? `${numHrs}` : numHrs.toFixed(2);
+
+          let rangeText = '';
+          if (numHrs > 0) {
+            const start = t.first_log_date || t.start_date;
+            const end = t.last_log_date || t.completed_date || (t.status === 'Completed' ? t.due_date : null);
+            const startStr = start ? this.formatDate(start) : '-';
+            const endStr = end ? this.formatDate(end) : (t.status === 'Completed' ? 'Completed' : '<span class="text-info font-weight-500">Ongoing</span>');
+            rangeText = `${startStr} &rarr; ${endStr}`;
+          } else {
+            rangeText = '<span class="text-muted">No time logged</span>';
+          }
+
+          return `
+            <div class="consumed-hrs-cell">
+              <span class="consumed-hours-val">
+                <i class="fa fa-clock-o mr-1 text-primary"></i>${hrsText} hrs
+              </span>
+              <small class="consumed-date-range text-muted">${rangeText}</small>
+            </div>
+          `;
+        }
+      },
+      {
+        headerName: 'DUE DATE',
+        field: 'due_date',
+        minWidth: 125,
+        flex: 0.9,
+        cellRenderer: (params: any) => {
+          if (!params.data) return '—';
+          const t = params.data;
+          const isOverdue = this.isTaskOverdue(t);
+          const overdueTag = isOverdue ? '<span class="overdue-tag">OVERDUE</span>' : '';
+          return `
+            <span class="timeline-date ${isOverdue ? 'overdue-date-text' : ''}">
+              <i class="fa fa-calendar-o mr-1"></i>${this.formatDate(t.due_date)}
+              ${overdueTag}
+            </span>
+          `;
+        }
+      },
+      {
+        headerName: 'STATUS',
+        field: 'status',
+        minWidth: 110,
+        flex: 0.9,
+        cellRenderer: (params: any) => {
+          const val = params.value || 'To Do';
+          const cls = this.getStatusClass(val);
+          return `
+            <span class="status-pill ${cls}">
+              <span class="status-dot"></span>
+              ${val}
+            </span>
+          `;
+        }
+      },
+      {
+        headerName: 'REVIEW STATUS',
+        field: 'review_status',
+        minWidth: 135,
+        flex: 1.0,
+        cellRenderer: (params: any) => {
+          const val = params.value || 'Pending';
+          const cls = this.getReviewStatusClass(val);
+          const icon = this.getReviewStatusIcon(val);
+          return `
+            <span class="review-status-pill clickable-pill ${cls}" title="Click to view/perform review">
+              <i class="${icon} mr-1"></i>${val}
+            </span>
+          `;
+        },
+        onCellClicked: (params: any) => this.openReviewTask(params.data)
+      },
+      {
+        headerName: 'ACTIONS',
+        field: 'task_id',
+        sortable: false,
+        filter: false,
+        headerClass: 'header-align-center',
+        cellStyle: { 'justify-content': 'center' },
+        minWidth: 130,
+        maxWidth: 155,
+        flex: 0.9,
+        cellClass: 'action-cell-renderer',
+        cellRenderer: TaskActionCellComponent,
+        cellRendererParams: {
+          onReview: (t: any) => this.openReviewTask(t),
+          onEdit: (t: any) => this.openEditTask(t),
+          onDelete: (t: any, e: any) => this.deleteTask(t, e),
+          canEdit: (t: any) => this.canEditTask(t),
+          canDelete: (t: any) => this.canDeleteTask(t)
+        }
+      }
+    ];
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+    if (this.filteredTasks && this.filteredTasks.length > 0) {
+      this.gridApi.setRowData(this.filteredTasks);
+    }
+    setTimeout(() => {
+      this.gridApi?.sizeColumnsToFit();
+    }, 50);
+  }
+
+  onGridSizeChanged(params: GridSizeChangedEvent): void {
+    params.api?.sizeColumnsToFit();
+  }
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.gridApi?.sizeColumnsToFit();
   }
 
   loadLookups(): void {
     this.pmService.getAllProjects().subscribe({
       next: (res: any) => {
         if (res.success && res.data) {
-          this.projects = res.data;
+          this.projects = res.data.filter((p: any) => p.status !== 'Completed' && p.status !== 'Cancelled');
+          this.filteredToolbarProjects = [...this.projects];
         }
       }
     });
@@ -95,13 +360,16 @@ export class TaskManagementComponent implements OnInit {
     });
   }
 
-  loadTasks(): void {
-    this.loading = true;
+  compareIds(o1: any, o2: any): boolean {
+    return o1 == o2;
+  }
+
+  loadTasks(showLoader: boolean = true): void {
+    if (showLoader) {
+      this.loading = true;
+    }
     const params: any = {};
     if (this.selectedProjectId) params.project_id = this.selectedProjectId;
-    if (this.selectedStatus && this.selectedStatus !== 'All') params.status = this.selectedStatus;
-    if (this.selectedPriority && this.selectedPriority !== 'All') params.priority = this.selectedPriority;
-    if (this.searchTerm) params.search = this.searchTerm;
 
     this.pmService.getAllTasks(params).subscribe({
       next: (res: any) => {
@@ -114,21 +382,40 @@ export class TaskManagementComponent implements OnInit {
       error: (err) => {
         this.loading = false;
         console.error('Error fetching tasks:', err);
-        this.toast.error('Failed to load tasks');
+        if (showLoader) {
+          this.toast.error('Failed to load tasks');
+        }
       }
     });
   }
 
   setStatusFilter(status: string): void {
     this.selectedStatus = status;
-    this.loadTasks();
+    this.applyFilter();
+  }
+
+  onFilterTextBoxChanged(): void {
+    this.applyFilter();
+  }
+
+  onProjectChange(): void {
+    this.applyFilter();
+  }
+
+  onPriorityChange(): void {
+    this.applyFilter();
   }
 
   applyFilter(): void {
     let result = [...this.tasks];
 
     if (this.selectedStatus && this.selectedStatus !== 'All') {
-      result = result.filter(t => t.status === this.selectedStatus);
+      if (this.selectedStatus === 'Overdue') {
+        const todayMs = new Date().setHours(0, 0, 0, 0);
+        result = result.filter(t => t.status !== 'Completed' && t.due_date && new Date(t.due_date).getTime() < todayMs);
+      } else {
+        result = result.filter(t => t.status === this.selectedStatus);
+      }
     }
 
     if (this.selectedPriority && this.selectedPriority !== 'All') {
@@ -149,46 +436,16 @@ export class TaskManagementComponent implements OnInit {
     }
 
     this.filteredTasks = result;
-    this.currentPage = 1;
-  }
-
-  get paginatedTasks(): any[] {
-    const start = (this.currentPage - 1) * this.pageSize;
-    return this.filteredTasks.slice(start, start + this.pageSize);
-  }
-
-  get totalPages(): number {
-    return Math.ceil(this.filteredTasks.length / this.pageSize) || 1;
-  }
-
-  get totalCount(): number {
-    return this.filteredTasks.length;
-  }
-
-  get startItemIndex(): number {
-    if (this.totalCount === 0) return 0;
-    return (this.currentPage - 1) * this.pageSize + 1;
-  }
-
-  get endItemIndex(): number {
-    const end = this.currentPage * this.pageSize;
-    return end > this.totalCount ? this.totalCount : end;
-  }
-
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    if (this.gridApi) {
+      this.gridApi.setRowData(this.filteredTasks);
+      setTimeout(() => this.gridApi?.sizeColumnsToFit(), 30);
     }
   }
 
   onPageSizeChange(): void {
-    this.currentPage = 1;
+    if (this.gridApi) {
+      this.gridApi.paginationSetPageSize(Number(this.pageSize));
+    }
   }
 
   get allCount(): number {
@@ -207,17 +464,36 @@ export class TaskManagementComponent implements OnInit {
     return this.tasks.filter(t => t.status === 'In Review').length;
   }
 
+  get waitingForInfoCount(): number {
+    return this.tasks.filter(t => t.status === 'Waiting for Information').length;
+  }
+
+  get overdueCount(): number {
+    const todayMs = new Date().setHours(0, 0, 0, 0);
+    return this.tasks.filter(t => t.status !== 'Completed' && t.due_date && new Date(t.due_date).getTime() < todayMs).length;
+  }
+
   get completedCount(): number {
     return this.tasks.filter(t => t.status === 'Completed').length;
   }
 
+  isTaskOverdue(task: any): boolean {
+    if (!task || task.status === 'Completed' || !task.due_date) return false;
+    const todayMs = new Date().setHours(0, 0, 0, 0);
+    return new Date(task.due_date).getTime() < todayMs;
+  }
+
+  initialTaskDialogView: 'split' | 'details' | 'activity' | 'review' = 'split';
+
   openCreateTask(): void {
     this.editingTask = null;
+    this.initialTaskDialogView = 'split';
     this.showTaskDialog = true;
   }
 
   openEditTask(task: any): void {
     this.editingTask = task;
+    this.initialTaskDialogView = 'split';
     this.showTaskDialog = true;
   }
 
@@ -227,18 +503,68 @@ export class TaskManagementComponent implements OnInit {
   }
 
   onTaskSaved(): void {
-    this.closeTaskDialog();
     this.loadTasks();
   }
 
   openReviewTask(task: any): void {
-    this.taskToReview = task;
-    this.showReviewDialog = true;
+    this.editingTask = task;
+    this.initialTaskDialogView = 'review';
+    this.showTaskDialog = true;
   }
 
   closeReviewDialog(): void {
     this.showReviewDialog = false;
     this.taskToReview = null;
+  }
+
+  openTaskActivity(task: any): void {
+    this.editingTask = task;
+    this.initialTaskDialogView = 'activity';
+    this.showTaskDialog = true;
+  }
+
+  closeActivityDialog(): void {
+    this.showActivityDialog = false;
+    this.taskForActivity = null;
+  }
+
+  canEditTask(task: any): boolean {
+    if (!this.currentUser) return false;
+    const rId = Number(this.currentUser?.role_master_id || this.currentUser?.role_id);
+    const rName = (this.currentUser?.role_name || this.currentUser?.role_master_name || '').toLowerCase();
+    if (rId === 1 || rName.includes('admin') || rName.includes('super')) return true;
+    const userEmpId = Number(this.currentUser?.employee_id || this.currentUser?.id);
+    if (task?.project_manager_id && task.project_manager_id == userEmpId) return true;
+    if (task?.created_by && task.created_by == userEmpId) return true;
+    if (task?.project_creator_id && task.project_creator_id == userEmpId) return true;
+    if (rName.includes('head') || rName.includes('creator')) return true;
+    return false;
+  }
+
+  canDeleteTask(task: any): boolean {
+    if (!this.currentUser) return false;
+    const rId = Number(this.currentUser?.role_master_id || this.currentUser?.role_id);
+    const rName = (this.currentUser?.role_name || this.currentUser?.role_master_name || '').toLowerCase();
+    if (rId === 1 || rName.includes('admin') || rName.includes('super')) return true;
+    const userEmpId = Number(this.currentUser?.employee_id || this.currentUser?.id);
+    if (task?.project_manager_id && task.project_manager_id == userEmpId) return true;
+    if (task?.created_by && task.created_by == userEmpId) return true;
+    if (rName.includes('head') || rName.includes('creator')) return true;
+    return false;
+  }
+
+  canReopenTask(task: any): boolean {
+    if (!this.currentUser) return false;
+    const rId = Number(this.currentUser?.role_master_id || this.currentUser?.role_id);
+    const rName = (this.currentUser?.role_name || this.currentUser?.role_master_name || localStorage.getItem('role') || '').toLowerCase();
+    if (rId === 1 || rName.includes('admin') || rName.includes('super')) return true;
+    const userEmpId = Number(this.currentUser?.employee_id || this.currentUser?.id || localStorage.getItem('employee_id'));
+    if (task?.project_manager_id && task.project_manager_id == userEmpId) return true;
+    if (task?.supervisor_id && task.supervisor_id == userEmpId) return true;
+    if (task?.created_by && task.created_by == userEmpId) return true;
+    if (task?.project_creator_id && task.project_creator_id == userEmpId) return true;
+    if (rName.includes('head')) return true;
+    return false;
   }
 
   onTaskReviewed(updatedTask: any): void {
@@ -248,21 +574,36 @@ export class TaskManagementComponent implements OnInit {
 
   toggleTaskStatus(task: any): void {
     if (task.status === 'Completed') {
-      if (confirm(`Do you want to reopen task "${task.task_name}" to In Progress?`)) {
-        this.pmService.updateTask(task.task_id, { status: 'In Progress', progress: 50 }).subscribe({
-          next: () => {
-            task.status = 'In Progress';
-            task.progress = 50;
-            task.review_status = 'Pending';
-            this.toast.success('Task reopened to In Progress');
-            this.loadTasks();
-          },
-          error: (err) => {
-            console.error('Error reopening task:', err);
-            this.toast.error('Failed to reopen task');
-          }
-        });
+      if (!this.canReopenTask(task)) {
+        this.toast.error('Reopening completed tasks is not allowed for team members. Only Project Head or Admin can reopen tasks.');
+        return;
       }
+      Swal.fire({
+        title: 'Reopen Task?',
+        text: `Do you want to reopen task "${task.task_name}" to In Progress?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#0c85c0',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'Yes, reopen',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.pmService.updateTask(task.task_id, { status: 'In Progress' }).subscribe({
+            next: () => {
+              task.status = 'In Progress';
+              task.progress = 50;
+              task.review_status = 'Pending';
+              this.toast.success('Task reopened to In Progress');
+              this.loadTasks();
+            },
+            error: (err) => {
+              console.error('Error reopening task:', err);
+              this.toast.error(err.error?.message || 'Failed to reopen task');
+            }
+          });
+        }
+      });
       return;
     }
 
@@ -286,20 +627,32 @@ export class TaskManagementComponent implements OnInit {
     });
   }
 
-  deleteTask(task: any, event: Event): void {
-    event.stopPropagation();
-    if (confirm(`Are you sure you want to delete task "${task.task_name}"?`)) {
-      this.pmService.deleteTask(task.task_id).subscribe({
-        next: () => {
-          this.toast.success('Task deleted successfully');
-          this.loadTasks();
-        },
-        error: (err) => {
-          console.error('Error deleting task:', err);
-          this.toast.error('Failed to delete task');
-        }
-      });
-    }
+  deleteTask(task: any, event?: Event): void {
+    if (event) event.stopPropagation();
+    Swal.fire({
+      title: 'Delete Task?',
+      text: `Are you sure you want to delete task "${task.task_name}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.pmService.deleteTask(task.task_id).subscribe({
+          next: () => {
+            this.toast.success('Task deleted successfully');
+            this.loadTasks();
+          },
+          error: (err) => {
+            console.error('Error deleting task:', err);
+            this.toast.error('Failed to delete task');
+          }
+        });
+      }
+    });
   }
 
   formatDate(dateStr: string): string {
@@ -327,6 +680,8 @@ export class TaskManagementComponent implements OnInit {
         return 'badge-inprogress';
       case 'In Review':
         return 'badge-inreview';
+      case 'Waiting for Information':
+        return 'badge-waiting';
       case 'Completed':
         return 'badge-completed';
       default:
@@ -335,17 +690,34 @@ export class TaskManagementComponent implements OnInit {
   }
 
   getPriorityClass(priority: string): string {
-    switch (priority) {
-      case 'Urgent':
+    switch (priority?.toLowerCase()) {
+      case 'urgent':
+      case 'critical':
         return 'priority-urgent';
-      case 'High':
+      case 'high':
         return 'priority-high';
-      case 'Medium':
+      case 'medium':
         return 'priority-medium';
-      case 'Low':
+      case 'low':
         return 'priority-low';
       default:
         return 'priority-medium';
+    }
+  }
+
+  getPriorityIcon(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'urgent':
+      case 'critical':
+        return 'fa fa-angle-double-up';
+      case 'high':
+        return 'fa fa-arrow-up';
+      case 'medium':
+        return 'fa fa-minus';
+      case 'low':
+        return 'fa fa-arrow-down';
+      default:
+        return 'fa fa-minus';
     }
   }
 
@@ -366,14 +738,14 @@ export class TaskManagementComponent implements OnInit {
   getReviewStatusIcon(reviewStatus: string): string {
     switch (reviewStatus) {
       case 'Approved':
-        return 'fa-check-circle text-success';
+        return 'fa fa-check-circle';
       case 'Submitted':
-        return 'fa-clock-o text-primary';
+        return 'fa fa-clock-o';
       case 'Changes Requested':
-        return 'fa-exclamation-circle text-danger';
+        return 'fa fa-exclamation-circle';
       case 'Pending':
       default:
-        return 'fa-shield text-muted';
+        return 'fa fa-clock-o';
     }
   }
 }

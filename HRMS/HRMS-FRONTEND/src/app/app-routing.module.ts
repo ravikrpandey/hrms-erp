@@ -138,6 +138,21 @@ const routes: Routes = [
     path: 'tasks',
     redirectTo: 'master/project-management/tasks',
     pathMatch: 'prefix'
+  },
+  {
+    path: 'timesheet',
+    redirectTo: 'master/project-management/timesheet',
+    pathMatch: 'prefix'
+  },
+  {
+    path: 'timesheets',
+    redirectTo: 'master/project-management/timesheet',
+    pathMatch: 'prefix'
+  },
+  {
+    path: 'expenses',
+    redirectTo: 'master/expense-management/expenses',
+    pathMatch: 'prefix'
   }
 ];
 

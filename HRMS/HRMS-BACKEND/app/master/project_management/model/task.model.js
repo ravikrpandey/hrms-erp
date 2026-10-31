@@ -19,6 +19,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING(255),
         allowNull: false,
       },
+      task_type: {
+        type: Sequelize.STRING(100),
+        defaultValue: "Task",
+      },
       description: {
         type: Sequelize.TEXT,
         allowNull: true,
@@ -52,7 +56,7 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: "Medium",
       },
       status: {
-        type: Sequelize.ENUM("To Do", "In Progress", "In Review", "Completed"),
+        type: Sequelize.ENUM("To Do", "In Progress", "In Review", "Waiting for Information", "Completed"),
         defaultValue: "To Do",
       },
       review_status: {
@@ -101,6 +105,18 @@ module.exports = (sequelize, Sequelize) => {
       },
       created_by: {
         type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      milestone_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      milestone_name: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      completed_date: {
+        type: Sequelize.DATEONLY,
         allowNull: true,
       },
     },

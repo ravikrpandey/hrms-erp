@@ -38,6 +38,18 @@ export class TaskReviewDialogComponent implements OnInit {
     return this.currentUser.employee_id == this.task.assigned_to_id;
   }
 
+  get canReopen(): boolean {
+    const rName = (
+      this.currentUser?.role_name ||
+      this.currentUser?.role_master_name ||
+      this.currentUser?.roles ||
+      this.currentUser?.role ||
+      localStorage.getItem('role') ||
+      ''
+    ).toString().toLowerCase();
+    return this.currentUser?.role_id === 1 || this.currentUser?.role_id === '1' || rName.includes('admin') || rName.includes('super') || rName.includes('head');
+  }
+
   submitForReview(): void {
     this.submitting = true;
     const payload = {
@@ -49,6 +61,7 @@ export class TaskReviewDialogComponent implements OnInit {
         this.submitting = false;
         this.toast.success('Task submitted for reviewer approval');
         this.reviewed.emit(res.data);
+        this.close.emit();
       },
       error: (err) => {
         this.submitting = false;
@@ -70,6 +83,7 @@ export class TaskReviewDialogComponent implements OnInit {
         this.submitting = false;
         this.toast.success('Task approved and completed successfully');
         this.reviewed.emit(res.data);
+        this.close.emit();
       },
       error: (err) => {
         this.submitting = false;
@@ -96,6 +110,7 @@ export class TaskReviewDialogComponent implements OnInit {
         this.submitting = false;
         this.toast.info('Changes requested from assignee');
         this.reviewed.emit(res.data);
+        this.close.emit();
       },
       error: (err) => {
         this.submitting = false;
@@ -106,12 +121,17 @@ export class TaskReviewDialogComponent implements OnInit {
   }
 
   reopenTask(): void {
+    if (!this.canReopen) {
+      this.toast.warning('Only Project Head or Super Admin can reopen completed tasks');
+      return;
+    }
     this.submitting = true;
     this.pmService.updateTask(this.task.task_id, { status: 'In Progress', progress: 50 }).subscribe({
       next: (res: any) => {
         this.submitting = false;
         this.toast.success('Task reopened to In Progress');
         this.reviewed.emit(res.data);
+        this.close.emit();
       },
       error: (err) => {
         this.submitting = false;

@@ -1,0 +1,229 @@
+<div class="modal-backdrop-custom" (click)="close.emit()">
+  <div class="modal-dialog-box" (click)="$event.stopPropagation()">
+    <div class="modal-dialog-header">
+      <div class="header-left">
+        <div class="header-icon-box" [ngClass]="{'icon-box-readonly': isReadOnly}">
+          <i class="fa" [ngClass]="isReadOnly ? 'fa-eye' : 'fa-clock-o'"></i>
+        </div>
+        <div class="header-title-wrap">
+          <h4 class="modal-dialog-title">
+            {{ isReadOnly ? 'View Time Log' : (log ? 'Edit Time Log' : 'Log Time') }}
+          </h4>
+          <span class="header-subtitle">
+            <span *ngIf="isReadOnly" class="badge-readonly-status">
+              <i class="fa fa-lock mr-1"></i> {{ (log?.approval_status === 'Approved' ? 'Approved' : (log?.submission_status === 'Submitted' ? 'Submitted' : 'Locked')) }} · View Only
+            </span>
+            <span *ngIf="!isReadOnly">{{ logMode }}</span>
+          </span>
+        </div>
+      </div>
+      <button type="button" class="modal-close-btn" (click)="close.emit()" title="Close">&times;</button>
+    </div>
+
+    <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
+      <div class="modal-dialog-body" [class.body-readonly]="isReadOnly">
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Project Name <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <select formControlName="project_id" class="form-select custom-control" (change)="onProjectChange(logForm.get('project_id')?.value)">
+              <option [ngValue]="null" disabled selected>-- Select Project --</option>
+              <option *ngIf="log?.project_id && !hasProject(log.project_id)" [value]="log.project_id">{{ log.project_name || 'Project ' + log.project_id }}</option>
+              <option *ngFor="let p of (projects || [])" [value]="p.project_id">{{ p.project_name }}</option>
+            </select>
+            <div class="field-error-text" *ngIf="!isReadOnly && logForm.get('project_id')?.invalid && logForm.get('project_id')?.touched">
+              Project Name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Job/Goal Name <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <select formControlName="task_id" class="form-select custom-control" (change)="onTaskChange(logForm.get('task_id')?.value)">
+              <option [ngValue]="null" disabled selected>{{ loadingTasks ? 'Loading...' : '-- Select Job/Goal --' }}</option>
+              <option *ngIf="log?.task_id && !hasTask(log.task_id)" [value]="log.task_id">{{ log.task_name || 'Job ' + log.task_id }}</option>
+              <option *ngFor="let t of (tasks || [])" [value]="t.task_id">{{ t.task_name }}</option>
+            </select>
+            <div class="field-error-text" *ngIf="!isReadOnly && logForm.get('task_id')?.invalid && logForm.get('task_id')?.touched">
+              Job/Goal Name is required
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Work Item
+          </label>
+          <div class="inline-control-wrap">
+            <input
+              type="text"
+              formControlName="work_item"
+              class="form-control custom-control"
+              placeholder="Work Item / JIRA ID / Email"
+            />
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Date <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <div class="date-picker-wrap">
+              <input
+                matInput
+                [matDatepicker]="logDatePicker"
+                formControlName="log_date"
+                placeholder="DD-MM-YYYY"
+                class="form-control custom-control date-control"
+              />
+              <mat-datepicker-toggle matSuffix [for]="logDatePicker" class="date-toggle-btn" [disabled]="isReadOnly"></mat-datepicker-toggle>
+              <mat-datepicker #logDatePicker></mat-datepicker>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Work Mode <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <div class="work-mode-pills">
+              <button
+                type="button"
+                *ngFor="let m of workModes"
+                class="mode-pill-btn"
+                [class.active]="logForm.get('work_mode')?.value === m.value"
+                [class.disabled-pill]="isReadOnly"
+                [ngClass]="'pill-' + m.value.toLowerCase().replace(' ', '')"
+                (click)="setWorkMode(m.value)"
+                [disabled]="isReadOnly"
+              >
+                <i [class]="m.icon"></i> {{ m.label }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2 inline-form-row-top">
+          <label class="inline-label inline-label-top">
+            Description <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <textarea
+              formControlName="description"
+              class="form-control custom-control"
+              rows="4"
+              [maxlength]="descriptionMaxLength"
+              placeholder="Describe the work performed..."
+            ></textarea>
+            <div class="char-counter" *ngIf="!isReadOnly">{{ descriptionLength }} / {{ descriptionMaxLength }}</div>
+            <div class="field-error-text" *ngIf="!isReadOnly && logForm.get('description')?.invalid && logForm.get('description')?.touched">
+              Description is required
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2 inline-form-row-top">
+          <label class="inline-label inline-label-top">
+            Hours <span class="required-star" *ngIf="!isReadOnly">*</span>
+          </label>
+          <div class="inline-control-wrap">
+            <div class="hours-mode-toggle" *ngIf="!isReadOnly">
+              <button type="button" class="mode-btn" [class.active]="logForm.get('hours_mode')?.value === 'Total Hours'" (click)="setHoursMode('Total Hours')">Total hours</button>
+              <button type="button" class="mode-btn" [class.active]="logForm.get('hours_mode')?.value === 'Start-End Time'" (click)="setHoursMode('Start-End Time')">Start-end time</button>
+              <button type="button" class="mode-btn" [class.active]="logForm.get('hours_mode')?.value === 'Timer'" (click)="setHoursMode('Timer')">Timer</button>
+            </div>
+
+            <div class="hours-input-area" *ngIf="isReadOnly || logForm.get('hours_mode')?.value === 'Total Hours'">
+              <div class="input-group">
+                <input type="number" formControlName="total_hours" min="0" step="0.25" class="form-control custom-control" placeholder="0.00" />
+                <span class="input-group-text unit-tag">hrs</span>
+              </div>
+            </div>
+
+            <div class="hours-input-area" *ngIf="!isReadOnly && logForm.get('hours_mode')?.value === 'Start-End Time'">
+              <div class="start-end-row">
+                <input type="time" formControlName="start_time" class="form-control custom-control" />
+                <span class="range-sep">to</span>
+                <input type="time" formControlName="end_time" class="form-control custom-control" />
+                <span class="computed-hours-tag">{{ computedRangeHours }} hrs</span>
+              </div>
+            </div>
+
+            <div class="hours-input-area timer-area" *ngIf="!isReadOnly && logForm.get('hours_mode')?.value === 'Timer'">
+              <span class="timer-display">{{ timerDisplay }}</span>
+              <button type="button" class="btn-timer" [class.running]="timerRunning" (click)="toggleTimer()">
+                <i class="fa" [ngClass]="timerRunning ? 'fa-stop' : 'fa-play'"></i>
+                {{ timerRunning ? 'Stop' : 'Start' }}
+              </button>
+              <span class="timer-hours-tag" *ngIf="!timerRunning && logForm.get('total_hours')?.value">
+                Logged: {{ logForm.get('total_hours')?.value }} hrs
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-2">
+          <label class="inline-label">
+            Billable
+          </label>
+          <div class="inline-control-wrap">
+            <div class="d-flex align-items-center" style="gap: 8px; min-height: 38px;">
+              <input
+                type="checkbox"
+                formControlName="is_billable"
+                id="isBillableCheck"
+                style="width: 16px; height: 16px; cursor: pointer; accent-color: #0284c7;"
+              />
+              <label for="isBillableCheck" style="margin: 0; font-size: 13px; color: #475569; cursor: pointer;">
+                Billable Work
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="inline-form-row mb-1 inline-form-row-top">
+          <label class="inline-label inline-label-top">
+            Attachment
+          </label>
+          <div class="inline-control-wrap">
+            <div class="attachment-upload-box" *ngIf="!logForm.get('attachment_path')?.value && !isReadOnly">
+              <label class="upload-trigger-btn">
+                <i class="fa fa-paperclip mr-1"></i> {{ uploading ? 'Uploading...' : 'Attach a file' }}
+                <input type="file" (change)="onFileSelected($event)" hidden [disabled]="uploading || isReadOnly" />
+              </label>
+            </div>
+            <div class="attachment-preview" *ngIf="logForm.get('attachment_path')?.value">
+              <i class="fa fa-file-o mr-1"></i>
+              <span class="file-name">{{ selectedFileName }}</span>
+              <button type="button" class="remove-attachment-btn" (click)="removeAttachment()" *ngIf="!isReadOnly"><i class="fa fa-times"></i></button>
+            </div>
+            <div class="text-muted small py-2" *ngIf="!logForm.get('attachment_path')?.value && isReadOnly">
+              No attachment
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-dialog-footer">
+        <ng-container *ngIf="!isReadOnly">
+          <button type="button" class="btn btn-secondary btn-modal-cancel" (click)="close.emit()">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-modal-save" [disabled]="submitting">
+            <i class="fa fa-spinner fa-spin mr-1" *ngIf="submitting"></i>
+            {{ log ? 'Update' : 'Save' }}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="isReadOnly">
+          <button type="button" class="btn btn-secondary btn-modal-cancel" (click)="close.emit()">Close</button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+</div>

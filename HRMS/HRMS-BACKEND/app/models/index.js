@@ -4316,6 +4316,21 @@ db.cost_center_map.belongsTo(db.cost_center, { foreignKey: "cost_center_id" });
 db.project = require("../master/project_management/model/project.model.js")(sequelize, Sequelize);
 db.projectMember = require("../master/project_management/model/project_member.model.js")(sequelize, Sequelize);
 db.task = require("../master/project_management/model/task.model.js")(sequelize, Sequelize);
+db.taskComment = require("../master/project_management/model/task_comment.model.js")(sequelize, Sequelize);
+db.timesheetLog = require("../master/project_management/model/timesheet_log.model.js")(sequelize, Sequelize);
+db.timesheetSubmission = require("../master/project_management/model/timesheet_submission.model.js")(sequelize, Sequelize);
+db.timesheetActivity = require("../master/project_management/model/timesheet_activity.model.js")(sequelize, Sequelize);
+db.projectMilestone = require("../master/project_management/model/project_milestone.model.js")(sequelize, Sequelize);
+db.projectExpense = require("../Expenses/project_expense/model/project_expense.model.js")(sequelize, Sequelize);
+db.projectExpenseHistory = require("../Expenses/project_expense/model/project_expense_history.model.js")(sequelize, Sequelize);
+
+db.projectExpense.hasMany(db.projectExpenseHistory, { foreignKey: "expense_id", as: "history" });
+db.projectExpenseHistory.belongsTo(db.projectExpense, { foreignKey: "expense_id" });
+db.project.hasMany(db.projectExpense, { foreignKey: "project_id", as: "expenses" });
+db.projectExpense.belongsTo(db.project, { foreignKey: "project_id", as: "project" });
+db.projectCostTransaction = require("../master/project_management/model/project_cost_transaction.model.js")(sequelize, Sequelize);
+db.project.hasMany(db.projectCostTransaction, { foreignKey: "project_id", as: "cost_transactions" });
+db.projectCostTransaction.belongsTo(db.project, { foreignKey: "project_id", as: "project" });
 
 module.exports = db;
 

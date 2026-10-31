@@ -1,0 +1,67 @@
+<div class="action-buttons-cell" *ngIf="data">
+  <!-- View Button (Always visible) -->
+  <button
+    type="button"
+    class="btn-action btn-view"
+    title="View Details"
+    (click)="onView($event)"
+  >
+    <i class="fa fa-eye"></i> View
+  </button>
+
+  <!-- Approve Button (Visible if authorized and pending) -->
+  <button
+    type="button"
+    class="btn-action btn-approve"
+    title="Approve Expense"
+    *ngIf="params?.canApprove && params.canApprove(data)"
+    (click)="onApprove($event)"
+  >
+    <i class="fa fa-check"></i> Approve
+  </button>
+
+  <!-- Reject Button (Visible if authorized and pending) -->
+  <button
+    type="button"
+    class="btn-action btn-reject"
+    title="Reject Expense"
+    *ngIf="params?.canReject && params.canReject(data)"
+    (click)="onReject($event)"
+  >
+    <i class="fa fa-times"></i> Reject
+  </button>
+
+  <!-- Edit Draft Button (Visible if own draft) -->
+  <button
+    type="button"
+    class="btn-action btn-edit"
+    title="Edit Draft"
+    *ngIf="params?.canEdit && params.canEdit(data)"
+    (click)="onEdit($event)"
+  >
+    <i class="fa fa-pencil"></i> Edit
+  </button>
+
+  <!-- Resubmit Button (Visible if own rejected) -->
+  <button
+    type="button"
+    class="btn-action btn-resubmit"
+    title="Correct & Resubmit"
+    *ngIf="params?.canResubmit && params.canResubmit(data)"
+    (click)="onResubmit($event)"
+  >
+    <i class="fa fa-refresh"></i> Resubmit
+  </button>
+
+  <!-- Delete Draft Button (Visible if own draft) -->
+  <button
+    type="button"
+    class="btn-action btn-delete"
+    title="Delete Draft"
+    *ngIf="params?.canDelete && params.canDelete(data)"
+    (click)="onDelete($event)"
+  >
+    <i class="fa fa-trash"></i>
+  </button>
+</div>
+

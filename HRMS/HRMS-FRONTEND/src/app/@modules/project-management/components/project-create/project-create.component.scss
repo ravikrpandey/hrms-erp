@@ -1,9 +1,10 @@
-
 :host {
   display: block;
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  font-family: 'Source Sans 3', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #1e293b;
 }
 
 :host-context(.content_right) {
@@ -18,33 +19,38 @@
   flex-direction: column;
   flex: 1;
   box-sizing: border-box;
+  font-family: 'Source Sans 3', 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .erp-header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 16px;
   padding: 0;
   flex-shrink: 0;
 
   .erp-title-block {
     .erp-module-title {
-      font-size: 14px;
+      font-size: 18px;
       font-weight: 700;
-      color: #111827;
-      margin-bottom: 1px;
-      letter-spacing: 0.3px;
-      text-transform: uppercase;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #0f172a;
+      margin-bottom: 2px;
+      letter-spacing: -0.2px;
     }
 
     .erp-breadcrumb {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #4b5563;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: #64748b;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      span {
+        color: #0c85c0;
+        font-weight: 600;
+      }
     }
   }
 
@@ -52,18 +58,26 @@
     .erp-btn-back {
       background: #ffffff;
       border: 1px solid #cbd5e1;
-      border-radius: 2px;
-      padding: 2px 10px;
-      font-size: 11px;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12.5px;
       font-weight: 600;
-      color: #374151;
+      color: #475569;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
+      font-family: inherit;
+
+      i {
+        font-size: 12px;
+      }
 
       &:hover {
         background: #f8fafc;
         border-color: #94a3b8;
-        color: #111827;
+        color: #0f172a;
       }
     }
   }
@@ -72,10 +86,10 @@
 .erp-form-card {
   width: 100%;
   background: #ffffff;
-  border: 1px solid #d1d5db;
-  border-radius: 2px;
-  padding: 10px 16px 12px 16px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 20px 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -106,38 +120,38 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 6px 12px;
-  margin-bottom: 6px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 2px;
+  padding: 12px 18px;
+  margin-bottom: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   flex-wrap: wrap;
 
   .erp-identity-label {
-    font-size: 11.5px;
+    font-size: 13px;
     font-weight: 700;
-    color: #111827;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    min-width: 110px;
+    color: #0c85c0;
+    letter-spacing: 0.3px;
+    min-width: 90px;
   }
 
   .erp-identity-field {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 
     &.name-field {
       flex: 2;
       min-width: 280px;
 
       .primary-highlight-input {
-        background-color: #fffde7 !important;
-        border: 1px solid #d1d5db !important;
+        background-color: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 600;
 
         &:focus {
-          border-color: #2563eb !important;
-          background-color: #ffffff !important;
+          border-color: #0c85c0 !important;
+          box-shadow: 0 0 0 3px rgba(12, 133, 192, 0.12) !important;
         }
       }
     }
@@ -150,71 +164,45 @@
   }
 }
 
-.erp-tabs-bar {
-  display: flex;
-  gap: 2px;
-  border-bottom: 1px solid #d1d5db;
-  margin-bottom: 0;
-  padding-left: 2px;
-
-  .erp-tab-item {
-    background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    border-bottom: none;
-    border-radius: 2px 2px 0 0;
-    padding: 4px 14px;
-    font-size: 10.5px;
-    font-weight: 700;
-    color: #4b5563;
-    cursor: pointer;
-    letter-spacing: 0.4px;
-    transition: all 0.15s ease;
-    margin-bottom: -1px;
-
-    &:hover {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    &.active {
-      background: #ffffff;
-      color: #111827;
-      border-top: 2px solid #2563eb;
-      border-bottom: 1px solid #ffffff;
-      z-index: 2;
-    }
-  }
-}
-
-.erp-tab-pane {
-  border: 1px solid #d1d5db;
-  border-top: none;
-  background: #ffffff;
-  padding: 12px 14px;
-  margin-bottom: 6px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.erp-section-header {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0f172a;
+  border-left: 3px solid #0c85c0;
+  padding-left: 10px;
+  margin-top: 16px;
+  margin-bottom: 14px;
+  line-height: 1.2;
 }
 
 .erp-form-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   width: 100%;
-  margin-bottom: 7px;
+  margin-bottom: 12px;
 
   .erp-label-col {
-    width: 145px;
-    min-width: 145px;
-    max-width: 145px;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
     text-align: left;
-    padding-right: 6px;
+    padding-right: 12px;
     display: flex;
     align-items: center;
+    height: 36px;
+    min-height: 36px;
+    box-sizing: border-box;
 
     &.label-top {
       align-self: flex-start;
-      padding-top: 5px;
+      padding-top: 8px;
+      height: auto;
+    }
+
+    &.compact-label {
+      width: 75px !important;
+      min-width: 75px !important;
+      max-width: 75px !important;
     }
   }
 
@@ -222,67 +210,189 @@
     flex: 1;
     min-width: 0;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+.erp-inline-twin-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+
+  .twin-select {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .erp-twin-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0 4px;
   }
 }
 
 .erp-label {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
   white-space: nowrap;
   margin-bottom: 0;
   display: inline-flex;
   align-items: center;
 
   .required-star {
-    color: #dc2626;
-    margin-left: 2px;
+    color: #ef4444;
+    margin-left: 3px;
     font-weight: 700;
   }
 }
 
 .erp-control {
-  height: 28px;
+  height: 36px;
   border: 1px solid #cbd5e1;
-  border-radius: 2px;
-  padding: 2px 8px;
-  font-size: 12px;
-  color: #111827;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #1e293b;
   background-color: #ffffff;
   width: 100%;
-  transition: border-color 0.15s ease;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
 
   &:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 1px #2563eb;
+    border-color: #0c85c0;
+    box-shadow: 0 0 0 3px rgba(12, 133, 192, 0.12);
     outline: none;
   }
 
   &.is-invalid {
-    border-color: #dc2626;
+    border-color: #ef4444;
   }
 
   &::placeholder {
-    color: #9ca3af;
-    font-size: 11.5px;
+    color: #94a3b8;
+    font-size: 12.5px;
   }
 }
 
 select.erp-select {
-  padding: 2px 6px;
+  height: 36px;
+  padding: 6px 12px;
   cursor: pointer;
   background-color: #ffffff;
+  box-sizing: border-box;
+}
+
+.erp-select-wrap {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  height: 36px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus-within {
+    border-color: #0c85c0;
+    box-shadow: 0 0 0 3px rgba(12, 133, 192, 0.12);
+  }
+
+  &.is-invalid {
+    border-color: #ef4444;
+  }
+
+  .erp-mat-select {
+    width: 100%;
+    font-size: 13px;
+
+    ::ng-deep .mat-mdc-select-trigger {
+      height: 34px;
+      display: flex;
+      align-items: center;
+    }
+
+    ::ng-deep .mat-mdc-select-value {
+      color: #1e293b;
+      font-size: 13px;
+    }
+
+    ::ng-deep .mat-mdc-select-placeholder {
+      color: #94a3b8;
+      font-size: 12.5px;
+    }
+
+    ::ng-deep .mat-mdc-select-arrow-wrapper {
+      transform: none;
+    }
+  }
+}
+
+.erp-input-group {
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus-within {
+    border-color: #0c85c0;
+    box-shadow: 0 0 0 3px rgba(12, 133, 192, 0.12);
+  }
+
+  .erp-addon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    border-right: 1px solid #cbd5e1;
+    user-select: none;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .addon-input {
+    flex: 1;
+    border: none !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 6px 12px;
+    font-size: 13px;
+    outline: none;
+    color: #1e293b;
+    background: transparent;
+
+    &:focus {
+      border: none !important;
+      box-shadow: none !important;
+      outline: none !important;
+    }
+  }
 }
 
 textarea.erp-textarea {
   height: auto;
-  min-height: 90px;
+  min-height: 80px;
   resize: vertical;
-  padding: 6px 8px;
-  line-height: 1.4;
+  padding: 8px 12px;
+  line-height: 1.5;
 }
 
 .erp-date-wrap {
@@ -291,31 +401,31 @@ textarea.erp-textarea {
   align-items: center;
 
   .erp-date-input {
-    padding-right: 32px;
+    padding-right: 36px;
   }
 
   .erp-date-toggle {
     position: absolute;
-    right: 0px;
+    right: 4px;
     top: 50%;
     transform: translateY(-50%);
 
     ::ng-deep button.mat-mdc-icon-button {
-      width: 24px;
-      height: 24px;
+      width: 28px;
+      height: 28px;
       padding: 0;
 
       .mat-mdc-button-touch-target {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
       }
 
       mat-icon {
-        font-size: 15px;
-        width: 15px;
-        height: 15px;
-        line-height: 15px;
-        color: #4b5563;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+        color: #64748b;
       }
     }
   }
@@ -323,31 +433,37 @@ textarea.erp-textarea {
 
 .erp-team-select-box {
   border: 1px solid #cbd5e1;
-  border-radius: 2px;
+  border-radius: 6px;
   background: #ffffff;
-  min-height: 28px;
-  padding: 0 6px;
+  min-height: 36px;
+  padding: 0 10px;
   display: flex;
   align-items: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:focus-within {
+    border-color: #0c85c0;
+    box-shadow: 0 0 0 3px rgba(12, 133, 192, 0.12);
+  }
 
   .erp-mat-select {
     width: 100%;
-    font-size: 12px;
+    font-size: 13px;
 
     ::ng-deep .mat-mdc-select-trigger {
-      height: 26px;
+      height: 34px;
       display: flex;
       align-items: center;
     }
 
     ::ng-deep .mat-mdc-select-value {
-      color: #111827;
-      font-size: 12px;
+      color: #1e293b;
+      font-size: 13px;
     }
 
     ::ng-deep .mat-mdc-select-placeholder {
-      color: #9ca3af;
-      font-size: 11.5px;
+      color: #94a3b8;
+      font-size: 12.5px;
     }
   }
 }
@@ -359,17 +475,18 @@ textarea.erp-textarea {
 .erp-quick-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 6px;
 
   .erp-quick-btn {
     background: none;
     border: none;
     padding: 0;
-    color: #2563eb;
-    font-size: 11px;
-    font-weight: 700;
+    color: #0c85c0;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
+    font-family: inherit;
 
     &:hover {
       text-decoration: underline;
@@ -378,18 +495,18 @@ textarea.erp-textarea {
 
   .erp-quick-sep {
     color: #cbd5e1;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .erp-members-count {
-    font-size: 11px;
-    font-weight: 700;
-    color: #2563eb;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #0c85c0;
     margin-left: 6px;
-    background: #eff6ff;
-    padding: 1px 8px;
+    background: #e0f2fe;
+    padding: 2px 8px;
     border-radius: 10px;
-    border: 1px solid #bfdbfe;
+    border: 1px solid #bae6fd;
   }
 }
 
@@ -397,122 +514,112 @@ textarea.erp-textarea {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  gap: 4px;
-  margin-top: 6px;
-  min-height: 50px;
-  max-height: 320px;
+  gap: 6px;
+  margin-top: 8px;
+  min-height: 44px;
+  max-height: 240px;
   overflow-y: auto;
-  padding: 8px 10px;
+  padding: 8px 12px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
-  border-radius: 3px;
+  border-radius: 6px;
   box-sizing: border-box;
 
   &::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
   }
   &::-webkit-scrollbar-track {
     background: #f1f5f9;
-    border-radius: 3px;
   }
   &::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
   }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-  }
 
   .erp-chip {
     background: #ffffff;
     border: 1px solid #cbd5e1;
-    border-radius: 2px;
-    padding: 1px 6px;
-    font-size: 11px;
+    border-radius: 16px;
+    padding: 2px 10px;
+    font-size: 12px;
     color: #1e293b;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    gap: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 
     .erp-chip-close {
       background: none;
       border: none;
       padding: 0;
-      color: #64748b;
+      color: #94a3b8;
       cursor: pointer;
-      font-size: 13px;
+      font-size: 14px;
       line-height: 1;
 
       &:hover {
-        color: #dc2626;
+        color: #ef4444;
       }
-    }
-
-    .chip-code {
-      font-family: monospace;
-      font-weight: 700;
-      color: #1e3a8a;
-      margin-right: 2px;
     }
   }
 }
 
-.emp-code-tag {
-  font-family: monospace;
-  font-weight: 700;
-  color: #1d4ed8;
-  margin-right: 4px;
-}
-
 .erp-active-checkbox-row {
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px dashed #e5e7eb;
+  margin-top: 12px;
+  padding-top: 10px;
+  padding-left: 200px;
+  border-top: 1px dashed #e2e8f0;
 
   .erp-checkbox-label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     cursor: pointer;
     margin-bottom: 0;
 
     .erp-checkbox {
-      width: 14px;
-      height: 14px;
+      width: 16px;
+      height: 16px;
       cursor: pointer;
-      accent-color: #2563eb;
+      accent-color: #0c85c0;
     }
   }
 }
 
 .erp-inline-error {
-  font-size: 11px;
-  color: #dc2626;
-  margin-left: 6px;
-  font-weight: 600;
+  display: block;
+  font-size: 11.5px;
+  color: #ef4444;
+  margin-top: 3px;
+  margin-left: 0;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .erp-form-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  padding-top: 12px;
+  gap: 12px;
+  padding-top: 20px;
   margin-top: auto;
+  border-top: 1px solid #f1f5f9;
 
   .erp-btn-save {
-    background: #2563eb;
+    background: #0c85c0;
     color: #ffffff;
-    border: 1px solid #1d4ed8;
-    border-radius: 3px;
-    padding: 4px 18px;
-    font-size: 12px;
+    border: 1px solid #0c85c0;
+    border-radius: 6px;
+    padding: 8px 24px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s ease;
+    font-family: inherit;
 
     &:hover:not(:disabled) {
-      background: #1d4ed8;
+      background: #096896;
+      border-color: #096896;
     }
 
     &:disabled {
@@ -522,18 +629,21 @@ textarea.erp-textarea {
   }
 
   .erp-btn-cancel {
-    background: #dc2626;
-    color: #ffffff;
-    border: 1px solid #b91c1c;
-    border-radius: 3px;
-    padding: 4px 18px;
-    font-size: 12px;
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 20px;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.15s ease;
+    font-family: inherit;
 
     &:hover {
-      background: #b91c1c;
+      background: #f8fafc;
+      border-color: #94a3b8;
+      color: #1e293b;
     }
   }
 }
@@ -554,5 +664,9 @@ textarea.erp-textarea {
   .erp-identity-strip {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .erp-active-checkbox-row {
+    padding-left: 0;
   }
 }
