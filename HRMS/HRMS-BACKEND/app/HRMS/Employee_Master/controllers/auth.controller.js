@@ -13,7 +13,7 @@ const moment = require("moment-timezone");
 const fs = require("fs");
 const s3 = require("../../../config/s3config");
 const { log } = require("console");
-const baseUrl = "https://emerpapi.elitetraveltech.in/";
+const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerpapi.elitetraveltech.in").replace(/\/?$/, "/");
 const empFamilyDetails = db.empFamilyDetails;
 const users = db.user;
 const Role_menu = db.role_menu_access;
@@ -2435,8 +2435,8 @@ exports.create_candidate = async (req, res) => {
     let { current_address, parmanent_address } = req.body;
 
     let abc = req.body.employee_id;
-    let link = "https://emerp.elitetraveltech.in/auth/login";
-    const baseUrl = "https://emerpapi.elitetraveltech.in/";
+    let link = (process.env.APP_FRONTEND_URL || "https://emerp.elitetraveltech.in").replace(/\/?$/, "") + "/auth/login";
+    const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerpapi.elitetraveltech.in").replace(/\/?$/, "/");
     const auditorQualificationDetails = db.auditorQualification;
     let employee_photo;
     req.file == undefined ? "" : (employee_photo = req.file.path);

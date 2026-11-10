@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const crypto = require("crypto");
 const dotenv = require("dotenv");
 var bodyParser = require("body-parser");
 var cron = require("node-cron");
@@ -16,9 +17,40 @@ global.__basedir = __dirname;
 dotenv.config();
 
 const app = express();
+app.disable("x-powered-by");
 app.set("trust proxy", 1);
+
+const bridgeSecret = String(process.env.BRIDGE_SECRET || "").trim();
+if (bridgeSecret) {
+  const expectedBridgeBuf = Buffer.from(bridgeSecret, "utf8");
+  app.use((req, res, next) => {
+    const provided = String(req.headers["x-bridge-secret"] || "");
+    const providedBuf = Buffer.from(provided, "utf8");
+    if (
+      providedBuf.length !== expectedBridgeBuf.length ||
+      !crypto.timingSafeEqual(providedBuf, expectedBridgeBuf)
+    ) {
+      return res.status(403).json({
+        status: "failed",
+        message: "Forbidden: Invalid bridge authentication",
+      });
+    }
+    next();
+  });
+}
+
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
 const corsOpts = {
-  origin: true,
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS not allowed"));
+  },
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",
@@ -127,6 +159,15 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to Zyno HRMS Application!" });
 });
 
+app.get("/health", async (req, res) => {
+  try {
+    await db.sequelize.authenticate();
+    res.json({ status: "ok", database: "connected" });
+  } catch (err) {
+    res.status(503).json({ status: "degraded", database: "disconnected" });
+  }
+});
+
 /////////////// Images routes will be listed here ///////////////
 app.use(
   "/digital_signature",
@@ -137,6 +178,10 @@ app.use(
   express.static(path.join(__dirname, "/uploaded_files"))
 );
 app.use("/leadfile", express.static(path.join(__dirname, "/leadfile")));
+app.use(
+  "/masterDocument",
+  express.static(path.join(__dirname, "masterDocument"))
+);
 
 /////////////// Routes will be listed here ///////////////
 require("./app/HRMS/whatsapp/whatsapp_attendance.js")(app);

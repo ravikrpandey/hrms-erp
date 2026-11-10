@@ -3,7 +3,7 @@ const db = require("../../../models/index");
 const emp_document_model = db.emp_sign_data;
 const User_model = db.user;
 // const baseUrl = "http://localhost:5000/"
-const baseUrl = "https://emerp.elitetraveltech.in/";
+const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerp.elitetraveltech.in").replace(/\/?$/, "/");
 exports.create_emp_sign = async (req, res) => {
   try {
     const employee_id = req.params.id;

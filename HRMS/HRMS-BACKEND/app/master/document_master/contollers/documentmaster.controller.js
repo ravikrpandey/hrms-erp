@@ -6,8 +6,8 @@ const path = require('path');
 const s3 = require("../config/s3config")
 const fs = require('fs')
 // const CsvParser = require("json2csv").Parser;
-const baseUrl = "https://emerp.elitetraveltech.in/";
-// const baseUrl = "https://emerp.elitetraveltech.in/";
+const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerp.elitetraveltech.in").replace(/\/?$/, "/");
+// const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerp.elitetraveltech.in").replace(/\/?$/, "/");
 // const baseUrl = "http://localhost:5000/"
 let i = 1;
 i++
