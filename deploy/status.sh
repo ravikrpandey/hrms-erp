@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# ZYNO HRMS - Production Service Status & Health Audit Script
+# KIRAN AUTOMATION HRMS - Production Service Status & Health Audit Script
 # Usage: ./status.sh [domain.duckdns.org]
 # ==============================================================================
 
 DOMAIN="${1:-}"
 
 echo "========================================================================"
-echo "🩺 ZYNO HRMS Health & Service Status"
+echo "🩺 KIRAN AUTOMATION HRMS Health & Service Status"
 echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S %Z')"
 echo "========================================================================"
 

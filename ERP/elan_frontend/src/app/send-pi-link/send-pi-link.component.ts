@@ -53,7 +53,7 @@ export class SendPiLinkComponent {
     proposalType: 'Export Customer',
     companyName: 'Bajaj',
     contactNumber: '9953025970',
-    mailId: 'deepakchaudhary@elitemindz.co',
+    mailId: 'hr@kiranautomation.com',
     address: 'B-5/5-100, Gurgaon, Haryana, 110097, India',
     items: [
       {

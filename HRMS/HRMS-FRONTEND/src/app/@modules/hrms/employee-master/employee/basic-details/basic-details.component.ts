@@ -71,7 +71,7 @@ export class BasicDetailsComponent {
   gradeData: any;
   variables: any = [];
   variable: any = [];
-  imageDefult: any = '../../../../../../assets/icons/icon_zyno/user.png';
+  imageDefult: any = '../../../../../../assets/icons/icon_kiran/user.png';
   abc: any;
   update: any;
   employeId: any;

@@ -96,12 +96,12 @@ export class SsoComponent implements OnInit {
 
         this.authService.getAllAccess_Modules(res).subscribe({
           next: () => {
-            this.toast.success('Welcome to Zyno HRMS', 'Login Successful');
+            this.toast.success('Welcome to Kiran Automation HRMS', 'Login Successful');
             this.router.navigate(['/master/ess/dashboard']);
           },
           error: (err: any) => {
             console.warn('HRMS module fetch warning:', err);
-            this.toast.success('Welcome to Zyno HRMS', 'Login Successful');
+            this.toast.success('Welcome to Kiran Automation HRMS', 'Login Successful');
             this.router.navigate(['/master/ess/dashboard']);
           },
         });

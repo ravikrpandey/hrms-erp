@@ -110,7 +110,7 @@ module.exports.sendDynamicMail = async function (
       <p>Dear ${first_name} ${last_name},</p>
       <p>Pls Approve the travel Requested created today</strong>.</p>
       <p>Best regards,</p>
-      <p>ZYNO Team</p>
+      <p>Kiran Automation Team</p>
     `,
     };
 
@@ -560,7 +560,7 @@ module.exports.sendCandidateonboardingmail = async function (
       from: `${entity_name} <${fromEmail}>`,
       to: email_to,
       subject: "Onboarding Completed!",
-      html: `Hello ${first_name} ${last_name} , You have successfully onboarded.<br>Please login your web panel through <a target = "_blank" href="${link_details?.web_url}">Zyno Group!</a> <br>And your userID is :${link_details?.emp_code} and Password is : ${link_details?.password}.`,
+      html: `Hello ${first_name} ${last_name} , You have successfully onboarded.<br>Please login your web panel through <a target = "_blank" href="${link_details?.web_url}">Kiran Automation!</a> <br>And your userID is :${link_details?.emp_code} and Password is : ${link_details?.password}.`,
     };
 
     const info = await transporter.sendMail(mailOptions);

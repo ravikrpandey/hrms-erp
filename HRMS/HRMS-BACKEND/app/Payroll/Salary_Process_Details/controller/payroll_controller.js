@@ -3534,9 +3534,9 @@ exports.generate_salary_slip = async (req, res) => {
         // Populate the final HTML template
         let finalHtml = htmlTemplate
           .replace("{{employee_code}}", emp_data[0].employee_code || "NA")
-          .replace("{{company_address}}", company_address || "Zyno Group")
+          .replace("{{company_address}}", company_address || "Kiran Automation")
           .replace("{{country_code}}", country_code || "NA")
-          .replace("{{company_branch}}", company_branch || "ZYNO GROUP")
+          .replace("{{company_branch}}", company_branch || "KIRAN AUTOMATION")
           .replace(
             "{{employee_name}}",
             `${emp_data[0].first_name} ${emp_data[0].last_name}` || "NA"

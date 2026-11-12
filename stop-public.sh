@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-# ZYNO HRMS - Graceful Shutdown Script
+# KIRAN AUTOMATION HRMS - Graceful Shutdown Script
 # ==============================================================================
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -14,7 +14,7 @@ fi
 export PATH="${HOME}/.local/bin:${PATH}"
 
 echo "========================================================================"
-echo "🛑 Stopping Zyno HRMS Public Deployment..."
+echo "🛑 Stopping Kiran Automation HRMS Public Deployment..."
 echo "========================================================================"
 
 # 1. Stop Public Tunnels in PM2

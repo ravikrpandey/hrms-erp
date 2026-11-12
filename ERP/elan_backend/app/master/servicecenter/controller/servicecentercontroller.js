@@ -38,10 +38,10 @@ exports.createServiceCenter = async (req, res) => {
             //     password: bcrypt.hashSync(password, 8)});
             if (createData) {
                 info = await transport.mailsend({
-                  from: "elitemindz99@gmail.com",
+                  from: process.env.SMTP_USER || "hr@kiranautomation.com",
                   to: sc_email,
-                  subject: "Elite ERP - Password ",
-                  html: `<p><strong>Hi ${sc_name}</strong> <br>Please find your link for Elite ERP login <a href = ${link}>Click Here </a>
+                  subject: "Kiran Automation ERP - Password ",
+                  html: `<p><strong>Hi ${sc_name}</strong> <br>Please find your link for Kiran Automation ERP login <a href = ${link}>Click Here </a>
                  Your <strong>Official Email Id is</strong> ${sc_email}
                  Your Password is: <strong> ${password} </strong> </p>`,
                 });

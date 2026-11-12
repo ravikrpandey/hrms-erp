@@ -365,7 +365,7 @@ module.exports.sendMailFnf = async (req, res) => {
     const pdfPath = file?.path;
 
     const mailOptions = {
-      from: '"HRMS" <elitemindz99@gmail.com>',
+      from: `"HRMS" <${process.env.SMTP_USER || "hr@kiranautomation.com"}>`,
       to,
       subject: sub,
       html,

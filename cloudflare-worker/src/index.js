@@ -1,5 +1,5 @@
 /**
- * Zyno HRMS Cloudflare Worker API Edge Gateway
+ * Kiran Automation HRMS Cloudflare Worker API Edge Gateway
  *
  * Security responsibilities:
  * - Enforces strict CORS allowlist (GitHub Pages origin only)

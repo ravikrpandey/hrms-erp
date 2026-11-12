@@ -84,7 +84,7 @@ export class ExportComponent implements OnInit {
     }
     // this.downloadService.createZip(
     //   this.filesArray?.map((c) => c.filePath),
-    //   'zyno_Project_Folder'
+    //   'KiranAutomation_Project_Folder'
     // );
   }
 

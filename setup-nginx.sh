@@ -25,6 +25,6 @@ nginx -t
 systemctl reload nginx || systemctl restart nginx
 
 echo "=============================================="
-echo "Nginx successfully configured for Zyno HRMS!"
+echo "Nginx successfully configured for Kiran Automation HRMS!"
 echo "=============================================="
 

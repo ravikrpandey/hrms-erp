@@ -2,7 +2,7 @@
 set -e
 
 # ==============================================================================
-# ZYNO HRMS - One-Command Public Deployment Launcher
+# KIRAN AUTOMATION HRMS - One-Command Public Deployment Launcher
 # ==============================================================================
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,7 +19,7 @@ fi
 export PATH="${HOME}/.local/bin:${PATH}"
 
 echo "========================================================================"
-echo "🚀 Starting Zyno HRMS Public Stack (Node.js + Angular + MySQL + Tunnels)"
+echo "🚀 Starting Kiran Automation HRMS Public Stack (Node.js + Angular + MySQL + Tunnels)"
 echo "========================================================================"
 
 # 1. Check MySQL
@@ -35,14 +35,14 @@ echo "✔ MySQL is running locally on 127.0.0.1:3306"
 
 # 2. Check Angular Build
 echo "[2/5] Checking Angular Production Build..."
-if [ ! -f "${FRONTEND_DIR}/dist/zyno-web/index.html" ]; then
+if [ ! -f "${FRONTEND_DIR}/dist/kiran-automation-web/index.html" ]; then
   echo "Angular production build not found. Building now..."
   (
     cd "${FRONTEND_DIR}"
     NODE_OPTIONS="--max-old-space-size=4096" npm run build
   )
 fi
-echo "✔ Angular build ready at ${FRONTEND_DIR}/dist/zyno-web"
+echo "✔ Angular build ready at ${FRONTEND_DIR}/dist/kiran-automation-web"
 
 # 3. Start/Reload Node.js Backend with PM2
 echo "[3/5] Starting Node.js Backend on port 3000..."

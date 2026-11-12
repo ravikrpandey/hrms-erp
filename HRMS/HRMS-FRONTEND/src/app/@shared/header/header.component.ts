@@ -67,7 +67,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
   parse: any;
   name: any;
   image: any;
-  imagePath: any = 'assets//icons/icon_zyno/employee.png';
+  imagePath: any = 'assets//icons/icon_kiran/employee.png';
   notExist: any;
   superM: any;
   role_id: any;
@@ -224,7 +224,7 @@ export class HeaderComponent implements AfterViewInit, OnDestroy, OnInit {
 
 
     const { employee_id, role_master_id } = this.loginUserDetails;
-    const apiUrl = `${databaseKey}/api/v1/getroleMenuAccessdetails?employee_id=${employee_id}&role_master_id=${role_master_id}&entity_id=${this?.entity_id}&domain=${'zyno_tenant'}`;
+    const apiUrl = `${databaseKey}/api/v1/getroleMenuAccessdetails?employee_id=${employee_id}&role_master_id=${role_master_id}&entity_id=${this?.entity_id}&domain=${'kiran_automation_tenant'}`;
 
     this.http.get(apiUrl).subscribe((res: any) => {
       if (res.code === 200) {

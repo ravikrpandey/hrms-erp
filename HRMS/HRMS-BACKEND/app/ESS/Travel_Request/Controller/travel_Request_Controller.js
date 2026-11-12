@@ -2120,7 +2120,8 @@ exports.getAllAdvanceTravelData = async (req, res) => {
 /** download ticket */
 const getFileContent = async (filename) => {
   try {
-    const fileUrl = `https://eliteerp.elitetraveltech.in/uploaded_files/${filename}`;
+    const baseUrl = (process.env.APP_PUBLIC_URL || "https://hrms-api.pandeyravikumar181.workers.dev").replace(/\/?$/, "/");
+    const fileUrl = `${baseUrl}uploaded_files/${filename}`;
 
     const response = await axios.get(fileUrl, {
       responseType: "arraybuffer",

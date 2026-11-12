@@ -10,8 +10,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   requireTLS: true,
   auth: {
-    user: 'elitemindz99@gmail.com',
-    pass: 'fundvpjsachxfvbr'
+    user: process.env.SMTP_USER || 'hr@kiranautomation.com',
+    pass: process.env.SMTP_PASS || ''
   },
   logger: true,
   debug: process.env.SMTP_DEBUG || false,
@@ -570,7 +570,7 @@ const servicePdfMail = async (
   const pdfBuffer = await generatePDF(htmlWithData);
 
   const mailOptions = {
-    from: '"System Admin" <elitemindz99@gmail.com>',
+    from: `"System Admin" <${process.env.SMTP_USER || "hr@kiranautomation.com"}>`,
     to: to_email,
     cc: cc_email,
     bcc: bcc_email,

@@ -895,7 +895,7 @@ module.exports.createSalesOrder = async (req, res) => {
       SELECT
         C.id,
         C.company_name AS name,
-        COALESCE(CA.email_id, 'pavan@elitemindz.co') AS email
+        COALESCE(CA.email_id, 'hr@kiranautomation.com') AS email
       FROM CUSTOMER_PROFILE_MST AS C
       LEFT JOIN CUSTOMER_ADDRESS_CONTACT_MST AS CA
         ON CA.customer_id = C.id

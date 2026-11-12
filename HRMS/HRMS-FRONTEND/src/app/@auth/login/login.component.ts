@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
           Validators.maxLength(20),
         ],
       ],
-      domain: ['zyno', Validators.required],
+      domain: ['kiranautomation', Validators.required],
     });
   }
 
@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
       'password'
     ).toString();
 
-    const domain = obj?.domain || 'zyno';
+    const domain = obj?.domain || 'kiranautomation';
 
     localStorage.setItem('domain', domain);
 
@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit {
         };
         localStorage.setItem('signInUser', JSON.stringify(signInObj));
 
-        this.toast.success('Welcome to Zyno HRMS', 'Login Successful');
+        this.toast.success('Welcome to Kiran Automation HRMS', 'Login Successful');
 
         // Save user details
         localStorage.setItem('EmpMainId', this.empMainId);

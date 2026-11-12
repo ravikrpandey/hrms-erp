@@ -221,8 +221,8 @@ const routes = {
       `${databaseKey}/api/v1/getInterCompanyrequestraisedlist`,
     getInterCompanyListRecieved: () =>
       `${databaseKey}/api/v1/getInterCompanyrequestlist`,
-    getVerifiedzyno: () => `${databaseKey}/api/v1/getAllleadmanagmentverified`,
-    getVerifiedzynoDataSus: () => `${databaseKey}/api/v1/getverfiedData`,
+    getVerifiedKiran: () => `${databaseKey}/api/v1/getAllleadmanagmentverified`,
+    getVerifiedKiranDataSus: () => `${databaseKey}/api/v1/getverfiedData`,
 
     rbhApprovalList: () => `${databaseKey}/api/v1/get_widthdrawallsit`,
 
@@ -1027,11 +1027,11 @@ export class LeadService {
     );
   }
 
-  getVerifiedzynoData(): Observable<any> {
-    return this.httpclient.get(routes.lead.getVerifiedzyno());
+  getVerifiedKiranData(): Observable<any> {
+    return this.httpclient.get(routes.lead.getVerifiedKiran());
   }
-  getVerifiedzynoDataSus(): Observable<any> {
-    return this.httpclient.get(routes.lead.getVerifiedzynoDataSus());
+  getVerifiedKiranDataSus(): Observable<any> {
+    return this.httpclient.get(routes.lead.getVerifiedKiranDataSus());
   }
   rbhApprovalList(): Observable<any> {
     return this.httpclient.get(routes.lead.rbhApprovalList());

@@ -1,4 +1,4 @@
-# Zyno HRMS Production Deployment & Hosting Guide
+# Kiran Automation HRMS Production Deployment & Hosting Guide
 ## Oracle Cloud Always Free (ARM64) + DuckDNS + HTTPS + GitHub
 
 ---

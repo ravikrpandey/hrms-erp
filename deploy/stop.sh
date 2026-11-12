@@ -2,14 +2,14 @@
 set -e
 
 # ==============================================================================
-# ZYNO HRMS - Production Service Stop Script
+# KIRAN AUTOMATION HRMS - Production Service Stop Script
 # Usage: ./stop.sh [--all]
 # ==============================================================================
 
 STOP_ALL="${1:-}"
 
 echo "========================================================================"
-echo "🛑 Stopping Zyno HRMS Services"
+echo "🛑 Stopping Kiran Automation HRMS Services"
 echo "========================================================================"
 
 # Stop Backend PM2

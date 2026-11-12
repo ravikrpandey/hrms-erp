@@ -1333,7 +1333,7 @@ exports.update_onboarded_employee_status = async (req, res) => {
     const first_name = candidate?.first_name;
     const last_name = candidate?.last_name;
     const link_details = {
-      web_url: "https://zynohrms.elitetraveltech.in/",
+      web_url: (process.env.APP_FRONTEND_URL || "https://ravikrpandey.github.io/hrms-erp").replace(/\/?$/, "/"),
       emp_code: employee_code,
       password: "123456789",
     };

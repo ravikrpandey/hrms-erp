@@ -38,7 +38,7 @@ export class ResignationCreateComponent implements OnInit {
   data: any = '';
   regionData: any;
   gradeData: any;
-  imageDefult: any = '../../../../../../assets/icons/icon_zyno/user.png'
+  imageDefult: any = '../../../../../../assets/icons/icon_kiran/user.png'
   abc: any;
   update: any;
   employeId: any;

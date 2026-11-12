@@ -829,7 +829,7 @@ exports.generate_salary_slip = async (req, res) => {
                 let finalHtml = htmlTemplate
                     .replace('{{employee_code}}', emp_data[0].employee_code || 'NA')
                     .replace('{{company_address}}', company_address || "Janakpuri, New Delhi, India")
-                    .replace('{{company_branch}}', company_branch || 'ELITE MINDZ')
+                    .replace('{{company_branch}}', company_branch || 'KIRAN AUTOMATION')
                     .replace('{{employee_name}}', `${emp_data[0].first_name} ${emp_data[0].last_name}` || 'NA')
                     .replace('{{emirates_id_number}}', emp_data[0].emirates_id_number || 'NA')
                     .replace('{{sal_month}}', current_month || 'NA')

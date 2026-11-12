@@ -63,7 +63,7 @@ export class AuthService {
           !res.employee_id
         ) {
           this.toster.warning(
-            'Sorry, You do not have access of any modules in ZYNO HRMS',
+            'Sorry, You do not have access of any modules in Kiran Automation HRMS',
             'Access Denied'
           );
           return;
@@ -346,7 +346,7 @@ export class AuthService {
           !res.employee_id
         ) {
           this.toster.warning(
-            'Sorry, You do not have access of any modules in ZYNO HRMS',
+            'Sorry, You do not have access of any modules in Kiran Automation HRMS',
             'Access Denied'
           );
           return;

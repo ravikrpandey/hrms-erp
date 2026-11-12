@@ -35,13 +35,13 @@ export class AppComponent implements OnInit, DoCheck {
         const segments = url.split('/').filter(s => s);
 
         if (!segments.length) {
-          this.title.setTitle('Zyno HRMS');
+          this.title.setTitle('Kiran Automation HRMS');
           return;
         }
 
         const last = segments[segments.length - 1];
         const formatted = this.format(last);
-        this.title.setTitle(`${formatted} | Zyno HRMS`);
+        this.title.setTitle(`${formatted} | Kiran Automation HRMS`);
       });
 
     // ---------- Save Last Page (Exclude Offline Page) ----------

@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'zyno-web'`, () => {
+  it(`should have as title 'kiran-automation-web'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('zyno-web');
+    expect(app.title).toEqual('kiran-automation-web');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('zyno-web app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('kiran-automation-web app is running!');
   });
 });

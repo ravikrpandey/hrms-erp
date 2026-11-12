@@ -23,7 +23,7 @@ export class EmployeeCreateComponent {
   edited_ID: any;
   loginUserDetails: any;
   baseUrl: any;
-  imagePath: any = 'assets//icons/icon_zyno/employee.png'
+  imagePath: any = 'assets//icons/icon_kiran/employee.png'
   thumbnail_photo: any
 
   uploadSuccess: boolean = false;

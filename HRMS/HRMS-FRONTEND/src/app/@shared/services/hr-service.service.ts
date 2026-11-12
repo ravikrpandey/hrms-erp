@@ -203,7 +203,7 @@ const routes = {
 export class HrServiceService {
   addTypeId: any = new BehaviorSubject(null);
   myObject: any;
-  // urlHR="https://zynoapi.elitetraveltech.in/api/test/getAllCondidateProfile";
+  // urlHR="https://hrms-api.pandeyravikumar181.workers.dev/api/test/getAllCondidateProfile";
   // sendData(){
   //   return this.http.get<any>('urlHR');
   // }

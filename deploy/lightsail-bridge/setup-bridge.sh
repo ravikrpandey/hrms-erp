@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ==============================================================================
-# ZYNO HRMS - Non-Destructive Lightsail HTTPS API Bridge Setup
+# KIRAN AUTOMATION HRMS - Non-Destructive Lightsail HTTPS API Bridge Setup
 #
 # Safety Guarantees:
 # - NEVER creates, drops, alters, or overwrites any MySQL database or table
@@ -16,7 +16,7 @@ BRIDGE_ROOT="/var/www/hrms-bridge"
 BACKEND_DIR="${BRIDGE_ROOT}/HRMS/HRMS-BACKEND"
 
 echo "========================================================================"
-echo "ZYNO HRMS Lightsail HTTPS Bridge Setup (MySQL untouched)"
+echo "Kiran Automation HRMS Lightsail HTTPS Bridge Setup (MySQL untouched)"
 echo "========================================================================"
 
 read -rp "Enter your DuckDNS full domain (e.g. myhrms-api.duckdns.org): " BRIDGE_DOMAIN

@@ -2,7 +2,7 @@
 set -e
 
 # ==============================================================================
-# ZYNO HRMS - Production Automated Backup Script
+# KIRAN AUTOMATION HRMS - Production Automated Backup Script
 # Usage: ./backup.sh
 # Performs consistent MySQL dump + Document archive + 7-day retention
 # ==============================================================================
@@ -23,7 +23,7 @@ mkdir -p "${BACKUP_DIR}/db"
 mkdir -p "${BACKUP_DIR}/files"
 
 echo "========================================================================"
-echo "📦 Starting Zyno HRMS Automated Backup"
+echo "📦 Starting Kiran Automation HRMS Automated Backup"
 echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S %Z')"
 echo "========================================================================"
 

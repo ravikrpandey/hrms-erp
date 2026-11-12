@@ -196,7 +196,7 @@ export class AllCandidateListComponent  implements OnInit {
   //   {
   //     employee_name: 'harsh',
   //     group_name: 'b',
-  //     Departmant_Name: 'mindz',
+  //     Departmant_Name: 'kiran automation',
   //     Grievance_type: 'nor',
   //     Grievance_date: '11-12-2020',
   //     Manager_Name: 'harshdip',

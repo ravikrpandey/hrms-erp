@@ -129,7 +129,7 @@ module.exports.sendDynamicMail = async function (
       <p>Dear ${first_name} ${last_name},</p>
       <p>Pls Approve the travel Requested created today</strong>.</p>
       <p>Best regards,</p>
-      <p>Elite Mindz Team</p>
+      <p>Kiran Automation Team</p>
     `
         };
 

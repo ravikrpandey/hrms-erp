@@ -6,7 +6,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class CryptoService {
 
-  private secretKey = 'elanpro-elitemindz';
+  private secretKey = 'elanpro-kiranautomation';
 
   constructor() { }
 

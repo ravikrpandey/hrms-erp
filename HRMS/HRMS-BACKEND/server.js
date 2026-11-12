@@ -156,7 +156,7 @@ db.sequelize
   });
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Zyno HRMS Application!" });
+  res.json({ message: "Welcome to Kiran Automation HRMS Application!" });
 });
 
 app.get("/health", async (req, res) => {

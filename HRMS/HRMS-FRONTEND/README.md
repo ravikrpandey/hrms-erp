@@ -1,4 +1,4 @@
-# mindz_hrms_frntend
+# kiran_automation_hrms_frontend
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/shibbu/mindz_hrms_frntend.git
+git remote add origin https://github.com/ravikrpandey/hrms-erp.git
 git branch -M main
 git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.com/shibbu/mindz_hrms_frntend/-/settings/integrations)
+- [ ] [Set up project integrations](https://github.com/ravikrpandey/hrms-erp/settings/actions)
 
 ## Collaborate with your team
 

@@ -13,7 +13,7 @@ const moment = require("moment-timezone");
 const fs = require("fs");
 const s3 = require("../../../config/s3config");
 const { log } = require("console");
-const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerpapi.elitetraveltech.in").replace(/\/?$/, "/");
+const baseUrl = (process.env.APP_PUBLIC_URL || "https://hrms-api.pandeyravikumar181.workers.dev").replace(/\/?$/, "/");
 const empFamilyDetails = db.empFamilyDetails;
 const users = db.user;
 const Role_menu = db.role_menu_access;
@@ -1529,7 +1529,8 @@ exports.forgetPassword = async (req, res) => {
     });
     if (chck) {
       var verify_link =
-        "https://emerp.elitetraveltech.in/Forgot?employee_id=" +
+        (process.env.APP_FRONTEND_URL || "https://ravikrpandey.github.io/hrms-erp").replace(/\/?$/, "") +
+        "/Forgot?employee_id=" +
         chck.employee_id;
       var obj_data = {
         from: process.env.EMAIL_FROM,
@@ -2435,8 +2436,8 @@ exports.create_candidate = async (req, res) => {
     let { current_address, parmanent_address } = req.body;
 
     let abc = req.body.employee_id;
-    let link = (process.env.APP_FRONTEND_URL || "https://emerp.elitetraveltech.in").replace(/\/?$/, "") + "/auth/login";
-    const baseUrl = (process.env.APP_PUBLIC_URL || "https://emerpapi.elitetraveltech.in").replace(/\/?$/, "/");
+    let link = (process.env.APP_FRONTEND_URL || "https://ravikrpandey.github.io/hrms-erp").replace(/\/?$/, "") + "/auth/login";
+    const baseUrl = (process.env.APP_PUBLIC_URL || "https://hrms-api.pandeyravikumar181.workers.dev").replace(/\/?$/, "/");
     const auditorQualificationDetails = db.auditorQualification;
     let employee_photo;
     req.file == undefined ? "" : (employee_photo = req.file.path);
@@ -2991,7 +2992,7 @@ exports.forgotSendOtp = async (req, res) => {
         "userId"
       ).toString();
       info = await transport.mailsend({
-        from: "zynoindia.erp@gmail.com",
+        from: process.env.EMAIL_FROM || "hr@kiranautomation.com",
         to: findUser?.employee_official_email,
         subject: "ERP - Password ",
         html: `<p><strong>Hi ${findUser?.first_name}</strong> <br>Please use this link for forgot password <a href = ${webLink}?id=${encryptedUserId}>Click Here </a>
@@ -3030,7 +3031,7 @@ exports.forgotPassword = async (req, res) => {
         const changedPassword = bytesChangeassword.toString(CryptoJS.enc.Utf8);
         let webLink = `${baseUiUrl}auth/login`;
         info = await transport.mailsend({
-          from: "zynoindia.erp@gmail.com",
+          from: process.env.EMAIL_FROM || "hr@kiranautomation.com",
           to: findUser?.employee_official_email,
           subject: "ERP - Password ",
           html: `<p><strong>Hi ${findUser?.first_name}</strong> <br>Please find your link for ERP login <a href = ${webLink}>Click Here </a>

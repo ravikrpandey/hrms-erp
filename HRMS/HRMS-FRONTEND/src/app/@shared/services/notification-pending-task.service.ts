@@ -13,14 +13,14 @@ export class NotificationPendingTaskService {
   //   this.notifications.push(message);
   // }
   dummayForCheck:any=[
-    {br_number:'br123',associated_company:'zyno',training_start_date:'20-03-2022',training_end_date:'20-04-2023'},
+    {br_number:'br123',associated_company:'Kiran Automation',training_start_date:'20-03-2022',training_end_date:'20-04-2023'},
     {br_number:'br444',associated_company:'SSSP',training_start_date:'20-03-2018',training_end_date:'20-04-2019'},
     {br_number:'br555',associated_company:'Mahendra Tech',training_start_date:'20-03-2017',training_end_date:'20-04-2018'},
     {br_number:'br777',associated_company:'HCL',training_start_date:'20-03-2022',training_end_date:'20-04-2024'},
     {br_number:'br888',associated_company:'TCS',training_start_date:'20-03-2011',training_end_date:'20-04-2013'},
   ]
   dummayForCheck2:any=[
-    {br_number:'br2nd',associated_company:'zyno2nd',training_start_date:'20-03-2022',training_end_date:'20-04-2023'},
+    {br_number:'br2nd',associated_company:'Kiran Automation 2nd',training_start_date:'20-03-2022',training_end_date:'20-04-2023'},
     {br_number:'br4nd',associated_company:'SSSP2nd',training_start_date:'20-03-2018',training_end_date:'20-04-2019'},
     {br_number:'br5nd',associated_company:'Mahendra Tech2nd',training_start_date:'20-03-2017',training_end_date:'20-04-2018'},
     {br_number:'br7nd',associated_company:'HCL2nd',training_start_date:'20-03-2022',training_end_date:'20-04-2024'},

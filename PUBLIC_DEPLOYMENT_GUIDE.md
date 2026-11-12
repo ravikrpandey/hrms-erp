@@ -1,6 +1,6 @@
-# Zyno HRMS Public Deployment Guide (Ubuntu + Cloudflare Quick Tunnel)
+# Kiran Automation HRMS Public Deployment Guide (Ubuntu + Cloudflare Quick Tunnel)
 
-This guide documents the architecture, configuration, operation, and maintenance procedures to make the **Zyno HRMS** application publicly accessible over the internet using your local Ubuntu workstation, Nginx reverse proxy, PM2 process manager, and Cloudflare Quick Tunnel.
+This guide documents the architecture, configuration, operation, and maintenance procedures to make the **Kiran Automation HRMS** application publicly accessible over the internet using your local Ubuntu workstation, Nginx reverse proxy, PM2 process manager, and Cloudflare Quick Tunnel.
 
 ---
 
@@ -30,7 +30,7 @@ This guide documents the architecture, configuration, operation, and maintenance
 ┌───────────────────────────┐                 ┌───────────────────────────┐
 │   Angular 15 Production   │                 │     Node.js / Express     │
 │       Static Build        │                 │    (Port 3000 on PM2)     │
-│   (dist/zyno-web/index)   │                 │     app.set('trust proxy')│
+│(dist/kiran-automation-web)│                 │     app.set('trust proxy')│
 └───────────────────────────┘                 └─────────────┬─────────────┘
                                                             │ (Internal TCP)
                                                             ▼
@@ -42,7 +42,7 @@ This guide documents the architecture, configuration, operation, and maintenance
 ```
 
 ### Key Routing Details
-- **`https://<public-url>/`** $\rightarrow$ Served directly by Nginx from the compiled Angular static production build (`HRMS/HRMS-FRONTEND/dist/zyno-web`). SPA client-side deep links and page refreshes are handled via `try_files $uri $uri/ /index.html`.
+- **`https://<public-url>/`** $\rightarrow$ Served directly by Nginx from the compiled Angular static production build (`HRMS/HRMS-FRONTEND/dist/kiran-automation-web`). SPA client-side deep links and page refreshes are handled via `try_files $uri $uri/ /index.html`.
 - **`https://<public-url>/api/*`** $\rightarrow$ Reverse-proxied transparently by Nginx to Express on `http://127.0.0.1:3000/api/*`.
 - **`https://<public-url>/uploaded_files/*`** (and `/digital_signature/*`, `/leadfile/*`) $\rightarrow$ Proxied to `http://127.0.0.1:3000` to stream documents and image assets.
 - **Port 3306 (MySQL)** $\rightarrow$ Strictly bound to localhost (`127.0.0.1`), entirely inaccessible from outside the local machine.
@@ -113,7 +113,7 @@ From the project root:
 ```
 This script automatically:
 1. Verifies that MySQL is running on `127.0.0.1:3306`.
-2. Checks that Angular production assets exist in `dist/zyno-web`.
+2. Checks that Angular production assets exist in `dist/kiran-automation-web`.
 3. Starts the Node.js backend under PM2 on `127.0.0.1:3000`.
 4. Ensures Nginx is running and serving the `hrms` reverse proxy configuration on port 80.
 5. Launches Cloudflare Quick Tunnel and outputs your live HTTPS URL.

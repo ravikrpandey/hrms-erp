@@ -1,6 +1,6 @@
 const CryptoJS = require('crypto-js');
 
-const secretKey = 'elanpro-elitemindz';
+const secretKey = 'elanpro-kiranautomation';
 
 const encrypt = (value) => {
 

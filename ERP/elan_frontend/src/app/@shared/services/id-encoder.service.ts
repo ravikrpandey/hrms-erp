@@ -7,7 +7,7 @@ import * as CryptoJS from 'crypto-js';
 })
 export class IdEncoderService {
 
-  private secretKey = '##MindzZyno@123####';
+  private secretKey = '##KiranAutomation@123####';
 
   constructor(private router: Router) {}
 

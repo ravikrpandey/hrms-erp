@@ -1,4 +1,4 @@
-# Zyno HRMS Free Deployment Guide
+# Kiran Automation HRMS Free Deployment Guide
 ## GitHub Pages (Frontend) + Cloudflare Workers (Edge API) + Lightsail HTTPS Bridge (Existing MySQL)
 
 ---
@@ -26,7 +26,7 @@
 
 ## Step 2: Register Free DuckDNS Subdomain
 1. Visit https://www.duckdns.org/ and sign in.
-2. Create a free subdomain (for example `zynohrms-api.duckdns.org`) and point it to `13.233.107.103`.
+2. Create a free subdomain (for example `kiran-hrms-api.duckdns.org`) and point it to `13.233.107.103`.
 3. Copy your DuckDNS Token.
 
 ---

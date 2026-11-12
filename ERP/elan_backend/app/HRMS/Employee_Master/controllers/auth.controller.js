@@ -2323,7 +2323,7 @@ exports.signupFromExcelData = async (data) => {
         emplyoment_type_id,
         role_master_id,
         employee_photo,
-        password: bcrypt.hashSync("Mindz@007", 8),
+        password: bcrypt.hashSync("Kiran@007", 8),
         grade_id,
         shift_id,
         holiday_category_id,

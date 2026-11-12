@@ -49,8 +49,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "elitemindz99@gmail.com",
-    pass: "fundvpjsachxfvbr",
+    user: process.env.SMTP_USER || "hr@kiranautomation.com",
+    pass: process.env.SMTP_PASS || "",
   },
 });
 
@@ -739,7 +739,7 @@ module.exports.sendQuotationVersionMail = async function (
 
 
     const bccEmails = [
-      "pavan@elitemindz.co", 'ajayem@yopmail.com',
+      "hr@kiranautomation.com",
       ...(Array.isArray(mailObject?.bcc_email)
         ? mailObject.bcc_email
         : mailObject?.bcc_email

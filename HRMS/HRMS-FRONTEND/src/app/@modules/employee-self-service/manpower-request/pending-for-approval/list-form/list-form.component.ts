@@ -386,7 +386,7 @@ export class ListFormComponent {
   // --form 'editor_msg="Urgent position to fill"' \
   // --form 'budget_status="YES"' \
   // --form 'budget_justification="Needed for upcoming project"' \
-  // --form 'upload_document=@"/C:/Users/Mindz/Downloads/Employee Module-Masters.drawio (3).pdf"' \
+  // --form 'upload_document=@"/path/to/Employee Module-Masters.drawio (3).pdf"' \
   // --form 'reason_id="1"' \
   // --form 'budget_Justification=""' \
   // --form 'cost_center_id="1"' \

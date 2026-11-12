@@ -8,8 +8,8 @@ module.exports.mailsend = async (body, mail_data) => {
     port: 587,
     requireTLS: true,
     auth: {
-      user: 'elitemindz99@gmail.com',
-      pass: 'fundvpjsachxfvbr'
+      user: process.env.SMTP_USER || 'hr@kiranautomation.com',
+      pass: process.env.SMTP_PASS || ''
     },
     logger: true,
     debug: process.env.SMTP_DEBUG || false,

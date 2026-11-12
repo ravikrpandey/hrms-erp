@@ -2,7 +2,7 @@
 set -e
 
 # ==============================================================================
-# ZYNO HRMS - Production Service Start Script
+# KIRAN AUTOMATION HRMS - Production Service Start Script
 # Usage: ./start.sh
 # ==============================================================================
 
@@ -16,7 +16,7 @@ else
 fi
 
 echo "========================================================================"
-echo "🚀 Starting Zyno HRMS Production Services"
+echo "🚀 Starting Kiran Automation HRMS Production Services"
 echo "========================================================================"
 
 # 1. MySQL
@@ -46,5 +46,5 @@ fi
 echo "✔ Nginx reverse proxy is active"
 
 echo "========================================================================"
-echo "✔ All Zyno HRMS services are up and running!"
+echo "✔ All Kiran Automation HRMS services are up and running!"
 echo "========================================================================"

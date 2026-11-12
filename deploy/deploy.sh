@@ -2,7 +2,7 @@
 set -e
 
 # ==============================================================================
-# ZYNO HRMS - Production Pull & Deployment Automation Script
+# KIRAN AUTOMATION HRMS - Production Pull & Deployment Automation Script
 # Usage: ./deploy.sh [branch]
 # Default branch: main
 # Target Path: /var/www/hrms
@@ -20,14 +20,14 @@ else
   FRONTEND_DIR="${PROJECT_ROOT}/HRMS-FRONTEND"
 fi
 
-if [ "${PROJECT_ROOT}" = "/var/www/hrms" ] || [ -d "/var/www/hrms/dist/zyno-web" ]; then
-  DIST_DIR="/var/www/hrms/dist/zyno-web"
+if [ "${PROJECT_ROOT}" = "/var/www/hrms" ] || [ -d "/var/www/hrms/dist/kiran-automation-web" ]; then
+  DIST_DIR="/var/www/hrms/dist/kiran-automation-web"
 else
-  DIST_DIR="${FRONTEND_DIR}/dist/zyno-web"
+  DIST_DIR="${FRONTEND_DIR}/dist/kiran-automation-web"
 fi
 
 echo "========================================================================"
-echo "🚀 Deploying Zyno HRMS from GitHub [Branch: ${DEPLOY_BRANCH}]"
+echo "🚀 Deploying Kiran Automation HRMS from GitHub [Branch: ${DEPLOY_BRANCH}]"
 echo "Target: ${PROJECT_ROOT}"
 echo "Timestamp: $(date '+%Y-%m-%d %H:%M:%S %Z')"
 echo "========================================================================"
@@ -72,9 +72,9 @@ npm run build
 
 # Deploy build artifacts to target directory
 mkdir -p "${DIST_DIR}"
-if [ -d "${FRONTEND_DIR}/dist/zyno-web" ] && [ "${FRONTEND_DIR}/dist/zyno-web" != "${DIST_DIR}" ]; then
+if [ -d "${FRONTEND_DIR}/dist/kiran-automation-web" ] && [ "${FRONTEND_DIR}/dist/kiran-automation-web" != "${DIST_DIR}" ]; then
   find "${DIST_DIR}" -mindepth 1 -delete
-  cp -r "${FRONTEND_DIR}/dist/zyno-web/"* "${DIST_DIR}/"
+  cp -r "${FRONTEND_DIR}/dist/kiran-automation-web/"* "${DIST_DIR}/"
 fi
 echo "✔ Angular build deployed to ${DIST_DIR}"
 
