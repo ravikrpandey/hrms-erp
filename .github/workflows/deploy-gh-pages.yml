@@ -34,23 +34,21 @@ jobs:
 
       - name: Install HRMS dependencies
         working-directory: HRMS/HRMS-FRONTEND
-        run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps --no-audit --no-fund || npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Install ERP dependencies
         working-directory: ERP/elan_frontend
-        run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps --no-audit --no-fund || npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Inject Cloudflare Worker API URL
         env:
           WORKER_API_URL: ${{ vars.WORKER_API_URL }}
         run: |
-          if [ -z "${WORKER_API_URL}" ]; then
-            echo "::error::Repository variable WORKER_API_URL is not set. Add it under Settings -> Secrets and variables -> Actions -> Variables (e.g. https://hrms-api.<subdomain>.workers.dev)."
-            exit 1
-          fi
-          CLEAN_URL="${WORKER_API_URL%/}"
+          RAW_URL="${WORKER_API_URL:-https://hrms-api.pandeyravikumar181.workers.dev}"
+          CLEAN_URL="${RAW_URL%/}"
           sed -i "s|__WORKER_API_URL__|${CLEAN_URL}|g" HRMS/HRMS-FRONTEND/src/app/environments/environment.prod.ts
           sed -i "s|__WORKER_API_URL__|${CLEAN_URL}|g" ERP/elan_frontend/src/app/environments/environment.prod.ts
+          echo "Configured API Worker: ${CLEAN_URL}"
 
       - name: Build HRMS Frontend
         working-directory: HRMS/HRMS-FRONTEND
@@ -60,7 +58,8 @@ jobs:
       - name: Build ERP Frontend
         working-directory: ERP/elan_frontend
         run: |
-          NODE_OPTIONS="--max-old-space-size=5120" npx ng build --configuration production --base-href /hrms-erp/erp/
+          NODE_OPTIONS="--max-old-space-size=4096" npx ng build --configuration production-low-memory --base-href /hrms-erp/erp/
+          ls -la dist/erp-web
 
       - name: Combine HRMS and ERP Frontends and Setup Multi-SPA Redirects
         run: |
