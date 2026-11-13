@@ -1,5 +1,6 @@
+require("dotenv").config();
 const jwt = require('jsonwebtoken');
-const secret = "abcTTT6543uzzzyyyuccccr434cvewqjhgder";
+const secret = process.env.JWT_SECRET || "abcTTT6543uzzzyyyuccccr434cvewqjhgder";
 const db = require("../models");
 const User = db.user_login;
 const logger = require('../.././logger/index');

@@ -308,9 +308,13 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (res: any) => {
           if (res.success && res.ssoToken) {
-            const hrmsUrl =
-              (environment as any).hrmsUrl || 'http://localhost:4201';
-            window.open(`${hrmsUrl}/auth/sso?token=${res.ssoToken}`, '_blank');
+            let hrmsUrl = (environment as any).hrmsUrl;
+            if (!hrmsUrl) {
+              hrmsUrl = window.location.pathname.startsWith('/hrms-erp')
+                ? `${window.location.origin}/hrms-erp`
+                : 'http://localhost:4201';
+            }
+            window.open(`${hrmsUrl.replace(/\/$/, '')}/auth/sso?token=${res.ssoToken}`, '_blank');
           } else {
             this.toaster.error(
               res?.message || 'Failed to generate HRMS session token'

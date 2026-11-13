@@ -1,7 +1,7 @@
 export const environment = {
-  servralUrl: 'https://elandevapi.elitetraveltech.in',
+  servralUrl: '__WORKER_API_URL__/erp-api',
   defaultLanguage: 'Label',
   supportedLanguages: ['Label', 'TMSA'],
   production: true,
-  hrmsUrl: 'http://localhost:4201',
+  hrmsUrl: 'https://ravikrpandey.github.io/hrms-erp',
 };

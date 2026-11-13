@@ -114,6 +114,36 @@ if pm2 list | grep -q "hrms-backend"; then
 else
   pm2 start ecosystem.config.js
 fi
+
+ERP_DIR="${BRIDGE_ROOT}/ERP/elan_backend"
+echo "  Setting up ERP backend in ${ERP_DIR}..."
+cd "${ERP_DIR}"
+cat > .env <<EOF
+NODE_ENV=production
+PORT=3001
+SERVER_PORT=3001
+HOST=127.0.0.1
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=mytaxuser
+DB_PASSWORD=${DB_PASS}
+DB_NAME=hrms
+JWT_SECRET=${JWT_SECRET}
+BRIDGE_SECRET=${BRIDGE_SECRET}
+CORS_ORIGINS=https://ravikrpandey.github.io
+APP_PUBLIC_URL=${WORKER_URL%/}/erp-api
+APP_FRONTEND_URL=https://ravikrpandey.github.io/hrms-erp/erp
+LOG_LEVEL=info
+EOF
+chmod 600 .env
+
+npm ci --omit=dev --legacy-peer-deps || npm install --omit=dev --legacy-peer-deps
+
+if pm2 list | grep -q "erp-backend"; then
+  pm2 reload erp-backend --update-env
+else
+  pm2 start ecosystem.config.js
+fi
 pm2 save
 
 echo "[6/7] Configuring isolated Nginx HTTPS site for ${BRIDGE_DOMAIN}..."
@@ -154,9 +184,11 @@ sudo systemctl reload nginx
 echo "[7/7] Verifying bridge authentication and MySQL health..."
 UNAUTH_CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://${BRIDGE_DOMAIN}/health" || echo "000")
 AUTH_RES=$(curl -s -H "X-Bridge-Secret: ${BRIDGE_SECRET}" "https://${BRIDGE_DOMAIN}/health")
+AUTH_ERP_RES=$(curl -s -H "X-Bridge-Secret: ${BRIDGE_SECRET}" "https://${BRIDGE_DOMAIN}/erp-api/health")
 
 echo "  Unauthenticated direct access check (expected 403): HTTP ${UNAUTH_CODE}"
-echo "  Authenticated Worker bridge health check: ${AUTH_RES}"
+echo "  Authenticated HRMS bridge health check: ${AUTH_RES}"
+echo "  Authenticated ERP bridge health check:  ${AUTH_ERP_RES}"
 echo ""
 echo "========================================================================"
 echo "Lightsail HTTPS Bridge Ready!"

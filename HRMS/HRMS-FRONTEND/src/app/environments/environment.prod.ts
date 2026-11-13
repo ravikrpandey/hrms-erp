@@ -5,5 +5,5 @@ export const environment = {
   defaultLanguage: 'Label',
   supportedLanguages: ['Label', 'TMSA'],
   production: true,
-  erpUrl: ''
+  erpUrl: 'https://ravikrpandey.github.io/hrms-erp/erp'
 };

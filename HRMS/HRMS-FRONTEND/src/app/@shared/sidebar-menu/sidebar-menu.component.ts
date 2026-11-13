@@ -367,8 +367,13 @@ export class SidebarMenuComponent implements OnInit, OnDestroy, AfterViewInit {
     this._authservice.generateSsoToken({ employee_id: empId, email }).subscribe({
       next: (res: any) => {
         if (res.success && res.ssoToken) {
-          const erpUrl = (environment as any).erpUrl || window.location.origin;
-          window.open(`${erpUrl}/auth/sso?token=${res.ssoToken}`, '_blank');
+          let erpUrl = (environment as any).erpUrl;
+          if (!erpUrl) {
+            erpUrl = window.location.pathname.startsWith('/hrms-erp')
+              ? `${window.location.origin}/hrms-erp/erp`
+              : `${window.location.origin}/erp`;
+          }
+          window.open(`${erpUrl.replace(/\/$/, '')}/auth/sso?token=${res.ssoToken}`, '_blank');
         } else {
           this.toast.error(res?.message || 'Failed to generate ERP session token');
         }

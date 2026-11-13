@@ -23,6 +23,7 @@ const ALLOWED_HEADERS = [
 
 const ALLOWED_PATH_PREFIXES = [
   '/api/',
+  '/erp-api/',
   '/uploaded_files/',
   '/digital_signature/',
   '/leadfile/',
@@ -37,7 +38,14 @@ function getAllowedOrigins(env) {
 }
 
 function isAllowedPath(pathname) {
-  if (pathname === '/' || pathname === '/health' || pathname === '/worker-health') {
+  if (
+    pathname === '/' ||
+    pathname === '/health' ||
+    pathname === '/worker-health' ||
+    pathname === '/erp-api' ||
+    pathname === '/erp-api/' ||
+    pathname === '/erp-api/health'
+  ) {
     return true;
   }
   return ALLOWED_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -175,7 +183,10 @@ export default {
         responseHeaders.set(k, v);
       }
 
-      addSecurityHeaders(responseHeaders, rawPathname.startsWith('/api/'));
+      addSecurityHeaders(
+        responseHeaders,
+        rawPathname.startsWith('/api/') || rawPathname.startsWith('/erp-api/')
+      );
 
       return new Response(upstreamResponse.body, {
         status: upstreamResponse.status,

@@ -75,6 +75,7 @@ const excludedRoutes = [
 ];
 
 function isExcluded(req) {
+  if (req.path === "/" || req.path === "/health" || req.path === "/ping") return true;
   return excludedRoutes.some((route) => req.path.startsWith(route));
 }
 

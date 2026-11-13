@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const crypto = require("crypto");
 const dotenv = require("dotenv");
 var bodyParser = require("body-parser");
 var cron = require("node-cron");
@@ -24,30 +25,61 @@ global.migrationRan = false;
 global.__basedir = __dirname;
 dotenv.config();
 const app = express();
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
+const bridgeSecret = String(process.env.BRIDGE_SECRET || "").trim();
+if (bridgeSecret) {
+  const expectedBridgeBuf = Buffer.from(bridgeSecret, "utf8");
+  app.use((req, res, next) => {
+    const provided = String(req.headers["x-bridge-secret"] || "");
+    const providedBuf = Buffer.from(provided, "utf8");
+    if (
+      providedBuf.length !== expectedBridgeBuf.length ||
+      !crypto.timingSafeEqual(providedBuf, expectedBridgeBuf)
+    ) {
+      return res.status(403).json({
+        status: "failed",
+        message: "Forbidden: Invalid bridge authentication",
+      });
+    }
+    next();
+  });
+}
+
+const allowedOrigins = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((o) => o.trim().replace(/\/$/, ""))
+  .filter(Boolean);
+
+const corsOpts = {
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS not allowed"));
+  },
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "x-domain",
+    "x-access-token",
+    "x-entity-id",
+    "x-user-id",
+    "session-id",
+    "x-skip-loader",
+    "x-idempotency-key",
+  ],
+  credentials: true,
+};
+
+app.use(cors(corsOpts));
+app.options("*", cors(corsOpts));
 
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
-
-app.set("trust proxy", true);
-
-const corsOpts = {
-  origin: "*",
-  methods: ["GET", "PATCH", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
-app.use(cors(corsOpts));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -156,8 +188,15 @@ const db = require("./app/models");
 // db.adjustmentJournal.sync({alter:true});
 
 
-const workbook = xlsx.readFile("price-list-master1.xlsx");
-const sheet1 = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"]);
+let sheet1 = [];
+if (fs.existsSync(path.join(__dirname, "price-list-master1.xlsx"))) {
+  try {
+    const workbook = xlsx.readFile(path.join(__dirname, "price-list-master1.xlsx"));
+    sheet1 = xlsx.utils.sheet_to_json(workbook.Sheets["Sheet1"] || {});
+  } catch (err) {
+    console.error("Failed to parse price-list-master1.xlsx:", err.message);
+  }
+}
 
 async function uploadData() {
   const chunkSize = 1000;
@@ -556,6 +595,19 @@ async function main() {
 
 // main();
 
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to Kiran Automation ERP Application!" });
+});
+
+app.get("/health", async (req, res) => {
+  try {
+    await db.sequelize.authenticate();
+    res.json({ status: "ok", service: "erp-backend", database: "connected" });
+  } catch (err) {
+    res.status(503).json({ status: "degraded", service: "erp-backend", database: "disconnected" });
+  }
+});
+
 app.get("/ping", (req, res) => {
   res.json({ message: "Welcome to ERP Application --> pong." });
 });
@@ -775,7 +827,17 @@ cron.schedule(
     timezone: "Asia/Kolkata",
   },
 );
-const PORT = process.env.SERVER_PORT || 3000;
-app.listen(PORT, () => {
-  console.log(` \u001b[1;32m Server is running on port ${PORT}. \u001b[0m`);
+db.sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Connected to ERP database successfully.");
+  })
+  .catch((err) => {
+    console.error("Unable to connect to ERP database:", err.message);
+  });
+
+const PORT = process.env.PORT || process.env.SERVER_PORT || 3001;
+const HOST = process.env.HOST || "127.0.0.1";
+app.listen(PORT, HOST, () => {
+  console.log(` \x1b[1;32m ERP Server is running on http://${HOST}:${PORT}. \x1b[0m`);
 });
